@@ -16,7 +16,8 @@
 | 6 | Retest + Longitudinal Tracking | Not started |
 | 7 | Wearable Integration | Not started |
 | 8 | Living Protocol + Marketplace Alerts | Not started |
-| 9 | Lab Partnership + Second Market | Not started |
+| 9 | Health Intelligence Engine | Not started |
+| 10 | Lab Partnership + Second Market | Not started |
 
 ## Phase Details
 
@@ -96,7 +97,21 @@
 - AI summarizes new research with confidence scoring
 - User preferences: notification frequency, channels (email, push, in-app)
 
-### Phase 9: Lab Partnership + Second Market
+### Phase 9: Health Intelligence Engine
+**Goal:** Build the knowledge graph that connects biomarkers ↔ research ↔ products ↔ pricing ↔ outcomes. The Google of personalized health.
+- Research aggregation: continuously ingest PubMed, Examine.com, clinical trials, meta-analyses
+- AI extracts: substance X helps condition Y at dose Z with confidence level W
+- YouTube/podcast content extraction (Huberman, Attia, Rhonda Patrick) — extract claims, match to papers, score credibility
+- Product aggregation: scrape/partner with supplement and peptide vendors across Europe
+- Track per product: ingredients, dosage, price, price-per-dose, purity, vendor reputation, shipping regions
+- Auto-match products to research: "This product matches the dose used in the study showing X benefit"
+- Price comparison engine across vendors for equivalent products
+- Product discovery: surface new products matching user's biomarker profile
+- Knowledge graph at the center: biomarker → condition → substance → research → product → vendor → price
+- The interpretation engine (Phase 3) and protocol engine (Phase 5) query this graph
+- This is the long-term moat — the intelligence layer nobody else builds
+
+### Phase 10: Lab Partnership + Second Market
 **Goal:** Direct lab ordering and expansion beyond Poland.
 - Diagnostyka B2B partnership (order tests directly through Lipa)
 - Electronic results integration (no more PDF upload)
