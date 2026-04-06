@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lipa Health — Your Biology, Decoded</title>
-  <meta name="description" content="Comprehensive biomarker testing with AI-powered protocols. Test 100+ markers, get a personalized optimization plan, and track your progress over time. Launching across Europe.">
+  <title>Lipa Health — Test. Protocol. Results.</title>
+  <meta name="description" content="100+ biomarkers tested. AI-powered personalized protocols — supplements, peptides, and lifestyle changes from vetted sources. Track your progress over time. Launching across Europe.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Instrument+Serif&display=swap" rel="stylesheet">
   <style>
@@ -290,6 +290,9 @@
       color: var(--text-tertiary);
     }
 
+    @media (max-width: 900px) {
+      .protocol-grid { grid-template-columns: 1fr !important; }
+    }
     @media (max-width: 768px) {
       nav { padding: 14px 20px; }
       .hero { padding: 120px 20px 80px; }
@@ -322,8 +325,8 @@
 
 <section class="hero">
   <div class="hero-eyebrow">Launching across Europe</div>
-  <h1>Your biology, decoded.</h1>
-  <p class="hero-sub">Comprehensive biomarker testing with AI-powered protocols. Test, understand, optimize — and watch your health transform over time.</p>
+  <h1>Test. Protocol. Results.</h1>
+  <p class="hero-sub">100+ biomarkers tested. A personalized protocol — supplements, peptides, and lifestyle changes — from vetted sources. Retest quarterly. Watch your biology improve.</p>
   <form class="waitlist-form" id="waitlist" action="https://buttondown.com/api/emails/embed-subscribe/lipa" method="post" target="_blank">
     <input type="email" name="email" placeholder="Enter your email" required>
     <button type="submit">Get Early Access</button>
@@ -370,6 +373,57 @@
       <div class="step-num">Step 04</div>
       <h3>Track and optimize</h3>
       <p>Retest quarterly. Watch your biomarkers improve. Your protocol evolves as your biology changes. The data proves what's working.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Protocol showcase -->
+<section class="section" style="padding-bottom: 40px;">
+  <div class="section-eyebrow">The action layer</div>
+  <h2 class="section-title">Don't just see the data. Act on it.</h2>
+
+  <div style="background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;">
+    <div>
+      <p style="font-size: 17px; color: var(--text); line-height: 1.8; margin-bottom: 24px;">Every blood test platform shows you numbers. Lipa shows you <strong>what to do about them</strong>.</p>
+      <p style="font-size: 15px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 24px;">Your AI-generated protocol is personalized to your exact biomarker profile — not generic advice. Every recommendation links to a vetted source. One click to buy.</p>
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="width: 8px; height: 8px; background: var(--accent); border-radius: 50%; flex-shrink: 0;"></div>
+          <span style="font-size: 15px;">Science-backed supplements matched to your deficiencies</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="width: 8px; height: 8px; background: var(--accent); border-radius: 50%; flex-shrink: 0;"></div>
+          <span style="font-size: 15px;">Advanced peptide protocols from reviewed European vendors</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="width: 8px; height: 8px; background: var(--accent); border-radius: 50%; flex-shrink: 0;"></div>
+          <span style="font-size: 15px;">Nutrition and lifestyle changes tailored to your biology</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="width: 8px; height: 8px; background: var(--accent); border-radius: 50%; flex-shrink: 0;"></div>
+          <span style="font-size: 15px;">Protocol updated quarterly based on your new results</span>
+        </div>
+      </div>
+    </div>
+    <div style="background: var(--section-alt); border-radius: 12px; padding: 32px; font-family: 'Inter', monospace;">
+      <div style="font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 20px;">Sample Protocol</div>
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <div style="background: var(--white); border-radius: 10px; padding: 16px 20px; border: 1px solid var(--border);">
+          <div style="font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Inflammation — hs-CRP elevated</div>
+          <div style="font-size: 15px; font-weight: 600;">Omega-3 (EPA/DHA) 2,000mg daily</div>
+          <div style="font-size: 13px; color: var(--accent); margin-top: 4px; cursor: pointer;">Shop from vetted source →</div>
+        </div>
+        <div style="background: var(--white); border-radius: 10px; padding: 16px 20px; border: 1px solid var(--border);">
+          <div style="font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Vitamin D — suboptimal (32 ng/mL)</div>
+          <div style="font-size: 15px; font-weight: 600;">Vitamin D3 5,000 IU + K2 daily</div>
+          <div style="font-size: 13px; color: var(--accent); margin-top: 4px; cursor: pointer;">Shop from vetted source →</div>
+        </div>
+        <div style="background: var(--white); border-radius: 10px; padding: 16px 20px; border: 1px solid var(--border);">
+          <div style="font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Recovery — elevated inflammation markers</div>
+          <div style="font-size: 15px; font-weight: 600;">BPC-157 250mcg/day (research peptide)</div>
+          <div style="font-size: 13px; color: var(--accent); margin-top: 4px; cursor: pointer;">View reviewed vendors →</div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
