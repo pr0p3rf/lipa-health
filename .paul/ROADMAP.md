@@ -15,7 +15,8 @@
 | 5 | Protocol Generation + Affiliate Links | Not started |
 | 6 | Retest + Longitudinal Tracking | Not started |
 | 7 | Wearable Integration | Not started |
-| 8 | Lab Partnership + Second Market | Not started |
+| 8 | Living Protocol + Marketplace Alerts | Not started |
+| 9 | Lab Partnership + Second Market | Not started |
 
 ## Phase Details
 
@@ -85,7 +86,17 @@
 - Resting HR trends mapped to thyroid/cardiac markers
 - Unified health timeline
 
-### Phase 8: Lab Partnership + Second Market
+### Phase 8: Living Protocol + Marketplace Alerts
+**Goal:** The protocol evolves automatically — new research, better vendors, new products.
+- Push notifications / email alerts when research changes a recommendation
+- Price monitoring across supplement/peptide vendors — alert on drops
+- New product alerts when items matching user's profile hit the market (e.g., NMN EU approval)
+- Vendor aggregator: compare prices across multiple sources for each protocol item
+- Auto-update protocols when new meta-analyses or guidelines shift evidence
+- AI summarizes new research with confidence scoring
+- User preferences: notification frequency, channels (email, push, in-app)
+
+### Phase 9: Lab Partnership + Second Market
 **Goal:** Direct lab ordering and expansion beyond Poland.
 - Diagnostyka B2B partnership (order tests directly through Lipa)
 - Electronic results integration (no more PDF upload)
