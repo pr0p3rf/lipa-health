@@ -385,149 +385,187 @@
 </div>
 
 <!-- Product Dashboard Preview -->
-<section style="padding: 80px 48px 40px; max-width: 1000px; margin: 0 auto;">
-  <div style="background: var(--white); border: 1px solid var(--border); border-radius: 20px; padding: 40px; box-shadow: 0 8px 40px rgba(0,0,0,0.06);">
+<section style="padding: 80px 48px 40px; max-width: 1060px; margin: 0 auto;">
+  <div style="background: linear-gradient(145deg, #FFFFFF 0%, #F8FAF8 100%); border: 1px solid rgba(0,0,0,0.04); border-radius: 24px; padding: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 12px 48px rgba(0,0,0,0.06); overflow: hidden;">
 
-    <!-- Top row: Score + Bio Age -->
-    <div style="display: flex; gap: 32px; margin-bottom: 36px; align-items: center;">
-      <!-- Lipa Score Ring -->
-      <div style="text-align: center; flex-shrink: 0;">
-        <div style="position: relative; width: 120px; height: 120px;">
-          <svg viewBox="0 0 120 120" style="transform: rotate(-90deg);">
-            <circle cx="60" cy="60" r="52" fill="none" stroke="#F2F1EE" stroke-width="8"/>
-            <circle cx="60" cy="60" r="52" fill="none" stroke="#1B6B4A" stroke-width="8" stroke-dasharray="245" stroke-dashoffset="49" stroke-linecap="round"/>
+    <!-- Dashboard top bar -->
+    <div style="padding: 16px 32px; border-bottom: 1px solid rgba(0,0,0,0.04); display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.7); backdrop-filter: blur(12px);">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <svg width="18" height="18" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="13" stroke="#1B6B4A" stroke-width="1.5"/><path d="M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z" fill="#1B6B4A" opacity="0.15" stroke="#1B6B4A" stroke-width="1"/></svg>
+        <span style="font-size: 13px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--text);">Lipa Dashboard</span>
+      </div>
+      <div style="display: flex; gap: 20px; font-size: 12px; color: var(--text-tertiary);">
+        <span style="color: var(--accent); font-weight: 600;">Overview</span>
+        <span>Biomarkers</span>
+        <span>Protocol</span>
+        <span>Trends</span>
+      </div>
+    </div>
+
+    <div style="padding: 36px 32px;">
+      <!-- Top row: Score + Bio Age + Systems -->
+      <div style="display: flex; gap: 24px; margin-bottom: 32px;">
+
+        <!-- Lipa Score -->
+        <div style="background: linear-gradient(135deg, #F0F7F2 0%, #E4F0E7 100%); border-radius: 20px; padding: 28px 32px; text-align: center; flex-shrink: 0; width: 180px;">
+          <div style="position: relative; width: 110px; height: 110px; margin: 0 auto 12px;">
+            <svg viewBox="0 0 110 110" style="transform: rotate(-90deg);">
+              <circle cx="55" cy="55" r="46" fill="none" stroke="rgba(27,107,74,0.1)" stroke-width="10"/>
+              <circle cx="55" cy="55" r="46" fill="none" stroke="url(#scoreGrad)" stroke-width="10" stroke-dasharray="289" stroke-dashoffset="63" stroke-linecap="round"/>
+              <defs><linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#1B6B4A"/><stop offset="100%" stop-color="#34D399"/></linearGradient></defs>
+            </svg>
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+              <div style="font-family: 'Instrument Serif', serif; font-size: 42px; line-height: 1; color: #1B6B4A;">78</div>
+            </div>
+          </div>
+          <div style="font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: #1B6B4A;">Lipa Score</div>
+          <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 4px;">+6 from last test</div>
+        </div>
+
+        <!-- Bio Age -->
+        <div style="background: linear-gradient(135deg, #FAFAF8 0%, #F5F3EE 100%); border-radius: 20px; padding: 28px; flex-shrink: 0; width: 200px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+          <div style="font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 16px;">Biological Age</div>
+          <div style="display: flex; align-items: baseline; gap: 6px;">
+            <span style="font-family: 'Instrument Serif', serif; font-size: 52px; line-height: 1; color: var(--accent);">34</span>
+          </div>
+          <div style="margin-top: 12px; display: flex; align-items: center; gap: 6px;">
+            <span style="font-size: 12px; color: var(--text-tertiary);">Chronological:</span>
+            <span style="font-size: 14px; font-weight: 600; color: var(--text-secondary);">41</span>
+          </div>
+          <div style="margin-top: 8px; background: rgba(27,107,74,0.08); color: #1B6B4A; font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 980px;">↓ 7 years younger</div>
+        </div>
+
+        <!-- System scores grid -->
+        <div style="flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+          <div style="background: #FAFAF8; border-radius: 14px; padding: 16px; text-align: center; border: 1px solid rgba(0,0,0,0.03);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" stroke-width="1.5" style="margin-bottom: 8px;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            <div style="font-size: 24px; font-weight: 700; color: #1B6B4A; line-height: 1;">92</div>
+            <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 4px;">Heart</div>
+          </div>
+          <div style="background: #FAFAF8; border-radius: 14px; padding: 16px; text-align: center; border: 1px solid rgba(0,0,0,0.03);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="1.5" style="margin-bottom: 8px;"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            <div style="font-size: 24px; font-weight: 700; color: #D4A017; line-height: 1;">67</div>
+            <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 4px;">Metabolic</div>
+          </div>
+          <div style="background: #FAFAF8; border-radius: 14px; padding: 16px; text-align: center; border: 1px solid rgba(0,0,0,0.03);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" stroke-width="1.5" style="margin-bottom: 8px;"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            <div style="font-size: 24px; font-weight: 700; color: #1B6B4A; line-height: 1;">85</div>
+            <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 4px;">Hormones</div>
+          </div>
+          <div style="background: #FAFAF8; border-radius: 14px; padding: 16px; text-align: center; border: 1px solid rgba(0,0,0,0.03);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C44D3F" stroke-width="1.5" style="margin-bottom: 8px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <div style="font-size: 24px; font-weight: 700; color: #C44D3F; line-height: 1;">48</div>
+            <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 4px;">Inflammation</div>
+          </div>
+          <div style="background: #FAFAF8; border-radius: 14px; padding: 16px; text-align: center; border: 1px solid rgba(0,0,0,0.03);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" stroke-width="1.5" style="margin-bottom: 8px;"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <div style="font-size: 24px; font-weight: 700; color: #1B6B4A; line-height: 1;">88</div>
+            <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 4px;">Nutrients</div>
+          </div>
+          <div style="background: #FAFAF8; border-radius: 14px; padding: 16px; text-align: center; border: 1px solid rgba(0,0,0,0.03);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="1.5" style="margin-bottom: 8px;"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            <div style="font-size: 24px; font-weight: 700; color: #D4A017; line-height: 1;">71</div>
+            <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 4px;">Thyroid</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Biomarker bars -->
+      <div style="background: #FAFAF8; border-radius: 16px; padding: 24px 28px; margin-bottom: 20px;">
+        <div style="font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 20px;">Key Biomarkers</div>
+        <div style="display: flex; flex-direction: column; gap: 18px;">
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <div style="width: 110px; font-size: 13px; font-weight: 500; color: var(--text);">Vitamin D</div>
+            <div style="flex: 1; height: 6px; border-radius: 3px; background: linear-gradient(to right, #E8B4B0 0%, #E8B4B0 20%, #F0DCA0 20%, #F0DCA0 40%, #B5DFBF 40%, #B5DFBF 100%); position: relative;">
+              <div style="position: absolute; top: -8px; left: 55%; width: 22px; height: 22px; background: white; border: 2.5px solid #1B6B4A; border-radius: 50%; transform: translateX(-50%); box-shadow: 0 2px 8px rgba(27,107,74,0.2);"></div>
+            </div>
+            <div style="width: 90px; text-align: right; flex-shrink: 0;">
+              <span style="font-size: 15px; font-weight: 700; color: #1B6B4A;">55</span>
+              <span style="font-size: 11px; color: var(--text-tertiary); margin-left: 2px;">ng/mL</span>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <div style="width: 110px; font-size: 13px; font-weight: 500; color: var(--text);">hs-CRP</div>
+            <div style="flex: 1; height: 6px; border-radius: 3px; background: linear-gradient(to right, #B5DFBF 0%, #B5DFBF 40%, #F0DCA0 40%, #F0DCA0 60%, #E8B4B0 60%, #E8B4B0 100%); position: relative;">
+              <div style="position: absolute; top: -8px; left: 65%; width: 22px; height: 22px; background: white; border: 2.5px solid #C44D3F; border-radius: 50%; transform: translateX(-50%); box-shadow: 0 2px 8px rgba(196,77,63,0.2);"></div>
+            </div>
+            <div style="width: 90px; text-align: right; flex-shrink: 0;">
+              <span style="font-size: 15px; font-weight: 700; color: #C44D3F;">2.8</span>
+              <span style="font-size: 11px; color: var(--text-tertiary); margin-left: 2px;">mg/L</span>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <div style="width: 110px; font-size: 13px; font-weight: 500; color: var(--text);">Testosterone</div>
+            <div style="flex: 1; height: 6px; border-radius: 3px; background: linear-gradient(to right, #E8B4B0 0%, #E8B4B0 25%, #F0DCA0 25%, #F0DCA0 45%, #B5DFBF 45%, #B5DFBF 100%); position: relative;">
+              <div style="position: absolute; top: -8px; left: 35%; width: 22px; height: 22px; background: white; border: 2.5px solid #D4A017; border-radius: 50%; transform: translateX(-50%); box-shadow: 0 2px 8px rgba(212,160,23,0.2);"></div>
+            </div>
+            <div style="width: 90px; text-align: right; flex-shrink: 0;">
+              <span style="font-size: 15px; font-weight: 700; color: #D4A017;">485</span>
+              <span style="font-size: 11px; color: var(--text-tertiary); margin-left: 2px;">ng/dL</span>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <div style="width: 110px; font-size: 13px; font-weight: 500; color: var(--text);">ApoB</div>
+            <div style="flex: 1; height: 6px; border-radius: 3px; background: linear-gradient(to right, #B5DFBF 0%, #B5DFBF 50%, #F0DCA0 50%, #F0DCA0 70%, #E8B4B0 70%, #E8B4B0 100%); position: relative;">
+              <div style="position: absolute; top: -8px; left: 30%; width: 22px; height: 22px; background: white; border: 2.5px solid #1B6B4A; border-radius: 50%; transform: translateX(-50%); box-shadow: 0 2px 8px rgba(27,107,74,0.2);"></div>
+            </div>
+            <div style="width: 90px; text-align: right; flex-shrink: 0;">
+              <span style="font-size: 15px; font-weight: 700; color: #1B6B4A;">72</span>
+              <span style="font-size: 11px; color: var(--text-tertiary); margin-left: 2px;">mg/dL</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom row: Protocol + Trend -->
+      <div style="display: flex; gap: 16px;">
+        <div style="flex: 1; background: linear-gradient(135deg, #F0F7F2 0%, #E8F0EA 100%); border-radius: 16px; padding: 24px;">
+          <div style="font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 14px;">Your Protocol</div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.8); padding: 12px 16px; border-radius: 10px; font-size: 13px; backdrop-filter: blur(8px);">
+              <div><span style="font-weight: 600;">Omega-3</span> <span style="color: var(--text-tertiary);">2,000mg daily</span></div>
+              <span style="color: var(--accent); font-size: 12px; font-weight: 600;">Shop →</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.8); padding: 12px 16px; border-radius: 10px; font-size: 13px; backdrop-filter: blur(8px);">
+              <div><span style="font-weight: 600;">BPC-157</span> <span style="color: var(--text-tertiary);">250mcg subq</span></div>
+              <span style="color: var(--accent); font-size: 12px; font-weight: 600;">Shop →</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.8); padding: 12px 16px; border-radius: 10px; font-size: 13px; backdrop-filter: blur(8px);">
+              <div><span style="font-weight: 600;">Vitamin D3+K2</span> <span style="color: var(--text-tertiary);">5,000 IU</span></div>
+              <span style="color: var(--accent); font-size: 12px; font-weight: 600;">Shop →</span>
+            </div>
+          </div>
+        </div>
+        <div style="flex: 1; background: #FAFAF8; border-radius: 16px; padding: 24px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <div style="font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-secondary);">hs-CRP Trend</div>
+            <div style="font-size: 12px; font-weight: 700; color: #1B6B4A; background: rgba(27,107,74,0.08); padding: 3px 10px; border-radius: 980px;">↓ 68%</div>
+          </div>
+          <svg viewBox="0 0 280 90" style="width: 100%;">
+            <defs>
+              <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1B6B4A" stop-opacity="0.12"/><stop offset="100%" stop-color="#1B6B4A" stop-opacity="0"/></linearGradient>
+            </defs>
+            <line x1="20" y1="75" x2="260" y2="75" stroke="#E8E4DD" stroke-width="0.5"/>
+            <line x1="20" y1="45" x2="260" y2="45" stroke="#E8E4DD" stroke-width="0.5" stroke-dasharray="3"/>
+            <line x1="20" y1="15" x2="260" y2="15" stroke="#E8E4DD" stroke-width="0.5" stroke-dasharray="3"/>
+            <path d="M20,18 L70,28 L140,48 L210,63 L260,72 L260,75 L20,75 Z" fill="url(#areaGrad)"/>
+            <polyline points="20,18 70,28 140,48 210,63 260,72" fill="none" stroke="#1B6B4A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="20" cy="18" r="4" fill="#fff" stroke="#C44D3F" stroke-width="2"/>
+            <circle cx="70" cy="28" r="4" fill="#fff" stroke="#D4A017" stroke-width="2"/>
+            <circle cx="140" cy="48" r="4" fill="#fff" stroke="#D4A017" stroke-width="2"/>
+            <circle cx="210" cy="63" r="4" fill="#fff" stroke="#1B6B4A" stroke-width="2"/>
+            <circle cx="260" cy="72" r="4" fill="#fff" stroke="#1B6B4A" stroke-width="2"/>
+            <text x="16" y="88" font-size="9" fill="#999" font-family="Inter">Jan</text>
+            <text x="65" y="88" font-size="9" fill="#999" font-family="Inter">Apr</text>
+            <text x="135" y="88" font-size="9" fill="#999" font-family="Inter">Jul</text>
+            <text x="205" y="88" font-size="9" fill="#999" font-family="Inter">Oct</text>
+            <text x="252" y="88" font-size="9" fill="#999" font-family="Inter">Jan</text>
           </svg>
-          <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
-            <div style="font-family: 'Instrument Serif', serif; font-size: 36px; line-height: 1;">78</div>
-            <div style="font-size: 10px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 1px;">Score</div>
-          </div>
         </div>
-        <div style="font-size: 12px; font-weight: 600; color: var(--accent); margin-top: 8px;">LIPA SCORE</div>
-      </div>
-
-      <!-- Bio Age -->
-      <div style="flex-shrink: 0; text-align: center; padding: 20px 32px; background: var(--section-alt); border-radius: 12px;">
-        <div style="font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 8px;">Biological Age</div>
-        <div style="display: flex; align-items: baseline; gap: 8px; justify-content: center;">
-          <span style="font-family: 'Instrument Serif', serif; font-size: 40px; color: var(--accent);">34</span>
-          <span style="font-size: 14px; color: var(--text-tertiary);">vs</span>
-          <span style="font-family: 'Instrument Serif', serif; font-size: 40px; color: var(--text-secondary);">41</span>
-        </div>
-        <div style="font-size: 12px; color: var(--text-tertiary);">7 years younger than actual</div>
-      </div>
-
-      <!-- System Scores -->
-      <div style="flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
-        <div style="text-align: center; padding: 12px; background: var(--section-alt); border-radius: 10px;">
-          <div style="font-size: 22px; font-weight: 600; color: #1B6B4A;">92</div>
-          <div style="font-size: 11px; color: var(--text-secondary);">Heart</div>
-        </div>
-        <div style="text-align: center; padding: 12px; background: var(--section-alt); border-radius: 10px;">
-          <div style="font-size: 22px; font-weight: 600; color: #D4A017;">67</div>
-          <div style="font-size: 11px; color: var(--text-secondary);">Metabolic</div>
-        </div>
-        <div style="text-align: center; padding: 12px; background: var(--section-alt); border-radius: 10px;">
-          <div style="font-size: 22px; font-weight: 600; color: #1B6B4A;">85</div>
-          <div style="font-size: 11px; color: var(--text-secondary);">Hormones</div>
-        </div>
-        <div style="text-align: center; padding: 12px; background: var(--section-alt); border-radius: 10px;">
-          <div style="font-size: 22px; font-weight: 600; color: #C44D3F;">48</div>
-          <div style="font-size: 11px; color: var(--text-secondary);">Inflammation</div>
-        </div>
-        <div style="text-align: center; padding: 12px; background: var(--section-alt); border-radius: 10px;">
-          <div style="font-size: 22px; font-weight: 600; color: #1B6B4A;">88</div>
-          <div style="font-size: 11px; color: var(--text-secondary);">Nutrients</div>
-        </div>
-        <div style="text-align: center; padding: 12px; background: var(--section-alt); border-radius: 10px;">
-          <div style="font-size: 22px; font-weight: 600; color: #D4A017;">71</div>
-          <div style="font-size: 11px; color: var(--text-secondary);">Thyroid</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Biomarker bars -->
-    <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px;">
-      <div style="font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--text-secondary);">Key Biomarkers</div>
-
-      <!-- Vitamin D -->
-      <div style="display: flex; align-items: center; gap: 16px;">
-        <div style="width: 120px; font-size: 13px; font-weight: 500; flex-shrink: 0;">Vitamin D</div>
-        <div style="flex: 1; height: 8px; border-radius: 4px; background: linear-gradient(to right, #C44D3F 0%, #C44D3F 20%, #D4A017 20%, #D4A017 40%, #1B6B4A 40%, #1B6B4A 100%); position: relative;">
-          <div style="position: absolute; top: -6px; left: 42%; width: 20px; height: 20px; background: var(--white); border: 2px solid #1B6B4A; border-radius: 50%; transform: translateX(-50%);"></div>
-        </div>
-        <div style="width: 80px; text-align: right; font-size: 14px; font-weight: 600; flex-shrink: 0;">55 <span style="font-weight: 400; color: var(--text-tertiary); font-size: 12px;">ng/mL</span></div>
-      </div>
-
-      <!-- hs-CRP -->
-      <div style="display: flex; align-items: center; gap: 16px;">
-        <div style="width: 120px; font-size: 13px; font-weight: 500; flex-shrink: 0;">hs-CRP</div>
-        <div style="flex: 1; height: 8px; border-radius: 4px; background: linear-gradient(to right, #1B6B4A 0%, #1B6B4A 40%, #D4A017 40%, #D4A017 60%, #C44D3F 60%, #C44D3F 100%); position: relative;">
-          <div style="position: absolute; top: -6px; left: 65%; width: 20px; height: 20px; background: var(--white); border: 2px solid #C44D3F; border-radius: 50%; transform: translateX(-50%);"></div>
-        </div>
-        <div style="width: 80px; text-align: right; font-size: 14px; font-weight: 600; color: #C44D3F; flex-shrink: 0;">2.8 <span style="font-weight: 400; font-size: 12px;">mg/L</span></div>
-      </div>
-
-      <!-- Testosterone -->
-      <div style="display: flex; align-items: center; gap: 16px;">
-        <div style="width: 120px; font-size: 13px; font-weight: 500; flex-shrink: 0;">Testosterone</div>
-        <div style="flex: 1; height: 8px; border-radius: 4px; background: linear-gradient(to right, #C44D3F 0%, #C44D3F 25%, #D4A017 25%, #D4A017 45%, #1B6B4A 45%, #1B6B4A 100%); position: relative;">
-          <div style="position: absolute; top: -6px; left: 35%; width: 20px; height: 20px; background: var(--white); border: 2px solid #D4A017; border-radius: 50%; transform: translateX(-50%);"></div>
-        </div>
-        <div style="width: 80px; text-align: right; font-size: 14px; font-weight: 600; color: #D4A017; flex-shrink: 0;">485 <span style="font-weight: 400; font-size: 12px;">ng/dL</span></div>
-      </div>
-
-      <!-- ApoB -->
-      <div style="display: flex; align-items: center; gap: 16px;">
-        <div style="width: 120px; font-size: 13px; font-weight: 500; flex-shrink: 0;">ApoB</div>
-        <div style="flex: 1; height: 8px; border-radius: 4px; background: linear-gradient(to right, #1B6B4A 0%, #1B6B4A 50%, #D4A017 50%, #D4A017 70%, #C44D3F 70%, #C44D3F 100%); position: relative;">
-          <div style="position: absolute; top: -6px; left: 30%; width: 20px; height: 20px; background: var(--white); border: 2px solid #1B6B4A; border-radius: 50%; transform: translateX(-50%);"></div>
-        </div>
-        <div style="width: 80px; text-align: right; font-size: 14px; font-weight: 600; flex-shrink: 0;">72 <span style="font-weight: 400; color: var(--text-tertiary); font-size: 12px;">mg/dL</span></div>
-      </div>
-    </div>
-
-    <!-- Protocol preview -->
-    <div style="display: flex; gap: 16px;">
-      <div style="flex: 1; background: var(--section-alt); border-radius: 12px; padding: 20px;">
-        <div style="font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 10px;">Your Protocol</div>
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; background: var(--white); padding: 10px 14px; border-radius: 8px; font-size: 13px;">
-            <span>Omega-3 2,000mg</span>
-            <span style="color: var(--accent); font-size: 12px; font-weight: 500;">Shop →</span>
-          </div>
-          <div style="display: flex; justify-content: space-between; align-items: center; background: var(--white); padding: 10px 14px; border-radius: 8px; font-size: 13px;">
-            <span>BPC-157 250mcg</span>
-            <span style="color: var(--accent); font-size: 12px; font-weight: 500;">Shop →</span>
-          </div>
-          <div style="display: flex; justify-content: space-between; align-items: center; background: var(--white); padding: 10px 14px; border-radius: 8px; font-size: 13px;">
-            <span>Vitamin D3 5,000 IU</span>
-            <span style="color: var(--accent); font-size: 12px; font-weight: 500;">Shop →</span>
-          </div>
-        </div>
-      </div>
-      <div style="flex: 1; background: var(--section-alt); border-radius: 12px; padding: 20px;">
-        <div style="font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 10px;">hs-CRP Trend</div>
-        <svg viewBox="0 0 280 100" style="width: 100%;">
-          <line x1="0" y1="80" x2="280" y2="80" stroke="#E8E4DD" stroke-width="1"/>
-          <line x1="0" y1="50" x2="280" y2="50" stroke="#E8E4DD" stroke-width="1" stroke-dasharray="4"/>
-          <line x1="0" y1="20" x2="280" y2="20" stroke="#E8E4DD" stroke-width="1" stroke-dasharray="4"/>
-          <polyline points="20,25 70,35 140,55 210,70 260,78" fill="none" stroke="#1B6B4A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <circle cx="20" cy="25" r="4" fill="#C44D3F"/>
-          <circle cx="70" cy="35" r="4" fill="#D4A017"/>
-          <circle cx="140" cy="55" r="4" fill="#D4A017"/>
-          <circle cx="210" cy="70" r="4" fill="#1B6B4A"/>
-          <circle cx="260" cy="78" r="4" fill="#1B6B4A"/>
-          <text x="20" y="95" font-size="9" fill="#999" font-family="Inter">Jan</text>
-          <text x="70" y="95" font-size="9" fill="#999" font-family="Inter">Apr</text>
-          <text x="140" y="95" font-size="9" fill="#999" font-family="Inter">Jul</text>
-          <text x="210" y="95" font-size="9" fill="#999" font-family="Inter">Oct</text>
-          <text x="260" y="95" font-size="9" fill="#999" font-family="Inter">Jan</text>
-          <text x="255" y="12" font-size="10" fill="#1B6B4A" font-family="Inter" font-weight="600">↓ 68%</text>
-        </svg>
       </div>
     </div>
   </div>
-  <p style="text-align: center; font-size: 13px; color: var(--text-tertiary); margin-top: 16px;">Sample dashboard — actual product in development</p>
+  <p style="text-align: center; font-size: 13px; color: var(--text-tertiary); margin-top: 16px;">Product preview — launching 2026</p>
 </section>
 
 <section class="section">
