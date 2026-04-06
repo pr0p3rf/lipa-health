@@ -324,21 +324,34 @@
       .waitlist-form button { border-radius: 980px; margin-top: 8px; }
       footer { flex-direction: column; gap: 8px; text-align: center; }
       /* Dashboard mobile */
-      .dash-section { padding: 40px 16px 20px !important; }
-      .dash-section > div { padding: 20px 16px !important; border-radius: 16px !important; }
-      .dash-top { flex-direction: column !important; align-items: stretch !important; }
+      .dash-section { padding: 24px 12px 20px !important; }
+      .dash-section > div { padding: 16px 12px !important; border-radius: 16px !important; }
+      .dash-section > div > div[style*="padding: 36px 32px"],
+      .dash-section > div > div[style*="padding: 24px 28px"] { padding: 16px 12px !important; }
+      .dash-top { flex-direction: column !important; align-items: stretch !important; gap: 16px !important; }
       .dash-top > div { width: 100% !important; }
-      .dash-top > div:last-child { grid-template-columns: repeat(3, 1fr) !important; }
+      .dash-top > div:last-child { grid-template-columns: repeat(3, 1fr) !important; gap: 8px !important; }
       .dash-trends { flex-direction: column !important; }
+      /* Dashboard top bar */
+      .dash-section [style*="padding: 16px 32px"] { padding: 12px 16px !important; }
+      .dash-section [style*="display: flex; gap: 20px; font-size: 12px"] { display: none !important; }
+      /* Biomarker bars label width */
+      .dash-section [style*="width: 110px"] { width: 80px !important; font-size: 12px !important; }
+      .dash-section [style*="width: 90px"] { width: 70px !important; }
       /* Disease prevention grid */
       .diff-section [style*="grid-template-columns: repeat(3"] { grid-template-columns: 1fr !important; }
       /* Protocol grid */
       [style*="grid-template-columns: repeat(3, 1fr); gap: 10px"] { grid-template-columns: 1fr !important; }
-      /* Action layer grid */
+      /* Action layer + peptide grids */
       [style*="grid-template-columns: 1fr 1fr; gap: 48px"],
-      [style*="grid-template-columns: 1fr 1fr; gap: 40px"] { grid-template-columns: 1fr !important; }
+      [style*="grid-template-columns: 1fr 1fr; gap: 40px"] { grid-template-columns: 1fr !important; gap: 24px !important; }
       /* Trust stats */
-      [style*="justify-content: center; gap: 40px"] { flex-wrap: wrap !important; gap: 20px !important; justify-content: space-around !important; }
+      [style*="justify-content: center; gap: 40px"] { flex-wrap: wrap !important; gap: 16px !important; justify-content: space-around !important; }
+      /* Insight card */
+      .dash-section [style*="display: flex; gap: 16px; align-items: start"] { flex-direction: column !important; }
+      /* General section padding */
+      [style*="padding: 120px 48px"],
+      [style*="padding: 100px 48px"] { padding-left: 20px !important; padding-right: 20px !important; }
     }
   </style>
 </head>
@@ -375,7 +388,7 @@
 </script>
 <section class="hero">
   <div class="hero-eyebrow">Launching across Europe</div>
-  <h1>Know exactly what your body needs.</h1>
+  <h1>Know exactly what<br>your body needs.</h1>
   <p class="hero-sub">Upload a blood test or book one at 500+ labs across Europe. Get a personalized, research-backed protocol — supplements, peptides, and lifestyle changes — with direct links to vetted vendors. Retest and watch your numbers improve. No more guessing.</p>
   <form class="waitlist-form" id="waitlist" onsubmit="return submitWaitlist(event, this)">
     <input type="email" name="email" placeholder="Enter your email" required>
