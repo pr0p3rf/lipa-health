@@ -329,7 +329,7 @@
 <body>
 
 <nav>
-  <a href="/" class="logo">
+  <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" class="logo">
     <svg class="logo-icon" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="14" cy="14" r="13" stroke="#1B6B4A" stroke-width="1.5"/>
       <path d="M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z" fill="#1B6B4A" opacity="0.15"/>
@@ -338,7 +338,7 @@
     </svg>
     Lipa
   </a>
-  <a href="#waitlist" class="nav-cta">Join Waitlist</a>
+  <a href="#join" class="nav-cta">Join Waitlist</a>
 </nav>
 
 <div class="hero-wrapper">
@@ -811,7 +811,7 @@
   </div>
 </section>
 
-<section class="bottom-cta">
+<section class="bottom-cta" id="join">
   <h2>Your healthiest years are ahead.</h2>
   <p>The same precision health insights longevity physicians charge thousands for — now accessible to anyone serious about optimizing their biology.</p>
   <form class="waitlist-form" onsubmit="return submitWaitlist(event, this)">
