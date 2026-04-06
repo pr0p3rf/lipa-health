@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lipa Health — What Your Doctor Won't Tell You</title>
   <meta name="description" content="100+ biomarkers tested. personalized personalized protocols — supplements, peptides, and lifestyle changes from vetted sources. Track your progress over time. Launching across Europe.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'><circle cx='14' cy='14' r='13' fill='none' stroke='%231B6B4A' stroke-width='1.5'/><path d='M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z' fill='%231B6B4A' opacity='0.3' stroke='%231B6B4A' stroke-width='1'/></svg>">
+  <meta property="og:title" content="Lipa Health — What Your Doctor Won't Tell You">
+  <meta property="og:description" content="100+ biomarkers tested. Personalized, research-backed protocols. Supplements, peptides, and lifestyle changes — all backed by science. Launching across Europe.">
+  <meta property="og:type" content="website">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Instrument+Serif&display=swap" rel="stylesheet">
   <style>
@@ -357,7 +361,7 @@
   <div class="hero-eyebrow">Launching across Europe</div>
   <h1>What your doctor won't tell you.</h1>
   <p class="hero-sub">100+ biomarkers tested against the ranges where your body actually thrives — not just the "normal" your doctor settles for. Every recommendation backed by the latest research, with the science to prove it.</p>
-  <form class="waitlist-form" id="waitlist" action="https://buttondown.com/api/emails/embed-subscribe/lipa" method="post" target="_blank">
+  <form class="waitlist-form" id="waitlist" onsubmit="return submitWaitlist(event, this)">
     <input type="email" name="email" placeholder="Enter your email" required>
     <button type="submit">Get Early Access</button>
   </form>
@@ -810,7 +814,7 @@
 <section class="bottom-cta">
   <h2>Your healthiest years are ahead.</h2>
   <p>The same precision health insights longevity physicians charge thousands for — now accessible to anyone serious about optimizing their biology.</p>
-  <form class="waitlist-form" action="https://buttondown.com/api/emails/embed-subscribe/lipa" method="post" target="_blank">
+  <form class="waitlist-form" onsubmit="return submitWaitlist(event, this)">
     <input type="email" name="email" placeholder="Enter your email" required>
     <button type="submit">Get Early Access</button>
   </form>
@@ -820,5 +824,44 @@
   <span>Lipa Health &copy; 2026</span>
 </footer>
 
+<script>
+async function submitWaitlist(e, form) {
+  e.preventDefault();
+  var btn = form.querySelector('button');
+  var input = form.querySelector('input');
+  var email = input.value.trim();
+  if (!email) return false;
+
+  btn.textContent = '...';
+  btn.disabled = true;
+
+  try {
+    var res = await fetch('https://ovprbhjtwtthuldcdlgq.supabase.co/rest/v1/waitlist', {
+      method: 'POST',
+      headers: {
+        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im92cHJiaGp0d3R0aHVsZGNkbGdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0OTEzMTgsImV4cCI6MjA5MTA2NzMxOH0.n3clDryaCjEfGebFzk2ZiEacKd5xpVAXNUUGWPjklOA',
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ email: email })
+    });
+
+    if (res.ok || res.status === 201) {
+      form.innerHTML = '<div style="font-size: 16px; font-weight: 600; color: #1B6B4A; padding: 14px 0;">You\'re on the list. We\'ll be in touch.</div>';
+    } else if (res.status === 409) {
+      form.innerHTML = '<div style="font-size: 16px; font-weight: 600; color: #1B6B4A; padding: 14px 0;">You\'re already on the list!</div>';
+    } else {
+      throw new Error('Failed');
+    }
+  } catch (err) {
+    btn.textContent = 'Get Early Access';
+    btn.disabled = false;
+    input.style.borderColor = '#C44D3F';
+    input.placeholder = 'Something went wrong. Try again.';
+    input.value = '';
+  }
+  return false;
+}
+</script>
 </body>
 </html>
