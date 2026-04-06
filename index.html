@@ -323,6 +323,22 @@
       .waitlist-form input { border-right: 1px solid var(--border); border-radius: 980px; }
       .waitlist-form button { border-radius: 980px; margin-top: 8px; }
       footer { flex-direction: column; gap: 8px; text-align: center; }
+      /* Dashboard mobile */
+      .dash-section { padding: 40px 16px 20px !important; }
+      .dash-section > div { padding: 20px 16px !important; border-radius: 16px !important; }
+      .dash-top { flex-direction: column !important; align-items: stretch !important; }
+      .dash-top > div { width: 100% !important; }
+      .dash-top > div:last-child { grid-template-columns: repeat(3, 1fr) !important; }
+      .dash-trends { flex-direction: column !important; }
+      /* Disease prevention grid */
+      .diff-section [style*="grid-template-columns: repeat(3"] { grid-template-columns: 1fr !important; }
+      /* Protocol grid */
+      [style*="grid-template-columns: repeat(3, 1fr); gap: 10px"] { grid-template-columns: 1fr !important; }
+      /* Action layer grid */
+      [style*="grid-template-columns: 1fr 1fr; gap: 48px"],
+      [style*="grid-template-columns: 1fr 1fr; gap: 40px"] { grid-template-columns: 1fr !important; }
+      /* Trust stats */
+      [style*="justify-content: center; gap: 40px"] { flex-wrap: wrap !important; gap: 20px !important; justify-content: space-around !important; }
     }
   </style>
 </head>
@@ -389,7 +405,7 @@
 </div>
 
 <!-- Product Dashboard Preview -->
-<section style="padding: 80px 48px 40px; max-width: 1060px; margin: 0 auto;">
+<section class="dash-section" style="padding: 80px 48px 40px; max-width: 1060px; margin: 0 auto;">
   <div style="background: linear-gradient(145deg, #FFFFFF 0%, #F8FAF8 100%); border: 1px solid rgba(0,0,0,0.04); border-radius: 24px; padding: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 12px 48px rgba(0,0,0,0.06); overflow: hidden;">
 
     <!-- Dashboard top bar -->
@@ -408,7 +424,7 @@
 
     <div style="padding: 36px 32px;">
       <!-- Top row: Score + Bio Age + Systems -->
-      <div style="display: flex; gap: 24px; margin-bottom: 32px;">
+      <div class="dash-top" style="display: flex; gap: 24px; margin-bottom: 32px;">
 
         <!-- Lipa Score -->
         <div style="background: linear-gradient(135deg, #F0F7F2 0%, #E4F0E7 100%); border-radius: 20px; padding: 28px 32px; text-align: center; flex-shrink: 0; width: 180px;">
@@ -587,7 +603,7 @@
       </div>
 
       <!-- Trends row (two charts) -->
-      <div style="display: flex; gap: 16px;">
+      <div class="dash-trends" style="display: flex; gap: 16px;">
         <div style="flex: 1; background: #FAFAF8; border-radius: 16px; padding: 24px;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
             <div style="font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-secondary);">Inflammation (hs-CRP)</div>
