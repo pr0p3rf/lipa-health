@@ -79,7 +79,9 @@ const translations = {
     dashPattern: "Pattern Detected",
     dashTrendInflammation: "Inflammation (hs-CRP)",
     dashSinceOmega: "Since starting Omega-3 + BPC-157 protocol",
-    dashSinceD3: "Since starting D3+K2 5,000 IU protocol"
+    dashSinceD3: "Since starting D3+K2 5,000 IU protocol",
+    dashTabOverview: "Overview", dashTabBiomarkers: "Biomarkers", dashTabProtocol: "Protocol", dashTabTrends: "Trends",
+    dashPatternText: "Your elevated hs-CRP (2.8) combined with suboptimal testosterone (485) and low-normal vitamin D (55) suggests <strong style=\"color: var(--text);\">systemic inflammation may be suppressing hormonal function</strong>. Addressing inflammation first is likely to improve testosterone without direct intervention."
   },
   pl: {
     heroEyebrow: "Startujemy w Europie",
@@ -161,7 +163,9 @@ const translations = {
     dashPattern: "Wykryto wzorzec",
     dashTrendInflammation: "Stan zapalny (hs-CRP)",
     dashSinceOmega: "Od rozpoczęcia protokołu Omega-3 + BPC-157",
-    dashSinceD3: "Od rozpoczęcia protokołu D3+K2 5000 IU"
+    dashSinceD3: "Od rozpoczęcia protokołu D3+K2 5000 IU",
+    dashTabOverview: "Przegląd", dashTabBiomarkers: "Biomarkery", dashTabProtocol: "Protokół", dashTabTrends: "Trendy",
+    dashPatternText: "Podwyższone hs-CRP (2,8) w połączeniu z suboptymalnym testosteronem (485) i nisko-normalną witaminą D (55) sugeruje, że <strong style=\"color: var(--text);\">ogólnoustrojowy stan zapalny może tłumić funkcje hormonalne</strong>. Zajęcie się stanem zapalnym w pierwszej kolejności prawdopodobnie poprawi testosteron bez bezpośredniej interwencji."
   },
   nl: {
     heroEyebrow: "Lancering in Europa",
@@ -243,7 +247,9 @@ const translations = {
     dashPattern: "Patroon gedetecteerd",
     dashTrendInflammation: "Ontsteking (hs-CRP)",
     dashSinceOmega: "Sinds start Omega-3 + BPC-157 protocol",
-    dashSinceD3: "Sinds start D3+K2 5.000 IU protocol"
+    dashSinceD3: "Sinds start D3+K2 5.000 IU protocol",
+    dashTabOverview: "Overzicht", dashTabBiomarkers: "Biomarkers", dashTabProtocol: "Protocol", dashTabTrends: "Trends",
+    dashPatternText: "Je verhoogde hs-CRP (2,8) in combinatie met suboptimaal testosteron (485) en laag-normaal vitamine D (55) suggereert dat <strong style=\"color: var(--text);\">systemische ontsteking de hormonale functie kan onderdrukken</strong>. Eerst de ontsteking aanpakken zal waarschijnlijk het testosteron verbeteren zonder directe interventie."
   },
   es: {
     heroEyebrow: "Lanzamiento en Europa",
@@ -325,7 +331,9 @@ const translations = {
     dashPattern: "Patrón detectado",
     dashTrendInflammation: "Inflamación (hs-CRP)",
     dashSinceOmega: "Desde el inicio del protocolo Omega-3 + BPC-157",
-    dashSinceD3: "Desde el inicio del protocolo D3+K2 5.000 UI"
+    dashSinceD3: "Desde el inicio del protocolo D3+K2 5.000 UI",
+    dashTabOverview: "Resumen", dashTabBiomarkers: "Biomarcadores", dashTabProtocol: "Protocolo", dashTabTrends: "Tendencias",
+    dashPatternText: "Tu hs-CRP elevada (2,8) combinada con testosterona subóptima (485) y vitamina D bajo-normal (55) sugiere que <strong style=\"color: var(--text);\">la inflamación sistémica puede estar suprimiendo la función hormonal</strong>. Abordar la inflamación primero probablemente mejorará la testosterona sin intervención directa."
   }
 };
 
