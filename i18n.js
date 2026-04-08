@@ -1,0 +1,209 @@
+const translations = {
+  en: {
+    heroEyebrow: "Launching across Europe",
+    heroTitle: "Know exactly what<br>your body needs.",
+    heroSub: "Upload a blood test or book one at 500+ labs across Europe. Get a personalized, research-backed protocol — supplements, peptides, and lifestyle changes — with direct links to vetted vendors. Retest and watch your numbers improve. No more guessing.",
+    ctaButton: "Get Early Access",
+    ctaFine: "Join the waitlist for early access and founding member pricing.",
+    stat1Num: "100+", stat1Label: "Biomarkers analyzed",
+    stat2Num: "500+", stat2Label: "Partner labs across Europe",
+    stat3Num: "48h", stat3Label: "From blood draw to protocol",
+    stat4Num: "1000s", stat4Label: "Of conditions screened",
+    howEyebrow: "How it works",
+    howTitle: "From a single blood draw to a plan that evolves with you.",
+    step1Num: "Step 01", step1Title: "Get tested — or upload what you have", step1Desc: "Visit any partner lab near you for 100+ biomarkers, or upload results from a recent blood test you already have. PDF, photo, or manual entry — we work with any lab format.",
+    step2Num: "Step 02", step2Title: "See the full picture", step2Desc: "Your results are analyzed against the ranges where your body actually thrives — not just \"normal.\" We cross-reference your markers against the latest peer-reviewed research, identify patterns your doctor would miss, and show you exactly what needs attention.",
+    step3Num: "Step 03", step3Title: "Your protocol, not the internet's", step3Desc: "Cut through the noise. Your plan is built from your blood, not generic advice. Every recommendation backed by research, dosed for your biology, and linked to trusted sources. One place. Zero confusion.",
+    step4Num: "Step 04", step4Title: "Track, optimize, stay ahead", step4Desc: "Retest quarterly. Connect your wearables. Watch your biomarkers improve. Your protocol evolves automatically — new research, better vendors, new products pushed to you as they emerge.",
+    detectionEyebrow: "Early detection",
+    detectionTitle: "Catch what your annual physical misses.",
+    detectionSub: "Most diseases are preventable — if caught early. Standard check-ups test a handful of markers. We test 100+ and screen for patterns that emerge years before symptoms appear.",
+    cardio: "Cardiovascular risk", cardioDesc: "ApoB, Lp(a), hs-CRP, advanced lipid ratios. The markers that predict heart disease 10-20 years before an event — markers most GPs never order.",
+    metabolic: "Metabolic health", metabolicDesc: "Fasting insulin, HbA1c, HOMA-IR, glucose. Detect insulin resistance and pre-diabetes years before a diagnosis — when it's still fully reversible.",
+    inflammation: "Inflammation", inflammationDesc: "Chronic inflammation is the root of most disease. We track hs-CRP, homocysteine, ESR, and ferritin to catch systemic inflammation before it causes damage.",
+    thyroid: "Thyroid function", thyroidDesc: "Full panel: TSH, fT3, fT4, antibodies. Not just the single TSH test your GP runs. Subclinical thyroid dysfunction affects energy, weight, mood, and metabolism.",
+    hormones: "Hormonal balance", hormonesDesc: "Testosterone, estrogen, DHEA-S, cortisol. Hormonal decline drives aging. We track the full picture and show what's optimizable — naturally or with targeted protocols.",
+    organs: "Organ health", organsDesc: "Liver (ALT, AST, GGT), kidneys (eGFR, creatinine), blood (CBC with differential). Monitor the systems that fail silently — until they don't.",
+    detectionNote: "Our system analyzes patterns across all your markers simultaneously — not one at a time like a GP. Multi-marker pattern recognition catches risk signals that individual tests miss. When something needs medical attention, we tell you exactly what to discuss with your doctor.",
+    whyEyebrow: "Why Lipa",
+    whyTitle: "What your doctor doesn't tell you.",
+    optimal: "Optimal, not normal", optimalDesc: "A vitamin D of 32 is \"within range.\" But 55 is where your body actually thrives. We show you the gap — and exactly how to close it.",
+    connected: "Connected markers", connectedDesc: "Your biomarkers tell a story together. Elevated inflammation plus low vitamin D plus borderline testosterone points to a root cause — not three separate problems.",
+    protocols: "Protocols, not PDFs", protocolsDesc: "Every result comes with a clear action plan. What to take, how much, where to buy it. One click. No Googling.",
+    progress: "Progress over time", progressDesc: "After two or three tests, you see trajectory lines — proof that your protocol is working. That's something no single blood test can give you.",
+    longevity: "Longevity-grade panels", longevityDesc: "We test the markers most GPs skip: ApoB, fasting insulin, hs-CRP, homocysteine, full thyroid, omega-3 index. The markers that predict healthspan.",
+    optimizers: "Built for optimizers", optimizersDesc: "Running a supplement stack? Trying a new protocol? Lipa gives you the biomarker data to prove what's actually moving the needle.",
+    trustEyebrow: "Built with rigor",
+    trustTitle: "Science-first. No hype.",
+    medOversight: "Medical oversight", medOversightDesc: "Every protocol reviewed by licensed physicians. Flagged results trigger a clinical review before you see them.",
+    researchBacked: "Research-backed", researchBackedDesc: "Every recommendation cites the underlying study. Confidence scores tell you whether the evidence is strong or emerging. No guesswork.",
+    gdpr: "GDPR compliant", gdprDesc: "Your health data is encrypted, stored in the EU, and never shared. You can delete everything with one click. Your data, your control.",
+    bottomTitle: "Your healthiest years are ahead.",
+    bottomSub: "The same precision health insights longevity physicians charge thousands for — now accessible to anyone serious about optimizing their biology.",
+    privacyLink: "Privacy Policy"
+  },
+  pl: {
+    heroEyebrow: "Startujemy w Europie",
+    heroTitle: "Dowiedz się, czego<br>naprawdę potrzebuje Twoje ciało.",
+    heroSub: "Prześlij wyniki badań krwi lub umów się w jednym z 500+ laboratoriów w Europie. Otrzymaj spersonalizowany protokół oparty na badaniach naukowych — suplementy, peptydy i zmiany stylu życia — z linkami do sprawdzonych dostawców. Powtórz badania i obserwuj poprawę.",
+    ctaButton: "Dołącz do listy",
+    ctaFine: "Zapisz się na wczesny dostęp i cenę dla założycieli.",
+    stat1Num: "100+", stat1Label: "Analizowanych biomarkerów",
+    stat2Num: "500+", stat2Label: "Laboratoriów partnerskich w Europie",
+    stat3Num: "48h", stat3Label: "Od pobrania krwi do protokołu",
+    stat4Num: "1000+", stat4Label: "Wykrywanych schorzeń",
+    howEyebrow: "Jak to działa",
+    howTitle: "Od jednego pobrania krwi do planu, który ewoluuje razem z Tobą.",
+    step1Num: "Krok 01", step1Title: "Zbadaj się — lub prześlij wyniki", step1Desc: "Odwiedź dowolne laboratorium partnerskie na badanie 100+ biomarkerów lub prześlij wyniki ostatnich badań krwi. PDF, zdjęcie lub ręczne wprowadzenie — obsługujemy każdy format.",
+    step2Num: "Krok 02", step2Title: "Zobacz pełny obraz", step2Desc: "Twoje wyniki są analizowane względem zakresów, w których Twoje ciało naprawdę dobrze funkcjonuje — nie tylko \"normy.\" Krzyżujemy Twoje markery z najnowszymi badaniami naukowymi i identyfikujemy wzorce, które Twój lekarz przeoczy.",
+    step3Num: "Krok 03", step3Title: "Twój protokół, nie z internetu", step3Desc: "Koniec z chaosem informacyjnym. Twój plan oparty jest na Twojej krwi, nie na ogólnych poradach. Każda rekomendacja poparta badaniami, dostosowana do Twojej biologii, z linkami do zaufanych źródeł.",
+    step4Num: "Krok 04", step4Title: "Śledź, optymalizuj, bądź na bieżąco", step4Desc: "Powtarzaj badania co kwartał. Podłącz urządzenia wearable. Obserwuj poprawę biomarkerów. Twój protokół ewoluuje automatycznie — nowe badania, lepsi dostawcy, nowe produkty.",
+    detectionEyebrow: "Wczesne wykrywanie",
+    detectionTitle: "Wykryj to, co umknie podczas zwykłych badań.",
+    detectionSub: "Większości chorób można zapobiec — jeśli zostaną wykryte odpowiednio wcześnie. Standardowe badania kontrolne sprawdzają kilka markerów. My badamy ponad 100 i szukamy wzorców, które pojawiają się lata przed objawami.",
+    cardio: "Ryzyko sercowo-naczyniowe", cardioDesc: "ApoB, Lp(a), hs-CRP, zaawansowane wskaźniki lipidowe. Markery przewidujące choroby serca 10-20 lat przed zdarzeniem — markery, których większość lekarzy nigdy nie zleca.",
+    metabolic: "Zdrowie metaboliczne", metabolicDesc: "Insulina na czczo, HbA1c, HOMA-IR, glukoza. Wykryj insulinooporność i stan przedcukrzycowy lata przed diagnozą — gdy jest jeszcze w pełni odwracalny.",
+    inflammation: "Stan zapalny", inflammationDesc: "Przewlekły stan zapalny jest przyczyną większości chorób. Śledzimy hs-CRP, homocysteinę, OB i ferrytynę, aby wykryć systemowy stan zapalny, zanim wyrządzi szkody.",
+    thyroid: "Funkcja tarczycy", thyroidDesc: "Pełny panel: TSH, fT3, fT4, przeciwciała. Nie tylko pojedynczy test TSH. Subkliniczne zaburzenia tarczycy wpływają na energię, wagę, nastrój i metabolizm.",
+    hormones: "Równowaga hormonalna", hormonesDesc: "Testosteron, estrogen, DHEA-S, kortyzol. Spadek hormonów przyspiesza starzenie. Śledzimy pełny obraz i pokazujemy, co można zoptymalizować.",
+    organs: "Zdrowie narządów", organsDesc: "Wątroba (ALT, AST, GGT), nerki (eGFR, kreatynina), krew (morfologia). Monitoruj układy, które zawodzą po cichu — dopóki nie jest za późno.",
+    detectionNote: "Nasz system analizuje wzorce we wszystkich markerach jednocześnie — nie jeden po drugim jak lekarz. Rozpoznawanie wzorców wielomarkerowych wychwytuje sygnały ryzyka, które pojedyncze testy pomijają.",
+    whyEyebrow: "Dlaczego Lipa",
+    whyTitle: "Czego Twój lekarz Ci nie powie.",
+    optimal: "Optymalne, nie normalne", optimalDesc: "Witamina D na poziomie 32 jest \"w normie.\" Ale 55 to poziom, przy którym Twoje ciało naprawdę dobrze funkcjonuje. Pokazujemy różnicę — i jak ją zniwelować.",
+    connected: "Połączone markery", connectedDesc: "Twoje biomarkery opowiadają historię razem. Podwyższony stan zapalny plus niska witamina D plus graniczny testosteron wskazują na przyczynę źródłową — nie trzy osobne problemy.",
+    protocols: "Protokoły, nie PDFy", protocolsDesc: "Każdy wynik zawiera jasny plan działania. Co brać, ile, gdzie kupić. Jedno kliknięcie. Bez googlowania.",
+    progress: "Postęp w czasie", progressDesc: "Po dwóch lub trzech badaniach widzisz linie trendu — dowód, że Twój protokół działa.",
+    longevity: "Panele klasy longevity", longevityDesc: "Badamy markery, które większość lekarzy pomija: ApoB, insulinę na czczo, hs-CRP, homocysteinę, pełny panel tarczycy, indeks omega-3.",
+    optimizers: "Dla optymalizatorów", optimizersDesc: "Stosujesz suplementy? Testujesz nowy protokół? Lipa daje Ci dane biomarkerów, aby udowodnić, co naprawdę działa.",
+    trustEyebrow: "Budowane z rygorem",
+    trustTitle: "Nauka przede wszystkim. Bez marketingu.",
+    medOversight: "Nadzór medyczny", medOversightDesc: "Każdy protokół przeglądany przez licencjonowanych lekarzy. Niepokojące wyniki wyzwalają przegląd kliniczny.",
+    researchBacked: "Oparte na badaniach", researchBackedDesc: "Każda rekomendacja cytuje badanie naukowe. Wskaźniki pewności mówią, czy dowody są silne czy wstępne.",
+    gdpr: "Zgodność z RODO", gdprDesc: "Twoje dane zdrowotne są szyfrowane, przechowywane w UE i nigdy nie udostępniane. Możesz usunąć wszystko jednym kliknięciem.",
+    bottomTitle: "Twoje najzdrowsze lata są przed Tobą.",
+    bottomSub: "Te same precyzyjne informacje zdrowotne, za które lekarze medycyny długowieczności pobierają tysiące — teraz dostępne dla każdego.",
+    privacyLink: "Polityka prywatności"
+  },
+  nl: {
+    heroEyebrow: "Lancering in Europa",
+    heroTitle: "Weet precies wat<br>je lichaam nodig heeft.",
+    heroSub: "Upload een bloedtest of boek er een bij 500+ labs in Europa. Ontvang een gepersonaliseerd, wetenschappelijk onderbouwd protocol — supplementen, peptiden en leefstijlveranderingen — met directe links naar betrouwbare leveranciers. Hertest en zie je waarden verbeteren.",
+    ctaButton: "Vroege toegang",
+    ctaFine: "Schrijf je in voor vroege toegang en oprichtersprijs.",
+    stat1Num: "100+", stat1Label: "Biomarkers geanalyseerd",
+    stat2Num: "500+", stat2Label: "Partnerlabs in Europa",
+    stat3Num: "48u", stat3Label: "Van bloedafname tot protocol",
+    stat4Num: "1000+", stat4Label: "Aandoeningen gescreend",
+    howEyebrow: "Hoe het werkt",
+    howTitle: "Van één bloedafname naar een plan dat met je meegroeit.",
+    step1Num: "Stap 01", step1Title: "Laat je testen — of upload je resultaten", step1Desc: "Bezoek een partnerlab bij jou in de buurt voor 100+ biomarkers, of upload resultaten van een recente bloedtest. PDF, foto of handmatige invoer — we werken met elk labformaat.",
+    step2Num: "Stap 02", step2Title: "Zie het volledige beeld", step2Desc: "Je resultaten worden geanalyseerd tegen de ranges waar je lichaam optimaal functioneert — niet alleen \"normaal.\" We kruisverwijzen je markers met het nieuwste wetenschappelijk onderzoek en identificeren patronen die je arts zou missen.",
+    step3Num: "Stap 03", step3Title: "Jouw protocol, niet dat van het internet", step3Desc: "Geen ruis meer. Je plan is gebaseerd op jouw bloed, niet op generiek advies. Elke aanbeveling onderbouwd door onderzoek, afgestemd op jouw biologie, met links naar betrouwbare bronnen.",
+    step4Num: "Stap 04", step4Title: "Volg, optimaliseer, blijf voorop", step4Desc: "Hertest elk kwartaal. Koppel je wearables. Zie je biomarkers verbeteren. Je protocol evolueert automatisch — nieuw onderzoek, betere leveranciers, nieuwe producten.",
+    detectionEyebrow: "Vroege detectie",
+    detectionTitle: "Ontdek wat je jaarlijkse check-up mist.",
+    detectionSub: "De meeste ziekten zijn te voorkomen — als ze vroeg worden ontdekt. Standaard check-ups testen een handvol markers. Wij testen er 100+ en screenen op patronen die jaren vóór symptomen verschijnen.",
+    cardio: "Cardiovasculair risico", cardioDesc: "ApoB, Lp(a), hs-CRP, geavanceerde lipidratio's. De markers die hartziekte 10-20 jaar van tevoren voorspellen — markers die de meeste artsen nooit aanvragen.",
+    metabolic: "Metabole gezondheid", metabolicDesc: "Nuchtere insuline, HbA1c, HOMA-IR, glucose. Detecteer insulineresistentie en pre-diabetes jaren vóór een diagnose — wanneer het nog volledig omkeerbaar is.",
+    inflammation: "Ontsteking", inflammationDesc: "Chronische ontsteking is de oorzaak van de meeste ziekten. We volgen hs-CRP, homocysteïne, BSE en ferritine om systemische ontsteking op te vangen voordat het schade veroorzaakt.",
+    thyroid: "Schildklierfunctie", thyroidDesc: "Volledig panel: TSH, fT3, fT4, antistoffen. Niet alleen de enkele TSH-test die je huisarts doet. Subklinische schildklieraandoeningen beïnvloeden energie, gewicht, stemming en metabolisme.",
+    hormones: "Hormonale balans", hormonesDesc: "Testosteron, oestrogeen, DHEA-S, cortisol. Hormonale achteruitgang versnelt veroudering. We volgen het volledige beeld en tonen wat optimaliseerbaar is.",
+    organs: "Orgaangezondheid", organsDesc: "Lever (ALT, AST, GGT), nieren (eGFR, creatinine), bloed (volledig bloedbeeld). Monitor de systemen die stilletjes falen — totdat het te laat is.",
+    detectionNote: "Ons systeem analyseert patronen in al je markers tegelijkertijd — niet één voor één zoals een arts. Multi-marker patroonherkenning vangt risicosignalen op die individuele tests missen.",
+    whyEyebrow: "Waarom Lipa",
+    whyTitle: "Wat je arts je niet vertelt.",
+    optimal: "Optimaal, niet normaal", optimalDesc: "Een vitamine D van 32 is \"binnen bereik.\" Maar 55 is waar je lichaam optimaal functioneert. We tonen het verschil — en precies hoe je het dicht.",
+    connected: "Verbonden markers", connectedDesc: "Je biomarkers vertellen samen een verhaal. Verhoogde ontsteking plus lage vitamine D plus borderline testosteron wijst op een grondoorzaak — niet drie aparte problemen.",
+    protocols: "Protocollen, geen PDF's", protocolsDesc: "Elk resultaat bevat een duidelijk actieplan. Wat te nemen, hoeveel, waar te kopen. Eén klik. Niet meer Googelen.",
+    progress: "Voortgang in de tijd", progressDesc: "Na twee of drie tests zie je trendlijnen — bewijs dat je protocol werkt.",
+    longevity: "Longevity-klasse panels", longevityDesc: "We testen de markers die de meeste artsen overslaan: ApoB, nuchtere insuline, hs-CRP, homocysteïne, volledig schildklierpanel, omega-3 index.",
+    optimizers: "Gebouwd voor optimizers", optimizersDesc: "Neem je supplementen? Test je een nieuw protocol? Lipa geeft je de biomarkerdata om te bewijzen wat echt werkt.",
+    trustEyebrow: "Gebouwd met zorgvuldigheid",
+    trustTitle: "Wetenschap eerst. Geen hype.",
+    medOversight: "Medisch toezicht", medOversightDesc: "Elk protocol beoordeeld door gediplomeerde artsen. Afwijkende resultaten leiden tot een klinische review.",
+    researchBacked: "Wetenschappelijk onderbouwd", researchBackedDesc: "Elke aanbeveling citeert het onderliggende onderzoek. Betrouwbaarheidsscores vertellen of het bewijs sterk of opkomend is.",
+    gdpr: "AVG-conform", gdprDesc: "Je gezondheidsgegevens zijn versleuteld, opgeslagen in de EU en worden nooit gedeeld. Je kunt alles met één klik verwijderen.",
+    bottomTitle: "Je gezondste jaren liggen nog voor je.",
+    bottomSub: "Dezelfde precisie-gezondheidsinzichten waarvoor longevity-artsen duizenden rekenen — nu toegankelijk voor iedereen.",
+    privacyLink: "Privacybeleid"
+  },
+  es: {
+    heroEyebrow: "Lanzamiento en Europa",
+    heroTitle: "Sabe exactamente lo que<br>tu cuerpo necesita.",
+    heroSub: "Sube un análisis de sangre o reserva uno en más de 500 laboratorios en Europa. Recibe un protocolo personalizado respaldado por investigación — suplementos, péptidos y cambios de estilo de vida — con enlaces directos a proveedores verificados. Repite y observa cómo mejoran tus valores.",
+    ctaButton: "Acceso anticipado",
+    ctaFine: "Únete a la lista de espera para acceso anticipado y precio de fundador.",
+    stat1Num: "100+", stat1Label: "Biomarcadores analizados",
+    stat2Num: "500+", stat2Label: "Laboratorios asociados en Europa",
+    stat3Num: "48h", stat3Label: "De la extracción al protocolo",
+    stat4Num: "1000+", stat4Label: "Condiciones detectadas",
+    howEyebrow: "Cómo funciona",
+    howTitle: "De una sola extracción de sangre a un plan que evoluciona contigo.",
+    step1Num: "Paso 01", step1Title: "Hazte la prueba — o sube tus resultados", step1Desc: "Visita cualquier laboratorio asociado cerca de ti para 100+ biomarcadores, o sube resultados de un análisis reciente. PDF, foto o entrada manual — trabajamos con cualquier formato.",
+    step2Num: "Paso 02", step2Title: "Ve el panorama completo", step2Desc: "Tus resultados se analizan contra los rangos donde tu cuerpo realmente prospera — no solo lo \"normal.\" Cruzamos tus marcadores con la última investigación revisada por pares e identificamos patrones que tu médico pasaría por alto.",
+    step3Num: "Paso 03", step3Title: "Tu protocolo, no el de internet", step3Desc: "Corta el ruido. Tu plan está basado en tu sangre, no en consejos genéricos. Cada recomendación respaldada por investigación, dosificada para tu biología, con enlaces a fuentes confiables.",
+    step4Num: "Paso 04", step4Title: "Rastrea, optimiza, mantente adelante", step4Desc: "Repite cada trimestre. Conecta tus wearables. Observa cómo mejoran tus biomarcadores. Tu protocolo evoluciona automáticamente — nueva investigación, mejores proveedores, nuevos productos.",
+    detectionEyebrow: "Detección temprana",
+    detectionTitle: "Detecta lo que tu chequeo anual pasa por alto.",
+    detectionSub: "La mayoría de las enfermedades son prevenibles — si se detectan temprano. Los chequeos estándar prueban un puñado de marcadores. Nosotros probamos más de 100 y buscamos patrones que aparecen años antes de los síntomas.",
+    cardio: "Riesgo cardiovascular", cardioDesc: "ApoB, Lp(a), hs-CRP, ratios lipídicos avanzados. Los marcadores que predicen enfermedades cardíacas 10-20 años antes — marcadores que la mayoría de los médicos nunca solicitan.",
+    metabolic: "Salud metabólica", metabolicDesc: "Insulina en ayunas, HbA1c, HOMA-IR, glucosa. Detecta resistencia a la insulina y pre-diabetes años antes del diagnóstico — cuando aún es totalmente reversible.",
+    inflammation: "Inflamación", inflammationDesc: "La inflamación crónica es la raíz de la mayoría de las enfermedades. Rastreamos hs-CRP, homocisteína, VSG y ferritina para detectar inflamación sistémica antes de que cause daño.",
+    thyroid: "Función tiroidea", thyroidDesc: "Panel completo: TSH, fT3, fT4, anticuerpos. No solo la prueba TSH que hace tu médico. La disfunción tiroidea subclínica afecta energía, peso, estado de ánimo y metabolismo.",
+    hormones: "Equilibrio hormonal", hormonesDesc: "Testosterona, estrógeno, DHEA-S, cortisol. El declive hormonal impulsa el envejecimiento. Rastreamos el panorama completo y mostramos qué es optimizable.",
+    organs: "Salud de órganos", organsDesc: "Hígado (ALT, AST, GGT), riñones (eGFR, creatinina), sangre (hemograma completo). Monitorea los sistemas que fallan en silencio — hasta que no lo hacen.",
+    detectionNote: "Nuestro sistema analiza patrones en todos tus marcadores simultáneamente — no uno a uno como un médico. El reconocimiento de patrones multi-marcador detecta señales de riesgo que las pruebas individuales pasan por alto.",
+    whyEyebrow: "Por qué Lipa",
+    whyTitle: "Lo que tu médico no te dice.",
+    optimal: "Óptimo, no normal", optimalDesc: "Una vitamina D de 32 está \"dentro del rango.\" Pero 55 es donde tu cuerpo realmente prospera. Te mostramos la diferencia — y exactamente cómo cerrarla.",
+    connected: "Marcadores conectados", connectedDesc: "Tus biomarcadores cuentan una historia juntos. Inflamación elevada más vitamina D baja más testosterona límite apunta a una causa raíz — no tres problemas separados.",
+    protocols: "Protocolos, no PDFs", protocolsDesc: "Cada resultado incluye un plan de acción claro. Qué tomar, cuánto, dónde comprarlo. Un clic. Sin buscar en Google.",
+    progress: "Progreso en el tiempo", progressDesc: "Después de dos o tres pruebas, ves líneas de tendencia — prueba de que tu protocolo está funcionando.",
+    longevity: "Paneles de grado longevidad", longevityDesc: "Probamos los marcadores que la mayoría de los médicos omiten: ApoB, insulina en ayunas, hs-CRP, homocisteína, panel tiroideo completo, índice omega-3.",
+    optimizers: "Hecho para optimizadores", optimizersDesc: "¿Tomas suplementos? ¿Probando un nuevo protocolo? Lipa te da los datos de biomarcadores para demostrar qué está funcionando realmente.",
+    trustEyebrow: "Construido con rigor",
+    trustTitle: "Ciencia primero. Sin exageraciones.",
+    medOversight: "Supervisión médica", medOversightDesc: "Cada protocolo revisado por médicos licenciados. Los resultados marcados activan una revisión clínica.",
+    researchBacked: "Respaldado por investigación", researchBackedDesc: "Cada recomendación cita el estudio subyacente. Las puntuaciones de confianza te dicen si la evidencia es fuerte o emergente.",
+    gdpr: "Cumple con RGPD", gdprDesc: "Tus datos de salud están encriptados, almacenados en la UE y nunca se comparten. Puedes eliminar todo con un clic.",
+    bottomTitle: "Tus años más saludables están por venir.",
+    bottomSub: "Los mismos conocimientos de salud de precisión por los que los médicos de longevidad cobran miles — ahora accesibles para cualquiera.",
+    privacyLink: "Política de privacidad"
+  }
+};
+
+function setLang(lang) {
+  const t = translations[lang];
+  if (!t) return;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key]) {
+      if (el.tagName === 'INPUT') el.placeholder = t[key];
+      else el.innerHTML = t[key];
+    }
+  });
+  document.documentElement.lang = lang;
+  localStorage.setItem('lipa-lang', lang);
+  // Update active toggle
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.style.opacity = btn.dataset.lang === lang ? '1' : '0.4';
+    btn.style.fontWeight = btn.dataset.lang === lang ? '600' : '400';
+  });
+}
+
+// Auto-detect on load
+(function() {
+  const saved = localStorage.getItem('lipa-lang');
+  if (saved && translations[saved]) { setLang(saved); return; }
+
+  // Try IP-based detection
+  fetch('https://ipapi.co/json/')
+    .then(r => r.json())
+    .then(data => {
+      const cc = (data.country_code || '').toLowerCase();
+      const map = { pl: 'pl', nl: 'nl', be: 'nl', es: 'es', mx: 'es', ar: 'es', co: 'es' };
+      if (map[cc]) setLang(map[cc]);
+    })
+    .catch(() => {});
+})();

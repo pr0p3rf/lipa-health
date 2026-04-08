@@ -371,7 +371,15 @@
     </svg>
     Lipa
   </a>
-  <a href="#join" class="nav-cta">Join Waitlist</a>
+  <div style="display: flex; align-items: center; gap: 16px;">
+    <div style="display: flex; gap: 6px; font-size: 12px;">
+      <button class="lang-btn" data-lang="en" onclick="setLang('en')" style="background:none;border:none;cursor:pointer;color:var(--text);font-family:Inter;font-size:12px;opacity:1;font-weight:600;padding:2px 4px;">EN</button>
+      <button class="lang-btn" data-lang="nl" onclick="setLang('nl')" style="background:none;border:none;cursor:pointer;color:var(--text);font-family:Inter;font-size:12px;opacity:0.4;padding:2px 4px;">NL</button>
+      <button class="lang-btn" data-lang="pl" onclick="setLang('pl')" style="background:none;border:none;cursor:pointer;color:var(--text);font-family:Inter;font-size:12px;opacity:0.4;padding:2px 4px;">PL</button>
+      <button class="lang-btn" data-lang="es" onclick="setLang('es')" style="background:none;border:none;cursor:pointer;color:var(--text);font-family:Inter;font-size:12px;opacity:0.4;padding:2px 4px;">ES</button>
+    </div>
+    <a href="#join" class="nav-cta" data-i18n="ctaButton">Join Waitlist</a>
+  </div>
 </nav>
 
 <div class="hero-wrapper">
@@ -403,33 +411,33 @@
   })();
 </script>
 <section class="hero">
-  <div class="hero-eyebrow">Launching across Europe</div>
-  <h1>Know exactly what<br>your body needs.</h1>
-  <p class="hero-sub">Upload a blood test or book one at 500+ labs across Europe. Get a personalized, research-backed protocol — supplements, peptides, and lifestyle changes — with direct links to vetted vendors. Retest and watch your numbers improve. No more guessing.</p>
+  <div class="hero-eyebrow" data-i18n="heroEyebrow">Launching across Europe</div>
+  <h1 data-i18n="heroTitle">Know exactly what<br>your body needs.</h1>
+  <p class="hero-sub" data-i18n="heroSub">Upload a blood test or book one at 500+ labs across Europe. Get a personalized, research-backed protocol — supplements, peptides, and lifestyle changes — with direct links to vetted vendors. Retest and watch your numbers improve. No more guessing.</p>
   <form class="waitlist-form" id="waitlist" onsubmit="return submitWaitlist(event, this)">
     <input type="email" name="email" placeholder="Enter your email" required>
-    <button type="submit">Get Early Access</button>
+    <button type="submit" data-i18n="ctaButton">Get Early Access</button>
   </form>
-  <p class="hero-fine">Join the waitlist for early access and founding member pricing.</p>
+  <p class="hero-fine"><span data-i18n="ctaFine">Join the waitlist for early access and founding member pricing.</span></p>
 </section>
 </div>
 
 <div class="stats-bar">
   <div class="stat">
-    <div class="stat-num">100+</div>
-    <div class="stat-label">Biomarkers analyzed</div>
+    <div class="stat-num" data-i18n="stat1Num">100+</div>
+    <div class="stat-label" data-i18n="stat1Label">Biomarkers analyzed</div>
   </div>
   <div class="stat">
-    <div class="stat-num">500+</div>
-    <div class="stat-label">Partner labs across Europe</div>
+    <div class="stat-num" data-i18n="stat2Num">500+</div>
+    <div class="stat-label" data-i18n="stat2Label">Partner labs across Europe</div>
   </div>
   <div class="stat">
-    <div class="stat-num">48h</div>
-    <div class="stat-label">From blood draw to protocol</div>
+    <div class="stat-num" data-i18n="stat3Num">48h</div>
+    <div class="stat-label" data-i18n="stat3Label">From blood draw to protocol</div>
   </div>
   <div class="stat">
-    <div class="stat-num">1000s</div>
-    <div class="stat-label">Of conditions screened</div>
+    <div class="stat-num" data-i18n="stat4Num">1000s</div>
+    <div class="stat-label" data-i18n="stat4Label">Of conditions screened</div>
   </div>
 </div>
 
@@ -710,29 +718,29 @@
 </section>
 
 <section class="section">
-  <div class="section-eyebrow">How it works</div>
-  <h2 class="section-title">From a single blood draw to a plan that evolves with you.</h2>
+  <div class="section-eyebrow" data-i18n="howEyebrow">How it works</div>
+  <h2 class="section-title" data-i18n="howTitle">From a single blood draw to a plan that evolves with you.</h2>
 
   <div class="steps">
     <div class="step">
-      <div class="step-num">Step 01</div>
-      <h3>Get tested — or upload what you have</h3>
-      <p>Visit any partner lab near you for 100+ biomarkers, or upload results from a recent blood test you already have. PDF, photo, or manual entry — we work with any lab format.</p>
+      <div class="step-num" data-i18n="step1Num">Step 01</div>
+      <h3 data-i18n="step1Title">Get tested — or upload what you have</h3>
+      <p data-i18n="step1Desc">Visit any partner lab near you for 100+ biomarkers, or upload results from a recent blood test you already have. PDF, photo, or manual entry — we work with any lab format.</p>
     </div>
     <div class="step">
-      <div class="step-num">Step 02</div>
-      <h3>See the full picture</h3>
-      <p>Your results are analyzed against the ranges where your body actually thrives — not just "normal." We cross-reference your markers against the latest peer-reviewed research, identify patterns your doctor would miss, and show you exactly what needs attention.</p>
+      <div class="step-num" data-i18n="step2Num">Step 02</div>
+      <h3 data-i18n="step2Title">See the full picture</h3>
+      <p data-i18n="step2Desc">Your results are analyzed against the ranges where your body actually thrives — not just "normal." We cross-reference your markers against the latest peer-reviewed research, identify patterns your doctor would miss, and show you exactly what needs attention.</p>
     </div>
     <div class="step">
-      <div class="step-num">Step 03</div>
-      <h3>Your protocol, not the internet's</h3>
-      <p>Cut through the noise. Your plan is built from your blood, not generic advice. Every recommendation backed by research, dosed for your biology, and linked to trusted sources. One place. Zero confusion.</p>
+      <div class="step-num" data-i18n="step3Num">Step 03</div>
+      <h3 data-i18n="step3Title">Your protocol, not the internet's</h3>
+      <p data-i18n="step3Desc">Cut through the noise. Your plan is built from your blood, not generic advice. Every recommendation backed by research, dosed for your biology, and linked to trusted sources. One place. Zero confusion.</p>
     </div>
     <div class="step">
-      <div class="step-num">Step 04</div>
-      <h3>Track, optimize, stay ahead</h3>
-      <p>Retest quarterly. Connect your wearables. Watch your biomarkers improve. Your protocol evolves automatically — new research, better vendors, new products pushed to you as they emerge.</p>
+      <div class="step-num" data-i18n="step4Num">Step 04</div>
+      <h3 data-i18n="step4Title">Track, optimize, stay ahead</h3>
+      <p data-i18n="step4Desc">Retest quarterly. Connect your wearables. Watch your biomarkers improve. Your protocol evolves automatically — new research, better vendors, new products pushed to you as they emerge.</p>
       <div style="display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap;">
         <span style="font-size: 11px; font-weight: 500; color: var(--text-tertiary); background: var(--section-alt); padding: 5px 12px; border-radius: 980px;">Oura</span>
         <span style="font-size: 11px; font-weight: 500; color: var(--text-tertiary); background: var(--section-alt); padding: 5px 12px; border-radius: 980px;">Garmin</span>
@@ -1008,11 +1016,11 @@
 </section>
 
 <section class="bottom-cta" id="join">
-  <h2>Your healthiest years are ahead.</h2>
-  <p>The same precision health insights longevity physicians charge thousands for — now accessible to anyone serious about optimizing their biology.</p>
+  <h2 data-i18n="bottomTitle">Your healthiest years are ahead.</h2>
+  <p data-i18n="bottomSub">The same precision health insights longevity physicians charge thousands for — now accessible to anyone serious about optimizing their biology.</p>
   <form class="waitlist-form" onsubmit="return submitWaitlist(event, this)">
     <input type="email" name="email" placeholder="Enter your email" required>
-    <button type="submit">Get Early Access</button>
+    <button type="submit" data-i18n="ctaButton">Get Early Access</button>
   </form>
 </section>
 
@@ -1021,6 +1029,7 @@
   <a href="/privacy.html" style="font-size: 12px; color: var(--text-tertiary); text-decoration: none;">Privacy Policy</a>
 </footer>
 
+<script src="i18n.js"></script>
 <script>
 async function submitWaitlist(e, form) {
   e.preventDefault();
