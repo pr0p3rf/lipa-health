@@ -12,6 +12,7 @@ export default function UploadPage() {
   const [dragOver, setDragOver] = useState(false);
   const [uploaded, setUploaded] = useState(false);
   const [fileName, setFileName] = useState("");
+  const [analysisCount, setAnalysisCount] = useState(0);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -46,8 +47,27 @@ export default function UploadPage() {
       user_id: user.id,
       file_path: filePath,
       file_name: file.name,
-      status: "pending",
+      status: "analyzing",
     });
+
+    // Send to Claude for analysis
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("userId", user.id);
+    formData.append("testDate", new Date().toISOString().split("T")[0]);
+
+    try {
+      const res = await fetch("/api/analyze", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.success) {
+        setAnalysisCount(data.count);
+      }
+    } catch (err) {
+      console.error("Analysis error:", err);
+    }
 
     setUploading(false);
     setUploaded(true);
@@ -89,11 +109,23 @@ export default function UploadPage() {
                 <path d="M20 6L9 17l-5-5" />
               </svg>
             </div>
-            <h2 className="text-xl font-semibold mb-2">Results uploaded</h2>
+            <h2 className="text-xl font-semibold mb-2">
+              {analysisCount > 0 ? `${analysisCount} biomarkers extracted` : "Results uploaded"}
+            </h2>
             <p className="text-[#6B6B6B] text-[15px] mb-1">{fileName}</p>
             <p className="text-[#999] text-[13px] mb-6">
-              We&apos;re analyzing your biomarkers now. Your personalized insights will be ready shortly.
+              {analysisCount > 0
+                ? "Your biomarkers have been analyzed. View your dashboard to see your results and personalized protocol."
+                : "We're analyzing your biomarkers now. Your personalized insights will be ready shortly."}
             </p>
+            {analysisCount > 0 && (
+              <a
+                href="/dashboard"
+                className="inline-flex items-center gap-2 text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-5 py-2.5 rounded-full transition-colors mb-3"
+              >
+                View Dashboard
+              </a>
+            )}
             <button
               onClick={() => { setUploaded(false); setFileName(""); }}
               className="text-[13px] text-[#1B6B4A] font-medium hover:underline"

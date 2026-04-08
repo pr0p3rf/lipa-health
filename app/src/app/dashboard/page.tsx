@@ -37,7 +37,7 @@ export default function DashboardPage() {
               <line x1="14" y1="11" x2="14" y2="21" stroke="#1B6B4A" strokeWidth="0.8" />
             </svg>
           </div>
-          <h1 className="text-2xl font-semibold mb-3">Welcome to Lipa Health</h1>
+          <h1 className="text-2xl font-semibold mb-3">Welcome to Lipa</h1>
           <p className="text-[#6B6B6B] text-[16px] max-w-md mx-auto mb-8">
             Upload your blood test results to get started. We&apos;ll analyze your biomarkers, generate a personalized protocol, and track your progress over time.
           </p>
