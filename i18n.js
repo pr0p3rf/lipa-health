@@ -61,7 +61,13 @@ const translations = {
     pepStep2: "Get a tailored protocol", pepStep2Desc: "Dosing and stacking matched to your biology, not generic guides",
     pepStep3: "Find verified research suppliers", pepStep3Desc: "European suppliers with third-party purity testing",
     pepStep4: "Prove it's working", pepStep4Desc: "Retest. See your markers move. Data, not faith.",
-    dashPreview: "Product preview — launching 2026"
+    dashPreview: "Product preview — launching 2026",
+    viewAllBiomarkers: "View all 100+ biomarkers",
+    biomarkersList: "Including: fasting insulin, IGF-1, homocysteine, full thyroid panel, omega-3 index, cortisol...",
+    viewMoreRecs: "View 4 more recommendations",
+    recsList: "Including: CJC-1295 + Ipamorelin, Magnesium Glycinate, NAC, Zinc",
+    alertStudy: "New study updates your Omega-3 dosing",
+    alertPrice: "BPC-157 price dropped 20% at a verified research supplier"
   },
   pl: {
     heroEyebrow: "Startujemy w Europie",
@@ -125,7 +131,13 @@ const translations = {
     pepStep2: "Otrzymaj dopasowany protokół", pepStep2Desc: "Dawkowanie i łączenie dopasowane do Twojej biologii",
     pepStep3: "Znajdź zweryfikowanych dostawców", pepStep3Desc: "Europejscy dostawcy z testami czystości przez strony trzecie",
     pepStep4: "Udowodnij, że to działa", pepStep4Desc: "Powtórz badania. Zobacz jak zmieniają się Twoje markery. Dane, nie wiara.",
-    dashPreview: "Podgląd produktu — premiera 2026"
+    dashPreview: "Podgląd produktu — premiera 2026",
+    viewAllBiomarkers: "Zobacz wszystkie 100+ biomarkerów",
+    biomarkersList: "W tym: insulina na czczo, IGF-1, homocysteina, pełny panel tarczycy, indeks omega-3, kortyzol...",
+    viewMoreRecs: "Zobacz 4 kolejne rekomendacje",
+    recsList: "W tym: CJC-1295 + Ipamorelin, Glicynian Magnezu, NAC, Cynk",
+    alertStudy: "Nowe badanie aktualizuje Twoje dawkowanie Omega-3",
+    alertPrice: "Cena BPC-157 spadła o 20% u zweryfikowanego dostawcy"
   },
   nl: {
     heroEyebrow: "Lancering in Europa",
@@ -189,7 +201,13 @@ const translations = {
     pepStep2: "Krijg een op maat gemaakt protocol", pepStep2Desc: "Dosering en combinatie afgestemd op jouw biologie",
     pepStep3: "Vind geverifieerde onderzoeksleveranciers", pepStep3Desc: "Europese leveranciers met zuiverheidstests door derden",
     pepStep4: "Bewijs dat het werkt", pepStep4Desc: "Hertest. Zie je markers bewegen. Data, geen geloof.",
-    dashPreview: "Productvoorbeeld — lancering 2026"
+    dashPreview: "Productvoorbeeld — lancering 2026",
+    viewAllBiomarkers: "Bekijk alle 100+ biomarkers",
+    biomarkersList: "Inclusief: nuchtere insuline, IGF-1, homocysteïne, volledig schildklierpanel, omega-3 index, cortisol...",
+    viewMoreRecs: "Bekijk 4 meer aanbevelingen",
+    recsList: "Inclusief: CJC-1295 + Ipamorelin, Magnesiumglycinaat, NAC, Zink",
+    alertStudy: "Nieuw onderzoek werkt je Omega-3 dosering bij",
+    alertPrice: "BPC-157 prijs gedaald met 20% bij een geverifieerde leverancier"
   },
   es: {
     heroEyebrow: "Lanzamiento en Europa",
@@ -253,7 +271,13 @@ const translations = {
     pepStep2: "Obtén un protocolo personalizado", pepStep2Desc: "Dosificación y combinación adaptada a tu biología",
     pepStep3: "Encuentra proveedores de investigación verificados", pepStep3Desc: "Proveedores europeos con pruebas de pureza de terceros",
     pepStep4: "Demuestra que funciona", pepStep4Desc: "Repite. Ve cómo se mueven tus marcadores. Datos, no fe.",
-    dashPreview: "Vista previa del producto — lanzamiento 2026"
+    dashPreview: "Vista previa del producto — lanzamiento 2026",
+    viewAllBiomarkers: "Ver los 100+ biomarcadores",
+    biomarkersList: "Incluyendo: insulina en ayunas, IGF-1, homocisteína, panel tiroideo completo, índice omega-3, cortisol...",
+    viewMoreRecs: "Ver 4 recomendaciones más",
+    recsList: "Incluyendo: CJC-1295 + Ipamorelina, Glicinato de Magnesio, NAC, Zinc",
+    alertStudy: "Nuevo estudio actualiza tu dosificación de Omega-3",
+    alertPrice: "El precio de BPC-157 bajó 20% en un proveedor verificado"
   }
 };
 
