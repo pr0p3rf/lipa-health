@@ -67,7 +67,19 @@ const translations = {
     viewMoreRecs: "View 4 more recommendations",
     recsList: "Including: CJC-1295 + Ipamorelin, Magnesium Glycinate, NAC, Zinc",
     alertStudy: "New study updates your Omega-3 dosing",
-    alertPrice: "BPC-157 price dropped 20% at a verified research supplier"
+    alertPrice: "BPC-157 price dropped 20% at a verified research supplier",
+    dashFromLast: "+6 from last test",
+    dashBioAge: "Biological Age",
+    dashChrono: "Chronological:",
+    dashYounger: "↓ 7 years younger",
+    dashHeart: "Heart", dashMetabolic: "Metabolic", dashHormones: "Hormones",
+    dashInflammation: "Inflammation", dashNutrients: "Nutrients", dashThyroid: "Thyroid",
+    dashKeyBiomarkers: "Key Biomarkers",
+    dashShowing: "Showing 4 of 100+",
+    dashPattern: "Pattern Detected",
+    dashTrendInflammation: "Inflammation (hs-CRP)",
+    dashSinceOmega: "Since starting Omega-3 + BPC-157 protocol",
+    dashSinceD3: "Since starting D3+K2 5,000 IU protocol"
   },
   pl: {
     heroEyebrow: "Startujemy w Europie",
@@ -137,7 +149,19 @@ const translations = {
     viewMoreRecs: "Zobacz 4 kolejne rekomendacje",
     recsList: "W tym: CJC-1295 + Ipamorelin, Glicynian Magnezu, NAC, Cynk",
     alertStudy: "Nowe badanie aktualizuje Twoje dawkowanie Omega-3",
-    alertPrice: "Cena BPC-157 spadła o 20% u zweryfikowanego dostawcy"
+    alertPrice: "Cena BPC-157 spadła o 20% u zweryfikowanego dostawcy",
+    dashFromLast: "+6 od ostatniego badania",
+    dashBioAge: "Wiek biologiczny",
+    dashChrono: "Chronologiczny:",
+    dashYounger: "↓ 7 lat młodszy",
+    dashHeart: "Serce", dashMetabolic: "Metabolizm", dashHormones: "Hormony",
+    dashInflammation: "Stan zapalny", dashNutrients: "Składniki odżywcze", dashThyroid: "Tarczyca",
+    dashKeyBiomarkers: "Kluczowe biomarkery",
+    dashShowing: "Pokazano 4 ze 100+",
+    dashPattern: "Wykryto wzorzec",
+    dashTrendInflammation: "Stan zapalny (hs-CRP)",
+    dashSinceOmega: "Od rozpoczęcia protokołu Omega-3 + BPC-157",
+    dashSinceD3: "Od rozpoczęcia protokołu D3+K2 5000 IU"
   },
   nl: {
     heroEyebrow: "Lancering in Europa",
@@ -207,7 +231,19 @@ const translations = {
     viewMoreRecs: "Bekijk 4 meer aanbevelingen",
     recsList: "Inclusief: CJC-1295 + Ipamorelin, Magnesiumglycinaat, NAC, Zink",
     alertStudy: "Nieuw onderzoek werkt je Omega-3 dosering bij",
-    alertPrice: "BPC-157 prijs gedaald met 20% bij een geverifieerde leverancier"
+    alertPrice: "BPC-157 prijs gedaald met 20% bij een geverifieerde leverancier",
+    dashFromLast: "+6 sinds laatste test",
+    dashBioAge: "Biologische leeftijd",
+    dashChrono: "Chronologisch:",
+    dashYounger: "↓ 7 jaar jonger",
+    dashHeart: "Hart", dashMetabolic: "Metabolisme", dashHormones: "Hormonen",
+    dashInflammation: "Ontsteking", dashNutrients: "Voedingsstoffen", dashThyroid: "Schildklier",
+    dashKeyBiomarkers: "Belangrijkste biomarkers",
+    dashShowing: "4 van 100+ weergegeven",
+    dashPattern: "Patroon gedetecteerd",
+    dashTrendInflammation: "Ontsteking (hs-CRP)",
+    dashSinceOmega: "Sinds start Omega-3 + BPC-157 protocol",
+    dashSinceD3: "Sinds start D3+K2 5.000 IU protocol"
   },
   es: {
     heroEyebrow: "Lanzamiento en Europa",
@@ -277,7 +313,19 @@ const translations = {
     viewMoreRecs: "Ver 4 recomendaciones más",
     recsList: "Incluyendo: CJC-1295 + Ipamorelina, Glicinato de Magnesio, NAC, Zinc",
     alertStudy: "Nuevo estudio actualiza tu dosificación de Omega-3",
-    alertPrice: "El precio de BPC-157 bajó 20% en un proveedor verificado"
+    alertPrice: "El precio de BPC-157 bajó 20% en un proveedor verificado",
+    dashFromLast: "+6 desde la última prueba",
+    dashBioAge: "Edad biológica",
+    dashChrono: "Cronológica:",
+    dashYounger: "↓ 7 años más joven",
+    dashHeart: "Corazón", dashMetabolic: "Metabólico", dashHormones: "Hormonas",
+    dashInflammation: "Inflamación", dashNutrients: "Nutrientes", dashThyroid: "Tiroides",
+    dashKeyBiomarkers: "Biomarcadores clave",
+    dashShowing: "Mostrando 4 de 100+",
+    dashPattern: "Patrón detectado",
+    dashTrendInflammation: "Inflamación (hs-CRP)",
+    dashSinceOmega: "Desde el inicio del protocolo Omega-3 + BPC-157",
+    dashSinceD3: "Desde el inicio del protocolo D3+K2 5.000 UI"
   }
 };
 
