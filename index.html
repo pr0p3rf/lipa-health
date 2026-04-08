@@ -416,7 +416,7 @@
   <h1 data-i18n="heroTitle">Know exactly what<br>your body needs.</h1>
   <p class="hero-sub" data-i18n="heroSub">Upload a blood test or book one at 500+ labs across Europe. Get a personalized, research-backed protocol — supplements, peptides, and lifestyle changes — with direct links to vetted vendors. Retest and watch your numbers improve. No more guessing.</p>
   <form class="waitlist-form" id="waitlist" onsubmit="return submitWaitlist(event, this)">
-    <input type="email" name="email" placeholder="Enter your email" required>
+    <input type="email" name="email" placeholder="Enter your email" data-i18n="emailPlaceholder" required>
     <button type="submit" data-i18n="ctaButton">Get Early Access</button>
   </form>
   <p class="hero-fine"><span data-i18n="ctaFine">Join the waitlist for early access and founding member pricing.</span></p>
@@ -593,7 +593,7 @@
         <div>
           <div style="font-size: 13px; font-weight: 600; color: #B8860B; margin-bottom: 4px;" data-i18n="dashPattern">Pattern Detected</div>
           <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;" data-i18n="dashPatternText">Your elevated hs-CRP (2.8) combined with suboptimal testosterone (485) and low-normal vitamin D (55) suggests <strong style="color: var(--text);">systemic inflammation may be suppressing hormonal function</strong>. Addressing inflammation first is likely to improve testosterone without direct intervention.</div>
-          <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 8px;">Based on 14 studies • Confidence: <span style="color: #1B6B4A; font-weight: 600;">High</span> • <span style="color: var(--accent); cursor: pointer;">View research →</span></div>
+          <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 8px;" data-i18n="dashPatternMeta">Based on 14 studies • Confidence: <span style="color: #1B6B4A; font-weight: 600;">High</span> • <span style="color: var(--accent); cursor: pointer;">View research →</span></div>
         </div>
       </div>
 
@@ -836,10 +836,10 @@
       </div>
     </div>
     <div style="background: var(--section-alt); border-radius: 12px; padding: 32px; font-family: 'Inter', monospace;">
-      <div style="font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 20px;">Sample Protocol</div>
+      <div style="font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 20px;" data-i18n="sampleProtocol">Sample Protocol</div>
       <div style="display: flex; flex-direction: column; gap: 16px;">
         <div style="background: var(--white); border-radius: 10px; padding: 16px 20px; border: 1px solid var(--border);">
-          <div style="font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Inflammation — hs-CRP elevated</div>
+          <div style="font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;" data-i18n="sampleInflammation">Inflammation — hs-CRP elevated</div>
           <div style="font-size: 15px; font-weight: 600;">Omega-3 (EPA/DHA) 2,000mg daily</div>
           <div style="font-size: 13px; color: var(--accent); margin-top: 4px; cursor: pointer;">Shop from vetted source →</div>
         </div>
@@ -911,19 +911,19 @@
       <div style="display: flex; flex-direction: column; gap: 14px;">
         <div style="display: flex; align-items: start; gap: 12px;">
           <div style="width: 8px; height: 8px; background: var(--accent); border-radius: 50%; flex-shrink: 0; margin-top: 7px;"></div>
-          <span style="font-size: 15px;"><strong>BPC-157</strong> — tissue repair, gut healing, inflammation reduction. Tracked via hs-CRP and inflammatory markers.</span>
+          <span style="font-size: 15px;" data-i18n="pepBPC"><strong>BPC-157</strong> — tissue repair, gut healing, inflammation reduction. Tracked via hs-CRP and inflammatory markers.</span>
         </div>
         <div style="display: flex; align-items: start; gap: 12px;">
           <div style="width: 8px; height: 8px; background: var(--accent); border-radius: 50%; flex-shrink: 0; margin-top: 7px;"></div>
-          <span style="font-size: 15px;"><strong>CJC-1295 + Ipamorelin</strong> — growth hormone optimization, sleep quality, body composition. Tracked via IGF-1 and metabolic markers.</span>
+          <span style="font-size: 15px;" data-i18n="pepCJC"><strong>CJC-1295 + Ipamorelin</strong> — growth hormone optimization, sleep quality, body composition. Tracked via IGF-1 and metabolic markers.</span>
         </div>
         <div style="display: flex; align-items: start; gap: 12px;">
           <div style="width: 8px; height: 8px; background: var(--accent); border-radius: 50%; flex-shrink: 0; margin-top: 7px;"></div>
-          <span style="font-size: 15px;"><strong>NAD+ precursors</strong> — cellular energy, DNA repair, mitochondrial function. Tracked via metabolic and inflammatory panels.</span>
+          <span style="font-size: 15px;" data-i18n="pepNAD"><strong>NAD+</strong> — cellular energy, DNA repair, mitochondrial function. Tracked via metabolic and inflammatory panels.</span>
         </div>
         <div style="display: flex; align-items: start; gap: 12px;">
           <div style="width: 8px; height: 8px; background: var(--accent); border-radius: 50%; flex-shrink: 0; margin-top: 7px;"></div>
-          <span style="font-size: 15px;"><strong>Semax</strong> — cognitive performance, neuroprotection, focus. Tracked via hormonal and neurological markers.</span>
+          <span style="font-size: 15px;" data-i18n="pepSemax"><strong>Semax</strong> — cognitive performance, neuroprotection, focus. Tracked via hormonal and neurological markers.</span>
         </div>
       </div>
     </div>
@@ -1020,7 +1020,7 @@
   <h2 data-i18n="bottomTitle">Your healthiest years are ahead.</h2>
   <p data-i18n="bottomSub">The same precision health insights longevity physicians charge thousands for — now accessible to anyone serious about optimizing their biology.</p>
   <form class="waitlist-form" onsubmit="return submitWaitlist(event, this)">
-    <input type="email" name="email" placeholder="Enter your email" required>
+    <input type="email" name="email" placeholder="Enter your email" data-i18n="emailPlaceholder" required>
     <button type="submit" data-i18n="ctaButton">Get Early Access</button>
   </form>
 </section>

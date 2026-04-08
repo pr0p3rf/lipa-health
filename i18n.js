@@ -81,7 +81,15 @@ const translations = {
     dashSinceOmega: "Since starting Omega-3 + BPC-157 protocol",
     dashSinceD3: "Since starting D3+K2 5,000 IU protocol",
     dashTabOverview: "Overview", dashTabBiomarkers: "Biomarkers", dashTabProtocol: "Protocol", dashTabTrends: "Trends",
-    dashPatternText: "Your elevated hs-CRP (2.8) combined with suboptimal testosterone (485) and low-normal vitamin D (55) suggests <strong style=\"color: var(--text);\">systemic inflammation may be suppressing hormonal function</strong>. Addressing inflammation first is likely to improve testosterone without direct intervention."
+    dashPatternText: "Your elevated hs-CRP (2.8) combined with suboptimal testosterone (485) and low-normal vitamin D (55) suggests <strong style=\"color: var(--text);\">systemic inflammation may be suppressing hormonal function</strong>. Addressing inflammation first is likely to improve testosterone without direct intervention.",
+    emailPlaceholder: "Enter your email",
+    dashPatternMeta: "Based on 14 studies • Confidence: <span style=\"color: #1B6B4A; font-weight: 600;\">High</span> • <span style=\"color: var(--accent); cursor: pointer;\">View research →</span>",
+    sampleProtocol: "Sample Protocol",
+    sampleInflammation: "Inflammation — hs-CRP elevated",
+    pepBPC: "<strong>BPC-157</strong> — tissue repair, gut healing, inflammation reduction. Tracked via hs-CRP and inflammatory markers.",
+    pepCJC: "<strong>CJC-1295 + Ipamorelin</strong> — growth hormone optimization, sleep quality, body composition. Tracked via IGF-1 and metabolic markers.",
+    pepNAD: "<strong>NAD+</strong> — cellular energy, DNA repair, mitochondrial function. Tracked via metabolic and inflammatory panels.",
+    pepSemax: "<strong>Semax</strong> — cognitive performance, neuroprotection, focus. Tracked via hormonal and neurological markers."
   },
   pl: {
     heroEyebrow: "Startujemy w Europie",
@@ -165,7 +173,15 @@ const translations = {
     dashSinceOmega: "Od rozpoczęcia protokołu Omega-3 + BPC-157",
     dashSinceD3: "Od rozpoczęcia protokołu D3+K2 5000 IU",
     dashTabOverview: "Przegląd", dashTabBiomarkers: "Biomarkery", dashTabProtocol: "Protokół", dashTabTrends: "Trendy",
-    dashPatternText: "Podwyższone hs-CRP (2,8) w połączeniu z suboptymalnym testosteronem (485) i nisko-normalną witaminą D (55) sugeruje, że <strong style=\"color: var(--text);\">ogólnoustrojowy stan zapalny może tłumić funkcje hormonalne</strong>. Zajęcie się stanem zapalnym w pierwszej kolejności prawdopodobnie poprawi testosteron bez bezpośredniej interwencji."
+    dashPatternText: "Podwyższone hs-CRP (2,8) w połączeniu z suboptymalnym testosteronem (485) i nisko-normalną witaminą D (55) sugeruje, że <strong style=\"color: var(--text);\">ogólnoustrojowy stan zapalny może tłumić funkcje hormonalne</strong>. Zajęcie się stanem zapalnym w pierwszej kolejności prawdopodobnie poprawi testosteron bez bezpośredniej interwencji.",
+    emailPlaceholder: "Wpisz swój email",
+    dashPatternMeta: "Na podstawie 14 badań • Pewność: <span style=\"color: #1B6B4A; font-weight: 600;\">Wysoka</span> • <span style=\"color: var(--accent); cursor: pointer;\">Zobacz badania →</span>",
+    sampleProtocol: "Przykładowy protokół",
+    sampleInflammation: "Stan zapalny — hs-CRP podwyższone",
+    pepBPC: "<strong>BPC-157</strong> — naprawa tkanek, leczenie jelit, redukcja stanu zapalnego. Śledzone przez hs-CRP i markery zapalne.",
+    pepCJC: "<strong>CJC-1295 + Ipamorelin</strong> — optymalizacja hormonu wzrostu, jakość snu, skład ciała. Śledzone przez IGF-1 i markery metaboliczne.",
+    pepNAD: "<strong>NAD+</strong> — energia komórkowa, naprawa DNA, funkcja mitochondriów. Śledzone przez panele metaboliczne i zapalne.",
+    pepSemax: "<strong>Semax</strong> — wydajność poznawcza, neuroprotekcja, koncentracja. Śledzone przez markery hormonalne i neurologiczne."
   },
   nl: {
     heroEyebrow: "Lancering in Europa",
@@ -249,7 +265,15 @@ const translations = {
     dashSinceOmega: "Sinds start Omega-3 + BPC-157 protocol",
     dashSinceD3: "Sinds start D3+K2 5.000 IU protocol",
     dashTabOverview: "Overzicht", dashTabBiomarkers: "Biomarkers", dashTabProtocol: "Protocol", dashTabTrends: "Trends",
-    dashPatternText: "Je verhoogde hs-CRP (2,8) in combinatie met suboptimaal testosteron (485) en laag-normaal vitamine D (55) suggereert dat <strong style=\"color: var(--text);\">systemische ontsteking de hormonale functie kan onderdrukken</strong>. Eerst de ontsteking aanpakken zal waarschijnlijk het testosteron verbeteren zonder directe interventie."
+    dashPatternText: "Je verhoogde hs-CRP (2,8) in combinatie met suboptimaal testosteron (485) en laag-normaal vitamine D (55) suggereert dat <strong style=\"color: var(--text);\">systemische ontsteking de hormonale functie kan onderdrukken</strong>. Eerst de ontsteking aanpakken zal waarschijnlijk het testosteron verbeteren zonder directe interventie.",
+    emailPlaceholder: "Vul je e-mail in",
+    dashPatternMeta: "Gebaseerd op 14 studies • Betrouwbaarheid: <span style=\"color: #1B6B4A; font-weight: 600;\">Hoog</span> • <span style=\"color: var(--accent); cursor: pointer;\">Bekijk onderzoek →</span>",
+    sampleProtocol: "Voorbeeldprotocol",
+    sampleInflammation: "Ontsteking — hs-CRP verhoogd",
+    pepBPC: "<strong>BPC-157</strong> — weefselherstel, darmgenezing, ontstekingsreductie. Gevolgd via hs-CRP en ontstekingsmarkers.",
+    pepCJC: "<strong>CJC-1295 + Ipamorelin</strong> — groeihormoon-optimalisatie, slaapkwaliteit, lichaamssamenstelling. Gevolgd via IGF-1 en metabole markers.",
+    pepNAD: "<strong>NAD+</strong> — celenergie, DNA-reparatie, mitochondriale functie. Gevolgd via metabole en ontstekingspanels.",
+    pepSemax: "<strong>Semax</strong> — cognitieve prestaties, neuroprotectie, focus. Gevolgd via hormonale en neurologische markers."
   },
   es: {
     heroEyebrow: "Lanzamiento en Europa",
@@ -333,7 +357,15 @@ const translations = {
     dashSinceOmega: "Desde el inicio del protocolo Omega-3 + BPC-157",
     dashSinceD3: "Desde el inicio del protocolo D3+K2 5.000 UI",
     dashTabOverview: "Resumen", dashTabBiomarkers: "Biomarcadores", dashTabProtocol: "Protocolo", dashTabTrends: "Tendencias",
-    dashPatternText: "Tu hs-CRP elevada (2,8) combinada con testosterona subóptima (485) y vitamina D bajo-normal (55) sugiere que <strong style=\"color: var(--text);\">la inflamación sistémica puede estar suprimiendo la función hormonal</strong>. Abordar la inflamación primero probablemente mejorará la testosterona sin intervención directa."
+    dashPatternText: "Tu hs-CRP elevada (2,8) combinada con testosterona subóptima (485) y vitamina D bajo-normal (55) sugiere que <strong style=\"color: var(--text);\">la inflamación sistémica puede estar suprimiendo la función hormonal</strong>. Abordar la inflamación primero probablemente mejorará la testosterona sin intervención directa.",
+    emailPlaceholder: "Ingresa tu email",
+    dashPatternMeta: "Basado en 14 estudios • Confianza: <span style=\"color: #1B6B4A; font-weight: 600;\">Alta</span> • <span style=\"color: var(--accent); cursor: pointer;\">Ver investigación →</span>",
+    sampleProtocol: "Protocolo de ejemplo",
+    sampleInflammation: "Inflamación — hs-CRP elevada",
+    pepBPC: "<strong>BPC-157</strong> — reparación de tejidos, curación intestinal, reducción de inflamación. Rastreado vía hs-CRP y marcadores inflamatorios.",
+    pepCJC: "<strong>CJC-1295 + Ipamorelina</strong> — optimización de hormona de crecimiento, calidad del sueño, composición corporal. Rastreado vía IGF-1 y marcadores metabólicos.",
+    pepNAD: "<strong>NAD+</strong> — energía celular, reparación de ADN, función mitocondrial. Rastreado vía paneles metabólicos e inflamatorios.",
+    pepSemax: "<strong>Semax</strong> — rendimiento cognitivo, neuroprotección, enfoque. Rastreado vía marcadores hormonales y neurológicos."
   }
 };
 
