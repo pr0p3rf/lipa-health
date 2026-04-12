@@ -500,15 +500,75 @@ export default function DashboardPage() {
                 className="text-[34px] tracking-tight text-[#0F1A15]"
                 style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
               >
-                {allGood ? "Everything looks great" : "Here\u2019s what stood out"}
+                {allGood ? "Everything looks great" : "Here's what stood out"}
               </h1>
               <div className="text-[13px] text-[#8A928C] font-mono" style={{ fontFamily: MONO }}>
                 {latestTestDate ? new Date(latestTestDate).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : ""}
               </div>
             </div>
-            <p className="text-[14px] text-[#5A635D] mb-6">
-              {latestResults.length} biomarkers &middot; Analyzed with Living Research&trade;
-            </p>
+            <div className="flex items-center justify-between mb-6">
+              <p className="text-[14px] text-[#5A635D]">
+                {latestResults.length} biomarkers &middot; Analyzed with Living Research&trade;
+              </p>
+              <div className="flex items-center gap-2">
+                {testDates.length > 1 && (
+                  <select
+                    className="text-[12px] text-[#5A635D] bg-white/60 border border-white/30 rounded-lg px-3 py-1.5 backdrop-blur-sm"
+                    value={latestTestDate}
+                    onChange={(e) => {
+                      // TODO: implement test date switching
+                    }}
+                  >
+                    {testDates.map((d) => (
+                      <option key={d} value={d}>
+                        {new Date(d).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                      </option>
+                    ))}
+                  </select>
+                )}
+                <button
+                  onClick={() => {
+                    // Export as JSON for now
+                    const exportData = {
+                      test_date: latestTestDate,
+                      biomarkers: latestResults.map((r) => {
+                        const a = analyses.find((x) => x.biomarker_result_id === r.id);
+                        return { name: r.biomarker, value: r.value, unit: r.unit, status: a?.status, summary: a?.summary };
+                      }),
+                      risk_calculations: calculations.map((c) => ({ name: c.name, value: c.value, interpretation: c.interpretation_label })),
+                    };
+                    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url; a.download = `lipa-results-${latestTestDate}.json`; a.click();
+                    URL.revokeObjectURL(url);
+                  }}
+                  className="text-[11px] font-medium text-[#5A635D] hover:text-[#1B6B4A] bg-white/60 border border-white/30 rounded-lg px-3 py-1.5 backdrop-blur-sm transition-colors flex items-center gap-1.5"
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" />
+                  </svg>
+                  Export
+                </button>
+                <button
+                  onClick={async () => {
+                    if (!confirm("Delete this test and all its analyses? This cannot be undone.")) return;
+                    if (!userId) return;
+                    await supabase.from("analysis_citations").delete().eq("user_id", userId);
+                    await supabase.from("user_analyses").delete().eq("user_id", userId);
+                    await supabase.from("action_plans").delete().eq("user_id", userId);
+                    await supabase.from("biomarker_results").delete().eq("user_id", userId).eq("test_date", latestTestDate);
+                    window.location.reload();
+                  }}
+                  className="text-[11px] font-medium text-[#8A928C] hover:text-[#B91C1C] bg-white/60 border border-white/30 rounded-lg px-3 py-1.5 backdrop-blur-sm transition-colors flex items-center gap-1.5"
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                    <path d="M3 6h18" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" /><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                  </svg>
+                  Delete
+                </button>
+              </div>
+            </div>
 
             {/* Key findings cards */}
             {allGood ? (
@@ -529,7 +589,7 @@ export default function DashboardPage() {
                   <div>
                     <div className="text-[16px] font-semibold text-[#1B6B4A] mb-0.5">All markers in a healthy range</div>
                     <p className="text-[13px] text-[#5A635D]">
-                      {statusCounts.optimal} optimal, {statusCounts.normal} within normal range. Keep up what you&apos;re doing.
+                      {statusCounts.optimal} optimal, {statusCounts.normal} within normal range. Keep up what you're doing.
                     </p>
                   </div>
                 </div>
@@ -597,7 +657,7 @@ export default function DashboardPage() {
                 Patterns detected
               </h2>
               <p className="text-[13px] text-[#5A635D] mb-4">
-                Cross-marker patterns your individual results don&apos;t show in isolation.
+                Cross-marker patterns your individual results don't show in isolation.
               </p>
               <div className="space-y-3">
                 {detectedPatterns.map((pattern) => (
@@ -654,32 +714,38 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* Free tier action plan teaser */}
-          {isFree && actionPlan && (
-            <div
-              className="mb-10 p-6 text-center"
-              style={{
-                ...GLASS_CARD,
-                background: "rgba(232,245,238,0.5)",
-                border: "1px solid rgba(27,107,74,0.15)",
-              }}
-            >
-              <h3
-                className="text-[18px] text-[#1B6B4A] mb-2"
-                style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
-              >
-                Your personalized action plan is ready
-              </h3>
-              <p className="text-[13px] text-[#0F1A15] mb-4 max-w-md mx-auto leading-relaxed">
-                Lipa generated a personalized action plan across nutrition, supplementation, sleep, movement, environment, and lifestyle. Upgrade to see it.
-              </p>
-              <a
-                href="/pricing"
-                className="inline-flex text-[12px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-5 py-2.5 rounded-full transition-all duration-300 hover:-translate-y-0.5"
-                style={{ boxShadow: "0 4px 16px rgba(27,107,74,0.2)" }}
-              >
-                See your action plan &mdash; Upgrade
-              </a>
+          {/* Free tier action plan teaser — blurred preview */}
+          {isFree && actionPlan && actionPlan.domains && (
+            <div className="mb-10 relative overflow-hidden" style={{ ...GLASS_CARD, padding: 0 }}>
+              {/* Blurred preview of actual content */}
+              <div className="p-6 select-none" style={{ filter: "blur(5px)", opacity: 0.6, pointerEvents: "none" }}>
+                <h2 className="text-[20px] tracking-tight text-[#0F1A15] mb-3" style={{ fontFamily: FRAUNCES, fontWeight: 500 }}>
+                  Your Action Plan
+                </h2>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {(actionPlan.domains as any[]).slice(0, 3).map((d: any) => (
+                    <div key={d.domain} className="bg-white/50 rounded-2xl p-4">
+                      <div className="text-[11px] uppercase tracking-wider text-[#1B6B4A] font-semibold mb-1">{d.domain}</div>
+                      <div className="text-[13px] text-[#5A635D]">{d.recommendations?.length || 0} recommendations</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              {/* Overlay with CTA */}
+              <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-transparent via-white/40 to-white/70">
+                <div className="text-center px-6">
+                  <div className="text-[13px] text-[#5A635D] mb-3">
+                    Your personalized action plan is ready — nutrition, supplements, sleep, movement, and more.
+                  </div>
+                  <a
+                    href="/pricing"
+                    className="inline-flex text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-6 py-3 rounded-full transition-all duration-300 hover:-translate-y-0.5"
+                    style={{ boxShadow: "0 4px 16px rgba(27,107,74,0.2)" }}
+                  >
+                    See your action plan
+                  </a>
+                </div>
+              </div>
             </div>
           )}
 
@@ -733,23 +799,29 @@ export default function DashboardPage() {
               </div>
 
               {isFree && lockedCalcCount > 0 && (
-                <div
-                  className="mt-4 p-5 text-center"
-                  style={{
-                    ...GLASS_CARD,
-                    background: "rgba(254,243,199,0.5)",
-                    border: "1px solid rgba(245,158,11,0.15)",
-                  }}
-                >
-                  <p className="text-[13px] text-[#B45309] mb-3">
-                    <strong>{lockedCalcCount} more risk calculations</strong> available with Lipa Insight &mdash; including bio-age, HOMA-IR, FIB-4, and more.
-                  </p>
-                  <a
-                    href="/pricing"
-                    className="inline-flex text-[12px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-5 py-2.5 rounded-full transition-all duration-300"
-                  >
-                    Upgrade &mdash; &euro;79/year
-                  </a>
+                <div className="mt-4 relative overflow-hidden" style={{ ...GLASS_CARD, padding: 0 }}>
+                  {/* Blurred preview of locked calculations */}
+                  <div className="p-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-3 select-none" style={{ filter: "blur(4px)", opacity: 0.5, pointerEvents: "none" }}>
+                    {["Bio-Age (KDM)", "HOMA-IR", "FIB-4 Liver"].map((name) => (
+                      <div key={name} className="bg-white/50 rounded-2xl p-4">
+                        <div className="text-[12px] text-[#5A635D]">{name}</div>
+                        <div className="text-[22px] mt-1" style={{ fontFamily: FRAUNCES }}>—</div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="absolute inset-0 flex items-center justify-center bg-white/50">
+                    <div className="text-center">
+                      <p className="text-[13px] text-[#5A635D] mb-3">
+                        {lockedCalcCount} more calculations — bio-age, insulin resistance, liver health, and more.
+                      </p>
+                      <a
+                        href="/pricing"
+                        className="inline-flex text-[12px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-5 py-2.5 rounded-full transition-all duration-300"
+                      >
+                        See all insights
+                      </a>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
@@ -815,32 +887,41 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Locked markers paywall */}
+          {/* Locked markers — blurred preview */}
           {isFree && lockedCount > 0 && (
-            <div
-              className="mb-10 p-8 text-center"
-              style={GLASS_CARD}
-            >
-              <h3
-                className="text-[22px] mb-2 text-[#0F1A15]"
-                style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
-              >
-                {lockedCount} more markers analyzed
-              </h3>
-              <p className="text-[14px] text-[#5A635D] mb-2 max-w-lg mx-auto leading-relaxed">
-                Your full panel has {filteredResults.length} markers. Upgrade to Lipa Insight to see every marker with full citations, optimal vs normal ranges, confidence scores, cross-marker patterns, and your personalized action plan.
-              </p>
-              <p className="text-[12px] text-[#8A928C] mb-5 font-mono" style={{ fontFamily: MONO }}>
-                16+ risk calculations &middot; permanent vault &middot; year-over-year trending &middot; research alerts
-              </p>
-              <a
-                href="/pricing"
-                className="inline-flex items-center gap-2 text-[14px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-8 py-3.5 rounded-full transition-all duration-300 hover:-translate-y-0.5"
-                style={{ boxShadow: "0 4px 16px rgba(27,107,74,0.25)" }}
-              >
-                Unlock everything &mdash; &euro;79/year
-              </a>
-              <p className="text-[11px] text-[#8A928C] mt-3">30-day money-back guarantee</p>
+            <div className="mb-10 relative overflow-hidden" style={{ ...GLASS_CARD, padding: 0 }}>
+              {/* Show a few locked markers blurred */}
+              <div className="p-6 select-none" style={{ filter: "blur(5px)", opacity: 0.5, pointerEvents: "none" }}>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {filteredResults.slice(FREE_TIER_MARKER_LIMIT, FREE_TIER_MARKER_LIMIT + 6).map((r) => {
+                    const a = analyses.find((x) => x.biomarker_result_id === r.id);
+                    return (
+                      <div key={r.id} className="bg-white/50 rounded-2xl p-4">
+                        <div className="text-[13px] font-semibold">{r.biomarker}</div>
+                        <div className="text-[24px] mt-1" style={{ fontFamily: FRAUNCES }}>{r.value} <span className="text-[11px] text-[#8A928C]" style={{ fontFamily: MONO }}>{r.unit}</span></div>
+                        <div className="text-[11px] text-[#5A635D] mt-1 line-clamp-1">{a?.summary || ""}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+              <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-transparent via-white/30 to-white/60">
+                <div className="text-center px-6">
+                  <h3 className="text-[20px] mb-2 text-[#0F1A15]" style={{ fontFamily: FRAUNCES, fontWeight: 500 }}>
+                    {lockedCount} more markers analyzed
+                  </h3>
+                  <p className="text-[13px] text-[#5A635D] mb-4 max-w-md mx-auto">
+                    Full citations, risk calculations, cross-marker patterns, and your personalized action plan.
+                  </p>
+                  <a
+                    href="/pricing"
+                    className="inline-flex items-center gap-2 text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-6 py-3 rounded-full transition-all duration-300 hover:-translate-y-0.5"
+                    style={{ boxShadow: "0 4px 16px rgba(27,107,74,0.2)" }}
+                  >
+                    See all {filteredResults.length} markers
+                  </a>
+                </div>
+              </div>
             </div>
           )}
 
