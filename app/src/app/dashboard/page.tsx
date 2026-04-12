@@ -333,23 +333,43 @@ export default function DashboardPage() {
 
     setAnalyses(analysesData || []);
 
-    const { data: citationsData } = await supabase
-      .from("analysis_citations")
-      .select(`
-        study_id,
-        biomarker_result_id,
-        relevance_rank,
-        study:research_studies (
-          pmid,
-          title,
-          authors,
-          journal,
-          publication_year,
-          grade_score
-        )
-      `)
-      .eq("user_id", userId)
-      .order("relevance_rank", { ascending: true });
+    // Try joined query first, fall back to plain citations if FK doesn't exist
+    let citationsData: any[] | null = null;
+    try {
+      const { data, error } = await supabase
+        .from("analysis_citations")
+        .select(`
+          study_id,
+          biomarker_result_id,
+          relevance_rank,
+          study:research_studies (
+            pmid,
+            title,
+            authors,
+            journal,
+            publication_year,
+            grade_score
+          )
+        `)
+        .eq("user_id", userId)
+        .order("relevance_rank", { ascending: true });
+      if (!error) {
+        citationsData = data;
+      } else {
+        // FK join failed — fetch citations without study details
+        const { data: plainCitations } = await supabase
+          .from("analysis_citations")
+          .select("study_id, biomarker_result_id, relevance_rank, biomarker_name")
+          .eq("user_id", userId)
+          .order("relevance_rank", { ascending: true });
+        citationsData = (plainCitations || []).map((c: any) => ({
+          ...c,
+          study: { pmid: null, title: `Study #${c.study_id}`, authors: [], journal: null, publication_year: null, grade_score: null },
+        }));
+      }
+    } catch {
+      citationsData = [];
+    }
 
     setCitations((citationsData || []) as unknown as Citation[]);
 
