@@ -161,11 +161,59 @@
       color: #5A635D;
       line-height: 1.5;
     }
+    .lipa-chat-invite {
+      position: fixed;
+      bottom: 96px;
+      right: 28px;
+      max-width: 280px;
+      background: white;
+      border-radius: 16px 16px 4px 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+      padding: 14px 18px;
+      z-index: 9997;
+      font-family: 'Inter', -apple-system, sans-serif;
+      animation: slideUp 0.5s ease-out;
+      cursor: pointer;
+    }
+    .lipa-chat-invite-close {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #8A928C;
+      padding: 2px;
+    }
+    .lipa-chat-invite p {
+      font-size: 13px;
+      color: #0F1A15;
+      line-height: 1.4;
+      margin: 0;
+      padding-right: 16px;
+    }
+    .lipa-chat-invite strong { color: #1B6B4A; }
+    .lipa-chat-invite-link {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #1B6B4A;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
     @media (max-width: 480px) {
       .lipa-chat-panel {
         width: calc(100vw - 32px);
         right: 16px;
         bottom: 88px;
+      }
+      .lipa-chat-invite {
+        right: 16px;
+        bottom: 88px;
+        max-width: 240px;
       }
       .lipa-chat-btn {
         bottom: 20px;
@@ -181,6 +229,27 @@
   btn.setAttribute('aria-label', 'Chat with Lipa');
   btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>';
   document.body.appendChild(btn);
+
+  // Create invite bubble (appears after 5 seconds)
+  var invite = document.createElement('div');
+  invite.className = 'lipa-chat-invite';
+  invite.innerHTML = '<button class="lipa-chat-invite-close" onclick="this.parentElement.remove()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button><p>Have a question about Lipa or your blood test? <strong>We\'re here to help.</strong></p><span class="lipa-chat-invite-link">Send us a message →</span>';
+  invite.style.display = 'none';
+  invite.addEventListener('click', function(e) {
+    if (e.target.closest('.lipa-chat-invite-close')) return;
+    invite.remove();
+    panel.classList.add('open');
+  });
+  document.body.appendChild(invite);
+
+  setTimeout(function() {
+    if (!panel.classList.contains('open')) {
+      invite.style.display = 'block';
+    }
+  }, 5000);
+
+  // Hide invite when chat opens
+  btn.addEventListener('click', function() { invite.remove(); });
 
   // Create panel
   var panel = document.createElement('div');

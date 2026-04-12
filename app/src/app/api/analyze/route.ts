@@ -58,6 +58,37 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Rate limiting: check user's tier and upload count
+    const { data: subData } = await supabase
+      .from("user_subscriptions")
+      .select("tier")
+      .eq("user_id", userId)
+      .maybeSingle();
+
+    const tier = subData?.tier || "free";
+
+    // Count uploads in the last 24 hours
+    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    const { count: recentUploads } = await supabase
+      .from("uploads")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", userId)
+      .gte("created_at", oneDayAgo);
+
+    // Free users: 1 upload per day. Paid: 3 per day (12 per year soft limit)
+    const dailyLimit = tier === "free" ? 1 : 3;
+    if ((recentUploads || 0) >= dailyLimit) {
+      return NextResponse.json(
+        { error: tier === "free"
+          ? "Free accounts can upload 1 test per day. Upgrade to Lipa Insight for more."
+          : "You've reached the daily upload limit. Try again tomorrow."
+        },
+        { status: 429 }
+      );
+    }
+
+    // (original validation moved above rate limiting)
+
     // Process all files — extract biomarkers from each
     let allBiomarkers: any[] = [];
     let totalExtractTimeMs = 0;
