@@ -1,0 +1,41 @@
+CLINICAL LABORATORY REPORT
+==========================
+
+Patient: SYNTHETIC-0062
+Age: 62 | Sex: Male
+Date: 2026-04-12
+Lab: Lipa Synthetic Lab (for testing purposes)
+
+Test                         Result       Unit         Reference       
+──────────────────────────────────────────────────────────────────────
+Fasting Glucose              79           mg/dL        70 - 100
+HbA1c                        4            %            4 - 5.6
+Fasting Insulin              6.9          µIU/mL       2 - 25
+Total Cholesterol            193          mg/dL        125 - 200
+HDL Cholesterol              35         L mg/dL        40 - 100
+Triglycerides                91           mg/dL        0 - 150
+LDL Cholesterol              140        H mg/dL        0 - 100
+hs-CRP                       0.1          mg/L         0 - 3
+Homocysteine                 6.3          µmol/L       5 - 15
+TSH                          1.49         mIU/L        0.4 - 4.5
+Free T3                      4.4        H pg/mL        2.3 - 4.2
+Free T4                      1.03         ng/dL        0.8 - 1.8
+Ferritin                     100          ng/mL        12 - 300
+Vitamin D                    45           ng/mL        20 - 100
+Vitamin B12                  587          pg/mL        200 - 900
+ALT                          33           U/L          7 - 56
+AST                          36           U/L          10 - 40
+Creatinine                   1.24       H mg/dL        0.6 - 1.2
+Hemoglobin                   15           g/dL         14 - 18
+WBC                          3          L K/µL         4.5 - 11
+Platelets                    309          K/µL         150 - 400
+MCV                          81.4         fL           80 - 100
+RDW                          14.5         %            11.5 - 14.5
+Total Testosterone           396          ng/dL        264 - 916
+Estradiol                    10           pg/mL        8 - 43
+Albumin                      3.8          g/dL         3.5 - 5.5
+Alkaline Phosphatase         61           U/L          44 - 147
+Uric Acid                    5.4          mg/dL        2.5 - 7
+Magnesium                    2.4        H mg/dL        1.7 - 2.2
+
+--- END OF REPORT ---

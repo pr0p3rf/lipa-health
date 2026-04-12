@@ -1,0 +1,38 @@
+CLINICAL LABORATORY REPORT
+==========================
+
+Patient: SYNTHETIC-0028
+Age: 32 | Sex: Female
+Date: 2026-04-12
+Lab: Lipa Synthetic Lab (for testing purposes)
+
+Test                         Result       Unit         Reference       
+──────────────────────────────────────────────────────────────────────
+Fasting Glucose              79           mg/dL        70 - 100
+HbA1c                        4            %            4 - 5.6
+Fasting Insulin              9.4          µIU/mL       2 - 25
+Total Cholesterol            216        H mg/dL        125 - 200
+HDL Cholesterol              62           mg/dL        40 - 100
+Triglycerides                271        H mg/dL        0 - 150
+LDL Cholesterol              100          mg/dL        0 - 100
+hs-CRP                       0.3          mg/L         0 - 3
+Homocysteine                 6.7          µmol/L       5 - 15
+TSH                          0.72         mIU/L        0.4 - 4.5
+Free T3                      3.3          pg/mL        2.3 - 4.2
+Free T4                      1.22         ng/dL        0.8 - 1.8
+Ferritin                     11         L ng/mL        12 - 300
+Vitamin D                    37           ng/mL        20 - 100
+Vitamin B12                  293          pg/mL        200 - 900
+ALT                          5          L U/L          7 - 56
+AST                          21           U/L          10 - 40
+Creatinine                   1.06         mg/dL        0.6 - 1.2
+Hemoglobin                   13.9         g/dL         12 - 16
+WBC                          7.4          K/µL         4.5 - 11
+Platelets                    273          K/µL         150 - 400
+MCV                          79.7       L fL           80 - 100
+RDW                          14.5         %            11.5 - 14.5
+FSH                          6.1          mIU/mL       2 - 12
+Estradiol                    64           pg/mL        30 - 300
+Albumin                      4.3          g/dL         3.5 - 5.5
+
+--- END OF REPORT ---

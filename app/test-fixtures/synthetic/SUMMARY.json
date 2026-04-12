@@ -1,0 +1,16 @@
+{
+  "generated": "2026-04-12T15:06:46.576Z",
+  "total_patients": 100,
+  "archetype_distribution": {
+    "random": 30,
+    "healthy": 25,
+    "subclinical_hypothyroid": 8,
+    "inflammation_elevated": 4,
+    "prediabetic": 8,
+    "metabolic_syndrome": 10,
+    "iron_deficiency": 9,
+    "vitamin_d_deficient": 6
+  },
+  "markers_per_patient": "25-40",
+  "source": "NHANES-derived distributions with correlated values"
+}

@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google" content="notranslate">
+  <title>Lipa — Research-Grade Peptides. Verified Purity. Shipped Across Europe.</title>
+  <meta name="description" content="Premium research peptides independently tested by Janoshik Analytical. Every batch verified. BPC-157, TB-500, CJC-1295, Ipamorelin, Semax. Shipped from the Netherlands.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'><circle cx='14' cy='14' r='13' fill='none' stroke='%231B6B4A' stroke-width='1.5'/><path d='M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z' fill='%231B6B4A' opacity='0.3' stroke='%231B6B4A' stroke-width='1'/></svg>">
+  <meta property="og:title" content="Lipa — Research-Grade Peptides. Verified Purity.">
+  <meta property="og:description" content="Premium research peptides independently tested by Janoshik Analytical. Every batch verified. Shipped from the Netherlands across Europe.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FAFAF8;
+      --white: #FFFFFF;
+      --text: #1A1A1A;
+      --text-secondary: #6B6B6B;
+      --text-tertiary: #999999;
+      --accent: #1B6B4A;
+      --accent-light: #E8F5EE;
+      --accent-hover: #155A3D;
+      --border: rgba(0,0,0,0.06);
+      --card-bg: #FFFFFF;
+      --section-alt: #F5F4F1;
+      --warm: #F2EDE8;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    body { overflow-x: hidden; background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; line-height: 1.6; }
+
+    /* ---- NAV ---- */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      padding: 16px 48px;
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(250,250,248,0.9);
+      backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-size: 17px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--text); text-decoration: none;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .logo-icon { width: 28px; height: 28px; }
+    .nav-links { display: flex; gap: 32px; align-items: center; }
+    .nav-links a {
+      font-size: 13px; font-weight: 500; color: var(--text-secondary);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      font-size: 13px; font-weight: 600; color: white;
+      background: var(--accent); padding: 8px 20px;
+      border-radius: 100px; text-decoration: none;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--accent-hover); }
+
+    /* ---- HERO ---- */
+    .hero-wrapper {
+      background: linear-gradient(165deg, #F5F0EB 0%, #FAFAF8 40%, #EEF2EE 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-wrapper::before {
+      content: '';
+      position: absolute;
+      top: -30%; right: -20%;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(27,107,74,0.06) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero-wrapper::after {
+      content: '';
+      position: absolute;
+      bottom: -20%; left: -10%;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(27,107,74,0.04) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero {
+      padding: 160px 48px 100px;
+      max-width: 1200px; margin: 0 auto;
+      text-align: center;
+      position: relative; z-index: 1;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 12px; font-weight: 600; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--accent);
+      background: var(--accent-light); padding: 6px 16px;
+      border-radius: 100px; margin-bottom: 32px;
+    }
+    .hero-badge .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent); animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .hero h1 {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(40px, 6vw, 72px);
+      font-weight: 400; line-height: 1.1;
+      margin-bottom: 24px; letter-spacing: -1px;
+    }
+    .hero p {
+      font-size: 18px; line-height: 1.7;
+      color: var(--text-secondary);
+      max-width: 600px; margin: 0 auto 40px;
+    }
+    .hero-cta {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 15px; font-weight: 600; color: white;
+      background: var(--accent); padding: 14px 32px;
+      border-radius: 100px; text-decoration: none;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .hero-cta:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+    /* ---- TRUST BAR ---- */
+    .trust-bar {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 32px 48px;
+    }
+    .trust-inner {
+      max-width: 1000px; margin: 0 auto;
+      display: flex; justify-content: center; gap: 48px;
+      flex-wrap: wrap;
+    }
+    .trust-item {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 13px; font-weight: 500; color: var(--text-secondary);
+    }
+    .trust-icon {
+      width: 20px; height: 20px; color: var(--accent); flex-shrink: 0;
+    }
+
+    /* ---- SECTION COMMON ---- */
+    section { padding: 100px 48px; max-width: 100vw; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 400; line-height: 1.2;
+      margin-bottom: 16px; letter-spacing: -0.5px;
+    }
+    .section-sub {
+      font-size: 16px; line-height: 1.7;
+      color: var(--text-secondary); max-width: 560px;
+    }
+
+    /* ---- PRODUCTS ---- */
+    .products-section { background: var(--bg); }
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 24px; margin-top: 48px;
+    }
+    .product-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      transition: box-shadow 0.3s, transform 0.2s;
+      display: flex; flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+    .product-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), rgba(27,107,74,0.3));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .product-card:hover::before { opacity: 1; }
+    .product-card:hover {
+      box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+      transform: translateY(-3px);
+    }
+    .premium-badge {
+      position: absolute; top: 16px; right: 16px;
+      font-size: 9px; font-weight: 700; letter-spacing: 1.2px;
+      text-transform: uppercase; color: var(--accent);
+      background: var(--accent-light); padding: 4px 10px;
+      border-radius: 100px;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .premium-badge::before {
+      content: '✓'; font-size: 10px; font-weight: 700;
+    }
+    .product-tag {
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--accent);
+      background: var(--accent-light);
+      padding: 4px 10px; border-radius: 100px;
+      display: inline-block; margin-bottom: 16px; width: fit-content;
+    }
+    .product-name {
+      font-family: 'Instrument Serif', serif;
+      font-size: 28px; font-weight: 400;
+      margin-bottom: 8px;
+    }
+    .product-subtitle {
+      font-size: 14px; color: var(--text-secondary);
+      margin-bottom: 20px; line-height: 1.6;
+    }
+    .product-details {
+      display: flex; gap: 24px; margin-bottom: 24px;
+      padding-bottom: 20px; border-bottom: 1px solid var(--border);
+    }
+    .product-detail {
+      font-size: 12px; color: var(--text-tertiary);
+    }
+    .product-detail strong {
+      display: block; font-size: 15px; font-weight: 600;
+      color: var(--text); margin-bottom: 2px;
+    }
+    .product-research {
+      font-size: 13px; color: var(--text-secondary);
+      line-height: 1.6; flex: 1;
+    }
+    .product-research strong { color: var(--text); }
+    .product-footer { margin-top: auto; padding-top: 24px; }
+    .notify-btn {
+      width: 100%;
+      padding: 12px 24px;
+      font-size: 14px; font-weight: 600;
+      border: 2px solid var(--accent);
+      color: var(--accent); background: transparent;
+      border-radius: 100px; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .notify-btn:hover {
+      background: var(--accent); color: white;
+    }
+    .notify-btn.subscribed {
+      background: var(--accent-light); border-color: var(--accent-light);
+      color: var(--accent); cursor: default;
+    }
+
+    /* ---- PURITY ---- */
+    .purity-section {
+      background: linear-gradient(170deg, #F0EDE8 0%, var(--section-alt) 50%, #EEF2EE 100%);
+      position: relative;
+    }
+    .purity-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 64px; margin-top: 48px; align-items: center;
+    }
+    .purity-visual {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 40px;
+      border: 1px solid var(--border);
+    }
+    .coa-header {
+      display: flex; justify-content: space-between;
+      align-items: center; margin-bottom: 24px;
+      padding-bottom: 16px; border-bottom: 1px solid var(--border);
+    }
+    .coa-title { font-size: 13px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+    .coa-badge {
+      font-size: 11px; font-weight: 700;
+      color: var(--accent); background: var(--accent-light);
+      padding: 4px 12px; border-radius: 100px;
+    }
+    .coa-row {
+      display: flex; justify-content: space-between;
+      padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.04);
+      font-size: 14px;
+    }
+    .coa-label { color: var(--text-secondary); }
+    .coa-value { font-weight: 600; }
+    .coa-value.pass { color: var(--accent); }
+    .purity-points { display: flex; flex-direction: column; gap: 32px; }
+    .purity-point h3 {
+      font-size: 18px; font-weight: 600; margin-bottom: 8px;
+    }
+    .purity-point p {
+      font-size: 15px; color: var(--text-secondary); line-height: 1.7;
+    }
+
+    /* ---- RESEARCH ---- */
+    .research-section { background: var(--bg); }
+    .research-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 24px; margin-top: 48px;
+    }
+    .research-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      transition: box-shadow 0.3s, transform 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .research-card::after {
+      content: '';
+      position: absolute; bottom: 0; left: 32px; right: 32px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .research-card:hover::after { opacity: 0.5; }
+    .research-card:hover {
+      box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+      transform: translateY(-3px);
+    }
+    .research-category {
+      font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 12px;
+    }
+    .research-card h3 {
+      font-size: 18px; font-weight: 600;
+      margin-bottom: 12px; line-height: 1.4;
+    }
+    .research-card p {
+      font-size: 14px; color: var(--text-secondary); line-height: 1.7;
+      margin-bottom: 16px;
+    }
+    .research-link {
+      font-size: 13px; font-weight: 600; color: var(--accent);
+      text-decoration: none; display: inline-flex; align-items: center; gap: 4px;
+    }
+    .research-link:hover { text-decoration: underline; }
+
+    /* ---- HOW IT WORKS ---- */
+    .how-section { background: var(--section-alt); }
+    .how-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 32px; margin-top: 48px;
+    }
+    .how-step { }
+    .how-num {
+      font-size: 48px; font-family: 'Instrument Serif', serif;
+      color: var(--accent); opacity: 0.3;
+      margin-bottom: 12px; line-height: 1;
+    }
+    .how-step h3 {
+      font-size: 16px; font-weight: 600; margin-bottom: 8px;
+    }
+    .how-step p {
+      font-size: 14px; color: var(--text-secondary); line-height: 1.7;
+    }
+
+    /* ---- CTA BOTTOM ---- */
+    .cta-section {
+      background: linear-gradient(160deg, #1A1A1A 0%, #1B3A2A 50%, #1A2A1F 100%);
+      color: white;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: -50%; right: -20%;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(27,107,74,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .cta-section .section-eyebrow { color: rgba(255,255,255,0.5); }
+    .cta-section .section-title { color: white; }
+    .cta-section .section-sub { color: rgba(255,255,255,0.6); margin: 0 auto 40px; }
+    .cta-form {
+      display: flex; gap: 12px;
+      max-width: 440px; margin: 0 auto;
+    }
+    .cta-input {
+      flex: 1; padding: 14px 20px;
+      font-size: 15px; font-family: inherit;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.08);
+      color: white; border-radius: 100px;
+      outline: none; transition: border 0.2s;
+    }
+    .cta-input::placeholder { color: rgba(255,255,255,0.35); }
+    .cta-input:focus { border-color: rgba(255,255,255,0.4); }
+    .cta-submit {
+      padding: 14px 28px; font-size: 15px; font-weight: 600;
+      font-family: inherit; background: white; color: var(--text);
+      border: none; border-radius: 100px; cursor: pointer;
+      transition: opacity 0.2s; white-space: nowrap;
+    }
+    .cta-submit:hover { opacity: 0.9; }
+    .cta-fine {
+      font-size: 12px; color: rgba(255,255,255,0.35);
+      margin-top: 16px;
+    }
+
+    /* ---- FOOTER ---- */
+    footer {
+      padding: 48px; border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+      max-width: 100vw;
+    }
+    .footer-left {
+      font-size: 12px; color: var(--text-tertiary);
+    }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a {
+      font-size: 12px; color: var(--text-tertiary);
+      text-decoration: none;
+    }
+    .footer-links a:hover { color: var(--text-secondary); }
+    .disclaimer {
+      max-width: 1200px; margin: 0 auto;
+      padding: 0 48px 48px;
+      font-size: 11px; color: var(--text-tertiary);
+      line-height: 1.7;
+    }
+
+    /* ---- MODAL ---- */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      justify-content: center; align-items: center;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: white; border-radius: 20px;
+      padding: 40px; max-width: 420px; width: 90%;
+      text-align: center;
+    }
+    .modal h3 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 24px; margin-bottom: 8px;
+    }
+    .modal p {
+      font-size: 14px; color: var(--text-secondary);
+      margin-bottom: 24px; line-height: 1.6;
+    }
+    .modal-form { display: flex; flex-direction: column; gap: 12px; }
+    .modal-input {
+      padding: 14px 20px; font-size: 15px; font-family: inherit;
+      border: 1px solid var(--border); border-radius: 12px;
+      outline: none; transition: border 0.2s;
+    }
+    .modal-input:focus { border-color: var(--accent); }
+    .modal-submit {
+      padding: 14px 24px; font-size: 15px; font-weight: 600;
+      font-family: inherit; background: var(--accent); color: white;
+      border: none; border-radius: 12px; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .modal-submit:hover { background: var(--accent-hover); }
+    .modal-close {
+      margin-top: 16px; font-size: 13px; color: var(--text-tertiary);
+      background: none; border: none; cursor: pointer;
+    }
+    .modal-success { display: none; }
+    .modal-success h3 { color: var(--accent); }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 900px) {
+      nav { padding: 14px 20px; }
+      .nav-links { display: none; }
+      section { padding: 64px 20px; }
+      .hero { padding: 120px 20px 64px; }
+      .hero h1 { font-size: 36px; }
+      .hero p { font-size: 16px; }
+      .products-grid { grid-template-columns: 1fr; }
+      .purity-grid { grid-template-columns: 1fr; gap: 32px; }
+      .research-grid { grid-template-columns: 1fr; }
+      .how-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
+      .trust-inner { gap: 24px; }
+      .trust-bar { padding: 24px 20px; }
+      .cta-form { flex-direction: column; }
+      footer { flex-direction: column; gap: 16px; text-align: center; padding: 32px 20px; }
+      .disclaimer { padding: 0 20px 32px; }
+    }
+    @media (max-width: 500px) {
+      .how-grid { grid-template-columns: 1fr; }
+      .product-details { gap: 16px; }
+    }
+
+    /* ---- QUIZ ---- */
+    .quiz-section { background: var(--bg); padding: 80px 48px; }
+    .quiz-inner { max-width: 800px; margin: 0 auto; text-align: center; }
+    .quiz-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(24px, 3.5vw, 36px);
+      margin-bottom: 8px;
+    }
+    .quiz-sub { font-size: 15px; color: var(--text-secondary); margin-bottom: 40px; }
+    .quiz-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .quiz-option {
+      background: var(--white); border: 1.5px solid var(--border);
+      border-radius: 16px; padding: 28px 20px;
+      cursor: pointer; transition: all 0.2s;
+      text-decoration: none; color: var(--text);
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+    }
+    .quiz-option:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+    .quiz-icon { font-size: 32px; line-height: 1; }
+    .quiz-label { font-size: 14px; font-weight: 600; }
+    .quiz-compounds { font-size: 12px; color: var(--text-tertiary); line-height: 1.5; }
+    @media (max-width: 900px) {
+      .quiz-section { padding: 48px 20px; }
+      .quiz-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 500px) {
+      .quiz-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ---- WHY LIPA ---- */
+    .why-section { background: linear-gradient(180deg, var(--bg), var(--section-alt)); padding: 80px 48px; }
+    .why-grid {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 40px; text-align: center;
+    }
+    .why-item {}
+    .why-icon {
+      width: 48px; height: 48px; margin: 0 auto 16px;
+      background: var(--accent-light); border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .why-icon svg { width: 24px; height: 24px; color: var(--accent); }
+    .why-item h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+    .why-item p { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+    @media (max-width: 700px) {
+      .why-section { padding: 48px 20px; }
+      .why-grid { grid-template-columns: 1fr; gap: 32px; }
+    }
+
+    /* ---- MOBILE STICKY CTA ---- */
+    .mobile-sticky {
+      display: none; position: fixed; bottom: 0; left: 0; right: 0;
+      z-index: 99; padding: 12px 20px;
+      background: rgba(250,250,248,0.95);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border);
+    }
+    .mobile-sticky a {
+      display: block; text-align: center;
+      padding: 14px; font-size: 15px; font-weight: 600;
+      background: var(--accent); color: white;
+      border-radius: 100px; text-decoration: none;
+    }
+    @media (max-width: 900px) {
+      .mobile-sticky { display: block; }
+      body { padding-bottom: 72px; }
+    }
+
+    /* ---- PRODUCT CATEGORY ICONS ---- */
+    .product-icon {
+      width: 40px; height: 40px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px; font-size: 20px;
+    }
+    .product-icon.recovery { background: #FFF0E6; }
+    .product-icon.gh { background: #E6F0FF; }
+    .product-icon.cognitive { background: #F0E6FF; }
+    .product-icon.skin { background: #FFE6F0; }
+    .product-icon.longevity { background: #E6FFF0; }
+    .product-icon.body { background: #FFF6E6; }
+    .product-icon.sleep { background: #E6E8FF; }
+    .product-icon.gut { background: #E6FFFA; }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="/" class="logo">
+      <svg class="logo-icon" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="14" cy="14" r="13" stroke="#1B6B4A" stroke-width="1.5"/>
+        <path d="M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z" fill="#1B6B4A" opacity="0.15"/>
+        <path d="M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z" stroke="#1B6B4A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="14" y1="11" x2="14" y2="21" stroke="#1B6B4A" stroke-width="0.8"/>
+      </svg>
+      Lipa
+    </a>
+    <div class="nav-links">
+      <a href="#products">Products</a>
+      <a href="#supplies">Supplies</a>
+      <a href="#purity">Purity</a>
+      <a href="research.html">Research</a>
+    </div>
+    <a href="#notify" class="nav-cta">Get Notified</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero-wrapper">
+    <section class="hero">
+      <div class="hero-badge"><span class="dot"></span> Coming Soon — Shipping Across Europe</div>
+      <h1>Premium research peptides.<br>99%+ verified purity.</h1>
+      <p>Every batch independently tested by Janoshik Analytical via HPLC, mass spectrometry, and full composition analysis. Full certificates of analysis published per product. Premium-grade only. Shipped from the Netherlands. For research purposes only.</p>
+      <a href="#notify" class="hero-cta">
+        Join the Waitlist
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+
+    </section>
+  </div>
+
+  <!-- TRUST BAR -->
+  <div class="trust-bar">
+    <div class="trust-inner">
+      <div class="trust-item">
+        <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        Every batch Janoshik tested
+      </div>
+      <div class="trust-item">
+        <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+        Full COA published per product
+      </div>
+      <div class="trust-item">
+        <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        Shipped from the Netherlands
+      </div>
+      <div class="trust-item">
+        <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+        Professional laboratory packaging
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <section class="quiz-section">
+    <div class="quiz-inner">
+      <div class="section-eyebrow">Explore</div>
+      <div class="quiz-title">What are you researching?</div>
+      <div class="quiz-sub">Select a research area to see the most relevant compounds.</div>
+      <div class="quiz-grid">
+        <a href="#products" class="quiz-option" onclick="filterProducts('recovery')">
+          <span class="quiz-icon">🔬</span>
+          <span class="quiz-label">Tissue Modeling Peptides</span>
+          <span class="quiz-compounds">BPC-157, TB-500</span>
+        </a>
+        <a href="#products" class="quiz-option" onclick="filterProducts('gh')">
+          <span class="quiz-icon">📈</span>
+          <span class="quiz-label">GH Secretagogues</span>
+          <span class="quiz-compounds">CJC-1295, Ipamorelin, AOD-9604</span>
+        </a>
+        <a href="#products" class="quiz-option" onclick="filterProducts('cognitive')">
+          <span class="quiz-icon">🧠</span>
+          <span class="quiz-label">Neuropeptide Analogs</span>
+          <span class="quiz-compounds">Semax, Selank</span>
+        </a>
+        <a href="#products" class="quiz-option" onclick="filterProducts('longevity')">
+          <span class="quiz-icon">🧬</span>
+          <span class="quiz-label">Telomerase & Copper Peptides</span>
+          <span class="quiz-compounds">Epithalon, GHK-Cu</span>
+        </a>
+        <a href="#products" class="quiz-option" onclick="filterProducts('sleep')">
+          <span class="quiz-icon">🌙</span>
+          <span class="quiz-label">Delta-Wave Neuropeptides</span>
+          <span class="quiz-compounds">DSIP</span>
+        </a>
+        <a href="#products" class="quiz-option" onclick="filterProducts('gut')">
+          <span class="quiz-icon">🛡</span>
+          <span class="quiz-label">Anti-Inflammatory Fragments</span>
+          <span class="quiz-compounds">KPV, BPC-157</span>
+        </a>
+      </div>
+      <div style="margin-top: 24px;">
+        <a href="beginners.html" style="font-size: 13px; color: var(--accent); font-weight: 600; text-decoration: none;">New to research peptides? Start here &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY LIPA -->
+  <section class="why-section">
+    <div class="why-grid">
+      <div class="why-item">
+        <div class="why-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        </div>
+        <h3>Independently verified</h3>
+        <p>Every batch tested by Janoshik Analytical in the Czech Republic. Full COA published with HPLC purity, mass spec identity, endotoxin, and heavy metal results.</p>
+      </div>
+      <div class="why-item">
+        <div class="why-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <h3>Shipped from Europe</h3>
+        <p>Based in the Netherlands. Intra-EU logistics with no customs clearance delays. Fast, reliable delivery via PostNL and DHL. Professional laboratory packaging standards.</p>
+      </div>
+      <div class="why-item">
+        <div class="why-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+        </div>
+        <h3>Full methodological transparency</h3>
+        <p>Every compound documented with peer-reviewed citations, detailed COAs, stability data, and published research summaries. Built for researchers who demand rigor.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCTS -->
+  <section class="products-section" id="products">
+    <div class="section-inner">
+      <div class="section-eyebrow">Premium Research Compounds</div>
+      <div class="section-title">Every batch verified. No exceptions.</div>
+      <div class="section-sub">Every product ships with a full independent certificate of analysis — HPLC, mass spectrometry, endotoxin, and heavy metal testing. Our entire catalog is premium grade. No tiers, no downgrades, no manufacturer COAs. Just third-party verification.</div>
+
+      <div class="products-grid">
+
+        <!-- BPC-157 -->
+        <div class="product-card">
+          <div class="product-tag">Gastric Pentadecapeptide</div>
+          <div class="product-name">BPC-157</div>
+          <div class="product-subtitle">Body Protection Compound-157. A 15-amino-acid peptide derived from human gastric juice, studied extensively for tissue repair and gut integrity.</div>
+          <div class="product-details">
+            <div class="product-detail"><strong>5 mg</strong>per vial</div>
+            <div class="product-detail"><strong>99%+</strong>purity target</div>
+            <div class="product-detail"><strong>Lyophilized</strong>format</div>
+          </div>
+          <div class="product-research">
+            <strong>Research areas in the literature:</strong> NO pathway modulation, VEGFR2 expression, tendon fibroblast proliferation, gastric protection models, inflammatory cytokine studies. 30+ peer-reviewed publications.
+          </div>
+          <div class="product-footer">
+            <button class="notify-btn" onclick="openModal('BPC-157')">Notify Me When Available</button>
+          </div>
+        </div>
+
+        <!-- TB-500 -->
+        <div class="product-card">
+          <div class="product-tag">Thymosin Fragment</div>
+          <div class="product-name">TB-500</div>
+          <div class="product-subtitle">Thymosin Beta-4 fragment. A 43-amino-acid peptide naturally found in most tissues and body fluids, studied for wound healing and tissue regeneration.</div>
+          <div class="product-details">
+            <div class="product-detail"><strong>5 mg</strong>per vial</div>
+            <div class="product-detail"><strong>99%+</strong>purity target</div>
+            <div class="product-detail"><strong>Lyophilized</strong>format</div>
+          </div>
+          <div class="product-research">
+            <strong>Research areas in the literature:</strong> Actin-binding mechanics, cell migration models, angiogenesis pathways, fibroblast motility studies. Frequently studied alongside BPC-157 in combination protocols.
+          </div>
+          <div class="product-footer">
+            <button class="notify-btn" onclick="openModal('TB-500')">Notify Me When Available</button>
+          </div>
+        </div>
+
+        <!-- CJC-1295 -->
+        <div class="product-card">
+          <div class="product-tag">GH Secretagogue</div>
+          <div class="product-name">CJC-1295</div>
+          <div class="product-subtitle">Modified Growth Hormone Releasing Factor (1-29), no DAC. A 29-amino-acid peptide studied for growth hormone secretion and IGF-1 elevation.</div>
+          <div class="product-details">
+            <div class="product-detail"><strong>2 mg</strong>per vial</div>
+            <div class="product-detail"><strong>99%+</strong>purity target</div>
+            <div class="product-detail"><strong>Lyophilized</strong>format</div>
+          </div>
+          <div class="product-research">
+            <strong>Research areas in the literature:</strong> GHRH receptor binding, growth hormone pulsatility, IGF-1 response, pharmacokinetic profiling. Commonly studied in combination with Ipamorelin.
+          </div>
+          <div class="product-footer">
+            <button class="notify-btn" onclick="openModal('CJC-1295')">Notify Me When Available</button>
+          </div>
+        </div>
+
+        <!-- Ipamorelin -->
+        <div class="product-card">
+          <div class="product-tag">GH Secretagogue</div>
+          <div class="product-name">Ipamorelin</div>
+          <div class="product-subtitle">A selective growth hormone secretagogue. A 5-amino-acid peptide that mimics ghrelin to stimulate natural GH release without affecting cortisol or prolactin.</div>
+          <div class="product-details">
+            <div class="product-detail"><strong>2 mg</strong>per vial</div>
+            <div class="product-detail"><strong>99%+</strong>purity target</div>
+            <div class="product-detail"><strong>Lyophilized</strong>format</div>
+          </div>
+          <div class="product-research">
+            <strong>Research areas in the literature:</strong> Ghrelin receptor selectivity, GH secretion profiling, pharmacokinetics, comparison studies against earlier GHRPs. Studied for its receptor specificity profile.
+          </div>
+          <div class="product-footer">
+            <button class="notify-btn" onclick="openModal('Ipamorelin')">Notify Me When Available</button>
+          </div>
+        </div>
+
+        <!-- Semax -->
+        <div class="product-card">
+          <div class="product-tag">Neuropeptide</div>
+          <div class="product-name">Semax</div>
+          <div class="product-subtitle">A synthetic analog of ACTH(4-7). A 7-amino-acid neuropeptide originally developed at the Institute of Molecular Genetics, Russian Academy of Sciences.</div>
+          <div class="product-details">
+            <div class="product-detail"><strong>30 mg</strong>per vial</div>
+            <div class="product-detail"><strong>99%+</strong>purity target</div>
+            <div class="product-detail"><strong>Lyophilized</strong>format</div>
+          </div>
+          <div class="product-research">
+            <strong>Research areas in the literature:</strong> BDNF expression, neurotrophic pathways, dopaminergic system interactions, ischemia models. Originally developed at the Institute of Molecular Genetics, Russian Academy of Sciences.
+          </div>
+          <div class="product-footer">
+            <button class="notify-btn" onclick="openModal('Semax')">Notify Me When Available</button>
+          </div>
+        </div>
+
+        <!-- GHK-Cu -->
+        <div class="product-card">
+          <div class="product-tag">Copper Tripeptide</div>
+          <div class="product-name">GHK-Cu</div>
+          <div class="product-subtitle">Copper peptide. A naturally occurring tripeptide-copper complex that declines with age, studied for collagen synthesis, wound healing, and skin remodeling.</div>
+          <div class="product-details">
+            <div class="product-detail"><strong>50 mg</strong>per vial</div>
+            <div class="product-detail"><strong>99%+</strong>purity target</div>
+            <div class="product-detail"><strong>Lyophilized</strong>format</div>
+          </div>
+          <div class="product-research">
+            <strong>Research areas in the literature:</strong> Copper chelation chemistry, collagen and elastin gene expression, fibroblast studies, gene expression profiling (Campbell et al. — 4,000 gene analysis). Extensive peer-reviewed dermatological and biomedical literature.
+          </div>
+          <div class="product-footer">
+            <button class="notify-btn" onclick="openModal('GHK-Cu')">Notify Me When Available</button>
+          </div>
+        </div>
+
+        <!-- Selank -->
+        <div class="product-card">
+          <div class="product-tag">Neuropeptide</div>
+          <div class="product-name">Selank</div>
+          <div class="product-subtitle">A synthetic analog of tuftsin. A 7-amino-acid peptide studied for anxiolytic and nootropic properties, developed alongside Semax in Russia.</div>
+          <div class="product-details">
+            <div class="product-detail"><strong>5 mg</strong>per vial</div>
+            <div class="product-detail"><strong>99%+</strong>purity target</div>
+            <div class="product-detail"><strong>Lyophilized</strong>format</div>
+          </div>
+          <div class="product-research">
+            <strong>Research areas in the literature:</strong> GABAergic modulation, cytokine expression (IL-6), enkephalin system interactions, gene expression studies. Developed alongside Semax at the Institute of Molecular Genetics, RAS.
+          </div>
+          <div class="product-footer">
+            <button class="notify-btn" onclick="openModal('Selank')">Notify Me When Available</button>
+          </div>
+        </div>
+
+        <!-- Epithalon -->
+        <div class="product-card">
+          <div class="product-tag">Tetrapeptide</div>
+          <div class="product-name">Epithalon</div>
+          <div class="product-subtitle">A synthetic tetrapeptide (Ala-Glu-Asp-Gly) based on the natural peptide epithalamin, studied for telomerase activation and anti-aging properties.</div>
+          <div class="product-details">
+            <div class="product-detail"><strong>10 mg</strong>per vial</div>
+            <div class="product-detail"><strong>99%+</strong>purity target</div>
+            <div class="product-detail"><strong>Lyophilized</strong>format</div>
+          </div>
+          <div class="product-research">
+            <strong>Research areas in the literature:</strong> Telomerase enzyme activation, telomere biology, circadian rhythm studies, pineal gland research. 15+ years of research originating from the Khavinson Institute, St. Petersburg.
+          </div>
+          <div class="product-footer">
+            <button class="notify-btn" onclick="openModal('Epithalon')">Notify Me When Available</button>
+          </div>
+        </div>
+
+        <!-- AOD-9604 -->
+        <div class="product-card">
+          <div class="product-tag">HGH Fragment 177-191</div>
+          <div class="product-name">AOD-9604</div>
+          <div class="product-subtitle">Advanced Obesity Drug 9604. A modified fragment of human growth hormone (amino acids 177-191) studied for fat metabolism without growth-promoting effects.</div>
+          <div class="product-details">
+            <div class="product-detail"><strong>5 mg</strong>per vial</div>
+            <div class="product-detail"><strong>99%+</strong>purity target</div>
+            <div class="product-detail"><strong>Lyophilized</strong>format</div>
+          </div>
+          <div class="product-research">
+            <strong>Research areas in the literature:</strong> Lipolytic pathway studies, C-terminal hGH fragment characterization, metabolic pathway research. Phase 2b clinical trial data published by Metabolic Pharmaceuticals.
+          </div>
+          <div class="product-footer">
+            <button class="notify-btn" onclick="openModal('AOD-9604')">Notify Me When Available</button>
+          </div>
+        </div>
+
+        <!-- DSIP -->
+        <div class="product-card">
+          <div class="product-tag">Nonapeptide</div>
+          <div class="product-name">DSIP</div>
+          <div class="product-subtitle">Delta Sleep-Inducing Peptide. A 9-amino-acid neuropeptide studied for its role in promoting delta-wave deep sleep and stress modulation.</div>
+          <div class="product-details">
+            <div class="product-detail"><strong>5 mg</strong>per vial</div>
+            <div class="product-detail"><strong>99%+</strong>purity target</div>
+            <div class="product-detail"><strong>Lyophilized</strong>format</div>
+          </div>
+          <div class="product-research">
+            <strong>Research areas in the literature:</strong> EEG delta-wave modulation studies, cortisol rhythm research, LH secretion pathways, early neuropeptide characterization. One of the earliest neuropeptides discovered (Monnier & Schoenenberger, 1977).
+          </div>
+          <div class="product-footer">
+            <button class="notify-btn" onclick="openModal('DSIP')">Notify Me When Available</button>
+          </div>
+        </div>
+
+        <!-- KPV -->
+        <div class="product-card">
+          <div class="product-tag">alpha-MSH Fragment</div>
+          <div class="product-name">KPV</div>
+          <div class="product-subtitle">A C-terminal tripeptide fragment (Lys-Pro-Val) of alpha-melanocyte-stimulating hormone, studied for potent anti-inflammatory activity in the gut.</div>
+          <div class="product-details">
+            <div class="product-detail"><strong>5 mg</strong>per vial</div>
+            <div class="product-detail"><strong>99%+</strong>purity target</div>
+            <div class="product-detail"><strong>Lyophilized</strong>format</div>
+          </div>
+          <div class="product-research">
+            <strong>Research areas in the literature:</strong> NF-kB pathway inhibition, cytokine signaling, alpha-MSH C-terminal fragment studies, colitis animal models. Characterized as a potent anti-inflammatory fragment in peer-reviewed research.
+          </div>
+          <div class="product-footer">
+            <button class="notify-btn" onclick="openModal('KPV')">Notify Me When Available</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- STACKS -->
+      <div style="margin-top: 64px;">
+        <div class="section-eyebrow">Research Stacks</div>
+        <div class="section-title">Curated compound combinations.</div>
+        <div class="section-sub" style="margin-bottom: 32px;">Compounds frequently studied together in published research. Bundle pricing available at launch.</div>
+
+        <div class="products-grid">
+          <div class="product-card" style="border-color: var(--accent); border-width: 1.5px;">
+            <div class="product-tag">Synergistic Pair</div>
+            <div class="product-name">BPC-157 + TB-500</div>
+            <div class="product-subtitle">Two structurally complementary peptides frequently studied in combination. Shared research focus on tissue modeling and inflammatory pathways.</div>
+            <div class="product-footer">
+              <button class="notify-btn" onclick="openModal('Recovery Stack (BPC-157 + TB-500)')">Notify Me When Available</button>
+            </div>
+          </div>
+          <div class="product-card" style="border-color: var(--accent); border-width: 1.5px;">
+            <div class="product-tag">Secretagogue Combination</div>
+            <div class="product-name">CJC-1295 + Ipamorelin</div>
+            <div class="product-subtitle">The most widely studied GHRH + GHRP combination. Research examines synergistic effects on growth hormone pulsatility and IGF-1 pathways.</div>
+            <div class="product-footer">
+              <button class="notify-btn" onclick="openModal('GH Stack (CJC-1295 + Ipamorelin)')">Notify Me When Available</button>
+            </div>
+          </div>
+          <div class="product-card" style="border-color: var(--accent); border-width: 1.5px;">
+            <div class="product-tag">Neuropeptide Pair</div>
+            <div class="product-name">Semax + Selank</div>
+            <div class="product-subtitle">Complementary neuropeptide analogs developed at the Institute of Molecular Genetics, RAS. Studied for BDNF expression and GABA modulation respectively.</div>
+            <div class="product-footer">
+              <button class="notify-btn" onclick="openModal('Cognitive Stack (Semax + Selank)')">Notify Me When Available</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBSCRIBE & SAVE CALLOUT -->
+      <div style="margin-top: 64px; background: var(--section-alt); border-radius: 16px; padding: 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px;">
+        <div>
+          <div class="section-eyebrow">Subscribe & Save</div>
+          <div style="font-family: 'Instrument Serif', serif; font-size: 28px; margin-bottom: 8px;">15% off every order. Automated resupply.</div>
+          <div style="font-size: 15px; color: var(--text-secondary); max-width: 500px;">Automate your lab inventory. We auto-ship every 4, 6, or 8 weeks to ensure continuous supply for ongoing research. Pause or cancel anytime. Founding members lock in early pricing permanently.</div>
+        </div>
+        <a href="#notify" class="hero-cta" style="white-space: nowrap;">Join Waitlist for Early Pricing</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESEARCH SUPPLIES -->
+  <section style="background: var(--bg);" id="supplies">
+    <div class="section-inner">
+      <div class="section-eyebrow">Laboratory Supplies</div>
+      <div class="section-title">Everything for your research setup.</div>
+      <div class="section-sub">Standard laboratory preparation supplies. Sold separately.</div>
+
+      <div class="products-grid" style="margin-top: 32px;">
+        <div class="product-card">
+          <div class="product-name" style="font-size: 22px;">Bacteriostatic Water</div>
+          <div class="product-subtitle">Sterile water with 0.9% benzyl alcohol preservative. Standard laboratory reconstitution solvent. Available in 2ml, 5ml, and 10ml ampoules.</div>
+          <div class="product-footer">
+            <button class="notify-btn" onclick="openModal('Bacteriostatic Water')">Notify Me</button>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-name" style="font-size: 22px;">Precision Dispensing Syringes</div>
+          <div class="product-subtitle">31G and 32G ultra-fine tips. 0.5ml and 1ml volumes. Laboratory-grade dispensing syringes for precise volumetric measurement. Individually wrapped, sterile.</div>
+          <div class="product-footer">
+            <button class="notify-btn" onclick="openModal('Precision Dispensing Syringes')">Notify Me</button>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-name" style="font-size: 22px;">Laboratory Essentials Kit</div>
+          <div class="product-subtitle">Alcohol swabs, nitrile gloves, waste disposal container, and sterile mixing vials. Standard laboratory preparation supplies for research environments.</div>
+          <div class="product-footer">
+            <button class="notify-btn" onclick="openModal('Preparation Kit')">Notify Me</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PURITY -->
+  <section class="purity-section" id="purity">
+    <div class="section-inner">
+      <div class="section-eyebrow">Verified Purity</div>
+      <div class="section-title">Independent testing. Not manufacturer claims.</div>
+
+      <div class="purity-grid">
+        <div class="purity-visual">
+          <div class="coa-header">
+            <span class="coa-title">Certificate of Analysis</span>
+            <span class="coa-badge">Janoshik Analytical</span>
+          </div>
+          <div class="coa-row"><span class="coa-label">Compound</span><span class="coa-value">BPC-157</span></div>
+          <div class="coa-row"><span class="coa-label">Purity (HPLC)</span><span class="coa-value pass">99.2%</span></div>
+          <div class="coa-row"><span class="coa-label">Identity (MS)</span><span class="coa-value pass">Confirmed</span></div>
+          <div class="coa-row"><span class="coa-label">Endotoxin</span><span class="coa-value pass">&lt;0.5 EU/mg</span></div>
+          <div class="coa-row"><span class="coa-label">Heavy Metals</span><span class="coa-value pass">Below LOD</span></div>
+          <div class="coa-row"><span class="coa-label">Batch</span><span class="coa-value">LP-BPC-2026-001</span></div>
+          <div class="coa-row"><span class="coa-label">Test Date</span><span class="coa-value">Pending first batch</span></div>
+          <div style="margin-top: 16px; font-size: 12px; color: var(--text-tertiary);">Sample certificate. Real COAs will be published when products launch.</div>
+          <!-- Decorative HPLC chromatogram -->
+          <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border);">
+            <div style="font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 12px;">HPLC Chromatogram Preview</div>
+            <svg width="100%" height="80" viewBox="0 0 400 80" fill="none" style="opacity: 0.6;">
+              <path d="M0 70 L40 70 L60 68 L80 65 L100 60 L120 55 L140 45 L155 20 L165 5 L175 15 L185 40 L200 55 L220 62 L240 65 L260 67 L280 68 L300 69 L320 69.5 L340 70 L360 70 L400 70" stroke="#1B6B4A" stroke-width="1.5" fill="none"/>
+              <path d="M0 70 L40 70 L60 68 L80 65 L100 60 L120 55 L140 45 L155 20 L165 5 L175 15 L185 40 L200 55 L220 62 L240 65 L260 67 L280 68 L300 69 L320 69.5 L340 70 L360 70 L400 70 L400 80 L0 80 Z" fill="url(#chromGrad)"/>
+              <defs><linearGradient id="chromGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1B6B4A" stop-opacity="0.1"/><stop offset="100%" stop-color="#1B6B4A" stop-opacity="0"/></linearGradient></defs>
+              <text x="165" y="78" font-size="8" fill="#1B6B4A" font-family="Inter" text-anchor="middle">99.2%</text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="purity-points">
+          <div class="purity-point">
+            <h3>Third-party lab, not the manufacturer</h3>
+            <p>Every batch is tested by Janoshik Analytical in the Czech Republic — an independent laboratory with no financial relationship with Lipa or our suppliers. The same lab trusted by the research community worldwide.</p>
+          </div>
+          <div class="purity-point">
+            <h3>Full spectrum testing</h3>
+            <p>Not just purity. We test identity (mass spectrometry), purity (HPLC), endotoxins, heavy metals, and bioburden. If it's not clean, we don't sell it.</p>
+          </div>
+          <div class="purity-point">
+            <h3>Every COA published</h3>
+            <p>No "email us for the COA." Every certificate of analysis is published on the product page with batch number, test date, and downloadable PDF. Full transparency.</p>
+          </div>
+          <div class="purity-point">
+            <h3>If a batch fails, we discard it</h3>
+            <p>Not every batch passes. When one doesn't meet our standards, we reject it and reorder. You'll only see products with verified, published results.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESEARCH -->
+  <section class="research-section" id="research">
+    <div class="section-inner">
+      <div class="section-eyebrow">Research Library</div>
+      <div class="section-title">Understand what the science actually says.</div>
+      <div class="section-sub">Plain-English summaries of peer-reviewed research. Every claim cited. No hype.</div>
+
+      <div class="research-grid">
+        <div class="research-card">
+          <div class="research-category">Peptide Guide</div>
+          <h3>What is BPC-157? A complete research overview</h3>
+          <p>Everything known about Body Protection Compound-157 — mechanism of action, key studies, dosing in the literature, and what remains unproven.</p>
+          <span class="research-link">Coming soon &rarr;</span>
+        </div>
+        <div class="research-card">
+          <div class="research-category">Peptide Guide</div>
+          <h3>CJC-1295 + Ipamorelin: the research behind the stack</h3>
+          <p>Why these two compounds are studied together, what the data shows on GH pulsatility and IGF-1, and the current state of human trial evidence.</p>
+          <span class="research-link">Coming soon &rarr;</span>
+        </div>
+        <div class="research-card">
+          <div class="research-category">Education</div>
+          <h3>How to read a certificate of analysis</h3>
+          <p>What HPLC purity means, why identity testing matters, how to spot a fake COA, and what to look for when evaluating any research compound vendor.</p>
+          <span class="research-link">Coming soon &rarr;</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-section" id="how">
+    <div class="section-inner">
+      <div class="section-eyebrow">How It Works</div>
+      <div class="section-title">Simple from order to delivery.</div>
+
+      <div class="how-grid">
+        <div class="how-step">
+          <div class="how-num">01</div>
+          <h3>Choose your compounds</h3>
+          <p>Browse our catalog of independently tested research peptides. Every product page includes the full COA and research summary.</p>
+        </div>
+        <div class="how-step">
+          <div class="how-num">02</div>
+          <h3>We verify the batch</h3>
+          <p>Before any product is listed, the batch is sent to Janoshik Analytical. Only verified batches reach the store.</p>
+        </div>
+        <div class="how-step">
+          <div class="how-num">03</div>
+          <h3>Shipped from the Netherlands</h3>
+          <p>Discreet, professional packaging. Shipped via PostNL or DHL across Europe. Room-temperature stable, no cold chain needed.</p>
+        </div>
+        <div class="how-step">
+          <div class="how-num">04</div>
+          <h3>COA in every box</h3>
+          <p>Every order includes a printed certificate of analysis. Scan the QR code to verify the batch online.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BOTTOM -->
+  <section class="cta-section" id="notify">
+    <div class="section-inner">
+      <div class="section-eyebrow">Launching Soon</div>
+      <div class="section-title">Be the first to know.</div>
+      <div class="section-sub">Join the waitlist for early access and founding member pricing. We'll notify you when products are in stock.</div>
+      <form class="cta-form" id="waitlist-form" onsubmit="handleWaitlist(event)">
+        <input class="cta-input" type="email" placeholder="Your email" required id="waitlist-email">
+        <button class="cta-submit" type="submit">Join Waitlist</button>
+      </form>
+      <div class="cta-fine" id="waitlist-msg">No spam. Unsubscribe anytime.</div>
+    </div>
+  </section>
+
+  <!-- DISCLAIMER -->
+  <div class="disclaimer">
+    All products sold by Lipa are intended for laboratory and research purposes only. They are not intended for human consumption, medical use, or as food additives. Purchasers must be at least 18 years of age. By purchasing, you agree that you are a qualified researcher and that these products will not be used for any purpose other than legitimate research. Lipa does not provide medical advice, diagnosis, or treatment. Consult a qualified healthcare provider for medical guidance. Lipa is a trade name of Go Exe B.V., registered in the Netherlands.
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-left">&copy; 2026 Lipa. A trade name of Go Exe B.V. All rights reserved.</div>
+    <div class="footer-links">
+      <a href="terms.html">Terms</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="shipping.html">Shipping</a>
+      <a href="returns.html">Returns</a>
+      <a href="mailto:hello@lipa.bio">Contact</a>
+    </div>
+  </footer>
+
+  <!-- NOTIFY MODAL -->
+  <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div id="modal-form-view">
+        <h3>Get notified</h3>
+        <p id="modal-product-text">We'll email you when <strong id="modal-product-name">BPC-157</strong> is in stock.</p>
+        <form class="modal-form" onsubmit="handleNotify(event)">
+          <input class="modal-input" type="email" placeholder="Your email" required id="notify-email">
+          <button class="modal-submit" type="submit">Notify Me</button>
+        </form>
+        <button class="modal-close" onclick="closeModal()">Maybe later</button>
+      </div>
+      <div class="modal-success" id="modal-success">
+        <h3>You're on the list</h3>
+        <p>We'll let you know the moment it's available.</p>
+        <button class="modal-close" onclick="closeModal()" style="margin-top: 24px;">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOBILE STICKY CTA -->
+  <div class="mobile-sticky">
+    <a href="#notify">Join the Waitlist</a>
+  </div>
+
+  <script>
+    // Product filtering from quiz
+    const categoryMap = {
+      'recovery': ['BPC-157', 'TB-500'],
+      'gh': ['CJC-1295', 'Ipamorelin', 'AOD-9604'],
+      'cognitive': ['Semax', 'Selank'],
+      'longevity': ['Epithalon', 'GHK-Cu'],
+      'sleep': ['DSIP'],
+      'gut': ['KPV', 'BPC-157']
+    };
+
+    function filterProducts(category) {
+      const names = categoryMap[category] || [];
+      const cards = document.querySelectorAll('.products-grid .product-card');
+      let anyHidden = false;
+      cards.forEach(card => {
+        const name = card.querySelector('.product-name');
+        if (!name) return;
+        if (names.includes(name.textContent.trim())) {
+          card.style.display = '';
+          card.style.order = '-1';
+        } else {
+          card.style.display = 'none';
+          anyHidden = true;
+        }
+      });
+      // Show "Show all" link
+      let showAll = document.getElementById('show-all-products');
+      if (!showAll && anyHidden) {
+        showAll = document.createElement('div');
+        showAll.id = 'show-all-products';
+        showAll.style.cssText = 'text-align:center;margin-top:24px;';
+        showAll.innerHTML = '<a href="#" onclick="showAllProducts();return false;" style="font-size:14px;font-weight:600;color:var(--accent);text-decoration:none;">Show all compounds &rarr;</a>';
+        document.querySelector('.products-grid').after(showAll);
+      } else if (showAll) {
+        showAll.style.display = anyHidden ? '' : 'none';
+      }
+    }
+
+    function showAllProducts() {
+      document.querySelectorAll('.products-grid .product-card').forEach(card => {
+        card.style.display = '';
+        card.style.order = '';
+      });
+      const showAll = document.getElementById('show-all-products');
+      if (showAll) showAll.style.display = 'none';
+    }
+
+    // Supabase waitlist
+    const SUPABASE_URL = 'https://dqihkpicbswxzwkoxwnb.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRxaWhrcGljYnN3eHp3a294d25iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM5NjczODcsImV4cCI6MjA1OTU0MzM4N30.SifN_Rkhi5BwGXSfJz4jiM4VBzMdJPYE_6JjjC2S4RA';
+
+    let selectedProduct = '';
+
+    function openModal(product) {
+      selectedProduct = product;
+      document.getElementById('modal-product-name').textContent = product;
+      document.getElementById('modal-form-view').style.display = 'block';
+      document.getElementById('modal-success').style.display = 'none';
+      document.getElementById('modal-overlay').classList.add('active');
+      document.getElementById('notify-email').focus();
+    }
+
+    function closeModal(e) {
+      if (e && e.target !== e.currentTarget) return;
+      document.getElementById('modal-overlay').classList.remove('active');
+    }
+
+    async function handleNotify(e) {
+      e.preventDefault();
+      const email = document.getElementById('notify-email').value;
+      try {
+        await fetch(SUPABASE_URL + '/rest/v1/waitlist', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_ANON,
+            'Authorization': 'Bearer ' + SUPABASE_ANON,
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({ email: email, product: selectedProduct })
+        });
+      } catch (err) { /* silent */ }
+      document.getElementById('modal-form-view').style.display = 'none';
+      document.getElementById('modal-success').style.display = 'block';
+      document.getElementById('notify-email').value = '';
+    }
+
+    async function handleWaitlist(e) {
+      e.preventDefault();
+      const email = document.getElementById('waitlist-email').value;
+      try {
+        await fetch(SUPABASE_URL + '/rest/v1/waitlist', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_ANON,
+            'Authorization': 'Bearer ' + SUPABASE_ANON,
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({ email: email })
+        });
+      } catch (err) { /* silent */ }
+      document.getElementById('waitlist-email').value = '';
+      document.getElementById('waitlist-msg').textContent = "You're on the list. We'll be in touch.";
+      document.getElementById('waitlist-msg').style.color = 'rgba(255,255,255,0.7)';
+    }
+
+    // Keyboard close modal
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+CLINICAL LABORATORY REPORT
+==========================
+
+Patient: SYNTHETIC-0049
+Age: 72 | Sex: Female
+Date: 2026-04-12
+Lab: Lipa Synthetic Lab (for testing purposes)
+
+Test                         Result       Unit         Reference       
+──────────────────────────────────────────────────────────────────────
+Fasting Glucose              90           mg/dL        70 - 100
+HbA1c                        4.1          %            4 - 5.6
+Fasting Insulin              5.6          µIU/mL       2 - 25
+Total Cholesterol            210        H mg/dL        125 - 200
+HDL Cholesterol              65           mg/dL        40 - 100
+Triglycerides                121          mg/dL        0 - 150
+LDL Cholesterol              121        H mg/dL        0 - 100
+hs-CRP                       0.1          mg/L         0 - 3
+Homocysteine                 10.4         µmol/L       5 - 15
+TSH                          2.1          mIU/L        0.4 - 4.5
+Free T3                      3            pg/mL        2.3 - 4.2
+Free T4                      1.22         ng/dL        0.8 - 1.8
+Ferritin                     33           ng/mL        12 - 300
+Vitamin D                    31           ng/mL        20 - 100
+Vitamin B12                  564          pg/mL        200 - 900
+ALT                          15           U/L          7 - 56
+AST                          32           U/L          10 - 40
+Creatinine                   1.18         mg/dL        0.6 - 1.2
+Hemoglobin                   14.6         g/dL         12 - 16
+WBC                          5.8          K/µL         4.5 - 11
+Platelets                    237          K/µL         150 - 400
+MCV                          84.6         fL           80 - 100
+RDW                          11.6         %            11.5 - 14.5
+FSH                          70.4         mIU/mL       2 - 100
+Estradiol                    14           pg/mL        5 - 30
+Alkaline Phosphatase         44           U/L          44 - 147
+Magnesium                    2            mg/dL        1.7 - 2.2
+
+--- END OF REPORT ---

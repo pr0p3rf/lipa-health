@@ -1,0 +1,40 @@
+CLINICAL LABORATORY REPORT
+==========================
+
+Patient: SYNTHETIC-0003
+Age: 42 | Sex: Female
+Date: 2026-04-12
+Lab: Lipa Synthetic Lab (for testing purposes)
+
+Test                         Result       Unit         Reference       
+──────────────────────────────────────────────────────────────────────
+Fasting Glucose              83           mg/dL        70 - 100
+HbA1c                        4            %            4 - 5.6
+Fasting Insulin              8.1          µIU/mL       2 - 25
+Total Cholesterol            165          mg/dL        125 - 200
+HDL Cholesterol              44           mg/dL        40 - 100
+Triglycerides                93           mg/dL        0 - 150
+LDL Cholesterol              102        H mg/dL        0 - 100
+hs-CRP                       0.3          mg/L         0 - 3
+Homocysteine                 9.1          µmol/L       5 - 15
+TSH                          1.22         mIU/L        0.4 - 4.5
+Free T3                      2.9          pg/mL        2.3 - 4.2
+Free T4                      1.36         ng/dL        0.8 - 1.8
+Ferritin                     57           ng/mL        12 - 300
+Vitamin D                    30           ng/mL        20 - 100
+Vitamin B12                  503          pg/mL        200 - 900
+ALT                          25           U/L          7 - 56
+AST                          28           U/L          10 - 40
+Creatinine                   0.52       L mg/dL        0.6 - 1.2
+Hemoglobin                   13.6         g/dL         12 - 16
+WBC                          8.8          K/µL         4.5 - 11
+Platelets                    243          K/µL         150 - 400
+MCV                          95.2         fL           80 - 100
+RDW                          11.6         %            11.5 - 14.5
+FSH                          3.5          mIU/mL       2 - 12
+Estradiol                    83           pg/mL        30 - 300
+Albumin                      3.7          g/dL         3.5 - 5.5
+Uric Acid                    3.8          mg/dL        2.5 - 7
+Magnesium                    1.5        L mg/dL        1.7 - 2.2
+
+--- END OF REPORT ---

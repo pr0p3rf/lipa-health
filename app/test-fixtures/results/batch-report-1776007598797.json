@@ -1,0 +1,57 @@
+{
+  "run_date": "2026-04-12T15:26:38.793Z",
+  "patients_tested": 3,
+  "total_markers_analyzed": 80,
+  "citation_rate": "78%",
+  "avg_citations_per_marker": 7.6,
+  "avg_time_per_patient_ms": 365292,
+  "patients_with_patterns": "2/3",
+  "patients_with_action_plans": "3/3",
+  "total_errors": 0,
+  "scores": [
+    {
+      "patient_id": "0001",
+      "archetype": "random",
+      "markers_analyzed": 26,
+      "markers_with_citations": 20,
+      "avg_citation_count": 7.6,
+      "patterns_detected": [
+        "iron_deficiency_without_anemia"
+      ],
+      "risk_calcs_computed": 12,
+      "action_plan_domains": 6,
+      "action_plan_items": 9,
+      "total_time_ms": 337576,
+      "errors": []
+    },
+    {
+      "patient_id": "0002",
+      "archetype": "healthy",
+      "markers_analyzed": 26,
+      "markers_with_citations": 20,
+      "avg_citation_count": 7.5,
+      "patterns_detected": [
+        "early_metabolic_syndrome",
+        "inflammation_metabolic"
+      ],
+      "risk_calcs_computed": 12,
+      "action_plan_domains": 6,
+      "action_plan_items": 15,
+      "total_time_ms": 371579,
+      "errors": []
+    },
+    {
+      "patient_id": "0003",
+      "archetype": "healthy",
+      "markers_analyzed": 28,
+      "markers_with_citations": 22,
+      "avg_citation_count": 7.7,
+      "patterns_detected": [],
+      "risk_calcs_computed": 12,
+      "action_plan_domains": 6,
+      "action_plan_items": 12,
+      "total_time_ms": 386722,
+      "errors": []
+    }
+  ]
+}
