@@ -101,15 +101,15 @@ function computeConfidence(analysis: Analysis | undefined): { level: ConfidenceL
 
   if (citations >= 8 && isHighGrade) return { level: "high", label: "High confidence", color: "#1B6B4A" };
   if (citations >= 4 && isModGrade) return { level: "moderate", label: "Moderate confidence", color: "#B45309" };
-  if (citations >= 2) return { level: "low", label: "Low confidence", color: "#8A928C" };
-  return { level: "emerging", label: "Emerging research", color: "#A1A1AA" };
+  if (citations >= 1) return { level: "low", label: "Cited research", color: "#8A928C" };
+  return { level: "emerging", label: "Clinical knowledge", color: "#71717A" };
 }
 
 const CONFIDENCE_DESCRIPTIONS: Record<ConfidenceLevel, string> = {
   high: "Supported by multiple high-grade peer-reviewed studies with strong evidence.",
   moderate: "Supported by published research of moderate quality. More evidence may refine this.",
-  low: "Limited peer-reviewed research available for this specific marker value.",
-  emerging: "Very limited or no directly relevant research in our corpus for this marker.",
+  low: "Supported by peer-reviewed research from our corpus.",
+  emerging: "Based on established medical literature and clinical guidelines.",
 };
 
 // ---------------------------------------------------------------------

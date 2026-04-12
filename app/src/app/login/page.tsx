@@ -71,7 +71,7 @@ export default function LoginPage() {
           {isSignUp ? "Create your account" : "Sign in to Lipa"}
         </h1>
         <p className="text-[#6B6B6B] text-[14px] text-center mb-8">
-          {isSignUp ? "Know exactly what your body needs." : "Welcome back."}
+          {isSignUp ? "Understand your biology. Keep going." : "Welcome back."}
         </p>
 
         {error && (

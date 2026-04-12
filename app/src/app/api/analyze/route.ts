@@ -37,77 +37,99 @@ export async function POST(request: NextRequest) {
 
   try {
     const formData = await request.formData();
-    const file = formData.get("file") as File;
     const userId = formData.get("userId") as string;
     const testDate = formData.get("testDate") as string;
 
-    if (!file || !userId) {
+    // Support single file ("file") or multiple files ("files" or "file" repeated)
+    const files: File[] = [];
+    const singleFile = formData.get("file") as File | null;
+    if (singleFile) files.push(singleFile);
+
+    // Also check for multiple files via getAll
+    const multiFiles = formData.getAll("files") as File[];
+    if (multiFiles.length > 0) files.push(...multiFiles);
+
+    if (files.length === 0 || !userId) {
       return NextResponse.json(
-        { error: "File and userId required" },
+        { error: "At least one file and userId required" },
         { status: 400 }
       );
     }
 
+    // Process all files — extract biomarkers from each
+    let allBiomarkers: any[] = [];
+    let totalExtractTimeMs = 0;
+
     // ================================================================
-    // STEP 1: Extract biomarkers from the PDF using Claude vision
+    // STEP 1: Extract biomarkers from each file using Claude vision
     // ================================================================
-    const extractStart = Date.now();
+    for (const file of files) {
+      const extractStart = Date.now();
 
-    const bytes = await file.arrayBuffer();
-    const base64 = Buffer.from(bytes).toString("base64");
+      const bytes = await file.arrayBuffer();
+      const base64 = Buffer.from(bytes).toString("base64");
 
-    const isPdf = file.type === "application/pdf";
-    const mediaType = isPdf
-      ? ("application/pdf" as const)
-      : file.type.startsWith("image/")
-      ? (file.type as "image/jpeg" | "image/png" | "image/gif" | "image/webp")
-      : ("image/jpeg" as const);
+      const isPdf = file.type === "application/pdf";
+      const mediaType = isPdf
+        ? ("application/pdf" as const)
+        : file.type.startsWith("image/")
+        ? (file.type as "image/jpeg" | "image/png" | "image/gif" | "image/webp")
+        : ("image/jpeg" as const);
 
-    const extractionMessage = await anthropic.messages.create({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 4096,
-      messages: [
-        {
-          role: "user",
-          content: [
-            {
-              type: isPdf ? "document" : "image",
-              source: {
-                type: "base64",
-                media_type: mediaType,
-                data: base64,
+      const extractionMessage = await anthropic.messages.create({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 4096,
+        messages: [
+          {
+            role: "user",
+            content: [
+              {
+                type: isPdf ? "document" : "image",
+                source: {
+                  type: "base64",
+                  media_type: mediaType,
+                  data: base64,
+                },
+              } as any,
+              {
+                type: "text",
+                text: EXTRACTION_PROMPT,
               },
-            } as any,
-            {
-              type: "text",
-              text: EXTRACTION_PROMPT,
-            },
-          ],
-        },
-      ],
-    });
+            ],
+          },
+        ],
+      });
 
-    const extractTimeMs = Date.now() - extractStart;
+      const extractTimeMs = Date.now() - extractStart;
+      totalExtractTimeMs += extractTimeMs;
 
-    const responseText =
-      extractionMessage.content[0].type === "text"
-        ? extractionMessage.content[0].text
-        : "";
+      const responseText =
+        extractionMessage.content[0].type === "text"
+          ? extractionMessage.content[0].text
+          : "";
 
-    const jsonMatch = responseText.match(/\[[\s\S]*\]/);
-    const jsonStr = jsonMatch ? jsonMatch[0] : responseText;
+      const jsonMatch = responseText.match(/\[[\s\S]*\]/);
+      const jsonStr = jsonMatch ? jsonMatch[0] : responseText;
 
-    let biomarkers;
-    try {
-      biomarkers = JSON.parse(jsonStr);
-    } catch {
+      try {
+        const fileBiomarkers = JSON.parse(jsonStr);
+        allBiomarkers.push(...fileBiomarkers);
+        console.log(`[analyze] Extracted ${fileBiomarkers.length} biomarkers from ${file.name} in ${extractTimeMs}ms`);
+      } catch {
+        console.error(`[analyze] Failed to parse biomarkers from ${file.name}:`, responseText.slice(0, 200));
+      }
+    }
+
+    const biomarkers = allBiomarkers;
+
+    if (biomarkers.length === 0) {
       return NextResponse.json(
-        { error: "Failed to parse biomarker data", raw: responseText },
+        { error: "No biomarkers could be extracted from the uploaded files" },
         { status: 500 }
       );
     }
 
-    console.log(`[analyze] Extracted ${biomarkers.length} biomarkers in ${extractTimeMs}ms`);
+    console.log(`[analyze] Total: ${biomarkers.length} biomarkers from ${files.length} file(s) in ${totalExtractTimeMs}ms`);
 
     // ================================================================
     // STEP 2: Store biomarker results
@@ -305,7 +327,7 @@ export async function POST(request: NextRequest) {
       analyses_count: analyses.length,
       risk_calculations_count: riskCalcs.length,
       has_action_plan: !!actionPlan,
-      extraction_time_ms: extractTimeMs,
+      extraction_time_ms: totalExtractTimeMs,
       total_time_ms: totalTimeMs,
       biomarkers,
       analyses,

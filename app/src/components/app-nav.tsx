@@ -8,9 +8,8 @@ import type { User } from "@supabase/supabase-js";
 
 const navItems = [
   { label: "Overview", href: "/dashboard" },
-  { label: "Biomarkers", href: "/dashboard/biomarkers" },
-  { label: "Protocol", href: "/dashboard/protocol" },
-  { label: "Trends", href: "/dashboard/trends" },
+  { label: "Upload", href: "/upload" },
+  { label: "Account", href: "/account" },
 ];
 
 export function AppNav() {

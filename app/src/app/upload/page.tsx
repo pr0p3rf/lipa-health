@@ -5,14 +5,19 @@ import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 
+type UploadState = "idle" | "uploading" | "analyzing" | "done" | "error";
+
 export default function UploadPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [uploading, setUploading] = useState(false);
+  const [state, setState] = useState<UploadState>("idle");
   const [dragOver, setDragOver] = useState(false);
-  const [uploaded, setUploaded] = useState(false);
-  const [fileName, setFileName] = useState("");
+  const [fileNames, setFileNames] = useState<string[]>([]);
   const [analysisCount, setAnalysisCount] = useState(0);
+  const [riskCalcCount, setRiskCalcCount] = useState(0);
+  const [hasActionPlan, setHasActionPlan] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [testDate, setTestDate] = useState(new Date().toISOString().split("T")[0]);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -21,40 +26,42 @@ export default function UploadPage() {
     });
   }, [router]);
 
-  const handleFile = useCallback(async (file: File) => {
-    if (!file) return;
-    setUploading(true);
-    setFileName(file.name);
+  const handleFiles = useCallback(async (fileList: FileList | File[]) => {
+    const files = Array.from(fileList).filter(
+      (f) => f.type === "application/pdf" || f.type.startsWith("image/")
+    );
+    if (files.length === 0) return;
+
+    setState("uploading");
+    setFileNames(files.map((f) => f.name));
+    setErrorMsg("");
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    const filePath = `${user.id}/${Date.now()}-${file.name}`;
-
-    // Upload to Supabase Storage
-    const { error: uploadError } = await supabase.storage
-      .from("lab-results")
-      .upload(filePath, file);
-
-    if (uploadError) {
-      console.error("Upload error:", uploadError);
-      setUploading(false);
-      return;
+    // Upload all files to Supabase Storage
+    for (const file of files) {
+      const filePath = `${user.id}/${Date.now()}-${file.name}`;
+      await supabase.storage.from("lab-results").upload(filePath, file);
+      await supabase.from("uploads").insert({
+        user_id: user.id,
+        file_path: filePath,
+        file_name: file.name,
+        status: "analyzing",
+      });
     }
 
-    // Record in uploads table
-    await supabase.from("uploads").insert({
-      user_id: user.id,
-      file_path: filePath,
-      file_name: file.name,
-      status: "analyzing",
-    });
+    setState("analyzing");
 
-    // Send to Claude for analysis
+    // Send all files to analysis API
     const formData = new FormData();
-    formData.append("file", file);
+    if (files.length === 1) {
+      formData.append("file", files[0]);
+    } else {
+      files.forEach((f) => formData.append("files", f));
+    }
     formData.append("userId", user.id);
-    formData.append("testDate", new Date().toISOString().split("T")[0]);
+    formData.append("testDate", testDate);
 
     try {
       const res = await fetch("/api/analyze", {
@@ -64,25 +71,27 @@ export default function UploadPage() {
       const data = await res.json();
       if (data.success) {
         setAnalysisCount(data.count);
+        setRiskCalcCount(data.risk_calculations_count || 0);
+        setHasActionPlan(data.has_action_plan || false);
+        setState("done");
+      } else {
+        setErrorMsg(data.error || "Analysis failed");
+        setState("error");
       }
-    } catch (err) {
-      console.error("Analysis error:", err);
+    } catch (err: any) {
+      setErrorMsg(err.message || "Network error");
+      setState("error");
     }
-
-    setUploading(false);
-    setUploaded(true);
-  }, []);
+  }, [testDate]);
 
   function handleDrop(e: React.DragEvent) {
     e.preventDefault();
     setDragOver(false);
-    const file = e.dataTransfer.files[0];
-    if (file) handleFile(file);
+    if (e.dataTransfer.files.length > 0) handleFiles(e.dataTransfer.files);
   }
 
   function handleFileInput(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (file) handleFile(file);
+    if (e.target.files && e.target.files.length > 0) handleFiles(e.target.files);
   }
 
   if (loading) {
@@ -97,93 +106,354 @@ export default function UploadPage() {
     <>
       <AppNav />
       <main className="max-w-2xl mx-auto px-6 py-12">
-        <h1 className="text-2xl font-semibold mb-2">Upload Blood Test</h1>
+        <h1
+          className="text-[28px] tracking-tight mb-2"
+          style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}
+        >
+          Upload Blood Test
+        </h1>
         <p className="text-[#6B6B6B] text-[15px] mb-8">
-          Upload your lab results as a PDF or photo. We support results from any laboratory — Diagnostyka, ALAB, Synevo, and more.
+          Upload your lab results as PDF or photo. We support results from any laboratory worldwide — any language, any format.
         </p>
 
-        {uploaded ? (
-          <div className="bg-white border border-[#1B6B4A]/20 rounded-2xl p-8 text-center">
-            <div className="w-14 h-14 bg-[#1B6B4A]/[0.08] rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2" strokeLinecap="round">
-                <path d="M20 6L9 17l-5-5" />
-              </svg>
+        {state === "done" ? (
+          /* ---- Success state ---- */
+          <div className="bg-white border border-[#1B6B4A]/20 rounded-2xl p-8">
+            <div className="text-center mb-6">
+              <div className="w-14 h-14 bg-[#E8F5EE] rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" strokeLinecap="round">
+                  <path d="M20 6L9 17l-5-5" />
+                </svg>
+              </div>
+              <h2
+                className="text-[22px] tracking-tight mb-1"
+                style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}
+              >
+                Analysis complete
+              </h2>
+              <p className="text-[14px] text-[#6B6B6B]">
+                {fileNames.length > 1 ? `${fileNames.length} files processed` : fileNames[0]}
+              </p>
             </div>
-            <h2 className="text-xl font-semibold mb-2">
-              {analysisCount > 0 ? `${analysisCount} biomarkers extracted` : "Results uploaded"}
-            </h2>
-            <p className="text-[#6B6B6B] text-[15px] mb-1">{fileName}</p>
-            <p className="text-[#999] text-[13px] mb-6">
-              {analysisCount > 0
-                ? "Your biomarkers have been analyzed. View your dashboard to see your results and personalized protocol."
-                : "We're analyzing your biomarkers now. Your personalized insights will be ready shortly."}
-            </p>
-            {analysisCount > 0 && (
+
+            {/* Results summary */}
+            <div className="grid grid-cols-3 gap-3 mb-6">
+              <div className="bg-[#FAFAF8] rounded-xl p-4 text-center">
+                <div
+                  className="text-[28px] text-[#1B6B4A] tracking-tight"
+                  style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 600 }}
+                >
+                  {analysisCount}
+                </div>
+                <div className="text-[11px] text-[#6B6B6B] font-medium">Biomarkers</div>
+              </div>
+              <div className="bg-[#FAFAF8] rounded-xl p-4 text-center">
+                <div
+                  className="text-[28px] text-[#1B6B4A] tracking-tight"
+                  style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 600 }}
+                >
+                  {riskCalcCount}
+                </div>
+                <div className="text-[11px] text-[#6B6B6B] font-medium">Risk calcs</div>
+              </div>
+              <div className="bg-[#FAFAF8] rounded-xl p-4 text-center">
+                <div
+                  className="text-[28px] text-[#1B6B4A] tracking-tight"
+                  style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 600 }}
+                >
+                  {hasActionPlan ? "Ready" : "—"}
+                </div>
+                <div className="text-[11px] text-[#6B6B6B] font-medium">Action plan</div>
+              </div>
+            </div>
+
+            <div className="flex flex-col items-center gap-3">
               <a
                 href="/dashboard"
-                className="inline-flex items-center gap-2 text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-5 py-2.5 rounded-full transition-colors mb-3"
+                className="inline-flex items-center gap-2 text-[14px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-8 py-3 rounded-full transition-colors"
               >
-                View Dashboard
+                View Your Analysis
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
               </a>
-            )}
+              <button
+                onClick={() => { setState("idle"); setFileNames([]); setAnalysisCount(0); }}
+                className="text-[13px] text-[#1B6B4A] font-medium hover:underline"
+              >
+                Upload another test
+              </button>
+            </div>
+          </div>
+        ) : state === "error" ? (
+          /* ---- Error state ---- */
+          <div className="bg-white border border-[#EF4444]/20 rounded-2xl p-8 text-center">
+            <div className="w-14 h-14 bg-[#FEE2E2] rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#B91C1C" strokeWidth="2" strokeLinecap="round">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="15" y1="9" x2="9" y2="15" />
+                <line x1="9" y1="9" x2="15" y2="15" />
+              </svg>
+            </div>
+            <h2 className="text-[18px] font-semibold mb-2">Something went wrong</h2>
+            <p className="text-[14px] text-[#6B6B6B] mb-4">{errorMsg}</p>
             <button
-              onClick={() => { setUploaded(false); setFileName(""); }}
-              className="text-[13px] text-[#1B6B4A] font-medium hover:underline"
+              onClick={() => { setState("idle"); setErrorMsg(""); }}
+              className="text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-6 py-2.5 rounded-full transition-colors"
             >
-              Upload another test
+              Try again
             </button>
           </div>
+        ) : state === "uploading" || state === "analyzing" ? (
+          /* ---- Progress state ---- */
+          <AnalyzingProgress
+            state={state}
+            fileNames={fileNames}
+          />
         ) : (
-          <div
-            onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
-            onDragLeave={() => setDragOver(false)}
-            onDrop={handleDrop}
-            className={`border-2 border-dashed rounded-2xl p-12 text-center transition-colors cursor-pointer ${
-              dragOver
-                ? "border-[#1B6B4A] bg-[#1B6B4A]/[0.03]"
-                : "border-[#e5e5e5] hover:border-[#ccc] bg-white"
-            }`}
-            onClick={() => document.getElementById("fileInput")?.click()}
-          >
-            <input
-              id="fileInput"
-              type="file"
-              accept=".pdf,.png,.jpg,.jpeg"
-              onChange={handleFileInput}
-              className="hidden"
-            />
+          /* ---- Upload zone ---- */
+          <>
+            {/* Test date selector */}
+            <div className="mb-4">
+              <label className="text-[12px] text-[#6B6B6B] font-medium block mb-1.5">Test date</label>
+              <input
+                type="date"
+                value={testDate}
+                onChange={(e) => setTestDate(e.target.value)}
+                className="text-[14px] border border-[#E5E5E5] rounded-xl px-4 py-2.5 focus:outline-none focus:border-[#1B6B4A] bg-white"
+              />
+            </div>
 
-            {uploading ? (
-              <div className="text-[#6B6B6B]">
-                <div className="text-[15px] font-medium mb-1">Uploading {fileName}...</div>
-                <div className="text-[13px] text-[#999]">Please wait</div>
+            <div
+              onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+              onDragLeave={() => setDragOver(false)}
+              onDrop={handleDrop}
+              className={`border-2 border-dashed rounded-2xl p-12 text-center transition-all cursor-pointer ${
+                dragOver
+                  ? "border-[#1B6B4A] bg-[#1B6B4A]/[0.03] scale-[1.01]"
+                  : "border-[#e5e5e5] hover:border-[#ccc] bg-white"
+              }`}
+              onClick={() => document.getElementById("fileInput")?.click()}
+            >
+              <input
+                id="fileInput"
+                type="file"
+                accept=".pdf,.png,.jpg,.jpeg"
+                multiple
+                onChange={handleFileInput}
+                className="hidden"
+              />
+
+              <div className="w-12 h-12 bg-[#E8F5EE] rounded-xl flex items-center justify-center mx-auto mb-4">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2" strokeLinecap="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="17 8 12 3 7 8" />
+                  <line x1="12" y1="3" x2="12" y2="15" />
+                </svg>
               </div>
-            ) : (
-              <>
-                <div className="w-12 h-12 bg-[#FAFAF8] rounded-xl flex items-center justify-center mx-auto mb-4 border border-[#e5e5e5]">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B6B6B" strokeWidth="2" strokeLinecap="round">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                    <polyline points="17 8 12 3 7 8" />
-                    <line x1="12" y1="3" x2="12" y2="15" />
-                  </svg>
-                </div>
-                <p className="text-[15px] font-medium mb-1">
-                  Drop your lab results here
-                </p>
-                <p className="text-[13px] text-[#999]">
-                  PDF or photo — PNG, JPG accepted. Max 10MB.
-                </p>
-              </>
-            )}
-          </div>
+              <p className="text-[16px] font-medium mb-1">
+                Drop your lab results here
+              </p>
+              <p className="text-[13px] text-[#999] mb-3">
+                PDF or photo — PNG, JPG accepted. Max 10MB per file.
+              </p>
+              <p className="text-[12px] text-[#1B6B4A] font-medium">
+                You can upload multiple files at once
+              </p>
+            </div>
+          </>
         )}
 
         <div className="mt-8 p-4 bg-[#F2F1EE] rounded-xl">
           <p className="text-[12px] text-[#6B6B6B] leading-relaxed">
-            <strong className="text-[#1A1A1A]">Privacy:</strong> Your health data is encrypted and stored in the EU. We never share your data with third parties. You can delete everything at any time.
+            <strong className="text-[#1A1A1A]">Privacy:</strong> Your health data is encrypted and stored in the EU. We never share your data with third parties. You can delete everything at any time from your account settings.
           </p>
         </div>
       </main>
     </>
   );
 }
+
+// Rich analyzing progress with timed steps that build trust
+function AnalyzingProgress({ state, fileNames }: { state: UploadState; fileNames: string[] }) {
+  const [currentStep, setCurrentStep] = useState(0);
+  const [elapsedSec, setElapsedSec] = useState(0);
+
+  // Timed progression through steps to simulate real pipeline activity
+  useEffect(() => {
+    if (state !== "analyzing") return;
+    const timer = setInterval(() => setElapsedSec((s) => s + 1), 1000);
+    return () => clearInterval(timer);
+  }, [state]);
+
+  useEffect(() => {
+    if (state !== "analyzing") return;
+    // Step progression: each step advances after a delay
+    const timings = [0, 8, 20, 45, 70, 95, 120, 150, 175, 200, 225];
+    const step = timings.filter((t) => elapsedSec >= t).length - 1;
+    setCurrentStep(Math.min(step, ANALYSIS_STEPS.length - 1));
+  }, [elapsedSec, state]);
+
+  if (state === "uploading") {
+    return (
+      <div className="bg-white border border-[#E5E5E5] rounded-2xl p-8 text-center">
+        <div className="w-14 h-14 mx-auto mb-4 relative">
+          <div className="absolute inset-0 rounded-full border-2 border-[#E5E5E5]" />
+          <div className="absolute inset-0 rounded-full border-2 border-[#1B6B4A] border-t-transparent animate-spin" />
+        </div>
+        <h2 className="text-[20px] tracking-tight mb-1" style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}>
+          Uploading...
+        </h2>
+        <p className="text-[13px] text-[#6B6B6B]">
+          Sending {fileNames.length} file{fileNames.length > 1 ? "s" : ""} securely
+        </p>
+      </div>
+    );
+  }
+
+  const progressPct = Math.min(95, Math.round((currentStep / (ANALYSIS_STEPS.length - 1)) * 100));
+
+  return (
+    <div className="bg-white border border-[#E5E5E5] rounded-2xl overflow-hidden">
+      {/* Progress bar */}
+      <div className="h-1 bg-[#F4F4F5]">
+        <div
+          className="h-1 bg-[#1B6B4A] transition-all duration-1000 ease-out"
+          style={{ width: `${progressPct}%` }}
+        />
+      </div>
+
+      <div className="p-8">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h2
+            className="text-[22px] tracking-tight mb-1"
+            style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}
+          >
+            Analyzing your biology
+          </h2>
+          <p className="text-[13px] text-[#6B6B6B]">
+            This is not a quick summary — every marker is individually researched.
+          </p>
+        </div>
+
+        {/* Steps */}
+        <div className="space-y-1">
+          {ANALYSIS_STEPS.map((step, i) => {
+            const isDone = i < currentStep;
+            const isActive = i === currentStep;
+            const isFuture = i > currentStep;
+
+            return (
+              <div
+                key={i}
+                className={`flex items-start gap-3 py-2.5 px-3 rounded-xl transition-all duration-500 ${
+                  isActive ? "bg-[#E8F5EE]/50" : ""
+                }`}
+              >
+                {/* Icon */}
+                <div className="mt-0.5 flex-shrink-0">
+                  {isDone ? (
+                    <div className="w-5 h-5 bg-[#1B6B4A] rounded-full flex items-center justify-center">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round">
+                        <path d="M20 6L9 17l-5-5" />
+                      </svg>
+                    </div>
+                  ) : isActive ? (
+                    <div className="w-5 h-5 rounded-full border-2 border-[#1B6B4A] flex items-center justify-center">
+                      <div className="w-2 h-2 bg-[#1B6B4A] rounded-full animate-pulse" />
+                    </div>
+                  ) : (
+                    <div className="w-5 h-5 rounded-full border-2 border-[#E5E5E5]" />
+                  )}
+                </div>
+
+                {/* Content */}
+                <div className="flex-1 min-w-0">
+                  <div className={`text-[13px] leading-snug ${
+                    isDone ? "text-[#1B6B4A] font-medium" :
+                    isActive ? "text-[#0F1A15] font-medium" :
+                    "text-[#B5B5B5]"
+                  }`}>
+                    {step.label}
+                  </div>
+                  {(isDone || isActive) && step.detail && (
+                    <div className={`text-[11px] mt-1 leading-relaxed ${
+                      isDone ? "text-[#8A928C]" : "text-[#6B6B6B]"
+                    }`}>
+                      {step.detail}
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* File chips + timer */}
+        <div className="mt-6 pt-4 border-t border-[#F4F4F5] flex items-center justify-between">
+          <div className="flex flex-wrap gap-2">
+            {fileNames.map((name) => (
+              <span key={name} className="text-[11px] text-[#6B6B6B] bg-[#F4F4F5] px-3 py-1 rounded-full">
+                {name}
+              </span>
+            ))}
+          </div>
+          <div className="text-[11px] text-[#B5B5B5] font-mono tabular-nums flex-shrink-0 ml-4">
+            {Math.floor(elapsedSec / 60)}:{String(elapsedSec % 60).padStart(2, "0")}
+          </div>
+        </div>
+
+        {/* Trust footer */}
+        <div className="mt-4 text-center">
+          <p className="text-[10px] text-[#B5B5B5] leading-relaxed">
+            Your data is encrypted and processed in the EU. Nothing is shared with third parties.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const ANALYSIS_STEPS = [
+  {
+    label: "Reading your lab report",
+    detail: "Identifying biomarkers, values, units, and reference ranges from your document.",
+  },
+  {
+    label: "Biomarkers extracted — normalizing names",
+    detail: "Matching lab-specific names to standardized biomarker identifiers across languages.",
+  },
+  {
+    label: "Searching 55,000+ peer-reviewed studies",
+    detail: "Finding the most relevant published research for each of your markers using vector similarity.",
+  },
+  {
+    label: "Grading evidence quality",
+    detail: "Scoring each study by evidence grade, funding independence, recency, and sample size.",
+  },
+  {
+    label: "Generating per-marker analysis",
+    detail: "Writing a research-grounded explanation for each biomarker — what it means for you, cited to real studies.",
+  },
+  {
+    label: "Detecting cross-marker patterns",
+    detail: "Checking for clinical patterns that only appear when multiple markers are viewed together.",
+  },
+  {
+    label: "Computing risk calculations",
+    detail: "Running 16+ peer-reviewed algorithms — cardiovascular risk, insulin resistance, biological age, and more.",
+  },
+  {
+    label: "Comparing to demographic-adjusted ranges",
+    detail: "Your results vs. optimal ranges for your age and sex, based on 300,000+ NHANES health profiles.",
+  },
+  {
+    label: "Building your personalized action plan",
+    detail: "Generating recommendations across nutrition, supplementation, sleep, movement, environment, and lifestyle.",
+  },
+  {
+    label: "Preparing your dashboard",
+    detail: "Organizing everything into a clear, navigable view with full citations.",
+  },
+];

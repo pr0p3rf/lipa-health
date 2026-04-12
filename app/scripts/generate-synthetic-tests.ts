@@ -121,7 +121,7 @@ function generateMarkers(age: number, sex: 'male' | 'female', archetype: Archety
   const isAthlete = archetype === 'athlete';
 
   // Base glucose — shifts with archetype
-  const glucoseBase = isMetabolic ? gaussian(108, 12) : archetype === 'prediabetic' ? gaussian(102, 8) : gaussian(88, 8);
+  const glucoseBase = archetype === 'metabolic_syndrome' ? gaussian(108, 12) : archetype === 'prediabetic' ? gaussian(102, 8) : gaussian(88, 8);
   const glucose = clamp(roundTo(glucoseBase, 0), 65, 180);
   markers.push({ name: 'Fasting Glucose', value: glucose, unit: 'mg/dL', ref_low: 70, ref_high: 100, category: 'metabolic' });
 

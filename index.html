@@ -659,6 +659,89 @@
       font-weight: 600;
     }
 
+    /* ---------- BYOT BRIDGE ---------- */
+    .byot-bridge {
+      margin-top: 56px;
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+    }
+    .byot-left {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      flex: 1;
+    }
+    .byot-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(27,107,74,0.08);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .byot-title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 20px;
+      font-weight: 500;
+      margin-bottom: 6px;
+      letter-spacing: -0.01em;
+    }
+    .byot-desc {
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--text-secondary);
+    }
+    .byot-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .byot-guide-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      background: var(--accent);
+      padding: 12px 24px;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .byot-guide-btn:hover { background: #155A3D; }
+    .byot-signup-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      padding: 10px 24px;
+      border-radius: 100px;
+      border: 1px solid var(--accent);
+      text-decoration: none;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .byot-signup-btn:hover { background: var(--accent); color: #fff; }
+
+    @media (max-width: 900px) {
+      .byot-bridge { flex-direction: column; padding: 28px 24px; gap: 24px; }
+      .byot-actions { width: 100%; }
+      .byot-guide-btn, .byot-signup-btn { width: 100%; justify-content: center; }
+    }
+
     /* ---------- METHODOLOGY TEASER (INK) ---------- */
     .meth-teaser {
       background: var(--ink);
@@ -744,12 +827,65 @@
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
     }
+
+    /* Persona photo cards — editorial style */
+    .persona-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 64px;
+      margin-bottom: 64px;
+    }
+    .persona-card {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      aspect-ratio: 3 / 4;
+      cursor: default;
+      transition: transform 0.35s cubic-bezier(.22,1,.36,1), box-shadow 0.35s cubic-bezier(.22,1,.36,1);
+    }
+    .persona-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+    }
+    .persona-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s cubic-bezier(.22,1,.36,1);
+    }
+    .persona-card:hover img {
+      transform: scale(1.03);
+    }
+    .persona-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 32px 24px 24px;
+      background: linear-gradient(to top, rgba(15,26,21,0.85) 0%, rgba(15,26,21,0.4) 60%, transparent 100%);
+    }
+    .persona-label {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 20px;
+      font-weight: 500;
+      color: #fff;
+      letter-spacing: -0.01em;
+      margin-bottom: 4px;
+    }
+    .persona-desc {
+      font-size: 12px;
+      line-height: 1.5;
+      color: rgba(255,255,255,0.75);
+    }
+
     .audience-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 1px;
       background: var(--border);
-      margin-top: 72px;
+      margin-top: 0;
       border: 1px solid var(--border);
     }
     .aud-card {
@@ -1226,6 +1362,7 @@
       .how-card { padding: 36px 28px; }
       .meth-teaser { padding: 100px 20px; }
       .meth-content { grid-template-columns: 1fr; gap: 48px; }
+      .persona-row { grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 40px; margin-bottom: 40px; }
       .audience-grid { grid-template-columns: 1fr; }
       .options-grid { grid-template-columns: 1fr; gap: 16px; }
       .option-card { padding: 32px 28px; }
@@ -1255,6 +1392,7 @@
       .report-foot { padding: 16px 24px; }
     }
     @media (min-width: 901px) and (max-width: 1100px) {
+      .persona-row { gap: 14px; }
       .audience-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
@@ -1355,14 +1493,14 @@
   <div class="container">
     <div class="section-eyebrow">How Lipa works</div>
     <h2 class="display">A blood test goes in.<br>Full understanding<br>comes out.</h2>
-    <p class="lede">Use a blood test you already have. Lipa handles the rest in under a minute.</p>
+    <p class="lede">Already have a recent blood test? Upload it now. Don't have one yet? We'll show you exactly what to order — no middleman, no markup. You book the test, we analyze the results.</p>
 
     <div class="how-steps">
       <div class="how-card">
         <div class="how-num mono">01</div>
-        <h3>Drop any test in.</h3>
-        <p>PDF, photo, scan, or phone screenshot — from any lab, in any country, in any major language. Lipa reads lab reports automatically. Upload your newest test, or years of old ones sitting in your email.</p>
-        <div class="how-meta mono">Any lab, any country, any format</div>
+        <h3>Get your blood test.</h3>
+        <p>Use a test you already have — PDF, photo, scan, or screenshot from any lab, any country, any language. Or if you don't have one yet, follow our guide to order the right panel at any lab near you. No middleman. No markup. Your test, your data.</p>
+        <div class="how-meta mono">Any lab · any country · any format</div>
       </div>
       <div class="how-card">
         <div class="how-num mono">02</div>
@@ -1377,6 +1515,31 @@
         <div class="how-meta mono">Every insight cited. Yours forever.</div>
       </div>
     </div>
+
+    <!-- BYOT conversion bridge — captures users who don't have a test yet -->
+    <div class="byot-bridge">
+      <div class="byot-left">
+        <div class="byot-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+          </svg>
+        </div>
+        <div>
+          <h3 class="byot-title">Don't have a blood test yet?</h3>
+          <p class="byot-desc">We'll tell you exactly which markers to order based on your goals — longevity, hormones, metabolic health, thyroid, or a comprehensive panel. Book at any lab. No middleman, no markup. Your first analysis is free.</p>
+        </div>
+      </div>
+      <div class="byot-actions">
+        <a href="/research-which-blood-test.html" class="byot-guide-btn">
+          Which test should I order?
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+        <a href="#join" class="byot-signup-btn">Sign up free — analyze when ready</a>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -1386,6 +1549,37 @@
     <div class="section-eyebrow">Built for</div>
     <h2 class="display">People who want to take<br>control of their health.</h2>
     <p class="lede">Maybe you're on a protocol. Maybe your last test came back "normal" and you knew something was off. Maybe you just want to read your blood test without medical jargon. Whichever it is — Lipa is built for the moment you decided to stop waiting for someone else to interpret your biology.</p>
+
+    <div class="persona-row">
+      <div class="persona-card">
+        <img src="/img/persona-tracker.jpg" alt="Young woman outdoors by a lake wearing a fitness tracker" loading="lazy">
+        <div class="persona-overlay">
+          <div class="persona-label">The Tracker</div>
+          <div class="persona-desc">Uploads every test. Watches the trends. Wants to see what's actually moving.</div>
+        </div>
+      </div>
+      <div class="persona-card">
+        <img src="/img/persona-optimizer.jpg" alt="Confident man in European city" loading="lazy">
+        <div class="persona-overlay">
+          <div class="persona-label">The Optimizer</div>
+          <div class="persona-desc">Protocols, supplements, bio-age. Reads the research because results matter.</div>
+        </div>
+      </div>
+      <div class="persona-card">
+        <img src="/img/persona-proactive.jpg" alt="Active woman in her 50s with yoga mat" loading="lazy">
+        <div class="persona-overlay">
+          <div class="persona-label">The Proactive</div>
+          <div class="persona-desc">Knows "normal" doesn't mean optimal. Takes control before anything goes wrong.</div>
+        </div>
+      </div>
+      <div class="persona-card">
+        <img src="/img/persona-curious.jpg" alt="Young man in a café with a smartwatch" loading="lazy">
+        <div class="persona-overlay">
+          <div class="persona-label">The Curious</div>
+          <div class="persona-desc">Got a blood test back and wants to understand it. Properly. Without the jargon.</div>
+        </div>
+      </div>
+    </div>
 
     <div class="audience-grid">
       <div class="aud-card">
