@@ -252,7 +252,7 @@ function PricingContent() {
                 Fast analysis
               </div>
               <div className="text-[12px] text-[#6B6B6B]">
-                Results in under 60 seconds, not weeks.
+                Full analysis in minutes, not weeks.
               </div>
             </div>
             <div>
