@@ -322,7 +322,7 @@ function AnalyzingProgress({ state, fileNames }: { state: UploadState; fileNames
             Analyzing your biology
           </h2>
           <p className="text-[13px] text-[#6B6B6B]">
-            Sit tight — we're reading the research for each of your markers.
+            Sit tight — we're analyzing each marker against your biology, published research, and clinical guidelines.
           </p>
         </div>
 
@@ -407,42 +407,42 @@ function AnalyzingProgress({ state, fileNames }: { state: UploadState; fileNames
 const ANALYSIS_STEPS = [
   {
     label: "Reading your lab report",
-    detail: "Identifying biomarkers, values, units, and reference ranges from your document.",
+    detail: "Extracting every biomarker, value, unit, and reference range — in any language, from any lab.",
   },
   {
-    label: "Biomarkers extracted — normalizing names",
-    detail: "Matching lab-specific names to standardized biomarker identifiers across languages.",
+    label: "Normalizing across standards",
+    detail: "Converting lab-specific names and units to standardized medical identifiers.",
   },
   {
-    label: "Searching 55,000+ peer-reviewed studies",
-    detail: "Finding the most relevant published research for each of your markers using vector similarity.",
+    label: "Matching to peer-reviewed research",
+    detail: "Searching published studies relevant to each of your specific marker values.",
   },
   {
-    label: "Grading evidence quality",
-    detail: "Scoring each study by evidence grade, funding independence, recency, and sample size.",
+    label: "Scoring evidence quality and independence",
+    detail: "Weighting each study by evidence grade, sample size, funding source, and publication date.",
   },
   {
-    label: "Generating per-marker analysis",
-    detail: "Writing a research-grounded explanation for each biomarker — what it means for you, cited to real studies.",
+    label: "Analyzing each marker in context",
+    detail: "Combining your value, reference ranges, research findings, and clinical guidelines into a personalized analysis.",
   },
   {
     label: "Detecting cross-marker patterns",
-    detail: "Checking for clinical patterns that only appear when multiple markers are viewed together.",
+    detail: "Looking for clinical patterns across your full panel that individual markers can't reveal.",
   },
   {
-    label: "Computing risk calculations",
-    detail: "Running 16+ peer-reviewed algorithms — cardiovascular risk, insulin resistance, biological age, and more.",
+    label: "Running clinical health calculations",
+    detail: "Computing cardiovascular risk, insulin resistance, biological age, and 10+ more peer-reviewed algorithms.",
   },
   {
-    label: "Comparing to demographic-adjusted ranges",
-    detail: "Your results vs. optimal ranges for your age and sex, based on 300,000+ NHANES health profiles.",
+    label: "Benchmarking against your demographic",
+    detail: "Comparing your results to optimal ranges adjusted for your age and sex.",
   },
   {
-    label: "Building your personalized action plan",
-    detail: "Generating recommendations across nutrition, supplementation, sleep, movement, environment, and lifestyle.",
+    label: "Building your personalized protocol",
+    detail: "Creating an action plan across nutrition, supplementation, sleep, movement, and lifestyle — specific to your results.",
   },
   {
-    label: "Preparing your dashboard",
-    detail: "Organizing everything into a clear, navigable view with full citations.",
+    label: "Finalizing your report",
+    detail: "Assembling your complete analysis with full citations and actionable next steps.",
   },
 ];
