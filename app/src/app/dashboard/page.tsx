@@ -65,17 +65,17 @@ interface Citation {
 // ---------------------------------------------------------------------
 
 const CATEGORY_COLORS: Record<string, string> = {
-  inflammatory: "#F97316", // orange
-  lipid: "#F59E0B",        // amber
-  cardiovascular: "#EF4444", // red
-  metabolic: "#8B5CF6",    // purple
-  liver: "#A3A3A3",        // gray
-  kidney: "#0EA5E9",       // sky
-  hormonal: "#EC4899",     // pink
-  thyroid: "#14B8A6",      // teal
-  nutritional: "#1B6B4A",  // lipa green
-  hematology: "#DC2626",   // red-dark
-  other: "#6B7280",        // gray
+  inflammatory: "#F97316",
+  lipid: "#F59E0B",
+  cardiovascular: "#EF4444",
+  metabolic: "#8B5CF6",
+  liver: "#A3A3A3",
+  kidney: "#0EA5E9",
+  hormonal: "#EC4899",
+  thyroid: "#14B8A6",
+  nutritional: "#1B6B4A",
+  hematology: "#DC2626",
+  other: "#6B7280",
 };
 
 const STATUS_STYLES: Record<string, { bg: string; border: string; text: string; label: string; dot: string }> = {
@@ -86,7 +86,7 @@ const STATUS_STYLES: Record<string, { bg: string; border: string; text: string; 
 };
 
 // ---------------------------------------------------------------------
-// Confidence scoring (computed client-side from existing analysis fields)
+// Confidence scoring
 // ---------------------------------------------------------------------
 
 type ConfidenceLevel = "high" | "moderate" | "low" | "emerging";
@@ -123,12 +123,37 @@ interface OptimalRange {
 }
 
 // ---------------------------------------------------------------------
-// Free tier limits (Lipa Taste)
+// Free tier limits
 // ---------------------------------------------------------------------
 
 const FREE_TIER_MARKER_LIMIT = 10;
 const FREE_TIER_CITATION_LIMIT = 3;
-const FREE_TIER_RISK_CALC_LIMIT = 1; // Only SCORE2
+const FREE_TIER_RISK_CALC_LIMIT = 1;
+
+// ---------------------------------------------------------------------
+// Shared glass card styles
+// ---------------------------------------------------------------------
+
+const GLASS_CARD = {
+  background: "rgba(255,255,255,0.6)",
+  backdropFilter: "blur(20px)",
+  WebkitBackdropFilter: "blur(20px)",
+  border: "1px solid rgba(255,255,255,0.3)",
+  borderRadius: "20px",
+  boxShadow: "0 8px 32px rgba(15,26,21,0.06)",
+} as const;
+
+const GLASS_CARD_INNER = {
+  background: "rgba(255,255,255,0.45)",
+  backdropFilter: "blur(12px)",
+  WebkitBackdropFilter: "blur(12px)",
+  border: "1px solid rgba(255,255,255,0.25)",
+  borderRadius: "16px",
+  boxShadow: "0 4px 16px rgba(15,26,21,0.04)",
+} as const;
+
+const FRAUNCES = "'Fraunces', Georgia, serif";
+const MONO = "'JetBrains Mono', monospace";
 
 // ---------------------------------------------------------------------
 // Paywall overlay component
@@ -137,22 +162,22 @@ const FREE_TIER_RISK_CALC_LIMIT = 1; // Only SCORE2
 function PaywallOverlay({ featureName }: { featureName: string }) {
   return (
     <div className="relative">
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/80 to-white z-10 flex items-end justify-center pb-8">
-        <div className="bg-white border border-[#E5E5E5] rounded-2xl p-6 shadow-lg max-w-md text-center">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#F8F5EF]/80 to-[#F8F5EF] z-10 flex items-end justify-center pb-8">
+        <div style={GLASS_CARD} className="p-6 max-w-md text-center">
           <div className="text-[11px] uppercase tracking-wider text-[#1B6B4A] font-semibold mb-3">
             Lipa Insight
           </div>
-          <h3 className="text-[18px] font-semibold mb-2" style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}>
+          <h3 className="text-[18px] font-semibold mb-2" style={{ fontFamily: FRAUNCES, fontWeight: 500 }}>
             Unlock {featureName}
           </h3>
-          <p className="text-[13px] text-[#6B6B6B] mb-4 leading-relaxed">
-            Upgrade to Lipa Insight for the full analysis: all 100+ biomarkers, full citations, 16+ risk calculations, personalized action plan, vault, and research alerts. €79/year. 30-day money-back guarantee.
+          <p className="text-[13px] text-[#5A635D] mb-4 leading-relaxed">
+            Upgrade to Lipa Insight for the full analysis: all 100+ biomarkers, full citations, 16+ risk calculations, personalized action plan, vault, and research alerts. &euro;79/year. 30-day money-back guarantee.
           </p>
           <a
             href="/pricing"
-            className="inline-flex items-center gap-2 text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-6 py-3 rounded-full transition-colors"
+            className="inline-flex items-center gap-2 text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-6 py-3 rounded-full transition-all duration-300"
           >
-            Upgrade to Insight — €79/year
+            Upgrade to Insight &mdash; &euro;79/year
           </a>
         </div>
       </div>
@@ -190,7 +215,6 @@ export default function DashboardPage() {
       } else {
         setUserId(data.user.id);
 
-        // Check subscription tier
         const { data: sub } = await supabase
           .from("user_subscriptions")
           .select("tier")
@@ -208,7 +232,6 @@ export default function DashboardPage() {
     if (!userId) return;
     setLoadingData(true);
 
-    // Fetch biomarker results (most recent test first)
     const { data: resultsData } = await supabase
       .from("biomarker_results")
       .select("*")
@@ -218,7 +241,6 @@ export default function DashboardPage() {
 
     setResults(resultsData || []);
 
-    // Fetch analyses
     const { data: analysesData } = await supabase
       .from("user_analyses")
       .select("*")
@@ -227,7 +249,6 @@ export default function DashboardPage() {
 
     setAnalyses(analysesData || []);
 
-    // Fetch citations with joined study info
     const { data: citationsData } = await supabase
       .from("analysis_citations")
       .select(`
@@ -248,7 +269,6 @@ export default function DashboardPage() {
 
     setCitations((citationsData || []) as unknown as Citation[]);
 
-    // Fetch action plan (most recent)
     const { data: planData } = await supabase
       .from("action_plans")
       .select("*")
@@ -259,7 +279,6 @@ export default function DashboardPage() {
 
     setActionPlan(planData);
 
-    // Fetch optimal ranges from biomarker_reference
     const { data: refData } = await supabase
       .from("biomarker_reference")
       .select("canonical_name, optimal_low, optimal_high");
@@ -272,7 +291,6 @@ export default function DashboardPage() {
       setOptimalRanges(rangeMap);
     }
 
-    // Fetch profile (for risk calculations)
     const { data: profileData } = await supabase
       .from("user_profiles")
       .select("age, sex, is_smoker, systolic_bp")
@@ -310,12 +328,12 @@ export default function DashboardPage() {
     if (userId) fetchData();
   }, [userId, fetchData]);
 
-  // Group results by test_date (computed before any early return to keep hook order stable)
+  // Group results by test_date
   const testDates = Array.from(new Set(results.map((r) => r.test_date))).sort((a, b) => b.localeCompare(a));
   const latestTestDate = testDates[0];
   const latestResults = results.filter((r) => r.test_date === latestTestDate);
 
-  // Run risk calculations on latest results
+  // Risk calculations
   const calculations = useMemo<RiskCalculation[]>(() => {
     if (latestResults.length === 0) return [];
     const bv: BiomarkerValue[] = latestResults.map((r) => ({
@@ -326,7 +344,7 @@ export default function DashboardPage() {
     return runAllCalculations(bv, profile);
   }, [latestResults, profile]);
 
-  // Detect cross-marker patterns
+  // Cross-marker patterns
   const detectedPatterns = useMemo<DetectedPattern[]>(() => {
     if (latestResults.length === 0) return [];
     const patternInput = latestResults.map((r) => {
@@ -341,20 +359,23 @@ export default function DashboardPage() {
     return detectPatterns(patternInput);
   }, [latestResults, analyses]);
 
+  // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-[#999] text-sm">Loading...</div>
+      <div className="min-h-screen bg-gradient-to-br from-[#F8F5EF] via-[#F0EDE5] to-[#E8F5EE]/30 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-10 h-10 rounded-full border-2 border-[#1B6B4A]/20 border-t-[#1B6B4A] animate-spin" />
+          <div className="text-[#8A928C] text-sm">Loading your analysis...</div>
+        </div>
       </div>
     );
   }
 
-  // Apply category filter
+  // Category filter
   const filteredResults = selectedCategory
     ? latestResults.filter((r) => r.category === selectedCategory)
     : latestResults;
 
-  // Category counts
   const categories = Array.from(new Set(latestResults.map((r) => r.category)));
   const categoryCounts = Object.fromEntries(
     categories.map((c) => [c, latestResults.filter((r) => r.category === c).length])
@@ -374,35 +395,84 @@ export default function DashboardPage() {
     }
   });
 
+  // Summary findings for the hero
+  const keyFindings = latestResults
+    .map((r) => {
+      const analysis = analyses.find((a) => a.biomarker_result_id === r.id);
+      if (!analysis) return null;
+      if (analysis.status === "out_of_range") {
+        return {
+          biomarker: r.biomarker,
+          status: analysis.status,
+          flag: analysis.flag,
+          message: analysis.flag === "low"
+            ? `Your ${r.biomarker.toLowerCase()} is low`
+            : analysis.flag === "high"
+            ? `Your ${r.biomarker.toLowerCase()} is elevated`
+            : `${r.biomarker} needs attention`,
+          detail: analysis.summary,
+        };
+      }
+      if (analysis.status === "borderline") {
+        return {
+          biomarker: r.biomarker,
+          status: analysis.status,
+          flag: analysis.flag,
+          message: `${r.biomarker} could use attention`,
+          detail: analysis.summary,
+        };
+      }
+      return null;
+    })
+    .filter(Boolean)
+    .slice(0, 5);
+
+  // Add a positive finding if there are optimal markers
+  const allGood = keyFindings.length === 0 && statusCounts.optimal > 0;
+
   // Empty state
   if (!loadingData && results.length === 0) {
     return (
       <>
         <AppNav />
-        <main className="max-w-5xl mx-auto px-6 py-12">
-          <div className="text-center py-24">
-            <div className="w-16 h-16 bg-[#1B6B4A]/[0.08] rounded-2xl flex items-center justify-center mx-auto mb-6">
-              <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                <circle cx="14" cy="14" r="13" stroke="#1B6B4A" strokeWidth="1.5" />
-                <path d="M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z" fill="#1B6B4A" opacity="0.15" stroke="#1B6B4A" strokeWidth="1.2" />
-                <line x1="14" y1="11" x2="14" y2="21" stroke="#1B6B4A" strokeWidth="0.8" />
-              </svg>
+        <main className="min-h-screen bg-gradient-to-br from-[#F8F5EF] via-[#F0EDE5] to-[#E8F5EE]/30">
+          <div className="max-w-5xl mx-auto px-6 py-12">
+            <div className="text-center py-24">
+              <div
+                className="w-20 h-20 flex items-center justify-center mx-auto mb-6"
+                style={{
+                  ...GLASS_CARD,
+                  background: "rgba(232,245,238,0.6)",
+                }}
+              >
+                <svg width="32" height="32" viewBox="0 0 28 28" fill="none">
+                  <circle cx="14" cy="14" r="13" stroke="#1B6B4A" strokeWidth="1.5" />
+                  <path d="M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z" fill="#1B6B4A" opacity="0.15" stroke="#1B6B4A" strokeWidth="1.2" />
+                  <line x1="14" y1="11" x2="14" y2="21" stroke="#1B6B4A" strokeWidth="0.8" />
+                </svg>
+              </div>
+              <h1
+                className="text-3xl mb-3"
+                style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
+              >
+                Welcome to Lipa
+              </h1>
+              <p className="text-[#5A635D] text-[16px] max-w-md mx-auto mb-8 leading-relaxed">
+                Upload your blood test to get your first Living Research&trade; analysis. Every insight grounded in peer-reviewed research, cited and traceable.
+              </p>
+              <a
+                href="/upload"
+                className="inline-flex items-center gap-2 text-[14px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-8 py-3.5 rounded-full transition-all duration-300 hover:-translate-y-0.5"
+                style={{ boxShadow: "0 4px 16px rgba(27,107,74,0.25)" }}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="17 8 12 3 7 8" />
+                  <line x1="12" y1="3" x2="12" y2="15" />
+                </svg>
+                Upload Blood Test
+              </a>
             </div>
-            <h1 className="text-2xl font-semibold mb-3">Welcome to Lipa</h1>
-            <p className="text-[#6B6B6B] text-[16px] max-w-md mx-auto mb-8">
-              Upload your blood test to get your first Living Research™ analysis. Every insight grounded in peer-reviewed research, cited and traceable.
-            </p>
-            <a
-              href="/upload"
-              className="inline-flex items-center gap-2 text-[14px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-6 py-3 rounded-full transition-colors"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="17 8 12 3 7 8" />
-                <line x1="12" y1="3" x2="12" y2="15" />
-              </svg>
-              Upload Blood Test
-            </a>
           </div>
         </main>
       </>
@@ -418,256 +488,414 @@ export default function DashboardPage() {
   return (
     <>
       <AppNav />
-      <main className="max-w-6xl mx-auto px-6 py-10">
+      <main className="min-h-screen bg-gradient-to-br from-[#F8F5EF] via-[#F0EDE5] to-[#E8F5EE]/30">
+        <div className="max-w-6xl mx-auto px-6 py-10">
 
-        {/* Header */}
-        <div className="mb-10">
-          <div className="flex items-baseline justify-between mb-2">
-            <h1 className="text-[32px] font-serif tracking-tight" style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}>Your Analysis</h1>
-            <div className="text-[13px] text-[#999]">
-              Test: {latestTestDate ? new Date(latestTestDate).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : ""}
-            </div>
-          </div>
-          <p className="text-[14px] text-[#6B6B6B]">
-            {latestResults.length} biomarkers · Analyzed with Living Research™
-          </p>
-        </div>
-
-        {/* Summary cards */}
-        <div className="grid grid-cols-4 gap-3 mb-10">
-          <SummaryCard label="Optimal" count={statusCounts.optimal} color="#1B6B4A" />
-          <SummaryCard label="In range" count={statusCounts.normal} color="#71717A" />
-          <SummaryCard label="Borderline" count={statusCounts.borderline} color="#F59E0B" />
-          <SummaryCard label="Out of range" count={statusCounts.out_of_range} color="#EF4444" />
-        </div>
-
-        {/* Cross-marker patterns detected (paid only) */}
-        {!isFree && detectedPatterns.length > 0 && (
+          {/* ============================================================ */}
+          {/* 1. SUMMARY HERO                                              */}
+          {/* ============================================================ */}
           <div className="mb-10">
-            <h2 className="text-[20px] tracking-tight mb-1" style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}>Patterns detected</h2>
-            <p className="text-[12px] text-[#6B6B6B] mb-4">
-              Cross-marker patterns your individual results don&apos;t show in isolation.
-            </p>
-            <div className="space-y-3">
-              {detectedPatterns.map((pattern) => (
-                <PatternCard key={pattern.id} pattern={pattern} />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Lipa Insights — risk calculations */}
-        {visibleCalculations.length > 0 && (
-          <div className="mb-10">
-            <div className="flex items-baseline justify-between mb-4">
-              <div>
-                <h2 className="text-[20px] tracking-tight" style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}>Lipa Insights</h2>
-                <p className="text-[12px] text-[#6B6B6B]">
-                  Peer-reviewed calculations applied to your biomarkers. Educational, not diagnostic.
-                </p>
-              </div>
-              <button
-                onClick={() => setProfileOpen((v) => !v)}
-                className="text-[11px] font-medium text-[#1B6B4A] hover:underline"
+            <div className="flex items-baseline justify-between mb-1">
+              <h1
+                className="text-[34px] tracking-tight text-[#0F1A15]"
+                style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
               >
-                {profile.age ? "Edit profile" : "Add age & sex"}
-              </button>
+                {allGood ? "Everything looks great" : "Here\u2019s what stood out"}
+              </h1>
+              <div className="text-[13px] text-[#8A928C] font-mono" style={{ fontFamily: MONO }}>
+                {latestTestDate ? new Date(latestTestDate).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : ""}
+              </div>
             </div>
+            <p className="text-[14px] text-[#5A635D] mb-6">
+              {latestResults.length} biomarkers &middot; Analyzed with Living Research&trade;
+            </p>
 
-            {profileOpen && (
-              <ProfileEditor
-                profile={profile}
-                onSave={async (next) => {
-                  await saveProfile(next);
-                  setProfileOpen(false);
+            {/* Key findings cards */}
+            {allGood ? (
+              <div
+                className="p-6 transition-all duration-300"
+                style={{
+                  ...GLASS_CARD,
+                  background: "rgba(232,245,238,0.5)",
+                  border: "1px solid rgba(27,107,74,0.15)",
                 }}
-                onCancel={() => setProfileOpen(false)}
-              />
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full bg-[#1B6B4A]/10 flex items-center justify-center flex-shrink-0">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="text-[16px] font-semibold text-[#1B6B4A] mb-0.5">All markers in a healthy range</div>
+                    <p className="text-[13px] text-[#5A635D]">
+                      {statusCounts.optimal} optimal, {statusCounts.normal} within normal range. Keep up what you&apos;re doing.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {keyFindings.map((f: any) => (
+                  <div
+                    key={f.biomarker}
+                    className="p-4 transition-all duration-300 cursor-pointer hover:-translate-y-0.5"
+                    style={{
+                      ...GLASS_CARD,
+                      background: f.status === "out_of_range"
+                        ? "rgba(254,226,226,0.5)"
+                        : "rgba(254,243,199,0.5)",
+                      border: f.status === "out_of_range"
+                        ? "1px solid rgba(185,28,28,0.15)"
+                        : "1px solid rgba(180,83,9,0.15)",
+                      boxShadow: "0 4px 20px rgba(15,26,21,0.04)",
+                    }}
+                    onClick={() => {
+                      const r = latestResults.find((lr) => lr.biomarker === f.biomarker);
+                      if (r) setExpandedBiomarker(r.id);
+                      // scroll to biomarkers section
+                      document.getElementById("biomarkers-section")?.scrollIntoView({ behavior: "smooth" });
+                    }}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div
+                        className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0"
+                        style={{
+                          backgroundColor: f.status === "out_of_range" ? "#B91C1C" : "#B45309",
+                        }}
+                      />
+                      <div className="min-w-0">
+                        <div className="text-[15px] font-semibold text-[#0F1A15] mb-1">{f.message}</div>
+                        <p className="text-[13px] text-[#5A635D] line-clamp-2">{f.detail}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
+          </div>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {visibleCalculations.map((calc) => (
-                <InsightCard
-                  key={calc.id}
-                  calc={calc}
-                  expanded={expandedInsight === calc.id}
-                  onToggle={() =>
-                    setExpandedInsight(expandedInsight === calc.id ? null : calc.id)
-                  }
+          {/* ============================================================ */}
+          {/* 2. STATUS OVERVIEW                                           */}
+          {/* ============================================================ */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10">
+            <StatusCard label="Optimal" count={statusCounts.optimal} dotColor="#1B6B4A" />
+            <StatusCard label="In range" count={statusCounts.normal} dotColor="#71717A" />
+            <StatusCard label="Borderline" count={statusCounts.borderline} dotColor="#F59E0B" />
+            <StatusCard label="Out of range" count={statusCounts.out_of_range} dotColor="#EF4444" />
+          </div>
+
+          {/* ============================================================ */}
+          {/* 3. PATTERNS DETECTED (paid only)                             */}
+          {/* ============================================================ */}
+          {!isFree && detectedPatterns.length > 0 && (
+            <div className="mb-10">
+              <h2
+                className="text-[22px] tracking-tight text-[#0F1A15] mb-1"
+                style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
+              >
+                Patterns detected
+              </h2>
+              <p className="text-[13px] text-[#5A635D] mb-4">
+                Cross-marker patterns your individual results don&apos;t show in isolation.
+              </p>
+              <div className="space-y-3">
+                {detectedPatterns.map((pattern) => (
+                  <PatternCard key={pattern.id} pattern={pattern} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* ============================================================ */}
+          {/* 4. ACTION PLAN                                               */}
+          {/* ============================================================ */}
+          {!isFree && actionPlan && actionPlan.domains && actionPlan.domains.length > 0 && (
+            <div className="mb-10">
+              <h2
+                className="text-[22px] tracking-tight text-[#0F1A15] mb-1"
+                style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
+              >
+                Your Action Plan
+              </h2>
+              <p className="text-[13px] text-[#5A635D] mb-4">
+                Personalized recommendations across six life domains, based on your markers.
+              </p>
+
+              {actionPlan.overall_summary && (
+                <div
+                  className="p-5 mb-4"
+                  style={{
+                    ...GLASS_CARD,
+                    background: "rgba(232,245,238,0.5)",
+                    border: "1px solid rgba(27,107,74,0.15)",
+                  }}
+                >
+                  <div className="text-[11px] uppercase tracking-wider text-[#1B6B4A] font-medium mb-2">
+                    Summary
+                  </div>
+                  <p className="text-[14px] text-[#0F1A15] leading-relaxed">
+                    {actionPlan.overall_summary}
+                  </p>
+                </div>
+              )}
+
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {(actionPlan.domains as any[]).map((domain: any) => (
+                  <ActionPlanDomainCard key={domain.domain} domain={domain} />
+                ))}
+              </div>
+
+              {actionPlan.disclaimer && (
+                <p className="text-[10px] text-[#8A928C] mt-4 leading-relaxed text-center">
+                  {actionPlan.disclaimer}
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* Free tier action plan teaser */}
+          {isFree && actionPlan && (
+            <div
+              className="mb-10 p-6 text-center"
+              style={{
+                ...GLASS_CARD,
+                background: "rgba(232,245,238,0.5)",
+                border: "1px solid rgba(27,107,74,0.15)",
+              }}
+            >
+              <h3
+                className="text-[18px] text-[#1B6B4A] mb-2"
+                style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
+              >
+                Your personalized action plan is ready
+              </h3>
+              <p className="text-[13px] text-[#0F1A15] mb-4 max-w-md mx-auto leading-relaxed">
+                Lipa generated a personalized action plan across nutrition, supplementation, sleep, movement, environment, and lifestyle. Upgrade to see it.
+              </p>
+              <a
+                href="/pricing"
+                className="inline-flex text-[12px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-5 py-2.5 rounded-full transition-all duration-300 hover:-translate-y-0.5"
+                style={{ boxShadow: "0 4px 16px rgba(27,107,74,0.2)" }}
+              >
+                See your action plan &mdash; Upgrade
+              </a>
+            </div>
+          )}
+
+          {/* ============================================================ */}
+          {/* 5. RISK INSIGHTS                                             */}
+          {/* ============================================================ */}
+          {visibleCalculations.length > 0 && (
+            <div className="mb-10">
+              <div className="flex items-baseline justify-between mb-4">
+                <div>
+                  <h2
+                    className="text-[22px] tracking-tight text-[#0F1A15]"
+                    style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
+                  >
+                    Risk Insights
+                  </h2>
+                  <p className="text-[13px] text-[#5A635D]">
+                    Peer-reviewed calculations applied to your biomarkers.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setProfileOpen((v) => !v)}
+                  className="text-[12px] font-medium text-[#1B6B4A] hover:text-[#155A3D] transition-colors"
+                >
+                  {profile.age ? "Edit profile" : "Add age & sex"}
+                </button>
+              </div>
+
+              {profileOpen && (
+                <ProfileEditor
+                  profile={profile}
+                  onSave={async (next) => {
+                    await saveProfile(next);
+                    setProfileOpen(false);
+                  }}
+                  onCancel={() => setProfileOpen(false)}
+                />
+              )}
+
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {visibleCalculations.map((calc) => (
+                  <InsightCard
+                    key={calc.id}
+                    calc={calc}
+                    expanded={expandedInsight === calc.id}
+                    onToggle={() =>
+                      setExpandedInsight(expandedInsight === calc.id ? null : calc.id)
+                    }
+                  />
+                ))}
+              </div>
+
+              {isFree && lockedCalcCount > 0 && (
+                <div
+                  className="mt-4 p-5 text-center"
+                  style={{
+                    ...GLASS_CARD,
+                    background: "rgba(254,243,199,0.5)",
+                    border: "1px solid rgba(245,158,11,0.15)",
+                  }}
+                >
+                  <p className="text-[13px] text-[#B45309] mb-3">
+                    <strong>{lockedCalcCount} more risk calculations</strong> available with Lipa Insight &mdash; including bio-age, HOMA-IR, FIB-4, and more.
+                  </p>
+                  <a
+                    href="/pricing"
+                    className="inline-flex text-[12px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-5 py-2.5 rounded-full transition-all duration-300"
+                  >
+                    Upgrade &mdash; &euro;79/year
+                  </a>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ============================================================ */}
+          {/* 6. BIOMARKERS                                                */}
+          {/* ============================================================ */}
+          <div id="biomarkers-section" className="mb-10">
+            <h2
+              className="text-[22px] tracking-tight text-[#0F1A15] mb-4"
+              style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
+            >
+              Your Biomarkers
+            </h2>
+
+            {/* Category filter chips */}
+            <div className="mb-6 flex flex-wrap gap-2">
+              <FilterChip
+                label="All"
+                count={latestResults.length}
+                active={selectedCategory === null}
+                onClick={() => setSelectedCategory(null)}
+              />
+              {categories.map((cat) => (
+                <FilterChip
+                  key={cat}
+                  label={cat.charAt(0).toUpperCase() + cat.slice(1)}
+                  count={categoryCounts[cat]}
+                  color={CATEGORY_COLORS[cat] || "#6B7280"}
+                  active={selectedCategory === cat}
+                  onClick={() => setSelectedCategory(cat)}
                 />
               ))}
             </div>
 
-            {isFree && lockedCalcCount > 0 && (
-              <div className="mt-4 bg-[#FEF3C7] border border-[#F59E0B]/20 rounded-2xl p-5 text-center">
-                <p className="text-[13px] text-[#B45309] mb-3">
-                  <strong>{lockedCalcCount} more risk calculations</strong> available with Lipa Insight — including bio-age, HOMA-IR, FIB-4, and more.
-                </p>
-                <a href="/pricing" className="inline-flex text-[12px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-5 py-2 rounded-full transition-colors">
-                  Upgrade — €79/year
-                </a>
-              </div>
-            )}
+            {/* Biomarker grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {visibleResults.map((result) => {
+                const analysis = analyses.find((a) => a.biomarker_result_id === result.id);
+                const biomarkerCitations = citations.filter((c) => c.biomarker_result_id === result.id);
+                const isExpanded = expandedBiomarker === result.id;
+
+                return (
+                  <BiomarkerCard
+                    key={result.id}
+                    result={result}
+                    analysis={analysis}
+                    citations={biomarkerCitations}
+                    expanded={isExpanded}
+                    onToggle={() =>
+                      setExpandedBiomarker(isExpanded ? null : result.id)
+                    }
+                    optimalRange={(() => {
+                      const demoRange = getDemographicOptimalRange(result.biomarker, profile.age, profile.sex);
+                      if (demoRange) return { optimal_low: demoRange.optimal_low, optimal_high: demoRange.optimal_high, canonical_name: result.biomarker };
+                      return optimalRanges[result.biomarker.toLowerCase()] || optimalRanges[(analysis?.biomarker_name || "").toLowerCase()];
+                    })()}
+                    isFree={isFree}
+                  />
+                );
+              })}
+            </div>
           </div>
-        )}
 
-        {/* Action Plan (paid only) */}
-        {!isFree && actionPlan && actionPlan.domains && actionPlan.domains.length > 0 && (
-          <div className="mb-10">
-            <div className="flex items-baseline justify-between mb-4">
-              <div>
-                <h2 className="text-[20px] tracking-tight" style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}>Your Action Plan</h2>
-                <p className="text-[12px] text-[#6B6B6B]">
-                  Personalized recommendations across six life domains, based on your markers.
-                </p>
-              </div>
-            </div>
-
-            {actionPlan.overall_summary && (
-              <div className="bg-[#E8F5EE] border border-[#1B6B4A]/20 rounded-2xl p-5 mb-4">
-                <div className="text-[11px] uppercase tracking-wider text-[#1B6B4A] font-medium mb-2">
-                  Summary
-                </div>
-                <p className="text-[14px] text-[#2A2A2A] leading-relaxed">
-                  {actionPlan.overall_summary}
-                </p>
-              </div>
-            )}
-
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {(actionPlan.domains as any[]).map((domain: any) => (
-                <ActionPlanDomainCard key={domain.domain} domain={domain} />
-              ))}
-            </div>
-
-            {actionPlan.disclaimer && (
-              <p className="text-[10px] text-[#999] mt-4 leading-relaxed text-center">
-                {actionPlan.disclaimer}
+          {/* Locked markers paywall */}
+          {isFree && lockedCount > 0 && (
+            <div
+              className="mb-10 p-8 text-center"
+              style={GLASS_CARD}
+            >
+              <h3
+                className="text-[22px] mb-2 text-[#0F1A15]"
+                style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
+              >
+                {lockedCount} more markers analyzed
+              </h3>
+              <p className="text-[14px] text-[#5A635D] mb-2 max-w-lg mx-auto leading-relaxed">
+                Your full panel has {filteredResults.length} markers. Upgrade to Lipa Insight to see every marker with full citations, optimal vs normal ranges, confidence scores, cross-marker patterns, and your personalized action plan.
               </p>
-            )}
-          </div>
-        )}
+              <p className="text-[12px] text-[#8A928C] mb-5 font-mono" style={{ fontFamily: MONO }}>
+                16+ risk calculations &middot; permanent vault &middot; year-over-year trending &middot; research alerts
+              </p>
+              <a
+                href="/pricing"
+                className="inline-flex items-center gap-2 text-[14px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-8 py-3.5 rounded-full transition-all duration-300 hover:-translate-y-0.5"
+                style={{ boxShadow: "0 4px 16px rgba(27,107,74,0.25)" }}
+              >
+                Unlock everything &mdash; &euro;79/year
+              </a>
+              <p className="text-[11px] text-[#8A928C] mt-3">30-day money-back guarantee</p>
+            </div>
+          )}
 
-        {/* Category filter */}
-        <div className="mb-8 flex flex-wrap gap-2">
-          <FilterChip
-            label="All"
-            count={latestResults.length}
-            active={selectedCategory === null}
-            onClick={() => setSelectedCategory(null)}
-          />
-          {categories.map((cat) => (
-            <FilterChip
-              key={cat}
-              label={cat.charAt(0).toUpperCase() + cat.slice(1)}
-              count={categoryCounts[cat]}
-              color={CATEGORY_COLORS[cat] || "#6B7280"}
-              active={selectedCategory === cat}
-              onClick={() => setSelectedCategory(cat)}
-            />
-          ))}
-        </div>
-
-        {/* Biomarker list */}
-        <div className="space-y-3">
-          {visibleResults.map((result) => {
-            const analysis = analyses.find((a) => a.biomarker_result_id === result.id);
-            const biomarkerCitations = citations.filter((c) => c.biomarker_result_id === result.id);
-            const isExpanded = expandedBiomarker === result.id;
-
-            return (
-              <BiomarkerCard
-                key={result.id}
-                result={result}
-                analysis={analysis}
-                citations={biomarkerCitations}
-                expanded={isExpanded}
-                onToggle={() =>
-                  setExpandedBiomarker(isExpanded ? null : result.id)
-                }
-                optimalRange={(() => {
-                  // Prefer demographic-adjusted range if user has age+sex
-                  const demoRange = getDemographicOptimalRange(result.biomarker, profile.age, profile.sex);
-                  if (demoRange) return { optimal_low: demoRange.optimal_low, optimal_high: demoRange.optimal_high, canonical_name: result.biomarker };
-                  // Fall back to static biomarker_reference
-                  return optimalRanges[result.biomarker.toLowerCase()] || optimalRanges[(analysis?.biomarker_name || "").toLowerCase()];
-                })()}
-                isFree={isFree}
-              />
-            );
-          })}
-        </div>
-
-        {/* Locked markers paywall (free tier) */}
-        {isFree && lockedCount > 0 && (
-          <div className="mt-6 bg-white border border-[#E5E5E5] rounded-2xl p-8 text-center">
-            <h3 className="text-[20px] mb-2" style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}>
-              {lockedCount} more markers analyzed
-            </h3>
-            <p className="text-[14px] text-[#6B6B6B] mb-2 max-w-lg mx-auto leading-relaxed">
-              Your full panel has {filteredResults.length} markers. Upgrade to Lipa Insight to see every marker with full citations, optimal vs normal ranges, confidence scores, cross-marker patterns, and your personalized action plan.
-            </p>
-            <p className="text-[12px] text-[#999] mb-5">
-              Plus: 16+ risk calculations · permanent vault · year-over-year trending · research alerts
-            </p>
+          {/* Footer */}
+          <div className="mt-12 text-center pb-8">
             <a
-              href="/pricing"
-              className="inline-flex items-center gap-2 text-[14px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-8 py-3 rounded-full transition-colors"
+              href="/upload"
+              className="inline-flex items-center gap-2 text-[13px] font-semibold text-[#1B6B4A] hover:text-[#155A3D] transition-colors"
             >
-              Unlock everything — €79/year
-            </a>
-            <p className="text-[11px] text-[#999] mt-3">30-day money-back guarantee</p>
-          </div>
-        )}
-
-        {/* Free tier action plan teaser */}
-        {isFree && actionPlan && (
-          <div className="mt-6 bg-[#E8F5EE] border border-[#1B6B4A]/15 rounded-2xl p-6 text-center">
-            <h3 className="text-[16px] font-semibold text-[#1B6B4A] mb-2">Your personalized action plan is ready</h3>
-            <p className="text-[13px] text-[#2A2A2A] mb-4 max-w-md mx-auto">
-              Lipa generated a personalized action plan across nutrition, supplementation, sleep, movement, environment, and lifestyle — with specific dosages, timing, food sources, and interactions. Upgrade to see it.
-            </p>
-            <a
-              href="/pricing"
-              className="inline-flex text-[12px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-5 py-2 rounded-full transition-colors"
-            >
-              See your action plan — Upgrade
+              Upload another blood test
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <path d="M5 12h14" />
+                <path d="M12 5l7 7-7 7" />
+              </svg>
             </a>
           </div>
-        )}
-
-        {/* Footer action */}
-        <div className="mt-12 text-center">
-          <a
-            href="/upload"
-            className="inline-flex items-center gap-2 text-[13px] font-semibold text-[#1B6B4A] hover:text-[#155A3D]"
-          >
-            Upload another blood test →
-          </a>
         </div>
       </main>
     </>
   );
 }
 
+// =====================================================================
+// SUB-COMPONENTS
+// =====================================================================
+
 // ---------------------------------------------------------------------
-// Summary card component
+// Status card (glassmorphic)
 // ---------------------------------------------------------------------
 
-function SummaryCard({ label, count, color }: { label: string; count: number; color: string }) {
+function StatusCard({ label, count, dotColor }: { label: string; count: number; dotColor: string }) {
   return (
-    <div className="bg-white border border-[#E5E5E5] rounded-2xl p-5">
-      <div className="flex items-center gap-2 mb-2">
-        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
-        <div className="text-[12px] text-[#6B6B6B] font-medium">{label}</div>
+    <div
+      className="p-5 transition-all duration-300 hover:-translate-y-0.5"
+      style={{
+        ...GLASS_CARD,
+        boxShadow: count > 0 ? "0 8px 32px rgba(15,26,21,0.06)" : "0 4px 16px rgba(15,26,21,0.03)",
+      }}
+    >
+      <div className="flex items-center gap-2 mb-3">
+        <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: dotColor }} />
+        <div className="text-[12px] text-[#5A635D] font-medium">{label}</div>
       </div>
-      <div className="text-[28px] font-semibold tracking-tight" style={{ fontFamily: "'Fraunces', Georgia, serif" }}>{count}</div>
+      <div
+        className="text-[32px] tracking-tight text-[#0F1A15]"
+        style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
+      >
+        {count}
+      </div>
     </div>
   );
 }
 
 // ---------------------------------------------------------------------
-// Filter chip component
+// Filter chip
 // ---------------------------------------------------------------------
 
 function FilterChip({
@@ -686,24 +914,36 @@ function FilterChip({
   return (
     <button
       onClick={onClick}
-      className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-[12px] font-medium transition-colors ${
+      className={`flex items-center gap-2 px-3.5 py-1.5 text-[12px] font-medium transition-all duration-300 ${
         active
-          ? "bg-[#1B6B4A] text-white"
-          : "bg-white border border-[#E5E5E5] text-[#6B6B6B] hover:border-[#1B6B4A]/30"
+          ? "text-white shadow-sm"
+          : "text-[#5A635D] hover:text-[#0F1A15]"
       }`}
+      style={
+        active
+          ? {
+              background: "#1B6B4A",
+              borderRadius: "20px",
+              boxShadow: "0 4px 12px rgba(27,107,74,0.25)",
+            }
+          : {
+              ...GLASS_CARD,
+              borderRadius: "20px",
+              boxShadow: "0 2px 8px rgba(15,26,21,0.03)",
+            }
+      }
     >
       {color && !active && (
         <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: color }} />
       )}
       {label}
-      <span className={active ? "text-white/70" : "text-[#999]"}>{count}</span>
+      <span className={active ? "text-white/70" : "text-[#8A928C]"}>{count}</span>
     </button>
   );
 }
 
 // ---------------------------------------------------------------------
-// ---------------------------------------------------------------------
-// Pattern card (cross-marker detection)
+// Pattern card (glassmorphic)
 // ---------------------------------------------------------------------
 
 const SEVERITY_STYLES: Record<string, { bg: string; text: string; border: string; label: string }> = {
@@ -718,17 +958,20 @@ function PatternCard({ pattern }: { pattern: DetectedPattern }) {
 
   return (
     <div
-      className="bg-white border rounded-2xl overflow-hidden"
-      style={{ borderColor: sev.border, borderLeftWidth: "3px" }}
+      className="overflow-hidden transition-all duration-300 hover:-translate-y-0.5"
+      style={{
+        ...GLASS_CARD,
+        borderLeft: `3px solid ${sev.border}`,
+      }}
     >
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full text-left px-6 py-5 hover:bg-[#FAFAF8] transition-colors"
+        className="w-full text-left px-6 py-5 transition-colors"
       >
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-2">
-              <h3 className="text-[15px] font-semibold">{pattern.name}</h3>
+              <h3 className="text-[15px] font-semibold text-[#0F1A15]">{pattern.name}</h3>
               <div
                 className="text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full"
                 style={{ backgroundColor: sev.bg, color: sev.text }}
@@ -736,19 +979,23 @@ function PatternCard({ pattern }: { pattern: DetectedPattern }) {
                 {sev.label}
               </div>
             </div>
-            <p className="text-[13px] text-[#6B6B6B] leading-relaxed">{pattern.summary}</p>
+            <p className="text-[13px] text-[#5A635D] leading-relaxed line-clamp-2">{pattern.summary}</p>
           </div>
           <svg
             width="16" height="16" viewBox="0 0 24 24" fill="none"
-            stroke="#999" strokeWidth="2"
-            className={`transition-transform flex-shrink-0 mt-1 ${expanded ? "rotate-180" : ""}`}
+            stroke="#8A928C" strokeWidth="2"
+            className={`transition-transform duration-300 flex-shrink-0 mt-1 ${expanded ? "rotate-180" : ""}`}
           >
             <polyline points="6 9 12 15 18 9" />
           </svg>
         </div>
         <div className="flex gap-1.5 mt-3 flex-wrap">
           {pattern.markers_matched.map((m) => (
-            <span key={m} className="text-[10px] font-medium text-[#1B6B4A] bg-[#E8F5EE] px-2 py-0.5 rounded-full">
+            <span
+              key={m}
+              className="text-[10px] font-medium text-[#1B6B4A] px-2 py-0.5 rounded-full"
+              style={{ background: "rgba(232,245,238,0.7)" }}
+            >
               {m}
             </span>
           ))}
@@ -756,18 +1003,18 @@ function PatternCard({ pattern }: { pattern: DetectedPattern }) {
       </button>
 
       {expanded && (
-        <div className="border-t border-[#F4F4F5] px-6 py-5 bg-[#FAFAF8]">
+        <div className="px-6 py-5" style={{ borderTop: "1px solid rgba(255,255,255,0.3)", background: "rgba(255,255,255,0.3)" }}>
           <div className="mb-4">
-            <div className="text-[11px] uppercase tracking-wider text-[#999] font-medium mb-2">What the research shows</div>
-            <p className="text-[14px] text-[#2A2A2A] leading-relaxed">{pattern.detail}</p>
+            <div className="text-[11px] uppercase tracking-wider text-[#8A928C] font-medium mb-2">What the research shows</div>
+            <p className="text-[14px] text-[#0F1A15] leading-relaxed">{pattern.detail}</p>
           </div>
           <div className="mb-4">
-            <div className="text-[11px] uppercase tracking-wider text-[#999] font-medium mb-2">What to consider</div>
-            <p className="text-[14px] text-[#2A2A2A] leading-relaxed">{pattern.what_to_do}</p>
+            <div className="text-[11px] uppercase tracking-wider text-[#8A928C] font-medium mb-2">What to consider</div>
+            <p className="text-[14px] text-[#0F1A15] leading-relaxed">{pattern.what_to_do}</p>
           </div>
-          <div className="pt-3 border-t border-[#F4F4F5]">
-            <p className="text-[10px] text-[#999] font-mono leading-relaxed">{pattern.citation}</p>
-            <p className="text-[10px] text-[#999] mt-2">This is educational content, not medical advice.</p>
+          <div className="pt-3" style={{ borderTop: "1px solid rgba(255,255,255,0.3)" }}>
+            <p className="text-[10px] text-[#8A928C] font-mono leading-relaxed" style={{ fontFamily: MONO }}>{pattern.citation}</p>
+            <p className="text-[10px] text-[#8A928C] mt-2">This is educational content, not medical advice.</p>
           </div>
         </div>
       )}
@@ -788,36 +1035,53 @@ const DOMAIN_LABELS: Record<string, string> = {
   lifestyle: "Lifestyle",
 };
 
+const DOMAIN_ICONS: Record<string, string> = {
+  nutrition: "N",
+  supplementation: "S",
+  sleep: "Z",
+  movement: "M",
+  environment: "E",
+  lifestyle: "L",
+};
+
 function ActionPlanDomainCard({ domain }: { domain: any }) {
   const label = DOMAIN_LABELS[domain.domain] || domain.domain;
+  const icon = DOMAIN_ICONS[domain.domain] || "?";
   const [expanded, setExpanded] = useState(false);
   const recs = domain.recommendations || [];
 
   if (recs.length === 0) return null;
 
   return (
-    <div className="bg-white border border-[#E5E5E5] rounded-2xl overflow-hidden">
+    <div
+      className="overflow-hidden transition-all duration-300 hover:-translate-y-0.5"
+      style={GLASS_CARD}
+    >
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full text-left px-5 py-4 hover:bg-[#FAFAF8] transition-colors"
+        className="w-full text-left px-5 py-4 transition-colors"
       >
         <div className="flex items-center justify-between">
-          <div>
-            <div className="text-[11px] uppercase tracking-wider text-[#1B6B4A] font-semibold mb-1">
-              {label}
+          <div className="flex items-center gap-3">
+            <div
+              className="w-9 h-9 rounded-xl flex items-center justify-center text-[13px] font-semibold text-[#1B6B4A]"
+              style={{ background: "rgba(232,245,238,0.7)" }}
+            >
+              {icon}
             </div>
-            <div className="text-[13px] text-[#6B6B6B]">
-              {recs.length} recommendation{recs.length !== 1 ? "s" : ""}
+            <div>
+              <div className="text-[13px] font-semibold text-[#0F1A15]">
+                {label}
+              </div>
+              <div className="text-[12px] text-[#8A928C]">
+                {recs.length} recommendation{recs.length !== 1 ? "s" : ""}
+              </div>
             </div>
           </div>
           <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#999"
-            strokeWidth="2"
-            className={`transition-transform ${expanded ? "rotate-180" : ""}`}
+            width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="#8A928C" strokeWidth="2"
+            className={`transition-transform duration-300 ${expanded ? "rotate-180" : ""}`}
           >
             <polyline points="6 9 12 15 18 9" />
           </svg>
@@ -825,53 +1089,53 @@ function ActionPlanDomainCard({ domain }: { domain: any }) {
       </button>
 
       {expanded && (
-        <div className="border-t border-[#F4F4F5] px-5 py-4 bg-[#FAFAF8]">
+        <div className="px-5 py-4" style={{ borderTop: "1px solid rgba(255,255,255,0.3)", background: "rgba(255,255,255,0.3)" }}>
           <div className="space-y-5">
             {recs.map((rec: any, i: number) => (
-              <div key={i} className="pb-4 border-b border-[#F4F4F5] last:border-b-0 last:pb-0">
-                <p className="text-[14px] font-medium text-[#2A2A2A] leading-relaxed mb-1">
+              <div key={i} className="pb-4 last:pb-0" style={{ borderBottom: i < recs.length - 1 ? "1px solid rgba(255,255,255,0.4)" : "none" }}>
+                <p className="text-[14px] font-medium text-[#0F1A15] leading-relaxed mb-1">
                   {rec.text}
                 </p>
-                <p className="text-[12px] text-[#6B6B6B] leading-relaxed mb-2">
+                <p className="text-[12px] text-[#5A635D] leading-relaxed mb-2">
                   {rec.research_basis}
                 </p>
 
                 {rec.details && (
-                  <div className="bg-white border border-[#E5E5E5] rounded-xl p-4 mt-3 space-y-3">
+                  <div className="p-4 mt-3 space-y-3" style={GLASS_CARD_INNER}>
                     {rec.details.dosage_range && (
                       <div>
-                        <div className="text-[10px] uppercase tracking-wider text-[#999] font-medium mb-1">Dosage range (from research)</div>
-                        <p className="text-[12px] text-[#2A2A2A] leading-relaxed">{rec.details.dosage_range}</p>
+                        <div className="text-[10px] uppercase tracking-wider text-[#8A928C] font-medium mb-1">Dosage range (from research)</div>
+                        <p className="text-[12px] text-[#0F1A15] leading-relaxed">{rec.details.dosage_range}</p>
                       </div>
                     )}
                     {rec.details.best_form && (
                       <div>
-                        <div className="text-[10px] uppercase tracking-wider text-[#999] font-medium mb-1">Best-studied form</div>
-                        <p className="text-[12px] text-[#2A2A2A] leading-relaxed">{rec.details.best_form}</p>
+                        <div className="text-[10px] uppercase tracking-wider text-[#8A928C] font-medium mb-1">Best-studied form</div>
+                        <p className="text-[12px] text-[#0F1A15] leading-relaxed">{rec.details.best_form}</p>
                       </div>
                     )}
                     {rec.details.timing && (
                       <div>
-                        <div className="text-[10px] uppercase tracking-wider text-[#999] font-medium mb-1">When to take</div>
-                        <p className="text-[12px] text-[#2A2A2A] leading-relaxed">{rec.details.timing}</p>
+                        <div className="text-[10px] uppercase tracking-wider text-[#8A928C] font-medium mb-1">When to take</div>
+                        <p className="text-[12px] text-[#0F1A15] leading-relaxed">{rec.details.timing}</p>
                       </div>
                     )}
                     {rec.details.food_sources && (
                       <div>
-                        <div className="text-[10px] uppercase tracking-wider text-[#999] font-medium mb-1">Food sources</div>
-                        <p className="text-[12px] text-[#2A2A2A] leading-relaxed">{rec.details.food_sources}</p>
+                        <div className="text-[10px] uppercase tracking-wider text-[#8A928C] font-medium mb-1">Food sources</div>
+                        <p className="text-[12px] text-[#0F1A15] leading-relaxed">{rec.details.food_sources}</p>
                       </div>
                     )}
                     {rec.details.interactions && (
                       <div>
                         <div className="text-[10px] uppercase tracking-wider text-[#B45309] font-medium mb-1">Interactions &amp; cautions</div>
-                        <p className="text-[12px] text-[#2A2A2A] leading-relaxed">{rec.details.interactions}</p>
+                        <p className="text-[12px] text-[#0F1A15] leading-relaxed">{rec.details.interactions}</p>
                       </div>
                     )}
                     {rec.details.important_notes && (
                       <div>
-                        <div className="text-[10px] uppercase tracking-wider text-[#999] font-medium mb-1">Good to know</div>
-                        <p className="text-[12px] text-[#2A2A2A] leading-relaxed">{rec.details.important_notes}</p>
+                        <div className="text-[10px] uppercase tracking-wider text-[#8A928C] font-medium mb-1">Good to know</div>
+                        <p className="text-[12px] text-[#0F1A15] leading-relaxed">{rec.details.important_notes}</p>
                       </div>
                     )}
                   </div>
@@ -882,13 +1146,14 @@ function ActionPlanDomainCard({ domain }: { domain: any }) {
                     {rec.markers_addressed.map((m: string) => (
                       <span
                         key={m}
-                        className="text-[10px] font-medium text-[#1B6B4A] bg-[#E8F5EE] px-2 py-0.5 rounded-full"
+                        className="text-[10px] font-medium text-[#1B6B4A] px-2 py-0.5 rounded-full"
+                        style={{ background: "rgba(232,245,238,0.7)" }}
                       >
                         {m}
                       </span>
                     ))}
                     {rec.cited_studies && (
-                      <span className="text-[10px] text-[#999] px-2 py-0.5">
+                      <span className="text-[10px] text-[#8A928C] px-2 py-0.5">
                         {rec.cited_studies} studies
                       </span>
                     )}
@@ -903,7 +1168,8 @@ function ActionPlanDomainCard({ domain }: { domain: any }) {
   );
 }
 
-// Insight card (risk calculations)
+// ---------------------------------------------------------------------
+// Insight card (risk calculations, glassmorphic)
 // ---------------------------------------------------------------------
 
 const INSIGHT_COLORS: Record<RiskCalculation["interpretation"], { bg: string; text: string; dot: string }> = {
@@ -928,13 +1194,16 @@ function InsightCard({
   const hasValue = calc.interpretation !== "unknown";
 
   return (
-    <div className="bg-white border border-[#E5E5E5] rounded-2xl overflow-hidden">
+    <div
+      className="overflow-hidden transition-all duration-300 hover:-translate-y-0.5"
+      style={GLASS_CARD}
+    >
       <button
         onClick={onToggle}
-        className="w-full text-left px-5 py-4 hover:bg-[#FAFAF8] transition-colors"
+        className="w-full text-left px-5 py-4 transition-colors"
       >
-        <div className="flex items-start justify-between gap-3 mb-2">
-          <div className="text-[12px] font-medium text-[#6B6B6B] leading-snug">{calc.name}</div>
+        <div className="flex items-start justify-between gap-3 mb-3">
+          <div className="text-[13px] font-medium text-[#5A635D] leading-snug">{calc.name}</div>
           <div
             className="text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full flex items-center gap-1.5 flex-shrink-0"
             style={{ backgroundColor: c.bg, color: c.text }}
@@ -944,30 +1213,33 @@ function InsightCard({
           </div>
         </div>
         <div className="flex items-baseline gap-1.5">
-          <div className="text-[26px] font-semibold tracking-tight" style={{ color: hasValue ? "#1A1A1A" : "#A1A1AA" }}>
+          <div
+            className="text-[30px] tracking-tight"
+            style={{ fontFamily: FRAUNCES, fontWeight: 500, color: hasValue ? "#0F1A15" : "#A1A1AA" }}
+          >
             {calc.value}
           </div>
           {calc.unit && hasValue && (
-            <div className="text-[11px] text-[#999]">{calc.unit}</div>
+            <div className="text-[11px] text-[#8A928C] font-mono" style={{ fontFamily: MONO }}>{calc.unit}</div>
           )}
         </div>
       </button>
 
       {expanded && (
-        <div className="border-t border-[#F4F4F5] px-5 py-4 bg-[#FAFAF8]">
-          <p className="text-[12px] text-[#2A2A2A] leading-relaxed mb-3">{calc.summary}</p>
+        <div className="px-5 py-4" style={{ borderTop: "1px solid rgba(255,255,255,0.3)", background: "rgba(255,255,255,0.3)" }}>
+          <p className="text-[13px] text-[#0F1A15] leading-relaxed mb-3">{calc.summary}</p>
           {calc.missing.length > 0 && (
-            <div className="text-[11px] text-[#B45309] bg-[#FEF3C7] rounded-lg px-3 py-2 mb-3">
+            <div className="text-[11px] text-[#B45309] bg-[#FEF3C7]/60 rounded-xl px-3 py-2 mb-3">
               Missing: {calc.missing.join(", ")}
             </div>
           )}
-          <div className="text-[10px] text-[#999] leading-relaxed mb-2">
-            <span className="font-medium text-[#6B6B6B]">Based on:</span> {calc.research_based_on}
+          <div className="text-[10px] text-[#8A928C] leading-relaxed mb-2">
+            <span className="font-medium text-[#5A635D]">Based on:</span> {calc.research_based_on}
           </div>
-          <div className="text-[10px] text-[#999] leading-relaxed mb-2 font-mono">
+          <div className="text-[10px] text-[#8A928C] leading-relaxed mb-2 font-mono" style={{ fontFamily: MONO }}>
             {calc.citation}
           </div>
-          <p className="text-[10px] text-[#999] leading-relaxed mt-3 pt-3 border-t border-[#F4F4F5]">
+          <p className="text-[10px] text-[#8A928C] leading-relaxed mt-3 pt-3" style={{ borderTop: "1px solid rgba(255,255,255,0.3)" }}>
             {calc.disclaimer}
           </p>
         </div>
@@ -977,7 +1249,7 @@ function InsightCard({
 }
 
 // ---------------------------------------------------------------------
-// Profile editor
+// Profile editor (glassmorphic)
 // ---------------------------------------------------------------------
 
 function ProfileEditor({
@@ -995,45 +1267,45 @@ function ProfileEditor({
   const [sbp, setSbp] = useState<string>(profile.systolicBP ? String(profile.systolicBP) : "");
 
   return (
-    <div className="bg-white border border-[#E5E5E5] rounded-2xl p-5 mb-4">
-      <div className="text-[11px] uppercase tracking-wider text-[#999] font-medium mb-3">
+    <div className="p-5 mb-4" style={GLASS_CARD}>
+      <div className="text-[11px] uppercase tracking-wider text-[#8A928C] font-medium mb-3">
         Your profile
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
         <div>
-          <label className="text-[11px] text-[#6B6B6B] block mb-1">Age</label>
+          <label className="text-[11px] text-[#5A635D] block mb-1">Age</label>
           <input
             type="number"
             value={age}
             onChange={(e) => setAge(e.target.value)}
-            className="w-full text-[13px] border border-[#E5E5E5] rounded-lg px-3 py-2 focus:outline-none focus:border-[#1B6B4A]"
+            className="w-full text-[13px] bg-white/50 border border-white/30 rounded-xl px-3 py-2 focus:outline-none focus:border-[#1B6B4A]/50 focus:ring-1 focus:ring-[#1B6B4A]/20 transition-all"
             placeholder="e.g. 42"
           />
         </div>
         <div>
-          <label className="text-[11px] text-[#6B6B6B] block mb-1">Sex</label>
+          <label className="text-[11px] text-[#5A635D] block mb-1">Sex</label>
           <select
             value={sex}
             onChange={(e) => setSex(e.target.value as "" | "male" | "female")}
-            className="w-full text-[13px] border border-[#E5E5E5] rounded-lg px-3 py-2 focus:outline-none focus:border-[#1B6B4A] bg-white"
+            className="w-full text-[13px] bg-white/50 border border-white/30 rounded-xl px-3 py-2 focus:outline-none focus:border-[#1B6B4A]/50 focus:ring-1 focus:ring-[#1B6B4A]/20 transition-all"
           >
-            <option value="">—</option>
+            <option value="">&mdash;</option>
             <option value="male">Male</option>
             <option value="female">Female</option>
           </select>
         </div>
         <div>
-          <label className="text-[11px] text-[#6B6B6B] block mb-1">Systolic BP</label>
+          <label className="text-[11px] text-[#5A635D] block mb-1">Systolic BP</label>
           <input
             type="number"
             value={sbp}
             onChange={(e) => setSbp(e.target.value)}
-            className="w-full text-[13px] border border-[#E5E5E5] rounded-lg px-3 py-2 focus:outline-none focus:border-[#1B6B4A]"
+            className="w-full text-[13px] bg-white/50 border border-white/30 rounded-xl px-3 py-2 focus:outline-none focus:border-[#1B6B4A]/50 focus:ring-1 focus:ring-[#1B6B4A]/20 transition-all"
             placeholder="e.g. 120"
           />
         </div>
         <div className="flex items-end">
-          <label className="flex items-center gap-2 text-[13px] text-[#2A2A2A] cursor-pointer">
+          <label className="flex items-center gap-2 text-[13px] text-[#0F1A15] cursor-pointer">
             <input
               type="checkbox"
               checked={smoker}
@@ -1047,7 +1319,7 @@ function ProfileEditor({
       <div className="flex gap-2 justify-end">
         <button
           onClick={onCancel}
-          className="text-[12px] text-[#6B6B6B] hover:text-[#2A2A2A] px-4 py-2"
+          className="text-[12px] text-[#5A635D] hover:text-[#0F1A15] px-4 py-2 transition-colors"
         >
           Cancel
         </button>
@@ -1060,12 +1332,12 @@ function ProfileEditor({
               systolicBP: sbp ? parseInt(sbp, 10) : undefined,
             })
           }
-          className="text-[12px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] rounded-full px-5 py-2 transition-colors"
+          className="text-[12px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] rounded-full px-5 py-2 transition-all duration-300"
         >
           Save
         </button>
       </div>
-      <p className="text-[10px] text-[#999] mt-3 leading-relaxed">
+      <p className="text-[10px] text-[#8A928C] mt-3 leading-relaxed">
         Used only for risk calculations (SCORE2, FIB-4, bio-age). Never shared.
       </p>
     </div>
@@ -1073,8 +1345,63 @@ function ProfileEditor({
 }
 
 // ---------------------------------------------------------------------
-// Biomarker card component
+// Biomarker card (glassmorphic compact card with arc gauge)
 // ---------------------------------------------------------------------
+
+function ArcGauge({ value, low, high, statusColor, size = 52 }: { value: number; low: number; high: number; statusColor: string; size?: number }) {
+  // Position of value within reference range, clamped 0-100
+  const pct = Math.max(0, Math.min(100, ((value - low) / (high - low)) * 100));
+  // Arc goes from -135deg to +135deg (270 degree sweep)
+  const angleDeg = -135 + (pct / 100) * 270;
+  const r = (size - 8) / 2;
+  const cx = size / 2;
+  const cy = size / 2;
+
+  // Arc path for the track
+  const startAngle = -135;
+  const endAngle = 135;
+  const toRad = (deg: number) => (deg * Math.PI) / 180;
+  const arcPath = (start: number, end: number) => {
+    const s = toRad(start);
+    const e = toRad(end);
+    const x1 = cx + r * Math.cos(s);
+    const y1 = cy + r * Math.sin(s);
+    const x2 = cx + r * Math.cos(e);
+    const y2 = cy + r * Math.sin(e);
+    const largeArc = end - start > 180 ? 1 : 0;
+    return `M ${x1} ${y1} A ${r} ${r} 0 ${largeArc} 1 ${x2} ${y2}`;
+  };
+
+  // Indicator dot position
+  const indicatorAngle = toRad(angleDeg);
+  const dotX = cx + r * Math.cos(indicatorAngle);
+  const dotY = cy + r * Math.sin(indicatorAngle);
+
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+      {/* Track */}
+      <path
+        d={arcPath(startAngle, endAngle)}
+        fill="none"
+        stroke="rgba(15,26,21,0.07)"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+      {/* Filled portion */}
+      <path
+        d={arcPath(startAngle, angleDeg)}
+        fill="none"
+        stroke={statusColor}
+        strokeWidth="3"
+        strokeLinecap="round"
+        opacity="0.4"
+      />
+      {/* Dot */}
+      <circle cx={dotX} cy={dotY} r="4" fill={statusColor} />
+      <circle cx={dotX} cy={dotY} r="2" fill="white" />
+    </svg>
+  );
+}
 
 function BiomarkerCard({
   result,
@@ -1095,10 +1422,8 @@ function BiomarkerCard({
 }) {
   const status = analysis?.status || "normal";
   const statusStyle = STATUS_STYLES[status];
-  const categoryColor = CATEGORY_COLORS[result.category] || "#6B7280";
   const confidence = computeConfidence(analysis);
 
-  // Compute position within reference range (for the slider visual)
   const rangePosition =
     result.ref_low !== null && result.ref_high !== null
       ? Math.max(
@@ -1107,7 +1432,6 @@ function BiomarkerCard({
         )
       : 50;
 
-  // Check if "normal by lab" but "suboptimal by research"
   const isNormalButSuboptimal =
     optimalRange &&
     optimalRange.optimal_low !== null &&
@@ -1115,216 +1439,236 @@ function BiomarkerCard({
     status === "normal" &&
     (result.value < optimalRange.optimal_low || result.value > optimalRange.optimal_high);
 
+  const [citationsOpen, setCitationsOpen] = useState(false);
+
   return (
     <div
-      className="bg-white border border-[#E5E5E5] rounded-2xl overflow-hidden transition-shadow hover:shadow-sm"
-      style={{ borderLeft: `3px solid ${categoryColor}` }}
+      className={`overflow-hidden transition-all duration-300 ${expanded ? "sm:col-span-2 lg:col-span-3" : "hover:-translate-y-0.5"}`}
+      style={{
+        ...GLASS_CARD,
+        boxShadow: expanded ? "0 12px 40px rgba(15,26,21,0.08)" : "0 8px 32px rgba(15,26,21,0.06)",
+      }}
     >
-      {/* Card header — clickable to expand */}
+      {/* COMPACT CARD VIEW */}
       <button
         onClick={onToggle}
-        className="w-full px-6 py-5 text-left flex items-center gap-6 hover:bg-[#FAFAF8] transition-colors"
+        className="w-full text-left px-5 py-4 transition-colors"
       >
-        {/* Biomarker name + category */}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-3 mb-1">
-            <h3 className="text-[16px] font-semibold">{result.biomarker}</h3>
-            <div
-              className="text-[10px] uppercase tracking-wider font-medium px-2 py-0.5 rounded-full"
-              style={{ backgroundColor: `${categoryColor}15`, color: categoryColor }}
-            >
-              {result.category}
+        <div className="flex items-start gap-3">
+          {/* Arc gauge */}
+          {result.ref_low !== null && result.ref_high !== null ? (
+            <div className="flex-shrink-0 mt-0.5">
+              <ArcGauge
+                value={result.value}
+                low={result.ref_low}
+                high={result.ref_high}
+                statusColor={statusStyle.dot}
+                size={48}
+              />
             </div>
-          </div>
-          {analysis?.summary && (
-            <p className="text-[13px] text-[#6B6B6B] line-clamp-1">{analysis.summary}</p>
+          ) : (
+            <div
+              className="w-12 h-12 flex-shrink-0 rounded-full flex items-center justify-center"
+              style={{ background: `${statusStyle.bg}` }}
+            >
+              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: statusStyle.dot }} />
+            </div>
           )}
-        </div>
 
-        {/* Value + status */}
-        <div className="text-right flex-shrink-0">
-          <div className="text-[24px] font-semibold tracking-tight" style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}>
-            {result.value}
-            <span className="text-[12px] text-[#999] ml-1 font-normal" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{result.unit}</span>
-          </div>
-          <div className="flex items-center gap-1.5 mt-1 flex-wrap justify-end">
-            <div
-              className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2 py-0.5 rounded-full"
-              style={{ backgroundColor: statusStyle.bg, color: statusStyle.text }}
-            >
-              <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: statusStyle.dot }} />
-              {statusStyle.label}
+          <div className="flex-1 min-w-0">
+            {/* Name */}
+            <div className="text-[15px] font-semibold text-[#0F1A15] mb-1 truncate">
+              {result.biomarker}
             </div>
-            {analysis && (
-              <div
-                className="inline-flex items-center gap-1 text-[9px] font-medium px-2 py-0.5 rounded-full"
-                style={{ backgroundColor: `${confidence.color}12`, color: confidence.color, border: `1px solid ${confidence.color}25` }}
-                title={CONFIDENCE_DESCRIPTIONS[confidence.level]}
+
+            {/* Big number + unit */}
+            <div className="flex items-baseline gap-1">
+              <span
+                className="text-[28px] tracking-tight text-[#0F1A15]"
+                style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
               >
-                {confidence.label}
+                {result.value}
+              </span>
+              <span
+                className="text-[11px] text-[#8A928C]"
+                style={{ fontFamily: MONO }}
+              >
+                {result.unit}
+              </span>
+            </div>
+
+            {/* Status pill + summary */}
+            <div className="flex items-center gap-2 mt-1.5">
+              <div
+                className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full"
+                style={{ backgroundColor: statusStyle.bg, color: statusStyle.text }}
+              >
+                <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: statusStyle.dot }} />
+                {statusStyle.label}
               </div>
+            </div>
+            {analysis?.summary && (
+              <p className="text-[12px] text-[#5A635D] mt-1.5 line-clamp-1 leading-snug">{analysis.summary}</p>
             )}
           </div>
-        </div>
 
-        {/* Expand indicator */}
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="#999"
-          strokeWidth="2"
-          className={`transition-transform ${expanded ? "rotate-180" : ""}`}
-        >
-          <polyline points="6 9 12 15 18 9" />
-        </svg>
+          {/* Expand chevron */}
+          <svg
+            width="14" height="14" viewBox="0 0 24 24" fill="none"
+            stroke="#8A928C" strokeWidth="2"
+            className={`flex-shrink-0 mt-1 transition-transform duration-300 ${expanded ? "rotate-180" : ""}`}
+          >
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </div>
       </button>
 
-      {/* Range visualization with optimal overlay */}
-      {result.ref_low !== null && result.ref_high !== null && (
-        <div className="px-6 pb-3">
-          <div className="relative h-2 bg-[#F4F4F5] rounded-full">
-            {/* Lab reference range */}
-            <div
-              className="absolute top-0 h-2 rounded-full"
-              style={{
-                left: "5%",
-                right: "5%",
-                backgroundColor: "#E5E5E5",
-              }}
-            />
-            {/* Optimal range overlay (green zone) */}
-            {optimalRange && optimalRange.optimal_low !== null && optimalRange.optimal_high !== null && result.ref_low !== null && result.ref_high !== null && (
-              <div
-                className="absolute top-0 h-2 rounded-full"
-                style={{
-                  left: `${Math.max(5, ((optimalRange.optimal_low - result.ref_low) / (result.ref_high - result.ref_low)) * 90 + 5)}%`,
-                  right: `${Math.max(5, 95 - ((optimalRange.optimal_high - result.ref_low) / (result.ref_high - result.ref_low)) * 90 + 5)}%`,
-                  backgroundColor: "rgba(27, 107, 74, 0.2)",
-                  border: "1px solid rgba(27, 107, 74, 0.3)",
-                }}
-                title={`Optimal range: ${optimalRange.optimal_low}–${optimalRange.optimal_high} ${result.unit || ""}`}
-              />
-            )}
-            {/* Current value marker */}
-            <div
-              className="absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full border-2 border-white shadow-sm"
-              style={{
-                left: `calc(${Math.max(0, Math.min(100, rangePosition))}% - 7px)`,
-                backgroundColor: statusStyle.dot,
-              }}
-            />
-          </div>
-          <div className="flex justify-between text-[10px] text-[#999] mt-1">
-            <span>{result.ref_low} {result.unit}</span>
-            {optimalRange && optimalRange.optimal_low !== null && optimalRange.optimal_high !== null && (
-              <span className="text-[#1B6B4A] font-medium">
-                optimal: {optimalRange.optimal_low}–{optimalRange.optimal_high}
-              </span>
-            )}
-            <span>{result.ref_high} {result.unit}</span>
-          </div>
+      {/* EXPANDED DETAIL PANEL */}
+      {expanded && analysis && (
+        <div className="px-5 py-5" style={{ borderTop: "1px solid rgba(255,255,255,0.3)", background: "rgba(255,255,255,0.35)" }}>
 
-          {/* Normal-but-suboptimal callout */}
-          {isNormalButSuboptimal && (
-            <div className="mt-2 bg-[#FEF3C7] border border-[#F59E0B]/20 rounded-lg px-3 py-2">
-              <p className="text-[11px] text-[#B45309] leading-snug">
-                <strong>Your lab says "normal"</strong> — but your value of {result.value} {result.unit} sits outside the research-supported optimal range ({optimalRange!.optimal_low}–{optimalRange!.optimal_high}). The research suggests this may be worth attention.
-              </p>
+          {/* Range visualization */}
+          {result.ref_low !== null && result.ref_high !== null && (
+            <div className="mb-5">
+              <div className="relative h-2.5 rounded-full" style={{ background: "rgba(15,26,21,0.05)" }}>
+                {/* Lab reference range */}
+                <div
+                  className="absolute top-0 h-2.5 rounded-full"
+                  style={{ left: "5%", right: "5%", backgroundColor: "rgba(15,26,21,0.06)" }}
+                />
+                {/* Optimal range overlay */}
+                {optimalRange && optimalRange.optimal_low !== null && optimalRange.optimal_high !== null && (
+                  <div
+                    className="absolute top-0 h-2.5 rounded-full"
+                    style={{
+                      left: `${Math.max(5, ((optimalRange.optimal_low - result.ref_low) / (result.ref_high - result.ref_low)) * 90 + 5)}%`,
+                      right: `${Math.max(5, 95 - ((optimalRange.optimal_high - result.ref_low) / (result.ref_high - result.ref_low)) * 90 + 5)}%`,
+                      backgroundColor: "rgba(27, 107, 74, 0.15)",
+                      border: "1px solid rgba(27, 107, 74, 0.25)",
+                    }}
+                    title={`Optimal range: ${optimalRange.optimal_low}\u2013${optimalRange.optimal_high} ${result.unit || ""}`}
+                  />
+                )}
+                {/* Value marker */}
+                <div
+                  className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-2 border-white"
+                  style={{
+                    left: `calc(${Math.max(0, Math.min(100, rangePosition))}% - 8px)`,
+                    backgroundColor: statusStyle.dot,
+                    boxShadow: `0 2px 8px ${statusStyle.dot}40`,
+                  }}
+                />
+              </div>
+              <div className="flex justify-between text-[10px] text-[#8A928C] mt-1.5 font-mono" style={{ fontFamily: MONO }}>
+                <span>{result.ref_low} {result.unit}</span>
+                {optimalRange && optimalRange.optimal_low !== null && optimalRange.optimal_high !== null && (
+                  <span className="text-[#1B6B4A] font-medium">
+                    optimal: {optimalRange.optimal_low}\u2013{optimalRange.optimal_high}
+                  </span>
+                )}
+                <span>{result.ref_high} {result.unit}</span>
+              </div>
+
+              {isNormalButSuboptimal && (
+                <div
+                  className="mt-2.5 px-3 py-2 rounded-xl"
+                  style={{ background: "rgba(254,243,199,0.5)", border: "1px solid rgba(245,158,11,0.15)" }}
+                >
+                  <p className="text-[11px] text-[#B45309] leading-snug">
+                    <strong>Your lab says &quot;normal&quot;</strong> &mdash; but your value of {result.value} {result.unit} sits outside the research-supported optimal range ({optimalRange!.optimal_low}\u2013{optimalRange!.optimal_high}). The research suggests this may be worth attention.
+                  </p>
+                </div>
+              )}
             </div>
           )}
-        </div>
-      )}
-
-      {/* Expanded content */}
-      {expanded && analysis && (
-        <div className="border-t border-[#F4F4F5] px-6 py-6 bg-[#FAFAF8]">
 
           {/* Population percentile */}
           {(() => {
             const pct = getPopulationPercentile(result.biomarker, result.value, undefined, undefined);
             if (!pct) return null;
             return (
-              <div className="mb-6 bg-white border border-[#E5E5E5] rounded-xl p-4">
+              <div className="mb-5 p-4" style={GLASS_CARD_INNER}>
                 <div className="flex items-baseline justify-between mb-2">
-                  <div className="text-[11px] uppercase tracking-wider text-[#999] font-medium">Where you stand</div>
-                  <div className="text-[13px] font-semibold" style={{ fontFamily: "'Fraunces', Georgia, serif" }}>
+                  <div className="text-[11px] uppercase tracking-wider text-[#8A928C] font-medium">Where you stand</div>
+                  <div
+                    className="text-[14px] font-semibold"
+                    style={{ fontFamily: FRAUNCES }}
+                  >
                     {pct.label}
                   </div>
                 </div>
-                <div className="relative h-2 bg-[#F4F4F5] rounded-full mb-2">
+                <div className="relative h-2.5 rounded-full mb-2" style={{ background: "rgba(15,26,21,0.05)" }}>
                   <div
-                    className="absolute top-0 h-2 rounded-full bg-[#1B6B4A]"
-                    style={{ width: `${pct.percentile}%`, opacity: 0.3 }}
+                    className="absolute top-0 h-2.5 rounded-full bg-[#1B6B4A]"
+                    style={{ width: `${pct.percentile}%`, opacity: 0.2 }}
                   />
                   <div
-                    className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#1B6B4A] border-2 border-white shadow-sm"
-                    style={{ left: `calc(${pct.percentile}% - 6px)` }}
+                    className="absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-[#1B6B4A] border-2 border-white"
+                    style={{ left: `calc(${pct.percentile}% - 7px)`, boxShadow: "0 2px 8px rgba(27,107,74,0.3)" }}
                   />
                 </div>
-                <div className="text-[11px] text-[#6B6B6B] leading-snug">
+                <div className="text-[11px] text-[#5A635D] leading-snug">
                   {pct.interpretation} Compared to 300,000+ {pct.context}.
                 </div>
               </div>
             );
           })()}
 
-          {/* What it means */}
-          <div className="mb-6">
-            <div className="text-[11px] uppercase tracking-wider text-[#999] font-medium mb-2">
-              What it means
+          {/* What this means */}
+          <div className="mb-5">
+            <div className="text-[11px] uppercase tracking-wider text-[#8A928C] font-medium mb-2">
+              What this means
             </div>
-            <p className="text-[14px] text-[#2A2A2A] leading-relaxed">{analysis.what_it_means}</p>
+            <p className="text-[14px] text-[#0F1A15] leading-relaxed">{analysis.what_it_means}</p>
           </div>
 
-          {/* What research shows */}
-          <div className="mb-6">
-            <div className="text-[11px] uppercase tracking-wider text-[#999] font-medium mb-2 flex items-center gap-2">
+          {/* What the research shows */}
+          <div className="mb-5">
+            <div className="text-[11px] uppercase tracking-wider text-[#8A928C] font-medium mb-2 flex items-center gap-2">
               What the research shows
               {analysis.citation_count > 0 && (
                 <span className="normal-case tracking-normal font-normal text-[#1B6B4A]">
-                  · {analysis.citation_count} studies cited
+                  &middot; {analysis.citation_count} studies cited
                 </span>
               )}
             </div>
-            <p className="text-[14px] text-[#2A2A2A] leading-relaxed">{analysis.what_research_shows}</p>
+            <p className="text-[14px] text-[#0F1A15] leading-relaxed">{analysis.what_research_shows}</p>
           </div>
 
           {/* Related patterns */}
           {analysis.related_patterns && (
-            <div className="mb-6">
-              <div className="text-[11px] uppercase tracking-wider text-[#999] font-medium mb-2">
+            <div className="mb-5">
+              <div className="text-[11px] uppercase tracking-wider text-[#8A928C] font-medium mb-2">
                 Related patterns
               </div>
-              <p className="text-[14px] text-[#2A2A2A] leading-relaxed">{analysis.related_patterns}</p>
+              <p className="text-[14px] text-[#0F1A15] leading-relaxed">{analysis.related_patterns}</p>
             </div>
           )}
 
           {/* Suggested exploration */}
           {analysis.suggested_exploration && (
-            <div className="mb-6">
-              <div className="text-[11px] uppercase tracking-wider text-[#999] font-medium mb-2">
+            <div className="mb-5">
+              <div className="text-[11px] uppercase tracking-wider text-[#8A928C] font-medium mb-2">
                 Explore further
               </div>
-              <p className="text-[14px] text-[#2A2A2A] leading-relaxed">{analysis.suggested_exploration}</p>
+              <p className="text-[14px] text-[#0F1A15] leading-relaxed">{analysis.suggested_exploration}</p>
             </div>
           )}
 
-          {/* What to test next (borderline/out_of_range only) */}
+          {/* What to test next */}
           {(() => {
             const nextTests = getNextTestSuggestions(result.biomarker, status);
             if (nextTests.length === 0) return null;
             return (
-              <div className="mb-6">
+              <div className="mb-5">
                 <div className="text-[11px] uppercase tracking-wider text-[#1B6B4A] font-medium mb-2">
                   What to test next
                 </div>
                 <div className="space-y-2">
                   {nextTests.slice(0, 4).map((t) => (
-                    <div key={t.test_name} className="bg-white border border-[#E5E5E5] rounded-xl p-3">
-                      <div className="text-[13px] font-medium text-[#2A2A2A] mb-1">{t.test_name}</div>
-                      <div className="text-[11px] text-[#6B6B6B] leading-snug">{t.why}</div>
+                    <div key={t.test_name} className="p-3" style={GLASS_CARD_INNER}>
+                      <div className="text-[13px] font-medium text-[#0F1A15] mb-1">{t.test_name}</div>
+                      <div className="text-[11px] text-[#5A635D] leading-snug">{t.why}</div>
                     </div>
                   ))}
                 </div>
@@ -1332,49 +1676,64 @@ function BiomarkerCard({
             );
           })()}
 
-          {/* Citations */}
+          {/* Citations — collapsed by default */}
           {citations.length > 0 && (
-            <div>
-              <div className="text-[11px] uppercase tracking-wider text-[#999] font-medium mb-3">
-                Citations
-              </div>
-              <div className="space-y-2">
-                {citations.slice(0, isFree ? FREE_TIER_CITATION_LIMIT : 5).map((c) => (
-                  <a
-                    key={c.study_id}
-                    href={c.study.pmid ? `https://pubmed.ncbi.nlm.nih.gov/${c.study.pmid}/` : "#"}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block bg-white border border-[#E5E5E5] rounded-xl p-3 hover:border-[#1B6B4A]/30 transition-colors"
-                  >
-                    <div className="flex items-start justify-between gap-3 mb-1">
-                      <div className="text-[12px] font-medium text-[#2A2A2A] leading-snug line-clamp-2">
-                        {c.study.title}
-                      </div>
-                      {c.study.grade_score && (
-                        <div className="text-[9px] uppercase font-semibold text-[#1B6B4A] bg-[#E8F5EE] px-1.5 py-0.5 rounded flex-shrink-0">
-                          {c.study.grade_score}
+            <div className="mb-5">
+              <button
+                onClick={(e) => { e.stopPropagation(); setCitationsOpen(!citationsOpen); }}
+                className="flex items-center gap-2 text-[11px] uppercase tracking-wider text-[#8A928C] font-medium mb-3 hover:text-[#5A635D] transition-colors"
+              >
+                Studies cited ({citations.length})
+                <svg
+                  width="12" height="12" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" strokeWidth="2"
+                  className={`transition-transform duration-300 ${citationsOpen ? "rotate-180" : ""}`}
+                >
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </button>
+
+              {citationsOpen && (
+                <div className="space-y-2">
+                  {citations.slice(0, isFree ? FREE_TIER_CITATION_LIMIT : 5).map((c) => (
+                    <a
+                      key={c.study_id}
+                      href={c.study.pmid ? `https://pubmed.ncbi.nlm.nih.gov/${c.study.pmid}/` : "#"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block p-3 transition-all duration-300 hover:-translate-y-0.5"
+                      style={GLASS_CARD_INNER}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <div className="flex items-start justify-between gap-3 mb-1">
+                        <div className="text-[12px] font-medium text-[#0F1A15] leading-snug line-clamp-2">
+                          {c.study.title}
                         </div>
-                      )}
+                        {c.study.grade_score && (
+                          <div className="text-[9px] uppercase font-semibold text-[#1B6B4A] bg-[#E8F5EE]/70 px-1.5 py-0.5 rounded flex-shrink-0">
+                            {c.study.grade_score}
+                          </div>
+                        )}
+                      </div>
+                      <div className="text-[11px] text-[#8A928C] font-mono" style={{ fontFamily: MONO }}>
+                        {c.study.authors && c.study.authors.length > 0 && c.study.authors[0].split(" ").pop()} et al.
+                        {c.study.publication_year && ` \u00b7 ${c.study.publication_year}`}
+                        {c.study.journal && ` \u00b7 ${c.study.journal}`}
+                      </div>
+                    </a>
+                  ))}
+                  {citations.length > 5 && (
+                    <div className="text-[11px] text-[#8A928C] mt-2 text-center">
+                      +{citations.length - 5} more studies cited
                     </div>
-                    <div className="text-[11px] text-[#999]">
-                      {c.study.authors && c.study.authors.length > 0 && c.study.authors[0].split(" ").pop()} et al.
-                      {c.study.publication_year && ` · ${c.study.publication_year}`}
-                      {c.study.journal && ` · ${c.study.journal}`}
-                    </div>
-                  </a>
-                ))}
-              </div>
-              {citations.length > 5 && (
-                <div className="text-[11px] text-[#999] mt-2 text-center">
-                  +{citations.length - 5} more studies cited
+                  )}
                 </div>
               )}
             </div>
           )}
 
           {/* Confidence + metadata */}
-          <div className="mt-6 pt-4 border-t border-[#F4F4F5]">
+          <div className="pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.3)" }}>
             <div className="flex items-center gap-3 mb-2 flex-wrap">
               <div
                 className="inline-flex items-center gap-1.5 text-[10px] font-semibold px-2.5 py-1 rounded-full"
@@ -1383,16 +1742,16 @@ function BiomarkerCard({
                 <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: confidence.color }} />
                 {confidence.label}
               </div>
-              <span className="text-[10px] text-[#999]">
+              <span className="text-[10px] text-[#8A928C] font-mono" style={{ fontFamily: MONO }}>
                 {analysis.citation_count} studies cited
-                {analysis.highest_evidence_grade && ` · highest: ${analysis.highest_evidence_grade}`}
-                {analysis.avg_study_year && ` · avg year: ${analysis.avg_study_year}`}
+                {analysis.highest_evidence_grade && ` \u00b7 highest: ${analysis.highest_evidence_grade}`}
+                {analysis.avg_study_year && ` \u00b7 avg year: ${analysis.avg_study_year}`}
               </span>
             </div>
-            <p className="text-[10px] text-[#999] leading-relaxed mb-1">
+            <p className="text-[10px] text-[#8A928C] leading-relaxed mb-1">
               {CONFIDENCE_DESCRIPTIONS[confidence.level]}
             </p>
-            <p className="text-[10px] text-[#999] leading-relaxed">
+            <p className="text-[10px] text-[#8A928C] leading-relaxed">
               This analysis is educational content, not medical advice. Consult your healthcare provider before making any health decisions.
             </p>
           </div>
