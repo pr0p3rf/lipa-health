@@ -51,6 +51,36 @@
     .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; font-feature-settings: "tnum" 1; }
     .serif { font-family: 'Fraunces', Georgia, serif; }
 
+    /* ---------- DECORATIVE GRADIENT ORBS ---------- */
+    .orb-container {
+      position: relative;
+      overflow: hidden;
+    }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.4;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .orb-green {
+      background: radial-gradient(circle, rgba(27,107,74,0.3) 0%, rgba(27,107,74,0) 70%);
+    }
+    .orb-sage {
+      background: radial-gradient(circle, rgba(232,245,238,0.8) 0%, rgba(232,245,238,0) 70%);
+    }
+    .orb-cream {
+      background: radial-gradient(circle, rgba(248,245,239,0.9) 0%, rgba(248,245,239,0) 70%);
+    }
+    .orb-warm {
+      background: radial-gradient(circle, rgba(245,220,190,0.35) 0%, rgba(245,220,190,0) 70%);
+    }
+    .orb-container > *:not(.orb) {
+      position: relative;
+      z-index: 1;
+    }
+
     /* ---------- GLASSMORPHISM DESIGN SYSTEM ---------- */
     .glass {
       background: rgba(255,255,255,0.55);
@@ -1545,7 +1575,10 @@
 </div>
 
 <!-- ================== HOW IT WORKS ================== -->
-<section class="how" id="how">
+<section class="how orb-container" id="how">
+  <div class="orb orb-sage" style="width: 500px; height: 500px; top: -100px; right: -80px;"></div>
+  <div class="orb orb-warm" style="width: 400px; height: 400px; bottom: -50px; left: -100px;"></div>
+  <div class="orb orb-green" style="width: 300px; height: 300px; top: 40%; left: 30%;"></div>
   <div class="container">
     <div class="section-eyebrow">How Lipa works</div>
     <h2 class="display">A blood test goes in.<br>Full understanding<br>comes out.</h2>
@@ -1600,7 +1633,10 @@
 </section>
 
 <!-- ================== AUDIENCE / BUILT FOR ================== -->
-<section class="audience">
+<section class="audience orb-container">
+  <div class="orb orb-green" style="width: 600px; height: 600px; top: -150px; left: -200px;"></div>
+  <div class="orb orb-warm" style="width: 450px; height: 450px; top: 30%; right: -120px;"></div>
+  <div class="orb orb-sage" style="width: 350px; height: 350px; bottom: -80px; left: 40%;"></div>
   <div class="container">
     <div class="section-eyebrow">Built for</div>
     <h2 class="display">People who want to take<br>control of their health.</h2>
@@ -1691,8 +1727,10 @@
 
 
 <!-- ================== LATEST FROM THE RESEARCH LIBRARY ================== -->
-<section style="background: var(--white); padding: 120px 40px; border-top: 1px solid var(--border);">
-  <div class="container">
+<section class="orb-container" style="background: var(--white); padding: 120px 40px; border-top: 1px solid var(--border); position: relative; overflow: hidden;">
+  <div class="orb orb-sage" style="width: 400px; height: 400px; top: -80px; left: -100px;"></div>
+  <div class="orb orb-warm" style="width: 350px; height: 350px; bottom: -60px; right: -80px;"></div>
+  <div class="container" style="position: relative; z-index: 1;">
     <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 48px; flex-wrap: wrap; gap: 16px;">
       <div>
         <div class="section-eyebrow">From the research library</div>
@@ -1739,7 +1777,9 @@
 </section>
 
 <!-- ================== WHAT YOU GET + PRICING (CREAM) ================== -->
-<section class="preview">
+<section class="preview orb-container">
+  <div class="orb orb-green" style="width: 500px; height: 500px; top: -100px; right: -150px;"></div>
+  <div class="orb orb-cream" style="width: 400px; height: 400px; bottom: 10%; left: -120px;"></div>
   <div class="container">
     <div class="section-eyebrow">What you get</div>
     <h2 class="display">Upload any blood test.<br>We do the rest.</h2>
