@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { AppNav } from "@/components/app-nav";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { supabase } from "@/lib/supabase";
@@ -488,8 +489,8 @@ export default function DashboardPage() {
   return (
     <>
       <AppNav />
-      <main className="min-h-screen bg-gradient-to-br from-[#F8F5EF] via-[#F0EDE5] to-[#E8F5EE]/30">
-        <div className="max-w-6xl mx-auto px-6 py-10">
+      <main className="min-h-screen bg-gradient-to-br from-[#F8F5EF] via-[#F0EDE5] to-[#E8F5EE]/30" suppressHydrationWarning>
+        <div className="max-w-6xl mx-auto px-6 py-10" suppressHydrationWarning>
 
           {/* ============================================================ */}
           {/* 1. SUMMARY HERO                                              */}
@@ -648,7 +649,7 @@ export default function DashboardPage() {
           {/* ============================================================ */}
           {/* 3. PATTERNS DETECTED (paid only)                             */}
           {/* ============================================================ */}
-          {!isFree && detectedPatterns.length > 0 && (
+          {detectedPatterns.length > 0 && (
             <div className="mb-10">
               <h2
                 className="text-[22px] tracking-tight text-[#0F1A15] mb-1"
@@ -881,6 +882,7 @@ export default function DashboardPage() {
                       return optimalRanges[result.biomarker.toLowerCase()] || optimalRanges[(analysis?.biomarker_name || "").toLowerCase()];
                     })()}
                     isFree={isFree}
+                    allMarkerNames={latestResults.map((r) => r.biomarker)}
                   />
                 );
               })}
@@ -1492,6 +1494,7 @@ function BiomarkerCard({
   onToggle,
   optimalRange,
   isFree,
+  allMarkerNames,
 }: {
   result: BiomarkerResult;
   analysis: Analysis | undefined;
@@ -1500,6 +1503,7 @@ function BiomarkerCard({
   onToggle: () => void;
   optimalRange?: OptimalRange;
   isFree?: boolean;
+  allMarkerNames?: string[];
 }) {
   const status = analysis?.status || "normal";
   const statusStyle = STATUS_STYLES[status];
@@ -1736,9 +1740,10 @@ function BiomarkerCard({
             </div>
           )}
 
-          {/* What to test next */}
+          {/* What to test next — filter out tests already in this panel */}
           {(() => {
-            const nextTests = getNextTestSuggestions(result.biomarker, status);
+            const nextTests = getNextTestSuggestions(result.biomarker, status)
+              .filter((t) => !(allMarkerNames || []).some((name: string) => name.toLowerCase().includes(t.test_name.toLowerCase().split(" ")[0]) || t.test_name.toLowerCase().includes(name.toLowerCase().split(" ")[0])));
             if (nextTests.length === 0) return null;
             return (
               <div className="mb-5">
