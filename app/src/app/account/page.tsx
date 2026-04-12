@@ -233,11 +233,7 @@ export default function AccountPage() {
                 onClick={async () => {
                   if (!user) return;
                   if (!confirm("Delete ALL your health data? This removes every test result, analysis, and action plan. This cannot be undone.")) return;
-                  await supabase.from("analysis_citations").delete().eq("user_id", user.id);
-                  await supabase.from("user_analyses").delete().eq("user_id", user.id);
-                  await supabase.from("action_plans").delete().eq("user_id", user.id);
-                  await supabase.from("biomarker_results").delete().eq("user_id", user.id);
-                  await supabase.from("uploads").delete().eq("user_id", user.id);
+                  await fetch("/api/delete-data", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ userId: user.id }) });
                   alert("All health data deleted.");
                   window.location.reload();
                 }}
@@ -255,15 +251,7 @@ export default function AccountPage() {
                 onClick={async () => {
                   if (!user) return;
                   if (!confirm("Permanently delete your account? All data will be erased and this cannot be undone.")) return;
-                  // Delete all data first
-                  await supabase.from("analysis_citations").delete().eq("user_id", user.id);
-                  await supabase.from("user_analyses").delete().eq("user_id", user.id);
-                  await supabase.from("action_plans").delete().eq("user_id", user.id);
-                  await supabase.from("biomarker_results").delete().eq("user_id", user.id);
-                  await supabase.from("uploads").delete().eq("user_id", user.id);
-                  await supabase.from("user_profiles").delete().eq("user_id", user.id);
-                  await supabase.from("user_subscriptions").delete().eq("user_id", user.id);
-                  // Sign out (account deletion from auth requires admin API)
+                  await fetch("/api/delete-data", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ userId: user.id, scope: "account" }) });
                   await supabase.auth.signOut();
                   router.push("/login");
                 }}

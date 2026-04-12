@@ -555,10 +555,7 @@ export default function DashboardPage() {
                   onClick={async () => {
                     if (!confirm("Delete this test and all its analyses? This cannot be undone.")) return;
                     if (!userId) return;
-                    await supabase.from("analysis_citations").delete().eq("user_id", userId);
-                    await supabase.from("user_analyses").delete().eq("user_id", userId);
-                    await supabase.from("action_plans").delete().eq("user_id", userId);
-                    await supabase.from("biomarker_results").delete().eq("user_id", userId).eq("test_date", latestTestDate);
+                    await fetch("/api/delete-data", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ userId }) });
                     window.location.reload();
                   }}
                   className="text-[11px] font-medium text-[#8A928C] hover:text-[#B91C1C] bg-white/60 border border-white/30 rounded-lg px-3 py-1.5 backdrop-blur-sm transition-colors flex items-center gap-1.5"
