@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
 
       const extractionMessage = await anthropic.messages.create({
         model: "claude-sonnet-4-20250514",
-        max_tokens: 4096,
+        max_tokens: 16384,
         messages: [
           {
             role: "user",
@@ -111,30 +111,40 @@ export async function POST(request: NextRequest) {
           ? extractionMessage.content[0].text
           : "";
 
-      // Parse response — handles both new format {"test_date": ..., "biomarkers": [...]} and legacy [...]
-      const jsonObjMatch = responseText.match(/\{[\s\S]*\}/);
-      const jsonArrMatch = responseText.match(/\[[\s\S]*\]/);
-
+      // Parse response — try object format first, then array fallback
+      let fileBiomarkers: any[] = [];
       try {
-        let fileBiomarkers: any[] = [];
+        // Try parsing as {"test_date": "...", "biomarkers": [...]}
+        const jsonObjMatch = responseText.match(/\{[\s\S]*\}/);
         if (jsonObjMatch) {
           const parsed = JSON.parse(jsonObjMatch[0]);
           if (parsed.biomarkers && Array.isArray(parsed.biomarkers)) {
             fileBiomarkers = parsed.biomarkers;
-            // Use extracted test date if available and no manual date provided
             if (parsed.test_date && !testDate) {
               extractedTestDate = parsed.test_date;
             }
-          } else if (Array.isArray(parsed)) {
-            fileBiomarkers = parsed;
           }
-        } else if (jsonArrMatch) {
-          fileBiomarkers = JSON.parse(jsonArrMatch[0]);
         }
+      } catch {
+        // Object parse failed — try array fallback
+      }
+
+      if (fileBiomarkers.length === 0) {
+        try {
+          const jsonArrMatch = responseText.match(/\[[\s\S]*\]/);
+          if (jsonArrMatch) {
+            fileBiomarkers = JSON.parse(jsonArrMatch[0]);
+          }
+        } catch {
+          console.error(`[analyze] Failed to parse biomarkers from ${file.name}:`, responseText.slice(0, 300));
+        }
+      }
+
+      if (fileBiomarkers.length > 0) {
         allBiomarkers.push(...fileBiomarkers);
         console.log(`[analyze] Extracted ${fileBiomarkers.length} biomarkers from ${file.name} in ${extractTimeMs}ms`);
-      } catch {
-        console.error(`[analyze] Failed to parse biomarkers from ${file.name}:`, responseText.slice(0, 200));
+      } else {
+        console.error(`[analyze] No biomarkers extracted from ${file.name}. Response start:`, responseText.slice(0, 300));
       }
     }
 
