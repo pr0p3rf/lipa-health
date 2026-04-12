@@ -13,6 +13,7 @@ import {
 import { getNextTestSuggestions, type NextTestSuggestion } from "@/lib/next-tests";
 import { detectPatterns, type DetectedPattern } from "@/lib/pattern-detection";
 import { getDemographicOptimalRange } from "@/lib/demographic-ranges";
+import { getPopulationPercentile, type PercentileResult } from "@/lib/population-percentiles";
 
 // ---------------------------------------------------------------------
 // Types
@@ -1239,6 +1240,36 @@ function BiomarkerCard({
       {/* Expanded content */}
       {expanded && analysis && (
         <div className="border-t border-[#F4F4F5] px-6 py-6 bg-[#FAFAF8]">
+
+          {/* Population percentile */}
+          {(() => {
+            const pct = getPopulationPercentile(result.biomarker, result.value, undefined, undefined);
+            if (!pct) return null;
+            return (
+              <div className="mb-6 bg-white border border-[#E5E5E5] rounded-xl p-4">
+                <div className="flex items-baseline justify-between mb-2">
+                  <div className="text-[11px] uppercase tracking-wider text-[#999] font-medium">Where you stand</div>
+                  <div className="text-[13px] font-semibold" style={{ fontFamily: "'Fraunces', Georgia, serif" }}>
+                    {pct.label}
+                  </div>
+                </div>
+                <div className="relative h-2 bg-[#F4F4F5] rounded-full mb-2">
+                  <div
+                    className="absolute top-0 h-2 rounded-full bg-[#1B6B4A]"
+                    style={{ width: `${pct.percentile}%`, opacity: 0.3 }}
+                  />
+                  <div
+                    className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#1B6B4A] border-2 border-white shadow-sm"
+                    style={{ left: `calc(${pct.percentile}% - 6px)` }}
+                  />
+                </div>
+                <div className="text-[11px] text-[#6B6B6B] leading-snug">
+                  {pct.interpretation} Compared to 300,000+ {pct.context}.
+                </div>
+              </div>
+            );
+          })()}
+
           {/* What it means */}
           <div className="mb-6">
             <div className="text-[11px] uppercase tracking-wider text-[#999] font-medium mb-2">
