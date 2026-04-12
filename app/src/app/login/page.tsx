@@ -1,13 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="text-[#999] text-sm">Loading...</div></div>}>
+      <LoginContent />
+    </Suspense>
+  );
+}
+
+function LoginContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/dashboard";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -33,7 +43,7 @@ export default function LoginPage() {
             id: data.user.id,
             email: data.user.email,
           });
-          router.push("/dashboard");
+          router.push(redirectTo);
         }
       } else {
         const { error: authError } = await supabase.auth.signInWithPassword({
@@ -43,7 +53,7 @@ export default function LoginPage() {
         if (authError) {
           setError(authError.message);
         } else {
-          router.push("/dashboard");
+          router.push(redirectTo);
         }
       }
     } catch (err: any) {
