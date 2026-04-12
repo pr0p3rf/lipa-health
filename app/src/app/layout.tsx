@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -7,9 +7,14 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+});
+
 export const metadata: Metadata = {
-  title: "Lipa Health",
-  description: "Know exactly what your body needs.",
+  title: "Lipa — Understand your biology",
+  description: "Finally understand what your blood test means and what to do about it. Every insight cited to real peer-reviewed research.",
 };
 
 export default function RootLayout({
@@ -18,8 +23,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" translate="no" className={`${inter.variable} h-full antialiased`}>
-      <body className={`${inter.className} min-h-full flex flex-col bg-[#FAFAF8] text-[#1A1A1A]`}>
+    <html lang="en" translate="no" className={`${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&display=swap" rel="stylesheet" />
+      </head>
+      <body className={`${inter.className} min-h-full flex flex-col bg-[#FAFAF8] text-[#0F1A15]`}>
         {children}
       </body>
     </html>

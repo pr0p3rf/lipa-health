@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google" content="notranslate">
+  <title>How to Read a Certificate of Analysis: A Researcher's Guide | Lipa Research Library</title>
+  <meta name="description" content="Understanding HPLC purity, mass spectrometry identity confirmation, endotoxin testing, and how to spot a legitimate COA from a fake one.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'><circle cx='14' cy='14' r='13' fill='none' stroke='%231B6B4A' stroke-width='1.5'/><path d='M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z' fill='%231B6B4A' opacity='0.3' stroke='%231B6B4A' stroke-width='1'/></svg>">
+  <meta property="og:title" content="How to Read a Certificate of Analysis | Lipa">
+  <meta property="og:description" content="A researcher's guide to HPLC, mass spectrometry, endotoxins, and spotting a fake COA.">
+  <meta property="og:type" content="article">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FAFAF8;
+      --white: #FFFFFF;
+      --text: #1A1A1A;
+      --text-secondary: #6B6B6B;
+      --text-tertiary: #999999;
+      --accent: #1B6B4A;
+      --accent-light: #E8F5EE;
+      --accent-hover: #155A3D;
+      --border: rgba(0,0,0,0.06);
+      --card-bg: #FFFFFF;
+      --section-alt: #F5F4F1;
+      --warm: #F2EDE8;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    body { overflow-x: hidden; background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; line-height: 1.6; }
+
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      padding: 16px 48px;
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(250,250,248,0.9);
+      backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-size: 17px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--text); text-decoration: none;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .logo-icon { width: 28px; height: 28px; }
+    .nav-links { display: flex; gap: 32px; align-items: center; }
+    .nav-links a {
+      font-size: 13px; font-weight: 500; color: var(--text-secondary);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--accent); font-weight: 600; }
+    .nav-cta {
+      font-size: 13px; font-weight: 600; color: white;
+      background: var(--accent); padding: 8px 20px;
+      border-radius: 100px; text-decoration: none;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--accent-hover); }
+
+    .hero-wrapper {
+      background: linear-gradient(165deg, #F5F0EB 0%, #FAFAF8 40%, #EEF2EE 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-wrapper::before {
+      content: '';
+      position: absolute;
+      top: -30%; right: -20%;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(27,107,74,0.06) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero-wrapper::after {
+      content: '';
+      position: absolute;
+      bottom: -20%; left: -10%;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(27,107,74,0.04) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero {
+      padding: 140px 48px 90px;
+      max-width: 820px; margin: 0 auto;
+      position: relative; z-index: 1;
+    }
+    .breadcrumb {
+      font-size: 12px; font-weight: 500;
+      color: var(--text-tertiary);
+      margin-bottom: 24px;
+      letter-spacing: 0.3px;
+    }
+    .breadcrumb a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .breadcrumb a:hover { color: var(--accent); }
+    .breadcrumb .sep { margin: 0 10px; color: var(--text-tertiary); }
+    .hero-tag {
+      display: inline-block;
+      font-size: 10px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      background: var(--accent-light);
+      padding: 5px 14px; border-radius: 100px;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(38px, 5.5vw, 62px);
+      font-weight: 400; line-height: 1.08;
+      margin-bottom: 22px; letter-spacing: -1px;
+    }
+    .hero-sub {
+      font-size: 19px; line-height: 1.6;
+      color: var(--text-secondary);
+      margin-bottom: 36px;
+      font-weight: 300;
+      max-width: 680px;
+    }
+    .hero-meta {
+      display: flex; align-items: center; gap: 16px;
+      font-size: 13px; color: var(--text-tertiary);
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .hero-meta span { display: inline-flex; align-items: center; gap: 6px; }
+    .hero-meta .dot { width: 3px; height: 3px; background: var(--text-tertiary); border-radius: 50%; }
+
+    .article-wrapper {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 80px 48px 60px;
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+    .toc {
+      position: sticky; top: 100px;
+      font-size: 13px;
+    }
+    .toc-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 20px;
+    }
+    .toc-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .toc-list a {
+      font-size: 13px; font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      line-height: 1.45;
+      display: block;
+      padding-left: 12px;
+      border-left: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .toc-list a:hover,
+    .toc-list a.active {
+      color: var(--accent);
+      border-left-color: var(--accent);
+    }
+
+    .article-body {
+      max-width: 680px;
+      font-size: 17px;
+      line-height: 1.85;
+      color: var(--text);
+    }
+    .article-body h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 38px;
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.6px;
+      margin-top: 72px;
+      margin-bottom: 24px;
+      color: var(--text);
+    }
+    .article-body h2:first-child { margin-top: 0; }
+    .article-body h3 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1.3;
+      letter-spacing: -0.2px;
+      margin-top: 44px;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+    .article-body p {
+      margin-bottom: 22px;
+      color: var(--text-secondary);
+    }
+    .article-body p strong { color: var(--text); font-weight: 600; }
+    .article-body ul {
+      list-style: none;
+      margin-bottom: 28px;
+      padding-left: 0;
+    }
+    .article-body ul li {
+      position: relative;
+      padding-left: 22px;
+      margin-bottom: 12px;
+      color: var(--text-secondary);
+    }
+    .article-body ul li::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 14px;
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      opacity: 0.6;
+    }
+    .article-body ul li strong { color: var(--text); font-weight: 600; }
+
+    .cite {
+      font-size: 13px;
+      color: var(--accent);
+      font-weight: 500;
+      text-decoration: none;
+    }
+    .cite:hover { text-decoration: underline; }
+
+    .lede {
+      font-family: 'Instrument Serif', serif;
+      font-size: 22px;
+      line-height: 1.5;
+      color: var(--text);
+      font-style: italic;
+      margin-bottom: 40px;
+      padding-left: 24px;
+      border-left: 3px solid var(--accent);
+    }
+
+    .info-box {
+      background: var(--section-alt);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin: 32px 0;
+    }
+    .info-box .info-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .info-box p { margin-bottom: 0; font-size: 15px; }
+    .info-box p + p { margin-top: 14px; }
+
+    .sequence-box {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 24px 0;
+      font-family: 'SF Mono', Menlo, Monaco, Consolas, monospace;
+      font-size: 14px;
+      color: var(--text);
+      word-break: break-word;
+    }
+
+    .related-section {
+      background: var(--bg);
+      padding: 100px 48px;
+    }
+    .related-inner { max-width: 1100px; margin: 0 auto; }
+    .related-section h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 32px;
+      font-weight: 400;
+      margin-bottom: 40px;
+      letter-spacing: -0.4px;
+    }
+    .related-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .related-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      text-decoration: none;
+      color: inherit;
+      opacity: 0.78;
+    }
+    .related-card .category-tag {
+      display: inline-block;
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--accent);
+      background: var(--accent-light);
+      padding: 4px 12px; border-radius: 100px;
+      margin-bottom: 18px;
+    }
+    .related-card h3 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 22px; font-weight: 400;
+      line-height: 1.25;
+      margin-bottom: 12px;
+    }
+    .related-card p {
+      font-size: 14px; color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .related-card .read-link {
+      font-size: 13px; font-weight: 600; color: var(--text-tertiary);
+    }
+
+    .legal-section {
+      background: var(--text);
+      color: rgba(255,255,255,0.72);
+      padding: 80px 48px;
+    }
+    .legal-inner {
+      max-width: 820px; margin: 0 auto;
+    }
+    .legal-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: rgba(255,255,255,0.4);
+      margin-bottom: 20px;
+    }
+    .legal-section p {
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    .cta-section {
+      background: linear-gradient(160deg, #1A1A1A 0%, #1B3A2A 50%, #1A2A1F 100%);
+      color: white;
+      text-align: center;
+      padding: 100px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: -50%; right: -20%;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(27,107,74,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .cta-inner { max-width: 640px; margin: 0 auto; position: relative; z-index: 1; }
+    .section-eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 400; line-height: 1.2;
+      margin-bottom: 16px; letter-spacing: -0.5px;
+      color: white;
+    }
+    .section-sub {
+      font-size: 16px; line-height: 1.7;
+      color: rgba(255,255,255,0.6);
+      max-width: 500px; margin: 0 auto 40px;
+    }
+    .cta-form {
+      display: flex; gap: 12px;
+      max-width: 440px; margin: 0 auto;
+    }
+    .cta-input {
+      flex: 1; padding: 14px 20px;
+      font-size: 15px; font-family: inherit;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.08);
+      color: white; border-radius: 100px;
+      outline: none;
+    }
+    .cta-input::placeholder { color: rgba(255,255,255,0.35); }
+    .cta-input:focus { border-color: rgba(255,255,255,0.4); }
+    .cta-submit {
+      padding: 14px 28px; font-size: 15px; font-weight: 600;
+      font-family: inherit; background: white; color: var(--text);
+      border: none; border-radius: 100px; cursor: pointer;
+      white-space: nowrap;
+    }
+    .cta-submit:hover { opacity: 0.9; }
+    .cta-fine { font-size: 12px; color: rgba(255,255,255,0.35); margin-top: 16px; }
+
+    footer {
+      padding: 48px; border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-left { font-size: 12px; color: var(--text-tertiary); }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a {
+      font-size: 12px; color: var(--text-tertiary);
+      text-decoration: none;
+    }
+    .footer-links a:hover { color: var(--text-secondary); }
+
+    @media (max-width: 900px) {
+      nav { padding: 14px 20px; }
+      .nav-links { display: none; }
+      .hero { padding: 120px 20px 60px; }
+      .article-wrapper {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding: 60px 20px 40px;
+      }
+      .toc { position: static; }
+      .article-body { max-width: 100%; font-size: 16px; }
+      .article-body h2 { font-size: 30px; margin-top: 56px; }
+      .article-body h3 { font-size: 21px; margin-top: 36px; }
+      .related-section, .legal-section, .cta-section { padding: 70px 20px; }
+      .related-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 16px; text-align: center; padding: 32px 20px; }
+    }
+    @media (max-width: 500px) {
+      .hero h1 { font-size: 34px; }
+      .hero-sub { font-size: 17px; }
+      .cta-form { flex-direction: column; }
+      .lede { font-size: 19px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="/" class="logo">
+      <svg class="logo-icon" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="14" cy="14" r="13" stroke="#1B6B4A" stroke-width="1.5"/>
+        <path d="M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z" fill="#1B6B4A" opacity="0.15"/>
+        <path d="M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z" stroke="#1B6B4A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="14" y1="11" x2="14" y2="21" stroke="#1B6B4A" stroke-width="0.8"/>
+      </svg>
+      Lipa
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/methodology.html">Our methodology</a>
+      <a href="/research.html" class="active">Research</a>
+    </div>
+    <a href="/#join" class="nav-cta">Join the waitlist</a>
+  </nav>
+
+  <div class="hero-wrapper">
+    <section class="hero">
+      <div class="breadcrumb">
+        <a href="/research.html">Research Library</a>
+        <span class="sep">/</span>
+        <span>Reading a COA</span>
+      </div>
+      <span class="hero-tag">Methodology</span>
+      <h1>How to Read a Certificate of Analysis: A Researcher's Guide</h1>
+      <p class="hero-sub">Understanding HPLC purity, mass spectrometry identity confirmation, endotoxin testing, and how to spot a legitimate COA from a fake one.</p>
+      <div class="hero-meta">
+        <span>9 min read</span>
+        <span class="dot"></span>
+        <span>Updated April 2026</span>
+      </div>
+    </section>
+  </div>
+
+  <div class="article-wrapper">
+
+    <aside class="toc">
+      <div class="toc-label">Contents</div>
+      <ul class="toc-list">
+        <li><a href="#why">Why COAs matter</a></li>
+        <li><a href="#who">Who issues a COA</a></li>
+        <li><a href="#janoshik">Janoshik Analytical</a></li>
+        <li><a href="#hplc">Reading an HPLC result</a></li>
+        <li><a href="#ms">Mass spectrometry identity</a></li>
+        <li><a href="#endotoxin">Endotoxin testing</a></li>
+        <li><a href="#heavy-metals">Heavy metals testing</a></li>
+        <li><a href="#bioburden">Bioburden testing</a></li>
+        <li><a href="#fakes">Spotting a fake COA</a></li>
+        <li><a href="#questions">Questions to ask a vendor</a></li>
+        <li><a href="#lipa-standard">The Lipa standard</a></li>
+      </ul>
+    </aside>
+
+    <article class="article-body">
+
+      <p class="lede">A Certificate of Analysis is either the single most honest document in the research peptide industry, or a piece of marketing collateral with a laboratory aesthetic. Learning to tell the difference is one of the most practical skills a researcher can develop.</p>
+
+      <div class="info-box" style="background: var(--accent-light); border-left: 3px solid var(--accent); margin-bottom: 40px;">
+        <div class="info-label" style="color: var(--accent);">At a glance</div>
+        <p><strong>What this covers:</strong> How to read a Certificate of Analysis (COA) for a research peptide — purity by HPLC, identity by mass spectrometry, plus endotoxin, heavy metals, and bioburden testing.</p>
+        <p><strong>Why it matters:</strong> A research peptide is only as useful as the document that describes what is actually in the vial, and the difference between a legitimate COA and a photoshopped one is knowable with a few minutes of training.</p>
+        <p><strong>Key takeaways:</strong> Independent third-party testing is structurally more credible than in-house · Purity and identity are different questions and both must be answered · A real COA shows the raw traces, not just headline numbers · Fake COAs have consistent tells</p>
+        <p><strong>Who this is for:</strong> Researchers and buyers who need to evaluate a vendor and want to understand what a defensible quality document actually looks like.</p>
+      </div>
+
+      <h2 id="why">Why COAs matter for research-grade compounds</h2>
+      <p>A Certificate of Analysis (COA) is the document that answers a deceptively simple question: <strong>what is actually in the vial?</strong> For a researcher working with reference compounds, the identity, purity, and sterility of the material are not optional context — they are the preconditions for any observation drawn from the experiment being meaningful at all. A noisy result from a pure compound is a data point. A noisy result from an unknown mixture is nothing.</p>
+
+      <p>In a regulated pharmaceutical environment, COAs are governed by pharmacopoeias (official reference books that define how drug tests must be performed) — the European Pharmacopoeia (Ph. Eur.) in Europe, the United States Pharmacopeia (USP), and the Japanese Pharmacopoeia (JP), among others — which specify how tests are to be performed, reported, and signed off. The research peptide market does not fall under these frameworks, which is precisely why understanding what a legitimate COA looks like matters so much. There is nobody checking for you.</p>
+
+      <h2 id="who">Who issues a COA, and why independence matters</h2>
+      <p>There are two distinct species of Certificate of Analysis. The first is issued by the manufacturer of the compound — an internal quality control document produced by the same laboratory that synthesized the material. The second is issued by an <strong>independent third-party laboratory</strong> that received a sample of the batch from the manufacturer or vendor and ran its own tests on equipment the manufacturer does not own or control.</p>
+
+      <p>The distinction is not academic. A manufacturer's internal COA describes what the manufacturer says it found. An independent COA describes what someone else, with no commercial interest in the result, found when they looked. In every other corner of analytical chemistry — food testing, environmental monitoring, pharmaceutical release — the independent result is considered the more credible of the two, for obvious reasons.</p>
+
+      <p>The serious research peptide vendors — the ones who behave as if their customers are people who actually know how to read the documents — have largely migrated to independent third-party testing as the default. The rest have not.</p>
+
+      <h2 id="janoshik">Janoshik Analytical and the peptide research community</h2>
+      <p>In practice, one name has become something close to a gold standard in the English-speaking peptide research community: <strong>Janoshik Analytical</strong>, an independent laboratory based in the Czech Republic. Janoshik reports are widely circulated, compared, and debated on research forums, and their format — clean HPLC chromatograms, mass spectrometry identity confirmation, signed and dated documents — has become the template that other independent labs are measured against.</p>
+
+      <p>There is nothing magical about Janoshik specifically; there are other competent independent labs. What matters is the principle: a COA from an independent laboratory with a public reputation is structurally more trustworthy than a COA produced by the same operation that is selling you the vial.</p>
+
+      <h2 id="hplc">Reading an HPLC result</h2>
+
+      <h3>What High-Performance Liquid Chromatography is</h3>
+      <p>HPLC is a separation technique. A small amount of the sample is dissolved in a solvent and pushed under high pressure through a column (a narrow tube) packed with a stationary phase — typically, for peptide work, a reverse-phase C18 material (a sorbent coated with 18-carbon chains that grip molecules by their hydrophobic parts). Different molecules in the sample interact with the stationary phase to different degrees, which causes them to emerge from the far end of the column at different times. A detector — usually a UV absorbance detector for peptides — records what comes off the column, when, and in what quantity. The result is a chromatogram: a trace showing peaks at various retention times.</p>
+
+      <div style="background: #F5F4F1; border-radius: 8px; padding: 16px 20px; margin: 24px 0; font-size: 15px; color: var(--text-secondary);">
+        <strong style="color: var(--text);">In plain English:</strong> HPLC runs the sample through a tube that separates molecules by how "sticky" they are. Pure compounds show one tall, clean peak. Messy compounds show a crowd of peaks. The "purity %" number on a COA is how much of the total signal belongs to the main peak.
+      </div>
+
+      <h3>How purity percentages are calculated</h3>
+      <p>The number that appears on a COA as "purity" is almost always an <strong>area-percent</strong> calculation. The detector records a signal intensity over time; each peak encloses an area; the largest peak (assumed to be the main compound) is divided by the sum of all peaks to produce the purity figure. A result of "99.1% purity" means the main peak represents 99.1% of the total integrated UV-absorbing material on the chromatogram at the wavelength measured.</p>
+
+      <p>This is not the same as saying that 99.1% of the mass in the vial is the target compound. It is saying that 99.1% of the material detected by this specific technique, at this specific wavelength, is associated with the main peak. Salt, water, and any compound that does not absorb at the measured wavelength will not appear in the calculation at all.</p>
+
+      <h3>What "99% purity" actually means</h3>
+      <p>With that caveat in mind, 98–99% area-percent purity by reverse-phase HPLC with UV detection is a reasonable shorthand for a clean synthesis — meaning the peptide was assembled, cleaved, and purified without accumulating a large population of truncated or modified side-products. Numbers substantially below 95% suggest either a difficult sequence or sloppy purification. Numbers above 99% are common for short peptides and for sequences that purify easily.</p>
+
+      <h3>Chromatogram interpretation</h3>
+      <p>A useful COA reproduces the actual chromatogram, not just the summary number. When researchers read the chromatogram, they look for: a single dominant peak at the expected retention time; a clean, symmetrical peak shape; a flat baseline before and after; and small, discrete impurity peaks rather than a broad hump of unresolved material. A COA that reports a headline purity number but hides the underlying trace is conspicuously less useful than one that shows its work.</p>
+
+      <h2 id="ms">Mass spectrometry identity confirmation</h2>
+
+      <h3>Why identity matters</h3>
+      <p>HPLC tells a researcher how pure the sample is. It does not tell them what the sample is. In principle, a vial could be 99% pure of the entirely wrong compound — a synthesis that produced a single clean molecule that happens not to be the one on the label. HPLC alone cannot detect that. Mass spectrometry is the technique that closes the gap.</p>
+
+      <h3>Expected mass vs. observed mass</h3>
+      <p>A peptide's expected mass is calculated by summing the monoisotopic masses (the exact weights of the most common isotope of each atom) of its constituent amino acid residues and adjusting for the water lost at each peptide bond and any terminal modifications. This gives a theoretical molecular mass — a specific number, usually reported in daltons (the standard unit for molecular weight). A mass spectrometer ionizes the sample (gives molecules an electrical charge so they can be manipulated) and measures mass-to-charge ratio for the resulting ions; a match between the observed m/z (accounting for charge state) and the calculated expected mass is the confirmation that the compound in the vial is the compound on the label.</p>
+
+      <h3>Common identity confirmation formats</h3>
+      <p>A standard independent COA will quote both the calculated and observed masses, often with a spectrum attached showing the relevant m/z peak. Matches to within a fraction of a dalton are expected for modern electrospray-ionization (ESI) instruments. A COA that reports purity but declines to report identity is, for a researcher, missing its single most important piece of information.</p>
+
+      <h2 id="endotoxin">Endotoxin testing</h2>
+      <p>Endotoxins are lipopolysaccharide fragments (pieces of the outer "skin") from the outer membrane of Gram-negative bacteria. They are not the bacteria themselves — sterilizing a sample by filtration or heat does not remove them — and they are biologically active at extremely low concentrations. In injectable research contexts, endotoxin contamination is a serious confound: it can itself produce inflammatory, febrile (fever-inducing), and behavioural responses in animal models, which means an endotoxin-contaminated sample can <em>look</em> biologically active without containing anything of interest.</p>
+
+      <p>The standard test is the <strong>Limulus Amebocyte Lysate (LAL)</strong> assay, which exploits a clotting reaction in horseshoe crab blood cells that is exquisitely sensitive to endotoxin. Results are reported in endotoxin units per milligram (EU/mg) or per milliliter. The European Pharmacopoeia and USP both set threshold values for injectable pharmaceuticals; research-grade material from reputable sources is generally tested against comparable thresholds.</p>
+
+      <h2 id="heavy-metals">Heavy metals testing</h2>
+      <p>Synthetic peptide production introduces the theoretical possibility of heavy metal contamination from reagents, catalysts, and equipment. The four metals routinely tested for are <strong>lead, cadmium, arsenic, and mercury</strong>. Detection limits are typically reported in parts per million (ppm) or parts per billion (ppb), with acceptable thresholds defined by the relevant pharmacopoeia for the closest regulatory analog. A reputable COA will either report each metal with a numeric value or state that the compound was tested against a specific standard and passed.</p>
+
+      <h2 id="bioburden">Bioburden testing</h2>
+      <p>Bioburden refers to the viable microbial load in a sample — bacteria, yeasts, and moulds that can grow if given the opportunity. Bioburden is distinct from endotoxin (which is a chemical entity) and from sterility (which is an absolute claim rather than a measurement). For research-grade peptides, the expectation is a low bioburden count under defined conditions, reported as colony-forming units (CFU, the count of microbes able to grow into visible colonies) per gram or per milliliter. The relevant Ph. Eur. chapters on microbiological examination of non-sterile products provide the standard framework.</p>
+
+      <div style="background: #F5F4F1; border-radius: 8px; padding: 16px 20px; margin: 24px 0; font-size: 15px; color: var(--text-secondary);">
+        <strong style="color: var(--text);">In plain English:</strong> A serious COA does four things beyond purity and identity — it confirms the sample is not contaminated with bacterial toxins, heavy metals, or live microbes, and that each batch can be traced back to a specific vial. Anything less, and you are buying on trust.
+      </div>
+
+      <h2 id="fakes">How to spot a FAKE or manipulated COA</h2>
+      <p>The research peptide community has, over the years, developed a practical catalogue of the ways COAs are faked, reused, or manipulated. Researchers learning to evaluate vendors should be alert to all of them.</p>
+
+      <ul>
+        <li><strong>Mismatched dates.</strong> The test date predates the batch manufacturing date, or postdates it by a period that makes no logistical sense.</li>
+        <li><strong>Inconsistent formatting.</strong> Fonts change between sections, alignment drifts, or the same report format is used for both "manufacturer" and "independent lab" results.</li>
+        <li><strong>No independent lab signature.</strong> The document carries only the vendor's branding. No signature, no analyst name, no laboratory contact details.</li>
+        <li><strong>Photoshopped documents.</strong> Visible compression artefacts around numbers, faint traces of previous values beneath new ones, or watermarks that do not match the claimed issuing lab.</li>
+        <li><strong>Missing batch numbers.</strong> A COA with no batch identifier cannot be tied back to a specific vial; this makes it structurally impossible to verify.</li>
+        <li><strong>"Generic" COAs reused for multiple products.</strong> The same document, with the same dates and the same chromatogram, circulates under different product names. This is a common fraud and is easier to catch than one might expect.</li>
+        <li><strong>No raw traces.</strong> The report presents a headline purity number but omits the chromatogram and the mass spectrum. A legitimate independent COA shows the underlying data.</li>
+        <li><strong>Suspiciously identical numbers across batches.</strong> Genuine analytical measurements have variance; five consecutive batches reporting 99.00% purity to two decimal places is not plausible.</li>
+      </ul>
+
+      <div class="info-box">
+        <div class="info-label">A rule of thumb</div>
+        <p>If a vendor will not send you a COA produced by an independent laboratory, tied to a specific batch number, signed and dated, with the raw chromatogram and mass spectrum attached, then the vendor is effectively asking you to trust them on something that exists specifically so that you do not have to.</p>
+      </div>
+
+      <h2 id="questions">Questions to ask a vendor about their COAs</h2>
+      <p>A researcher evaluating a new supplier can cover most of the important ground with a short list of questions. The answers — or the reluctance to provide them — reveal a great deal.</p>
+
+      <ul>
+        <li><strong>Which laboratory issued this COA?</strong> An independent third-party name, publicly identifiable, is the only acceptable answer.</li>
+        <li><strong>Is every batch tested, or is testing spot-checked?</strong> The serious answer is every batch.</li>
+        <li><strong>Can the batch number on the COA be matched to the batch number on the physical vial?</strong> If not, the COA is decorative.</li>
+        <li><strong>Are the raw HPLC chromatogram and mass spectrum included?</strong> Summary numbers without underlying traces are substantially less informative.</li>
+        <li><strong>What is tested beyond purity?</strong> Identity, endotoxins, heavy metals, and bioburden should all be covered for serious research use.</li>
+        <li><strong>How long has the vendor been using this lab, and can they produce historical COAs for older batches?</strong> A vendor who can show continuity is harder to fake than one who cannot.</li>
+      </ul>
+
+      <h2 id="lipa-standard">The Lipa standard</h2>
+      <p>Lipa's position on this is straightforward and, to be honest, unremarkable by the standards of how analytical work <em>should</em> be done. Every batch of every compound is tested by an independent third-party laboratory. Every COA is tied to a specific batch number that appears on the physical vial. Every COA includes the underlying HPLC chromatogram and mass spectrometry identity confirmation. Purity, identity, endotoxins, heavy metals, and bioburden are all covered. The documents are published, not hidden.</p>
+
+      <p>This is not a marketing point. It is what the minimum reasonable answer to "what is in the vial?" looks like in the research peptide space, and the only thing that makes it worth writing down at all is the number of competitors who do not meet it.</p>
+
+      <div class="info-box">
+        <div class="info-label">Framing</div>
+        <p>This article is methodological. It describes how COAs are produced and read in the context of research-grade reference compounds. It is not medical advice and does not endorse or recommend any human use of research chemicals. The existence of a high-quality COA describes the material in a vial; it does not describe any approved or established human use of the compound it characterizes.</p>
+      </div>
+
+    </article>
+  </div>
+
+  <section class="related-section">
+    <div class="related-inner">
+      <h2>Related methodology</h2>
+      <div class="related-grid">
+        <a class="related-card" href="research-hplc-explained.html">
+          <span class="category-tag">Methodology</span>
+          <h3>HPLC and Mass Spectrometry: How Peptide Purity Is Really Measured</h3>
+          <p>A closer look at the two analytical techniques that define quality in the research peptide industry, and how to read their output.</p>
+          <span class="read-link">Read the guide</span>
+        </a>
+        <a class="related-card" href="research-storage.html">
+          <span class="category-tag">Methodology</span>
+          <h3>Research Peptide Storage and Stability</h3>
+          <p>How lyophilized peptides are preserved, what happens after reconstitution, and the published literature on peptide stability.</p>
+          <span class="read-link">Read the guide</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="legal-section">
+    <div class="legal-inner">
+      <div class="legal-label">Legal Disclaimer</div>
+      <p>This article is methodological and educational. It describes how Certificates of Analysis are produced, structured, and interpreted in the context of research-grade reference compounds. It is not medical advice, diagnosis, treatment, or a recommendation for human use of any research chemical. Nothing in this article should be read as endorsing the human use of any unapproved compound. Research peptides referred to here are sold strictly as research chemicals for laboratory and in-vitro research purposes only, and are not approved as medicines in the European Union, United Kingdom, United States, or any major regulatory jurisdiction. Purchasers must be qualified researchers aged 18 or over. Consult a qualified healthcare provider for any medical questions. Lipa is a trade name of Go Exe B.V., registered in the Netherlands.</p>
+    </div>
+  </section>
+
+  <section class="cta-section" id="notify">
+    <div class="cta-inner">
+      <div class="section-eyebrow">Stay Informed</div>
+      <div class="section-title">New research, delivered quietly.</div>
+      <div class="section-sub">Join the waitlist. We'll email you when new compound overviews are published and when the store opens across Europe.</div>
+      <form class="cta-form" id="waitlist-form" onsubmit="handleWaitlist(event)">
+        <input class="cta-input" type="email" placeholder="Your email" required id="waitlist-email">
+        <button class="cta-submit" type="submit">Join Waitlist</button>
+      </form>
+      <div class="cta-fine" id="waitlist-msg">No spam. Unsubscribe anytime.</div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-left">&copy; 2026 Lipa Health. All rights reserved.</div>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/methodology.html">Methodology</a>
+      <a href="/research.html">Research</a>
+      <a href="/privacy.html">Privacy</a>
+    </div>
+  </footer>
+
+  <script>
+    const tocLinks = document.querySelectorAll('.toc-list a');
+    const sections = Array.from(tocLinks).map(link => {
+      const id = link.getAttribute('href').slice(1);
+      return document.getElementById(id);
+    }).filter(Boolean);
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          tocLinks.forEach(l => l.classList.remove('active'));
+          const match = document.querySelector('.toc-list a[href="#' + id + '"]');
+          if (match) match.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+
+    const SUPABASE_URL = 'https://dqihkpicbswxzwkoxwnb.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRxaWhrcGljYnN3eHp3a294d25iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM5NjczODcsImV4cCI6MjA1OTU0MzM4N30.SifN_Rkhi5BwGXSfJz4jiM4VBzMdJPYE_6JjjC2S4RA';
+
+    async function handleWaitlist(e) {
+      e.preventDefault();
+      const email = document.getElementById('waitlist-email').value;
+      try {
+        await fetch(SUPABASE_URL + '/rest/v1/waitlist', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_ANON,
+            'Authorization': 'Bearer ' + SUPABASE_ANON,
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({ email: email, product: 'research-coa-guide' })
+        });
+      } catch (err) { /* silent */ }
+      document.getElementById('waitlist-email').value = '';
+      document.getElementById('waitlist-msg').textContent = "You're on the list. We'll be in touch.";
+      document.getElementById('waitlist-msg').style.color = 'rgba(255,255,255,0.7)';
+    }
+  </script>
+
+</body>
+</html>

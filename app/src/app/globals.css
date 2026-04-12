@@ -128,3 +128,22 @@
     @apply font-sans;
   }
 }
+
+/* Lipa design system utilities */
+.font-serif {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.font-mono-data {
+  font-family: var(--font-mono), 'JetBrains Mono', ui-monospace, monospace;
+  font-feature-settings: "tnum" 1;
+}
+
+/* Lipa brand colors */
+.text-lipa-green { color: #1B6B4A; }
+.bg-lipa-green { background-color: #1B6B4A; }
+.text-lipa-ink { color: #0F1A15; }
+.bg-lipa-cream { background-color: #F8F5EF; }
+.border-lipa { border-color: rgba(15,26,21,0.08); }

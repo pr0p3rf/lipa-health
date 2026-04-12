@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { createClient } from "@supabase/supabase-js";
+import { analyzeBiomarker, generateActionPlan } from "@/lib/living-research";
+import { runAllCalculations, type BiomarkerValue, type UserProfile } from "@/lib/risk-calculations";
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
@@ -31,6 +33,8 @@ Important:
 Return format: [{"name": "...", "value": ..., "unit": "...", "ref_low": ..., "ref_high": ..., "category": "..."}, ...]`;
 
 export async function POST(request: NextRequest) {
+  const overallStart = Date.now();
+
   try {
     const formData = await request.formData();
     const file = formData.get("file") as File;
@@ -44,20 +48,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Convert file to base64
+    // ================================================================
+    // STEP 1: Extract biomarkers from the PDF using Claude vision
+    // ================================================================
+    const extractStart = Date.now();
+
     const bytes = await file.arrayBuffer();
     const base64 = Buffer.from(bytes).toString("base64");
 
-    // Determine media type
     const isPdf = file.type === "application/pdf";
     const mediaType = isPdf
-      ? "application/pdf" as const
+      ? ("application/pdf" as const)
       : file.type.startsWith("image/")
       ? (file.type as "image/jpeg" | "image/png" | "image/gif" | "image/webp")
-      : "image/jpeg" as const;
+      : ("image/jpeg" as const);
 
-    // Send to Claude Vision
-    const message = await anthropic.messages.create({
+    const extractionMessage = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 4096,
       messages: [
@@ -81,16 +87,15 @@ export async function POST(request: NextRequest) {
       ],
     });
 
-    // Parse Claude's response
-    const responseText =
-      message.content[0].type === "text" ? message.content[0].text : "";
+    const extractTimeMs = Date.now() - extractStart;
 
-    // Extract JSON from response (handle potential markdown wrapping)
-    let jsonStr = responseText;
+    const responseText =
+      extractionMessage.content[0].type === "text"
+        ? extractionMessage.content[0].text
+        : "";
+
     const jsonMatch = responseText.match(/\[[\s\S]*\]/);
-    if (jsonMatch) {
-      jsonStr = jsonMatch[0];
-    }
+    const jsonStr = jsonMatch ? jsonMatch[0] : responseText;
 
     let biomarkers;
     try {
@@ -102,7 +107,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Store in database
+    console.log(`[analyze] Extracted ${biomarkers.length} biomarkers in ${extractTimeMs}ms`);
+
+    // ================================================================
+    // STEP 2: Store biomarker results
+    // ================================================================
     const date = testDate || new Date().toISOString().split("T")[0];
 
     const records = biomarkers.map((b: any) => ({
@@ -116,10 +125,12 @@ export async function POST(request: NextRequest) {
       category: b.category || "other",
     }));
 
+    let insertedResults: any[] = [];
     if (records.length > 0) {
-      const { error: insertError } = await supabase
+      const { data: inserted, error: insertError } = await supabase
         .from("biomarker_results")
-        .insert(records);
+        .insert(records)
+        .select();
 
       if (insertError) {
         console.error("DB insert error:", insertError);
@@ -128,12 +139,178 @@ export async function POST(request: NextRequest) {
           { status: 500 }
         );
       }
+      insertedResults = inserted || [];
     }
+
+    // ================================================================
+    // STEP 3: Living Research™ analysis for each biomarker
+    // ================================================================
+    // Run analyses in parallel (with concurrency limit)
+    const CONCURRENCY = 5;
+    const analyses = [];
+
+    for (let i = 0; i < insertedResults.length; i += CONCURRENCY) {
+      const batch = insertedResults.slice(i, i + CONCURRENCY);
+      const batchPromises = batch.map(async (result: any, idx: number) => {
+        try {
+          const analysis = await analyzeBiomarker(supabase, anthropic, {
+            id: result.id,
+            name: result.biomarker,
+            value: result.value,
+            unit: result.unit,
+            ref_low: result.ref_low,
+            ref_high: result.ref_high,
+            category: result.category,
+            user_id: userId,
+            test_date: date,
+          });
+
+          // Store the analysis
+          const { data: analysisRow, error: analysisError } = await supabase
+            .from("user_analyses")
+            .insert({
+              user_id: userId,
+              biomarker_result_id: result.id,
+              biomarker_name: analysis.biomarker_name,
+              status: analysis.status,
+              flag: analysis.flag,
+              summary: analysis.summary,
+              what_it_means: analysis.what_it_means,
+              what_research_shows: analysis.what_research_shows,
+              related_patterns: analysis.related_patterns,
+              suggested_exploration: analysis.suggested_exploration,
+              citation_count: analysis.citation_count,
+              avg_study_year: analysis.avg_study_year,
+              highest_evidence_grade: analysis.highest_evidence_grade,
+              retrieval_time_ms: analysis.retrieval_time_ms,
+              generation_time_ms: analysis.generation_time_ms,
+            })
+            .select()
+            .single();
+
+          if (analysisError) {
+            console.error(`Failed to store analysis for ${result.biomarker}:`, analysisError);
+          } else if (analysisRow && analysis.citations.length > 0) {
+            // Store citations
+            const citationRecords = analysis.citations.map((c) => ({
+              user_id: userId,
+              biomarker_result_id: result.id,
+              study_id: c.study_id,
+              relevance_score: c.similarity,
+              retrieval_rank: c.relevance_rank,
+              biomarker_name: analysis.biomarker_name,
+              query_used: `${analysis.canonical_name} analysis`,
+            }));
+
+            await supabase.from("analysis_citations").insert(citationRecords);
+          }
+
+          return analysis;
+        } catch (err) {
+          console.error(`Analysis failed for ${result.biomarker}:`, err);
+          return null;
+        }
+      });
+
+      const batchResults = await Promise.all(batchPromises);
+      analyses.push(...batchResults.filter(Boolean));
+    }
+
+    // ================================================================
+    // STEP 4: Run risk calculations
+    // ================================================================
+    const biomarkerValues: BiomarkerValue[] = insertedResults.map((r: any) => ({
+      name: r.biomarker,
+      value: r.value,
+      unit: r.unit,
+    }));
+
+    // Fetch user profile for risk calculations requiring age/sex
+    const { data: profileData } = await supabase
+      .from("user_profiles")
+      .select("age, sex, is_smoker, systolic_bp")
+      .eq("user_id", userId)
+      .maybeSingle();
+
+    const userProfile: UserProfile = profileData ? {
+      age: profileData.age ?? undefined,
+      sex: (profileData.sex as "male" | "female") ?? undefined,
+      isSmoker: profileData.is_smoker ?? undefined,
+      systolicBP: profileData.systolic_bp ?? undefined,
+    } : {};
+
+    const riskCalcs = runAllCalculations(biomarkerValues, userProfile);
+
+    console.log(`[analyze] ${riskCalcs.length} risk calculations computed`);
+
+    // ================================================================
+    // STEP 5: Generate personalized action plan
+    // ================================================================
+    let actionPlan = null;
+
+    try {
+      const panelForActionPlan = analyses
+        .filter(Boolean)
+        .map((a: any) => {
+          const result = insertedResults.find((r: any) => r.biomarker === a.biomarker_name || r.id === a.biomarker_result_id);
+          return {
+            name: a.biomarker_name || a.canonical_name,
+            value: result?.value ?? 0,
+            unit: result?.unit ?? null,
+            status: a.status,
+            flag: a.flag,
+            summary: a.summary,
+            what_research_shows: a.what_research_shows,
+            suggested_exploration: a.suggested_exploration,
+            category: result?.category ?? "other",
+          };
+        });
+
+      const riskCalcSummary = riskCalcs.map((r) => ({
+        name: r.name,
+        value: r.value,
+        interpretation: r.interpretation,
+        interpretation_label: r.interpretation_label,
+        summary: r.summary,
+      }));
+
+      actionPlan = await generateActionPlan(anthropic, panelForActionPlan, riskCalcSummary);
+
+      // Store action plan
+      await supabase.from("action_plans").insert({
+        user_id: userId,
+        test_date: date,
+        overall_summary: actionPlan.overall_summary,
+        disclaimer: actionPlan.disclaimer,
+        domains: actionPlan.domains,
+        generation_time_ms: actionPlan.generation_time_ms,
+      });
+
+      console.log(
+        `[analyze] Action plan generated in ${actionPlan.generation_time_ms}ms with ${actionPlan.domains.length} domains`
+      );
+    } catch (err) {
+      console.error("[analyze] Action plan generation failed:", err);
+    }
+
+    const totalTimeMs = Date.now() - overallStart;
+
+    console.log(
+      `[analyze] Complete. ${analyses.length}/${insertedResults.length} analyses + action plan generated in ${totalTimeMs}ms`
+    );
 
     return NextResponse.json({
       success: true,
       count: biomarkers.length,
+      analyses_count: analyses.length,
+      risk_calculations_count: riskCalcs.length,
+      has_action_plan: !!actionPlan,
+      extraction_time_ms: extractTimeMs,
+      total_time_ms: totalTimeMs,
       biomarkers,
+      analyses,
+      risk_calculations: riskCalcs,
+      action_plan: actionPlan,
     });
   } catch (error: any) {
     console.error("Analysis error:", error);

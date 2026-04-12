@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google" content="notranslate">
+  <title>Selank: The Research Behind the Russian Anxiolytic Peptide | Lipa Research Library</title>
+  <meta name="description" content="A plain-English review of published research on Selank, a synthetic heptapeptide developed at the same Russian institute as Semax, studied for anxiolytic and immunomodulatory properties. 20 cited studies.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'><circle cx='14' cy='14' r='13' fill='none' stroke='%231B6B4A' stroke-width='1.5'/><path d='M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z' fill='%231B6B4A' opacity='0.3' stroke='%231B6B4A' stroke-width='1'/></svg>">
+  <meta property="og:title" content="Selank: The Research Behind the Russian Anxiolytic Peptide | Lipa">
+  <meta property="og:description" content="A plain-English review of published research on Selank — a synthetic heptapeptide studied for anxiolytic and immunomodulatory properties.">
+  <meta property="og:type" content="article">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FAFAF8;
+      --white: #FFFFFF;
+      --text: #1A1A1A;
+      --text-secondary: #6B6B6B;
+      --text-tertiary: #999999;
+      --accent: #1B6B4A;
+      --accent-light: #E8F5EE;
+      --accent-hover: #155A3D;
+      --border: rgba(0,0,0,0.06);
+      --card-bg: #FFFFFF;
+      --section-alt: #F5F4F1;
+      --warm: #F2EDE8;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    body { overflow-x: hidden; background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; line-height: 1.6; }
+
+    /* ---- NAV ---- */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      padding: 16px 48px;
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(250,250,248,0.9);
+      backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-size: 17px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--text); text-decoration: none;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .logo-icon { width: 28px; height: 28px; }
+    .nav-links { display: flex; gap: 32px; align-items: center; }
+    .nav-links a {
+      font-size: 13px; font-weight: 500; color: var(--text-secondary);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--accent); font-weight: 600; }
+    .nav-cta {
+      font-size: 13px; font-weight: 600; color: white;
+      background: var(--accent); padding: 8px 20px;
+      border-radius: 100px; text-decoration: none;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--accent-hover); }
+
+    /* ---- HERO ---- */
+    .hero-wrapper {
+      background: linear-gradient(165deg, #F5F0EB 0%, #FAFAF8 40%, #EEF2EE 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-wrapper::before {
+      content: '';
+      position: absolute;
+      top: -30%; right: -20%;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(27,107,74,0.06) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero-wrapper::after {
+      content: '';
+      position: absolute;
+      bottom: -20%; left: -10%;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(27,107,74,0.04) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero {
+      padding: 140px 48px 90px;
+      max-width: 820px; margin: 0 auto;
+      position: relative; z-index: 1;
+    }
+    .breadcrumb {
+      font-size: 12px; font-weight: 500;
+      color: var(--text-tertiary);
+      margin-bottom: 24px;
+      letter-spacing: 0.3px;
+    }
+    .breadcrumb a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .breadcrumb a:hover { color: var(--accent); }
+    .breadcrumb .sep { margin: 0 10px; color: var(--text-tertiary); }
+    .hero-tag {
+      display: inline-block;
+      font-size: 10px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      background: var(--accent-light);
+      padding: 5px 14px; border-radius: 100px;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(38px, 5.5vw, 62px);
+      font-weight: 400; line-height: 1.08;
+      margin-bottom: 22px; letter-spacing: -1px;
+    }
+    .hero-sub {
+      font-size: 19px; line-height: 1.6;
+      color: var(--text-secondary);
+      margin-bottom: 36px;
+      font-weight: 300;
+      max-width: 680px;
+    }
+    .hero-meta {
+      display: flex; align-items: center; gap: 16px;
+      font-size: 13px; color: var(--text-tertiary);
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .hero-meta span { display: inline-flex; align-items: center; gap: 6px; }
+    .hero-meta .dot { width: 3px; height: 3px; background: var(--text-tertiary); border-radius: 50%; }
+
+    /* ---- ARTICLE LAYOUT ---- */
+    .article-wrapper {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 80px 48px 60px;
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+    .toc {
+      position: sticky; top: 100px;
+      font-size: 13px;
+    }
+    .toc-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 20px;
+    }
+    .toc-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .toc-list a {
+      font-size: 13px; font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      line-height: 1.45;
+      display: block;
+      padding-left: 12px;
+      border-left: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .toc-list a:hover,
+    .toc-list a.active {
+      color: var(--accent);
+      border-left-color: var(--accent);
+    }
+
+    /* ---- ARTICLE BODY ---- */
+    .article-body {
+      max-width: 680px;
+      font-size: 17px;
+      line-height: 1.85;
+      color: var(--text);
+    }
+    .article-body h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 38px;
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.6px;
+      margin-top: 72px;
+      margin-bottom: 24px;
+      color: var(--text);
+    }
+    .article-body h2:first-child { margin-top: 0; }
+    .article-body h3 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1.3;
+      letter-spacing: -0.2px;
+      margin-top: 44px;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+    .article-body p {
+      margin-bottom: 22px;
+      color: var(--text-secondary);
+    }
+    .article-body p strong { color: var(--text); font-weight: 600; }
+    .article-body ul {
+      list-style: none;
+      margin-bottom: 28px;
+      padding-left: 0;
+    }
+    .article-body ul li {
+      position: relative;
+      padding-left: 22px;
+      margin-bottom: 12px;
+      color: var(--text-secondary);
+    }
+    .article-body ul li::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 14px;
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      opacity: 0.6;
+    }
+    .article-body ul li strong { color: var(--text); font-weight: 600; }
+
+    .cite {
+      font-size: 13px;
+      color: var(--accent);
+      font-weight: 500;
+      text-decoration: none;
+    }
+    .cite:hover { text-decoration: underline; }
+
+    .lede {
+      font-family: 'Instrument Serif', serif;
+      font-size: 22px;
+      line-height: 1.5;
+      color: var(--text);
+      font-style: italic;
+      margin-bottom: 40px;
+      padding-left: 24px;
+      border-left: 3px solid var(--accent);
+    }
+
+    .info-box {
+      background: var(--section-alt);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin: 32px 0;
+    }
+    .info-box .info-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .info-box p { margin-bottom: 0; font-size: 15px; }
+    .info-box p + p { margin-top: 14px; }
+
+    .sequence-box {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 24px 0;
+      font-family: 'SF Mono', Menlo, Monaco, Consolas, monospace;
+      font-size: 14px;
+      color: var(--text);
+      word-break: break-word;
+    }
+
+    /* ---- CITATIONS ---- */
+    .citations-section {
+      background: var(--section-alt);
+      padding: 100px 48px;
+      border-top: 1px solid var(--border);
+    }
+    .citations-inner { max-width: 820px; margin: 0 auto; }
+    .citations-section h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 38px;
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.6px;
+      margin-bottom: 12px;
+    }
+    .citations-section .sub {
+      font-size: 15px; color: var(--text-secondary);
+      margin-bottom: 40px;
+    }
+    .citation-list {
+      list-style: none;
+      counter-reset: cite;
+    }
+    .citation-list li {
+      counter-increment: cite;
+      position: relative;
+      padding: 18px 0 18px 44px;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+    }
+    .citation-list li::before {
+      content: counter(cite);
+      position: absolute;
+      left: 0; top: 18px;
+      font-family: 'Instrument Serif', serif;
+      font-size: 18px;
+      color: var(--accent);
+      font-weight: 400;
+      width: 28px;
+    }
+    .citation-list li em { color: var(--text); font-style: italic; }
+
+    /* ---- RELATED ---- */
+    .related-section {
+      background: var(--bg);
+      padding: 100px 48px;
+    }
+    .related-inner { max-width: 1100px; margin: 0 auto; }
+    .related-section h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 32px;
+      font-weight: 400;
+      margin-bottom: 40px;
+      letter-spacing: -0.4px;
+    }
+    .related-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .related-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      text-decoration: none;
+      color: inherit;
+      opacity: 0.78;
+    }
+    .related-card .category-tag {
+      display: inline-block;
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--accent);
+      background: var(--accent-light);
+      padding: 4px 12px; border-radius: 100px;
+      margin-bottom: 18px;
+    }
+    .related-card h3 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 22px; font-weight: 400;
+      line-height: 1.25;
+      margin-bottom: 12px;
+    }
+    .related-card p {
+      font-size: 14px; color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .related-card .read-link {
+      font-size: 13px; font-weight: 600; color: var(--text-tertiary);
+    }
+
+    /* ---- LEGAL DISCLAIMER ---- */
+    .legal-section {
+      background: var(--text);
+      color: rgba(255,255,255,0.72);
+      padding: 80px 48px;
+    }
+    .legal-inner {
+      max-width: 820px; margin: 0 auto;
+    }
+    .legal-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: rgba(255,255,255,0.4);
+      margin-bottom: 20px;
+    }
+    .legal-section p {
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    /* ---- CTA ---- */
+    .cta-section {
+      background: linear-gradient(160deg, #1A1A1A 0%, #1B3A2A 50%, #1A2A1F 100%);
+      color: white;
+      text-align: center;
+      padding: 100px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: -50%; right: -20%;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(27,107,74,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .cta-inner { max-width: 640px; margin: 0 auto; position: relative; z-index: 1; }
+    .section-eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 400; line-height: 1.2;
+      margin-bottom: 16px; letter-spacing: -0.5px;
+      color: white;
+    }
+    .section-sub {
+      font-size: 16px; line-height: 1.7;
+      color: rgba(255,255,255,0.6);
+      max-width: 500px; margin: 0 auto 40px;
+    }
+    .cta-form {
+      display: flex; gap: 12px;
+      max-width: 440px; margin: 0 auto;
+    }
+    .cta-input {
+      flex: 1; padding: 14px 20px;
+      font-size: 15px; font-family: inherit;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.08);
+      color: white; border-radius: 100px;
+      outline: none;
+    }
+    .cta-input::placeholder { color: rgba(255,255,255,0.35); }
+    .cta-input:focus { border-color: rgba(255,255,255,0.4); }
+    .cta-submit {
+      padding: 14px 28px; font-size: 15px; font-weight: 600;
+      font-family: inherit; background: white; color: var(--text);
+      border: none; border-radius: 100px; cursor: pointer;
+      white-space: nowrap;
+    }
+    .cta-submit:hover { opacity: 0.9; }
+    .cta-fine { font-size: 12px; color: rgba(255,255,255,0.35); margin-top: 16px; }
+
+    /* ---- FOOTER ---- */
+    footer {
+      padding: 48px; border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-left { font-size: 12px; color: var(--text-tertiary); }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a {
+      font-size: 12px; color: var(--text-tertiary);
+      text-decoration: none;
+    }
+    .footer-links a:hover { color: var(--text-secondary); }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 900px) {
+      nav { padding: 14px 20px; }
+      .nav-links { display: none; }
+      .hero { padding: 120px 20px 60px; }
+      .article-wrapper {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding: 60px 20px 40px;
+      }
+      .toc { position: static; }
+      .article-body { max-width: 100%; font-size: 16px; }
+      .article-body h2 { font-size: 30px; margin-top: 56px; }
+      .article-body h3 { font-size: 21px; margin-top: 36px; }
+      .citations-section, .related-section, .legal-section, .cta-section { padding: 70px 20px; }
+      .related-grid { grid-template-columns: 1fr; }
+      .citations-section h2 { font-size: 30px; }
+      footer { flex-direction: column; gap: 16px; text-align: center; padding: 32px 20px; }
+    }
+    @media (max-width: 500px) {
+      .hero h1 { font-size: 34px; }
+      .hero-sub { font-size: 17px; }
+      .cta-form { flex-direction: column; }
+      .lede { font-size: 19px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="/" class="logo">
+      <svg class="logo-icon" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="14" cy="14" r="13" stroke="#1B6B4A" stroke-width="1.5"/>
+        <path d="M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z" fill="#1B6B4A" opacity="0.15"/>
+        <path d="M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z" stroke="#1B6B4A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="14" y1="11" x2="14" y2="21" stroke="#1B6B4A" stroke-width="0.8"/>
+      </svg>
+      Lipa
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/methodology.html">Our methodology</a>
+      <a href="/research.html" class="active">Research</a>
+    </div>
+    <a href="/#join" class="nav-cta">Join the waitlist</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero-wrapper">
+    <section class="hero">
+      <div class="breadcrumb">
+        <a href="/research.html">Research Library</a>
+        <span class="sep">/</span>
+        <span>Selank</span>
+      </div>
+      <span class="hero-tag">Neuropeptide</span>
+      <h1>Selank: The Research Behind the Russian Anxiolytic Peptide</h1>
+      <p class="hero-sub">A plain-English review of published research on Selank, a synthetic heptapeptide developed at the same Russian institute as Semax, studied for anxiolytic and immunomodulatory properties.</p>
+      <div class="hero-meta">
+        <span>11 min read</span>
+        <span class="dot"></span>
+        <span>Updated April 2026</span>
+        <span class="dot"></span>
+        <span>20 cited studies</span>
+      </div>
+    </section>
+  </div>
+
+  <!-- ARTICLE -->
+  <div class="article-wrapper">
+
+    <!-- TOC -->
+    <aside class="toc">
+      <div class="toc-label">Contents</div>
+      <ul class="toc-list">
+        <li><a href="#what-is">What is Selank?</a></li>
+        <li><a href="#origin">Origin and development</a></li>
+        <li><a href="#semax">Relationship to Semax</a></li>
+        <li><a href="#mechanisms">Proposed mechanisms</a></li>
+        <li><a href="#research-areas">Key research areas</a></li>
+        <li><a href="#clinical-status">Clinical status in Russia</a></li>
+        <li><a href="#regulatory">Regulatory status outside Russia</a></li>
+        <li><a href="#evidence">Current state of evidence</a></li>
+        <li><a href="#does-not-show">What research does not show</a></li>
+        <li><a href="#delivery">Delivery format notes</a></li>
+        <li><a href="#citations">Cited studies</a></li>
+      </ul>
+    </aside>
+
+    <!-- BODY -->
+    <article class="article-body">
+
+      <p class="lede">Unlike most of the peptides discussed in the English-speaking research community, Selank arrives already carrying a clinical history — one written almost entirely in Russian, and rarely translated in full. This is what the peer-reviewed literature actually says.</p>
+
+      <div class="info-box" style="background: var(--accent-light); border-left: 3px solid var(--accent); margin-bottom: 40px;">
+        <div class="info-label" style="color: var(--accent);">At a glance</div>
+        <p><strong>What:</strong> A synthetic seven-amino-acid peptide derived from tuftsin, a natural fragment of the immune protein IgG, developed in Russia as a non-benzodiazepine anti-anxiety agent.</p>
+        <p><strong>Research areas:</strong> Generalized anxiety disorder · Cognitive performance under stress · Immune and cytokine balance · Neurotrophic gene expression · Benzodiazepine comparison</p>
+        <p><strong>Evidence:</strong> Russian clinical trials in anxiety disorder; extensive rodent behavioral and gene-expression studies; no independent Western Phase 3 replication.</p>
+        <p><strong>Status:</strong> Approved as a prescription medicine in Russia for generalized anxiety disorder. Not approved by the EMA, MHRA, or FDA. Sold as a research chemical elsewhere.</p>
+      </div>
+
+      <h2 id="what-is">What is Selank?</h2>
+      <p>Selank is a synthetic <strong>heptapeptide</strong> — a chain of seven amino acids — designed as a stabilized analog of the endogenous immunomodulatory tetrapeptide tuftsin. Tuftsin itself is a naturally occurring fragment of the immunoglobulin IgG, first isolated at Tufts University in the 1970s, which is why it carries the name. In the human body, free tuftsin is rapidly broken down by peptidases, and its biological half-life is extremely short.</p>
+
+      <p>To overcome this instability, researchers at the Institute of Molecular Genetics of the Russian Academy of Sciences attached a three-amino-acid extension (Pro-Gly-Pro) to the tuftsin sequence. The resulting heptapeptide is substantially more resistant to enzymatic degradation (breakdown by the body's enzymes) while retaining affinity at the relevant biological targets <a class="cite" href="#cite-1">(Myasoedov et al., 2015)</a>.</p>
+
+      <div style="background: #F5F4F1; border-radius: 8px; padding: 16px 20px; margin: 24px 0; font-size: 15px; color: var(--text-secondary);">
+        <strong style="color: var(--text);">In plain English:</strong> Selank is a stabilized version of a tiny natural peptide called tuftsin, which the body normally breaks down in seconds. Russian researchers added a short "tail" to make it survive long enough to actually do something.
+      </div>
+
+      <p>The molecule's full amino-acid sequence is:</p>
+      <div class="sequence-box">Thr-Lys-Pro-Arg-Pro-Gly-Pro</div>
+      <p>The first four residues (Thr-Lys-Pro-Arg) correspond to the tuftsin core; the trailing Pro-Gly-Pro motif is the stabilizing tripeptide extension. The molecule carries no disulfide bridges and no unusual amino acids.</p>
+
+      <h2 id="origin">Origin and development</h2>
+      <p>Selank was developed in the 1990s through a collaboration between the <strong>Institute of Molecular Genetics of the Russian Academy of Sciences</strong> and the Zakusov Institute of Pharmacology. The scientific program was led principally by Nikolai Myasoedov, whose laboratory had previously been responsible for Semax, and drew on decades of work by Ivan Ashmarin and colleagues on regulatory peptides <a class="cite" href="#cite-2">(Ashmarin et al., 2005)</a>.</p>
+
+      <p>The explicit design goal was a non-benzodiazepine anxiolytic — a compound capable of reducing anxiety without the sedation, cognitive impairment, tolerance, and dependency liability that characterize traditional GABA-A agonists. The team's interest in tuftsin as a starting point reflected the emerging view that immunological peptides and neural peptides interact far more extensively than the older compartmentalized pharmacology had suggested.</p>
+
+      <p>Selank was subsequently approved in the Russian Federation as a prescription medicine for generalized anxiety disorder, administered as an intranasal solution. It is, in other words, not merely a research chemical inside Russia — it is a registered pharmaceutical <a class="cite" href="#cite-3">(Zozulya et al., 2008)</a>.</p>
+
+      <h2 id="semax">Relationship to Semax</h2>
+      <p>Anyone reading the Russian peptide literature quickly notices that Semax and Selank are siblings. Both were developed at the same institute, both draw on the Myasoedov / Ashmarin tradition of regulatory peptide design, and both are delivered as intranasal solutions. The two compounds are frequently described in the Russian literature as <strong>complementary</strong>: Semax positioned around cognitive performance and neuroprotection, Selank positioned around anxiolysis and immunomodulation.</p>
+
+      <p>In practical terms, Russian clinical writing often presents them as a matched pair — a cognitive peptide and an anxiolytic peptide from the same scientific school. They do not share a sequence, however. Semax is a heptapeptide based on a fragment of ACTH (adrenocorticotropic hormone); Selank is a heptapeptide based on tuftsin. The overlap is programmatic, not structural.</p>
+
+      <h2 id="mechanisms">Proposed mechanisms of action</h2>
+      <p>The literature proposes several overlapping mechanisms for Selank. As with most regulatory peptides, these are described as "proposed" deliberately — no single dominant mechanism has been fully established, and the pharmacology is best understood as modulation of several interacting systems.</p>
+
+      <h3>GABAergic modulation</h3>
+      <p>A consistent finding in the Russian literature is that Selank produces anxiolytic (anxiety-reducing) effects that resemble benzodiazepines in behavioural models, but without the sedative and muscle-relaxant features characteristic of GABA-A agonists. Published work has reported interactions with the GABA-A receptor complex, though Selank does not appear to bind at the benzodiazepine site directly <a class="cite" href="#cite-4">(Semenova et al., 2007)</a>.</p>
+
+      <h3>Cytokine modulation</h3>
+      <p>Several studies from Uchakina and colleagues have reported that Selank administration modulates the balance of pro- and anti-inflammatory cytokines (immune signaling molecules), with effects on interleukin-6 (IL-6) expression among others. This immunomodulatory dimension is one of the features that sets the compound apart from conventional anxiolytics <a class="cite" href="#cite-5">(Uchakina et al., 2008)</a>.</p>
+
+      <h3>Enkephalin system interaction</h3>
+      <p>Research has reported that Selank influences the enkephalin system, including effects on enkephalin-degrading enzymes. Published work has proposed this as one of the mechanisms through which the peptide produces its anxiolytic profile <a class="cite" href="#cite-6">(Kozlovskaya et al., 2003)</a>.</p>
+
+      <h3>BDNF and NGF expression</h3>
+      <p>Gene expression studies from Kolomin and colleagues have reported that Selank administration is associated with changes in the expression of neurotrophic factors, including BDNF (brain-derived neurotrophic factor) and NGF (nerve growth factor), alongside broader shifts in the hippocampal transcriptome <a class="cite" href="#cite-7">(Kolomin et al., 2011)</a>.</p>
+
+      <h3>Immunomodulatory effects</h3>
+      <p>Tuftsin, the parent molecule, is itself a classical immunomodulator — it was originally described as a phagocytosis-stimulating factor (phagocytosis is how immune cells engulf and destroy pathogens). Selank retains some of this immunological character and has been studied in models of immune dysregulation, with published work reporting effects on leukocyte function and cytokine balance <a class="cite" href="#cite-8">(Kolomin et al., 2013)</a>.</p>
+
+      <div style="background: #F5F4F1; border-radius: 8px; padding: 16px 20px; margin: 24px 0; font-size: 15px; color: var(--text-secondary);">
+        <strong style="color: var(--text);">In plain English:</strong> Unlike a typical anti-anxiety drug, Selank appears to act on both the calming GABA system and on immune signaling at the same time. Russian researchers frame it as a "network" compound rather than a single-target drug.
+      </div>
+
+      <div class="info-box">
+        <div class="info-label">A note on mechanism</div>
+        <p>Russian regulatory peptide research frequently treats mechanism as emergent rather than reductive — the compounds are described as modulating networks of interacting systems, not as ligands of a single receptor. Readers coming from a Western "one molecule, one target" framing will find the literature harder to parse. "Selank acts through the GABA system" is an oversimplification; the data is more properly read as "Selank influences behaviour in GABA-sensitive models, with measurable effects on several interacting systems."</p>
+      </div>
+
+      <h2 id="research-areas">Key research areas</h2>
+
+      <h3>Generalized anxiety disorder</h3>
+      <p>The clinical file supporting Selank's registration as a medicine in Russia rests principally on human trials in patients with generalized anxiety disorder (GAD). Zozulya and colleagues published a clinical study reporting anxiolytic effects in GAD patients, with a profile characterized as comparable to benzodiazepines in terms of anxiolysis, but without sedation, cognitive dulling, or evidence of dependence on cessation <a class="cite" href="#cite-9">(Zozulya et al., 2008)</a>.</p>
+
+      <p>These trials are genuinely human clinical data — a rarity in the research peptide space — but the publications are primarily in Russian-language journals, and independent Western replication has not occurred.</p>
+
+      <div style="background: #F5F4F1; border-radius: 8px; padding: 16px 20px; margin: 24px 0; font-size: 15px; color: var(--text-secondary);">
+        <strong style="color: var(--text);">In plain English:</strong> The core claim is that Selank works for anxiety about as well as a benzodiazepine, but without the drowsiness and dependency. The evidence for that claim is real but almost entirely Russian.
+      </div>
+
+      <h3>Cognitive performance under stress</h3>
+      <p>Research from the Myasoedov group has examined effects on cognitive function under conditions of psychological stress, reporting that Selank administration was associated with preservation of attention, memory, and decision-making performance in stress paradigms <a class="cite" href="#cite-10">(Semenova et al., 2009)</a>.</p>
+
+      <h3>Gene expression studies</h3>
+      <p>Kolomin and colleagues have published a series of papers examining the transcriptomic footprint of Selank administration in rat brain tissue. These studies report broad and coordinated shifts in gene expression — including genes involved in neurotransmission, plasticity, and inflammation — rather than isolated single-target effects <a class="cite" href="#cite-11">(Kolomin et al., 2010)</a>.</p>
+
+      <h3>Cytokine balance research</h3>
+      <p>Uchakina and colleagues have published studies examining cytokine modulation under Selank administration, reporting effects on the balance of Th1 / Th2 cytokines and on interleukin expression profiles <a class="cite" href="#cite-12">(Uchakina et al., 2008)</a>.</p>
+
+      <h3>Comparison to benzodiazepines</h3>
+      <p>A distinctive theme in the Selank literature is the comparison to benzodiazepines. Published work reports that in behavioural anxiety models Selank produces comparable effect sizes, but without the sedation, motor impairment, or discontinuation phenomena that complicate benzodiazepine use <a class="cite" href="#cite-13">(Kozlovskaya et al., 2003)</a>.</p>
+
+      <h2 id="clinical-status">Clinical status in Russia</h2>
+      <p>Selank is registered in the Russian Federation as a prescription medicine under the brand <strong>Selank 0.15% nasal spray</strong>, with generalized anxiety disorder as an approved indication. Registration dates to 2009, and the compound has been on the Russian pharmaceutical market since then <a class="cite" href="#cite-14">(Myasoedov et al., 2015)</a>.</p>
+
+      <p>This is a meaningful distinction. Most of the compounds discussed in the peptide research community have no approved medical status anywhere. Selank does — in one jurisdiction, with one indication, under one regulatory framework.</p>
+
+      <h2 id="regulatory">Regulatory status outside Russia</h2>
+      <p>Outside the Russian Federation, Selank is <strong>not approved</strong> as a medicine by the European Medicines Agency, the MHRA in the United Kingdom, the FDA in the United States, or any comparable regulator. It has no authorized therapeutic indication in those jurisdictions. Legally, in markets where it is available at all, it circulates as a research chemical for laboratory and in-vitro research purposes only.</p>
+
+      <p>Researchers in the English-speaking scientific community who have followed Selank tend to note the unusual situation in which a compound is simultaneously a registered pharmaceutical in one country and an unregistered research chemical everywhere else.</p>
+
+      <h2 id="evidence">Current state of evidence</h2>
+      <p>A sober view of the Selank literature must distinguish what has been <em>studied</em> from what has been <em>established</em> in the English-language peer-reviewed record.</p>
+
+      <ul>
+        <li><strong>Substantial Russian human clinical data.</strong> Russian clinical trials supporting the generalized anxiety disorder indication are real and publicly documented, but largely in Russian-language journals.</li>
+        <li><strong>Limited Western peer-reviewed translation.</strong> A number of mechanistic and preclinical papers have appeared in English-language journals, but the full clinical file has not been systematically translated or replicated.</li>
+        <li><strong>Preclinical rodent research is extensive.</strong> Behavioural, immunological, and gene-expression studies in rats from the Myasoedov / Kolomin school form a coherent body of work.</li>
+        <li><strong>No regulatory approval outside Russia.</strong> Selank has no authorized therapeutic indication in the EU, UK, or US.</li>
+        <li><strong>Research chemical status outside Russia.</strong> In other markets it is sold strictly as a research chemical for in-vitro and laboratory research purposes only.</li>
+      </ul>
+
+      <h2 id="does-not-show">What the research does not show</h2>
+      <p>Being explicit about what is <em>not</em> in the literature is as important as cataloguing what is.</p>
+
+      <ul>
+        <li><strong>No Western-run randomized controlled trials.</strong> The human clinical evidence base is Russian, not replicated by independent Western groups.</li>
+        <li><strong>No approved indication outside generalized anxiety disorder.</strong> Even in Russia, the registered indication is narrow; claims beyond GAD are not supported by the regulatory file.</li>
+        <li><strong>Long-term safety outside the registered Russian use is uncharacterized.</strong> Years-long follow-up data for populations outside the approved Russian indication does not exist in the peer-reviewed literature.</li>
+        <li><strong>Mechanism is not fully understood.</strong> The proposed mechanisms are hypotheses with varying levels of experimental support.</li>
+        <li><strong>Optimal non-Russian dosing is not established.</strong> The dose-finding work behind the registered Russian formulation does not automatically generalize.</li>
+      </ul>
+
+      <h2 id="delivery">Delivery format notes</h2>
+      <p>The registered Russian pharmaceutical formulation is an intranasal spray at 0.15% concentration. The intranasal route is a deliberate design choice: small regulatory peptides are poorly absorbed orally and are frequently degraded in systemic circulation, but the nasal mucosa offers a route by which small amounts of peptide can reach the central nervous system with relatively short transit times <a class="cite" href="#cite-15">(Gusev et al., 2018)</a>.</p>
+
+      <p>In the research peptide market outside Russia, lyophilized Selank is available as a laboratory reagent. Published literature on stability and handling describes standard peptide practice: freeze-dried storage, reconstitution in bacteriostatic or sterile water for research work, and refrigerated handling of solutions.</p>
+
+      <div class="info-box">
+        <div class="info-label">Framing</div>
+        <p>This article is a summary of published research. At no point should it be read as instruction for human use. Outside the Russian Federation, Selank is not an approved medicine. There is no established Western human protocol in the peer-reviewed literature. Even the Russian registered use is narrow in indication, population, and dose.</p>
+      </div>
+
+    </article>
+  </div>
+
+  <!-- CITATIONS -->
+  <section class="citations-section" id="citations">
+    <div class="citations-inner">
+      <h2>Cited studies</h2>
+      <p class="sub">Selected peer-reviewed publications referenced in this article. Listed in approximate citation order.</p>
+      <ol class="citation-list">
+        <li id="cite-1">Myasoedov, N. F., Andreeva, L. A., Grivennikov, I. A., Dolotov, O. V., Kolomin, T. A., Shadrina, M. I., et al. (2015). Regulatory peptides in the treatment of anxiety and neurodegenerative disorders. <em>Herald of the Russian Academy of Sciences</em>, 85(2), 142–151.</li>
+        <li id="cite-2">Ashmarin, I. P., Nezavibatko, V. N., Myasoedov, N. F., Kamensky, A. A., Grivennikov, I. A., Ponomareva-Stepnaya, M. A., et al. (2005). Nootropic analog of ACTH(4–10) Semax: 15 years of experience in development and clinical application. <em>Journal of Russian Physiology</em>, 82(8), 420–431.</li>
+        <li id="cite-3">Zozulya, A. A., Neznamov, G. G., Siuniakov, T. S., Kost, N. V., Gabaeva, M. V., Sokolov, O. Y., et al. (2008). Efficacy and possible mechanisms of action of a new peptide anxiolytic drug Selank in the therapy of generalized anxiety disorders and neurasthenia. <em>Bulletin of Experimental Biology and Medicine</em>, 146(6), 731–733.</li>
+        <li id="cite-4">Semenova, T. P., Kozlovskaya, M. M., Zuikov, A. V., Kozlovskii, I. I., Zakharova, N. M., & Andreeva, L. A. (2007). Behavioral effects of peptide Selank in rats under conditions of emotional stress. <em>Eksperimentalnaia i Klinicheskaia Farmakologiia</em>, 70(4), 8–11.</li>
+        <li id="cite-5">Uchakina, O. N., Uchakin, P. N., Myasoedov, N. F., Andreeva, L. A., Shcherbenko, V. E., Mezentseva, M. V., et al. (2008). Immunomodulatory effects of Selank in patients with anxiety-asthenic disorders. <em>Zhurnal Nevrologii i Psikhiatrii imeni S.S. Korsakova</em>, 108(5), 71–75.</li>
+        <li id="cite-6">Kozlovskaya, M. M., Kozlovskii, I. I., Val'dman, E. A., & Seredenin, S. B. (2003). Selank and short peptides of the tuftsin family in the regulation of adaptive behavior in stress. <em>Neuroscience and Behavioral Physiology</em>, 33(8), 775–781.</li>
+        <li id="cite-7">Kolomin, T. A., Shadrina, M. I., Agniullin, Y. V., Shram, S. I., Slominskii, P. A., Limborskaia, S. A., & Myasoedov, N. F. (2011). Dynamics of expression of genes involved in regulation of inflammation and neurogenesis in rat hippocampus after Selank administration. <em>Doklady Biological Sciences</em>, 439(1), 200–202.</li>
+        <li id="cite-8">Kolomin, T. A., Shadrina, M. I., Slominskii, P. A., Limborskaia, S. A., & Myasoedov, N. F. (2013). A new generation of drugs: synthetic peptides based on natural regulatory peptides. <em>Neuroscience and Medicine</em>, 4(4), 223–252.</li>
+        <li id="cite-9">Zozulya, A. A., Neznamov, G. G., Siuniakov, T. S., & Seredenin, S. B. (2008). Results of a clinical study of the new peptide anxiolytic drug Selank in patients with anxiety disorders. <em>Eksperimentalnaia i Klinicheskaia Farmakologiia</em>, 71(4), 10–16.</li>
+        <li id="cite-10">Semenova, T. P., Medvinskaya, N. I., Kozlovskaya, M. M., Bobkova, N. V., Nesterova, I. V., & Zakharova, L. A. (2009). Neuroprotective effect of peptides Semax and Selank in experimental models of neurodegeneration. <em>Neuroscience and Behavioral Physiology</em>, 39(8), 755–761.</li>
+        <li id="cite-11">Kolomin, T. A., Agapova, T. Y., Agniullin, Y. V., Shram, S. I., Shadrina, M. I., Slominskii, P. A., & Myasoedov, N. F. (2010). Effect of Selank on expression of genes in rat brain. <em>Doklady Biological Sciences</em>, 430(1), 1–3.</li>
+        <li id="cite-12">Uchakina, O. N., Uchakin, P. N., Miasoedov, N. F., & Andreeva, L. A. (2008). Cytokine profile changes in patients with anxiety-asthenic disorders in response to Selank therapy. <em>Cytokines and Inflammation</em>, 7(4), 57–60.</li>
+        <li id="cite-13">Kozlovskaya, M. M., Kozlovskii, I. I., Val'dman, E. A., & Seredenin, S. B. (2003). Anxiolytic and antidepressant-like effects of Selank in comparison with medazepam in behavioral tests. <em>Bulletin of Experimental Biology and Medicine</em>, 136(5), 457–460.</li>
+        <li id="cite-14">Myasoedov, N. F., Skvortsova, V. I., Nasonov, E. L., Zhuravleva, E. Y., Grivennikov, I. A., Arsen'eva, E. L., & Sukhanov, I. I. (2015). Investigation of the effectiveness of Selank and Semax in clinical neurology. <em>Annals of Clinical and Experimental Neurology</em>, 9(2), 33–40.</li>
+        <li id="cite-15">Gusev, E. I., Skvortsova, V. I., Miasoedov, N. F., Nezavibat'ko, V. N., Zhuravleva, E. Y., & Vanichkin, A. V. (2018). Neuroprotective effects of regulatory peptides in cerebral ischemia. <em>Zhurnal Nevrologii i Psikhiatrii imeni S.S. Korsakova</em>, 118(3), 85–92.</li>
+        <li>Inozemtseva, L. S., Karpenko, E. A., Dolotov, O. V., Levitskaya, N. G., Kamensky, A. A., Andreeva, L. A., & Grivennikov, I. A. (2007). Intranasal administration of the peptide Selank regulates BDNF expression in the rat hippocampus in vivo. <em>Doklady Biological Sciences</em>, 421(1), 241–243.</li>
+        <li>Kolomin, T. A., Shadrina, M. I., Agniullin, Y. V., Shram, S. I., Slominskii, P. A., Limborskaia, S. A., & Myasoedov, N. F. (2012). Transcriptome analysis of rat hippocampus after Selank administration. <em>Molecular Genetics, Microbiology and Virology</em>, 27(2), 78–83.</li>
+        <li>Vyunova, T. V., Andreeva, L. A., Shevchenko, K. V., Shevchenko, V. P., & Myasoedov, N. F. (2018). Peptide-based anxiolytics: the molecular aspects of heptapeptide Selank biological activity. <em>Protein and Peptide Letters</em>, 25(10), 914–923.</li>
+        <li>Volkova, A., Shadrina, M., Kolomin, T., Andreeva, L., Limborska, S., Myasoedov, N., & Slominsky, P. (2016). Selank administration affects the expression of some genes involved in GABAergic neurotransmission. <em>Frontiers in Pharmacology</em>, 7, 31.</li>
+        <li>Medvedev, V. E., Tereshchenko, O. N., Israelyan, A. Y., Chobanu, I. K., Kost, N. V., Sokolov, O. Y., & Myasoedov, N. F. (2015). Optimization of therapy for anxiety disorders with the peptide anxiolytic Selank. <em>Zhurnal Nevrologii i Psikhiatrii imeni S.S. Korsakova</em>, 115(6), 33–40.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- RELATED -->
+  <section class="related-section">
+    <div class="related-inner">
+      <h2>Related compounds</h2>
+      <div class="related-grid">
+        <a class="related-card" href="research-semax.html">
+          <span class="category-tag">Neuropeptide</span>
+          <h3>Semax: The Russian Cognitive Peptide</h3>
+          <p>The ACTH-derived heptapeptide developed alongside Selank at the Institute of Molecular Genetics, studied for cognitive and neuroprotective properties.</p>
+          <span class="read-link">Read the research</span>
+        </a>
+        <a class="related-card" href="research-bpc-157.html">
+          <span class="category-tag">Gastric Pentadecapeptide</span>
+          <h3>BPC-157: The Complete Research Overview</h3>
+          <p>A plain-English review of published research on Body Protection Compound-157, its proposed mechanisms, and the current state of evidence.</p>
+          <span class="read-link">Read the research</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEGAL DISCLAIMER -->
+  <section class="legal-section">
+    <div class="legal-inner">
+      <div class="legal-label">Legal Disclaimer</div>
+      <p>This article summarizes published research on Selank. It is not medical advice, diagnosis, treatment, or a recommendation for human use. Outside the Russian Federation, Selank is not approved as a medicine in the European Union, United Kingdom, United States, or any major regulatory jurisdiction, and the narrow Russian registration does not constitute a general medical recommendation. Content is for educational and research purposes only. The compound is sold strictly as a research chemical for laboratory and in-vitro research. Purchasers must be qualified researchers aged 18 or over. Consult a qualified healthcare provider for any medical questions. Lipa is a trade name of Go Exe B.V., registered in the Netherlands.</p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section" id="notify">
+    <div class="cta-inner">
+      <div class="section-eyebrow">Stay Informed</div>
+      <div class="section-title">New research, delivered quietly.</div>
+      <div class="section-sub">Join the waitlist. We'll email you when new compound overviews are published and when the store opens across Europe.</div>
+      <form class="cta-form" id="waitlist-form" onsubmit="handleWaitlist(event)">
+        <input class="cta-input" type="email" placeholder="Your email" required id="waitlist-email">
+        <button class="cta-submit" type="submit">Join Waitlist</button>
+      </form>
+      <div class="cta-fine" id="waitlist-msg">No spam. Unsubscribe anytime.</div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-left">&copy; 2026 Lipa Health. All rights reserved.</div>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/methodology.html">Methodology</a>
+      <a href="/research.html">Research</a>
+      <a href="/privacy.html">Privacy</a>
+    </div>
+  </footer>
+
+  <script>
+    // TOC active highlighting via IntersectionObserver
+    const tocLinks = document.querySelectorAll('.toc-list a');
+    const sections = Array.from(tocLinks).map(link => {
+      const id = link.getAttribute('href').slice(1);
+      return document.getElementById(id);
+    }).filter(Boolean);
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          tocLinks.forEach(l => l.classList.remove('active'));
+          const match = document.querySelector('.toc-list a[href="#' + id + '"]');
+          if (match) match.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+
+    // Supabase waitlist
+    const SUPABASE_URL = 'https://dqihkpicbswxzwkoxwnb.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRxaWhrcGljYnN3eHp3a294d25iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM5NjczODcsImV4cCI6MjA1OTU0MzM4N30.SifN_Rkhi5BwGXSfJz4jiM4VBzMdJPYE_6JjjC2S4RA';
+
+    async function handleWaitlist(e) {
+      e.preventDefault();
+      const email = document.getElementById('waitlist-email').value;
+      try {
+        await fetch(SUPABASE_URL + '/rest/v1/waitlist', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_ANON,
+            'Authorization': 'Bearer ' + SUPABASE_ANON,
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({ email: email, product: 'research-selank' })
+        });
+      } catch (err) { /* silent */ }
+      document.getElementById('waitlist-email').value = '';
+      document.getElementById('waitlist-msg').textContent = "You're on the list. We'll be in touch.";
+      document.getElementById('waitlist-msg').style.color = 'rgba(255,255,255,0.7)';
+    }
+  </script>
+
+</body>
+</html>

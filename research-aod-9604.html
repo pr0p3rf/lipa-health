@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google" content="notranslate">
+  <title>AOD-9604: The Research Behind the HGH C-Terminal Fragment | Lipa Research Library</title>
+  <meta name="description" content="A plain-English review of published research on AOD-9604, a modified 15-amino-acid fragment of human growth hormone originally developed as an investigational weight loss compound. 18 cited studies.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'><circle cx='14' cy='14' r='13' fill='none' stroke='%231B6B4A' stroke-width='1.5'/><path d='M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z' fill='%231B6B4A' opacity='0.3' stroke='%231B6B4A' stroke-width='1'/></svg>">
+  <meta property="og:title" content="AOD-9604: The Research Behind the HGH C-Terminal Fragment | Lipa">
+  <meta property="og:description" content="A plain-English review of published research on AOD-9604, a modified fragment of human growth hormone. Cited studies. Current state of evidence.">
+  <meta property="og:type" content="article">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FAFAF8;
+      --white: #FFFFFF;
+      --text: #1A1A1A;
+      --text-secondary: #6B6B6B;
+      --text-tertiary: #999999;
+      --accent: #1B6B4A;
+      --accent-light: #E8F5EE;
+      --accent-hover: #155A3D;
+      --border: rgba(0,0,0,0.06);
+      --card-bg: #FFFFFF;
+      --section-alt: #F5F4F1;
+      --warm: #F2EDE8;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    body { overflow-x: hidden; background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; line-height: 1.6; }
+
+    /* ---- NAV ---- */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      padding: 16px 48px;
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(250,250,248,0.9);
+      backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-size: 17px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--text); text-decoration: none;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .logo-icon { width: 28px; height: 28px; }
+    .nav-links { display: flex; gap: 32px; align-items: center; }
+    .nav-links a {
+      font-size: 13px; font-weight: 500; color: var(--text-secondary);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--accent); font-weight: 600; }
+    .nav-cta {
+      font-size: 13px; font-weight: 600; color: white;
+      background: var(--accent); padding: 8px 20px;
+      border-radius: 100px; text-decoration: none;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--accent-hover); }
+
+    /* ---- HERO ---- */
+    .hero-wrapper {
+      background: linear-gradient(165deg, #F5F0EB 0%, #FAFAF8 40%, #EEF2EE 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-wrapper::before {
+      content: '';
+      position: absolute;
+      top: -30%; right: -20%;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(27,107,74,0.06) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero-wrapper::after {
+      content: '';
+      position: absolute;
+      bottom: -20%; left: -10%;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(27,107,74,0.04) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero {
+      padding: 140px 48px 90px;
+      max-width: 820px; margin: 0 auto;
+      position: relative; z-index: 1;
+    }
+    .breadcrumb {
+      font-size: 12px; font-weight: 500;
+      color: var(--text-tertiary);
+      margin-bottom: 24px;
+      letter-spacing: 0.3px;
+    }
+    .breadcrumb a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .breadcrumb a:hover { color: var(--accent); }
+    .breadcrumb .sep { margin: 0 10px; color: var(--text-tertiary); }
+    .hero-tag {
+      display: inline-block;
+      font-size: 10px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      background: var(--accent-light);
+      padding: 5px 14px; border-radius: 100px;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(38px, 5.5vw, 62px);
+      font-weight: 400; line-height: 1.08;
+      margin-bottom: 22px; letter-spacing: -1px;
+    }
+    .hero-sub {
+      font-size: 19px; line-height: 1.6;
+      color: var(--text-secondary);
+      margin-bottom: 36px;
+      font-weight: 300;
+      max-width: 680px;
+    }
+    .hero-meta {
+      display: flex; align-items: center; gap: 16px;
+      font-size: 13px; color: var(--text-tertiary);
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .hero-meta span { display: inline-flex; align-items: center; gap: 6px; }
+    .hero-meta .dot { width: 3px; height: 3px; background: var(--text-tertiary); border-radius: 50%; }
+
+    /* ---- ARTICLE LAYOUT ---- */
+    .article-wrapper {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 80px 48px 60px;
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+    .toc {
+      position: sticky; top: 100px;
+      font-size: 13px;
+    }
+    .toc-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 20px;
+    }
+    .toc-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .toc-list a {
+      font-size: 13px; font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      line-height: 1.45;
+      display: block;
+      padding-left: 12px;
+      border-left: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .toc-list a:hover,
+    .toc-list a.active {
+      color: var(--accent);
+      border-left-color: var(--accent);
+    }
+
+    /* ---- ARTICLE BODY ---- */
+    .article-body {
+      max-width: 680px;
+      font-size: 17px;
+      line-height: 1.85;
+      color: var(--text);
+    }
+    .article-body h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 38px;
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.6px;
+      margin-top: 72px;
+      margin-bottom: 24px;
+      color: var(--text);
+    }
+    .article-body h2:first-child { margin-top: 0; }
+    .article-body h3 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1.3;
+      letter-spacing: -0.2px;
+      margin-top: 44px;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+    .article-body p {
+      margin-bottom: 22px;
+      color: var(--text-secondary);
+    }
+    .article-body p strong { color: var(--text); font-weight: 600; }
+    .article-body ul {
+      list-style: none;
+      margin-bottom: 28px;
+      padding-left: 0;
+    }
+    .article-body ul li {
+      position: relative;
+      padding-left: 22px;
+      margin-bottom: 12px;
+      color: var(--text-secondary);
+    }
+    .article-body ul li::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 14px;
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      opacity: 0.6;
+    }
+    .article-body ul li strong { color: var(--text); font-weight: 600; }
+
+    .cite {
+      font-size: 13px;
+      color: var(--accent);
+      font-weight: 500;
+      text-decoration: none;
+    }
+    .cite:hover { text-decoration: underline; }
+
+    .lede {
+      font-family: 'Instrument Serif', serif;
+      font-size: 22px;
+      line-height: 1.5;
+      color: var(--text);
+      font-style: italic;
+      margin-bottom: 40px;
+      padding-left: 24px;
+      border-left: 3px solid var(--accent);
+    }
+
+    .info-box {
+      background: var(--section-alt);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin: 32px 0;
+    }
+    .info-box .info-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .info-box p { margin-bottom: 0; font-size: 15px; }
+    .info-box p + p { margin-top: 14px; }
+
+    .sequence-box {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 24px 0;
+      font-family: 'SF Mono', Menlo, Monaco, Consolas, monospace;
+      font-size: 14px;
+      color: var(--text);
+      word-break: break-word;
+    }
+
+    /* ---- CITATIONS ---- */
+    .citations-section {
+      background: var(--section-alt);
+      padding: 100px 48px;
+      border-top: 1px solid var(--border);
+    }
+    .citations-inner { max-width: 820px; margin: 0 auto; }
+    .citations-section h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 38px;
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.6px;
+      margin-bottom: 12px;
+    }
+    .citations-section .sub {
+      font-size: 15px; color: var(--text-secondary);
+      margin-bottom: 40px;
+    }
+    .citation-list {
+      list-style: none;
+      counter-reset: cite;
+    }
+    .citation-list li {
+      counter-increment: cite;
+      position: relative;
+      padding: 18px 0 18px 44px;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+    }
+    .citation-list li::before {
+      content: counter(cite);
+      position: absolute;
+      left: 0; top: 18px;
+      font-family: 'Instrument Serif', serif;
+      font-size: 18px;
+      color: var(--accent);
+      font-weight: 400;
+      width: 28px;
+    }
+    .citation-list li em { color: var(--text); font-style: italic; }
+
+    /* ---- RELATED ---- */
+    .related-section {
+      background: var(--bg);
+      padding: 100px 48px;
+    }
+    .related-inner { max-width: 1100px; margin: 0 auto; }
+    .related-section h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 32px;
+      font-weight: 400;
+      margin-bottom: 40px;
+      letter-spacing: -0.4px;
+    }
+    .related-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .related-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      text-decoration: none;
+      color: inherit;
+      opacity: 0.78;
+    }
+    .related-card .category-tag {
+      display: inline-block;
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--accent);
+      background: var(--accent-light);
+      padding: 4px 12px; border-radius: 100px;
+      margin-bottom: 18px;
+    }
+    .related-card h3 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 22px; font-weight: 400;
+      line-height: 1.25;
+      margin-bottom: 12px;
+    }
+    .related-card p {
+      font-size: 14px; color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .related-card .read-link {
+      font-size: 13px; font-weight: 600; color: var(--text-tertiary);
+    }
+
+    /* ---- LEGAL DISCLAIMER ---- */
+    .legal-section {
+      background: var(--text);
+      color: rgba(255,255,255,0.72);
+      padding: 80px 48px;
+    }
+    .legal-inner {
+      max-width: 820px; margin: 0 auto;
+    }
+    .legal-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: rgba(255,255,255,0.4);
+      margin-bottom: 20px;
+    }
+    .legal-section p {
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    /* ---- CTA ---- */
+    .cta-section {
+      background: linear-gradient(160deg, #1A1A1A 0%, #1B3A2A 50%, #1A2A1F 100%);
+      color: white;
+      text-align: center;
+      padding: 100px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: -50%; right: -20%;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(27,107,74,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .cta-inner { max-width: 640px; margin: 0 auto; position: relative; z-index: 1; }
+    .section-eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 400; line-height: 1.2;
+      margin-bottom: 16px; letter-spacing: -0.5px;
+      color: white;
+    }
+    .section-sub {
+      font-size: 16px; line-height: 1.7;
+      color: rgba(255,255,255,0.6);
+      max-width: 500px; margin: 0 auto 40px;
+    }
+    .cta-form {
+      display: flex; gap: 12px;
+      max-width: 440px; margin: 0 auto;
+    }
+    .cta-input {
+      flex: 1; padding: 14px 20px;
+      font-size: 15px; font-family: inherit;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.08);
+      color: white; border-radius: 100px;
+      outline: none;
+    }
+    .cta-input::placeholder { color: rgba(255,255,255,0.35); }
+    .cta-input:focus { border-color: rgba(255,255,255,0.4); }
+    .cta-submit {
+      padding: 14px 28px; font-size: 15px; font-weight: 600;
+      font-family: inherit; background: white; color: var(--text);
+      border: none; border-radius: 100px; cursor: pointer;
+      white-space: nowrap;
+    }
+    .cta-submit:hover { opacity: 0.9; }
+    .cta-fine { font-size: 12px; color: rgba(255,255,255,0.35); margin-top: 16px; }
+
+    /* ---- FOOTER ---- */
+    footer {
+      padding: 48px; border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-left { font-size: 12px; color: var(--text-tertiary); }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a {
+      font-size: 12px; color: var(--text-tertiary);
+      text-decoration: none;
+    }
+    .footer-links a:hover { color: var(--text-secondary); }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 900px) {
+      nav { padding: 14px 20px; }
+      .nav-links { display: none; }
+      .hero { padding: 120px 20px 60px; }
+      .article-wrapper {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding: 60px 20px 40px;
+      }
+      .toc { position: static; }
+      .article-body { max-width: 100%; font-size: 16px; }
+      .article-body h2 { font-size: 30px; margin-top: 56px; }
+      .article-body h3 { font-size: 21px; margin-top: 36px; }
+      .citations-section, .related-section, .legal-section, .cta-section { padding: 70px 20px; }
+      .related-grid { grid-template-columns: 1fr; }
+      .citations-section h2 { font-size: 30px; }
+      footer { flex-direction: column; gap: 16px; text-align: center; padding: 32px 20px; }
+    }
+    @media (max-width: 500px) {
+      .hero h1 { font-size: 34px; }
+      .hero-sub { font-size: 17px; }
+      .cta-form { flex-direction: column; }
+      .lede { font-size: 19px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="/" class="logo">
+      <svg class="logo-icon" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="14" cy="14" r="13" stroke="#1B6B4A" stroke-width="1.5"/>
+        <path d="M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z" fill="#1B6B4A" opacity="0.15"/>
+        <path d="M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z" stroke="#1B6B4A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="14" y1="11" x2="14" y2="21" stroke="#1B6B4A" stroke-width="0.8"/>
+      </svg>
+      Lipa
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/methodology.html">Our methodology</a>
+      <a href="/research.html" class="active">Research</a>
+    </div>
+    <a href="/#join" class="nav-cta">Join the waitlist</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero-wrapper">
+    <section class="hero">
+      <div class="breadcrumb">
+        <a href="/research.html">Research Library</a>
+        <span class="sep">/</span>
+        <span>AOD-9604</span>
+      </div>
+      <span class="hero-tag">HGH Fragment 177-191</span>
+      <h1>AOD-9604: The Research Behind the HGH C-Terminal Fragment</h1>
+      <p class="hero-sub">A plain-English review of published research on AOD-9604, a modified 15-amino-acid fragment of human growth hormone (residues 177-191), originally developed as an investigational weight loss compound.</p>
+      <div class="hero-meta">
+        <span>11 min read</span>
+        <span class="dot"></span>
+        <span>Updated April 2026</span>
+        <span class="dot"></span>
+        <span>18 cited studies</span>
+      </div>
+    </section>
+  </div>
+
+  <!-- ARTICLE -->
+  <div class="article-wrapper">
+
+    <!-- TOC -->
+    <aside class="toc">
+      <div class="toc-label">Contents</div>
+      <ul class="toc-list">
+        <li><a href="#what-is">What is AOD-9604?</a></li>
+        <li><a href="#origin">Origin and development</a></li>
+        <li><a href="#mechanisms">Proposed mechanisms</a></li>
+        <li><a href="#research-areas">Key research areas</a></li>
+        <li><a href="#phase2b">The Phase 2b result</a></li>
+        <li><a href="#evidence">Current state of evidence</a></li>
+        <li><a href="#regulatory">Regulatory status and WADA</a></li>
+        <li><a href="#does-not-show">What the research does not show</a></li>
+        <li><a href="#assessment">An honest assessment</a></li>
+        <li><a href="#citations">Cited studies</a></li>
+      </ul>
+    </aside>
+
+    <!-- BODY -->
+    <article class="article-body">
+
+      <p class="lede">AOD-9604 is one of the more carefully-designed peptides in the research literature — and also one of the clearest examples of a compound whose preclinical promise did not survive contact with a properly powered human trial.</p>
+
+      <div class="info-box" style="background: var(--accent-light); border-left: 3px solid var(--accent); margin-bottom: 40px;">
+        <div class="info-label" style="color: var(--accent);">At a glance</div>
+        <p><strong>What:</strong> A modified 16-amino-acid fragment of human growth hormone (residues 177-191 plus an added tyrosine), designed to isolate hGH's fat-mobilizing activity from its growth-promoting activity.</p>
+        <p><strong>Research areas:</strong> Lipolysis (fat breakdown) · Obesity drug development · Cartilage and chondrocyte biology · Growth hormone structure-function</p>
+        <p><strong>Evidence:</strong> Supportive preclinical data in rodents, acceptable Phase 1 safety — but the pivotal Phase 2b obesity trial failed to meet its primary weight-loss endpoint.</p>
+        <p><strong>Status:</strong> Not approved as a medicine anywhere. GRAS food-ingredient status in the US is a food-safety classification, not a therapeutic endorsement. WADA-prohibited.</p>
+      </div>
+
+      <h2 id="what-is">What is AOD-9604?</h2>
+      <p>AOD-9604 — "<strong>Anti-Obesity Drug 9604</strong>" — is a synthetic 15-amino-acid peptide corresponding to the <strong>C-terminal fragment of human growth hormone</strong>, specifically residues 177 to 191 of the hGH sequence, with a tyrosine residue added at the N-terminus to improve stability. The sequence is:</p>
+      <div class="sequence-box">Tyr-Leu-Arg-Ile-Val-Gln-Cys-Arg-Ser-Val-Glu-Gly-Ser-Cys-Gly-Phe</div>
+      <p>The rationale behind the molecule is elegant. Full-length human growth hormone has multiple biological activities, including effects on growth, IGF-1 production (IGF-1 is a hormone that mediates most of hGH's growth effects), and — separately — a lipolytic (fat-mobilizing) activity that appears to be located in the C-terminal region (the "tail end") of the protein. AOD-9604 was designed to retain the lipolytic region while removing the growth-promoting and IGF-1-stimulating regions, in the hope of producing a selective fat-loss compound without the metabolic side-effects of whole hGH <a class="cite" href="#cite-1">(Ng et al., 2000)</a>.</p>
+
+      <h2 id="origin">Origin and development</h2>
+      <p>AOD-9604 emerged from the laboratory of <strong>Frank Ng</strong> and colleagues at Monash University in Australia in the 1990s, building on earlier work on the lipolytic properties of the hGH C-terminal region. The compound was subsequently licensed to <strong>Metabolic Pharmaceuticals Ltd</strong>, an Australian biotechnology company that advanced it into human clinical trials as an investigational obesity therapeutic <a class="cite" href="#cite-2">(Heffernan et al., 2001)</a>.</p>
+
+      <p>Through the early 2000s, AOD-9604 moved through a typical early-stage clinical development pathway: Phase 1 safety studies, then Phase 2 efficacy studies. For a time, the program was one of the more visible obesity peptide candidates in the Australian biotech sector. As we will see, the later-stage results did not match the expectations set by the preclinical data.</p>
+
+      <h2 id="mechanisms">Proposed mechanisms of action</h2>
+
+      <h3>Lipolysis without hGH-like growth effects</h3>
+      <p>The central mechanistic claim is that AOD-9604 activates lipolytic pathways in adipose tissue without triggering the insulin-antagonizing or growth-promoting activities of whole hGH. Published work from Ng and colleagues reported that the fragment stimulated fat breakdown in isolated rat adipocytes and in whole-animal models while failing to produce the expected rise in IGF-1 that accompanies full hGH administration <a class="cite" href="#cite-3">(Ng et al., 2000)</a>.</p>
+
+      <h3>β3-adrenergic receptor involvement</h3>
+      <p>Some mechanistic studies have proposed that the lipolytic action of AOD-9604 depends, at least in part, on signaling through the <strong>β3-adrenergic receptor</strong> pathway in adipocytes (fat cells) — the same receptor system targeted by several investigational fat-loss compounds in the 1990s <a class="cite" href="#cite-4">(Stier et al., 2013)</a>. The authors proposed that this might explain the selective effect on fat tissue.</p>
+
+      <h3>Mitochondrial fat oxidation</h3>
+      <p>Other publications have described effects on fat oxidation in mitochondrial preparations, linking the molecule's activity to increased breakdown of stored triglycerides rather than mere redistribution <a class="cite" href="#cite-5">(Heffernan et al., 2000)</a>.</p>
+
+      <h3>No IGF-1 pathway stimulation</h3>
+      <p>A consistent finding across the early literature is that AOD-9604 does <em>not</em> appear to stimulate the IGF-1 axis in the way full-length hGH does. This was the original design goal, and preclinical studies supported it. In principle, this is what makes the molecule interesting: the possibility of a growth-hormone-derived lipolytic effect without the insulin-resistance and growth-promotion issues that complicate full hGH administration <a class="cite" href="#cite-6">(Ng et al., 2000)</a>.</p>
+
+      <div class="info-box">
+        <div class="info-label">A note on mechanism</div>
+        <p>The mechanistic story for AOD-9604 is internally coherent and supported by published in-vitro and rodent data. The question — as with many investigational peptides — is whether the mechanism translates into measurable clinical outcomes in humans. For AOD-9604, the answer from the Phase 2b data is less favorable than the mechanism alone would suggest.</p>
+      </div>
+
+      <h2 id="research-areas">Key research areas</h2>
+
+      <h3>Preclinical lipolysis studies</h3>
+      <p>The preclinical literature is where AOD-9604 looks strongest. Published studies reported stimulation of lipolysis in rat adipocyte preparations, reduced body fat accumulation in obese mouse models fed high-fat diets, and preserved lean mass — a favorable combination on paper <a class="cite" href="#cite-7">(Ng et al., 2000)</a>. The effect sizes in these studies were large enough to justify clinical development.</p>
+
+      <h3>Phase 1 human safety trials</h3>
+      <p>Heffernan and colleagues published Phase 1 data describing the pharmacokinetics and short-term safety profile of AOD-9604 in healthy volunteers. The compound was reported to be generally well-tolerated at the doses examined, with a pharmacokinetic profile consistent with a short-half-life peptide <a class="cite" href="#cite-8">(Heffernan et al., 2001)</a>.</p>
+
+      <h3>Phase 2 obesity trials</h3>
+      <p>Metabolic Pharmaceuticals advanced the compound into Phase 2 efficacy studies in obese human subjects. Early reports suggested modest weight-loss signals in the treated groups, which — combined with the favorable safety profile — generated optimism around the program.</p>
+
+      <h2 id="phase2b">The Phase 2b result</h2>
+      <p>It is important to be clear about what happened next, because the later Phase 2b result is frequently glossed over in non-technical coverage.</p>
+
+      <p>In the later, larger Phase 2b trial conducted by Metabolic Pharmaceuticals, <strong>AOD-9604 failed to meet its primary weight-loss endpoint</strong> in obese subjects. The trial did not demonstrate clinically or statistically meaningful weight loss versus placebo at the doses and duration tested. This was a significant negative result for the program, and the commercial development of AOD-9604 as a weight-loss medicine effectively ended at this point <a class="cite" href="#cite-9">(Metabolic Pharmaceuticals, 2007)</a>.</p>
+
+      <p>The researcher should hold this in mind when reading breathless online descriptions of AOD-9604 as "proven" for fat loss. The peer-reviewed and regulatory trial record does not support that description. A properly powered human efficacy trial was conducted and did not produce the hoped-for outcome.</p>
+
+      <div style="background: #F5F4F1; border-radius: 8px; padding: 16px 20px; margin: 24px 0; font-size: 15px; color: var(--text-secondary);">
+        <strong style="color: var(--text);">In plain English:</strong> The fat-cell data in rats looked great. The short human safety studies were fine. But when Metabolic Pharmaceuticals ran the big human trial — the one that would actually prove it worked — obese patients did not lose meaningfully more weight than placebo. The commercial obesity program ended there.
+      </div>
+
+      <h3>Cartilage research: a second life</h3>
+      <p>After the obesity program wound down, AOD-9604 reappeared in a separate research context: cartilage and joint biology. Kwon and colleagues published work examining effects of AOD-9604 in cartilage models, reporting pro-anabolic effects on chondrocyte behavior in laboratory settings <a class="cite" href="#cite-10">(Kwon et al., 2015)</a>. This line of research is smaller and has not matured into an approved clinical indication.</p>
+
+      <h3>GRAS status as a food ingredient</h3>
+      <p>In 2011, AOD-9604 received <strong>"Generally Recognized as Safe" (GRAS)</strong> status from the U.S. FDA as a food ingredient — a regulatory category entirely separate from drug approval. GRAS classification is a safety determination for use in food, not a demonstration of therapeutic efficacy <a class="cite" href="#cite-11">(FDA, 2011)</a>. It is frequently quoted in marketing material as though it were an endorsement. It is not.</p>
+
+      <h2 id="evidence">Current state of evidence</h2>
+
+      <ul>
+        <li><strong>Strong preclinical data.</strong> The in-vitro and rodent literature on AOD-9604 is genuinely supportive of lipolytic activity and favorable mechanism.</li>
+        <li><strong>Phase 1 data: acceptable.</strong> Human safety and pharmacokinetics were characterized in small healthy-volunteer studies.</li>
+        <li><strong>Phase 2b data: negative.</strong> The primary weight-loss endpoint was not met in the larger obesity trial.</li>
+        <li><strong>GRAS status for food use</strong> is unrelated to therapeutic efficacy.</li>
+        <li><strong>No regulatory approval</strong> as a medicine by the EMA, MHRA, FDA, or any comparable regulator.</li>
+        <li><strong>Cartilage research</strong> is an active but small secondary line of work.</li>
+      </ul>
+
+      <h2 id="regulatory">Regulatory status and WADA</h2>
+      <p>AOD-9604 is not approved as a medicine in any major jurisdiction. It is not a registered pharmaceutical in the European Union, the United Kingdom, or the United States.</p>
+
+      <p>The World Anti-Doping Agency <strong>prohibits AOD-9604</strong> under its classification for growth hormone fragments and related peptide hormones. The prohibition applies at all times to athletes subject to WADA code. This regulatory status has no bearing on the scientific question of efficacy — it reflects the substance's classification within the anti-doping framework regardless of whether it works <a class="cite" href="#cite-12">(WADA, 2024)</a>.</p>
+
+      <h2 id="does-not-show">What the research does not show</h2>
+
+      <ul>
+        <li><strong>No proven weight loss</strong> in adequately powered human trials. The Phase 2b trial was the pivotal test, and it did not support the preclinical hypothesis.</li>
+        <li><strong>No long-term human safety data.</strong> The human exposure that has been characterized is in short-duration trials.</li>
+        <li><strong>No head-to-head efficacy comparison with GLP-1 receptor agonists</strong> (the current standard for pharmacological weight loss), or with any approved obesity medicine.</li>
+        <li><strong>No validated human dosing protocol</strong> for any indication in the peer-reviewed trial literature.</li>
+        <li><strong>No demonstration of cartilage benefit in humans.</strong> The cartilage work remains preclinical.</li>
+      </ul>
+
+      <h2 id="assessment">An honest assessment</h2>
+      <p>A researcher reading the AOD-9604 literature is looking at a compound with three distinct narratives running through it:</p>
+
+      <p><strong>The mechanistic story</strong> — supported by published preclinical work and internally coherent — suggests a selective lipolytic effect via the hGH C-terminal region without the growth-promoting activity of full hGH. This is scientifically interesting.</p>
+
+      <p><strong>The clinical trial story</strong> — supported by the Phase 2b outcome — is much less encouraging. The compound did not translate its mechanism into meaningful weight loss in obese humans at the doses and duration tested. Negative trials are normal in drug development, and they matter.</p>
+
+      <p><strong>The marketing story</strong> — which circulates widely online — tends to cite the preclinical data and skip the negative Phase 2b. This is not an accurate representation of the evidence and the researcher should notice when it happens.</p>
+
+      <p>Compared to the GLP-1 class of approved obesity medicines (semaglutide, liraglutide, tirzepatide — the active ingredients in Ozempic, Wegovy, Mounjaro, Zepbound), AOD-9604 has produced far weaker clinical efficacy signals and has never achieved regulatory approval for weight loss in any jurisdiction. This comparison is rarely made in non-technical coverage, but it is the honest framing.</p>
+
+      <div style="background: #F5F4F1; border-radius: 8px; padding: 16px 20px; margin: 24px 0; font-size: 15px; color: var(--text-secondary);">
+        <strong style="color: var(--text);">In plain English:</strong> The mechanism is clever and the preclinical data was real. But "it worked in rats" and "it got GRAS food-safety status" are not the same thing as "it helps humans lose weight." The one trial that tested that question directly came up empty.
+      </div>
+
+
+      <div class="info-box">
+        <div class="info-label">Framing</div>
+        <p>This article is a summary of the published research on AOD-9604. It is not instruction for human use, not medical advice, and not a recommendation for any application. The compound is not an approved medicine. The most important clinical trial in its development program did not support its original indication.</p>
+      </div>
+
+    </article>
+  </div>
+
+  <!-- CITATIONS -->
+  <section class="citations-section" id="citations">
+    <div class="citations-inner">
+      <h2>Cited studies</h2>
+      <p class="sub">Selected publications and regulatory documents referenced in this article. Listed in approximate citation order.</p>
+      <ol class="citation-list">
+        <li id="cite-1">Ng, F. M., Sun, J., Sharma, L., Libinaka, R., Jiang, W. J., & Gianello, R. (2000). Metabolic studies of a synthetic lipolytic domain (AOD9604) of human growth hormone. <em>Hormone Research</em>, 53(6), 274–278.</li>
+        <li id="cite-2">Heffernan, M. A., Thorburn, A. W., Fam, B., Summers, R., Conway-Campbell, B., Waters, M. J., & Ng, F. M. (2001). Increase of fat oxidation and weight loss in obese mice caused by chronic treatment with human growth hormone or a modified C-terminal fragment. <em>International Journal of Obesity</em>, 25(10), 1442–1449.</li>
+        <li id="cite-3">Ng, F. M., Jiang, W. J., Gianello, R., Pitt, S., & Roupas, P. (2000). Molecular and cellular actions of a structural domain of human growth hormone (AOD9401) on lipid metabolism. <em>Journal of Molecular Endocrinology</em>, 25(3), 287–298.</li>
+        <li id="cite-4">Stier, H., Vos, E., & Kenley, D. (2013). Safety and tolerability of the hexadecapeptide AOD9604 in humans. <em>Journal of Endocrinology, Diabetes & Obesity</em>, 1(2), 1007.</li>
+        <li id="cite-5">Heffernan, M., Summers, R. J., Thorburn, A., Ogru, E., Gianello, R., Jiang, W. J., & Ng, F. M. (2001). The effects of human GH and its lipolytic fragment (AOD9604) on lipid metabolism following chronic treatment in obese mice and β3-AR knock-out mice. <em>Endocrinology</em>, 142(12), 5182–5189.</li>
+        <li id="cite-6">Ng, F. M., Sun, J., Sharma, L., Libinaka, R., Jiang, W. J., & Gianello, R. (2000). The lipolytic action of human growth hormone resides in its C-terminal fragment. <em>Endocrine Journal</em>, 47(Suppl), S47–S50.</li>
+        <li id="cite-7">Heffernan, M. A., Jiang, W. J., Thorburn, A. W., & Ng, F. M. (2000). Effects of oral administration of a synthetic fragment of human growth hormone on lipid metabolism. <em>American Journal of Physiology - Endocrinology and Metabolism</em>, 279(3), E501–E507.</li>
+        <li id="cite-8">Heffernan, M. A., Summers, R. J., & Ng, F. M. (2001). Pharmacokinetics and metabolism of the lipolytic fragment (AOD9604) of human growth hormone in healthy subjects. <em>Clinical Pharmacology & Therapeutics</em>, 69(2), P23.</li>
+        <li id="cite-9">Metabolic Pharmaceuticals Ltd. (2007). Results of Phase 2b obesity trial of AOD9604 [Company announcement and investor disclosure]. Melbourne, Australia. [Public regulatory disclosure regarding failure of primary weight-loss endpoint.]</li>
+        <li id="cite-10">Kwon, D. R., Park, G. Y., & Lee, S. C. (2015). The effects of intra-articular injection of AOD9604 combined with hyaluronic acid in a collagenase-induced osteoarthritis rabbit model. <em>Journal of Back and Musculoskeletal Rehabilitation</em>, 28(4), 769–775.</li>
+        <li id="cite-11">U.S. Food and Drug Administration. (2011). GRAS Notice No. GRN 000375: Modified human growth hormone fragment AOD9604. Office of Food Additive Safety.</li>
+        <li id="cite-12">World Anti-Doping Agency. (2024). The Prohibited List. Section S2: Peptide hormones, growth factors, related substances and mimetics. WADA, Montreal.</li>
+        <li>Ng, F. M., & Borstein, J. (1978). Hyperglycaemic action of synthetic C-terminal fragments of human growth hormone. <em>Nature</em>, 272(5654), 725–726.</li>
+        <li>Wu, Z., Bidlingmaier, M., Friess, S. C., Kirk, S. E., Buchfelder, M., Schwab, S., & Strasburger, C. J. (2001). A new nonisotopic, highly sensitive assay for the measurement of human placental growth hormone: development and clinical implications. <em>Journal of Clinical Endocrinology & Metabolism</em>, 86(2), 804–811.</li>
+        <li>Wijnen, R. M. H., Pertijs, J. C. L. M., Kraaimaat, F. W., Arduini, A., & Ng, F. M. (1996). Lipolytic activity of synthetic peptides corresponding to the C-terminal region of human growth hormone. <em>Biochemistry International</em>, 40(3), 571–577.</li>
+        <li>Wei, Y., Monaghan, T., & Birzniece, V. (2014). Effect of growth hormone and its fragments on body composition. <em>Trends in Endocrinology & Metabolism</em>, 25(10), 529–537.</li>
+        <li>Fainstein-Day, P., Frara, S., Mercuri, V., & Giustina, A. (2015). Growth hormone fragments and lipolysis: a narrative review. <em>Pituitary</em>, 18(5), 751–758.</li>
+        <li>Holt, R. I. G., & Sönksen, P. H. (2008). Growth hormone, IGF-I and insulin and their abuse in sport. <em>British Journal of Pharmacology</em>, 154(3), 542–556.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- RELATED -->
+  <section class="related-section">
+    <div class="related-inner">
+      <h2>Related compounds</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/research-bpc-157.html">
+          <span class="category-tag">Gastric Pentadecapeptide</span>
+          <h3>BPC-157: The Complete Research Overview</h3>
+          <p>A plain-English review of published research on Body Protection Compound-157 — proposed mechanisms, preclinical models, and the current state of evidence.</p>
+          <span class="read-link">Read article</span>
+        </a>
+        <a class="related-card" href="/research-epithalon.html">
+          <span class="category-tag">Tetrapeptide</span>
+          <h3>Epithalon: Telomere and Circadian Biology</h3>
+          <p>The research history behind the synthetic tetrapeptide developed at the St. Petersburg Institute of Bioregulation and Gerontology.</p>
+          <span class="read-link">Read article</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEGAL DISCLAIMER -->
+  <section class="legal-section">
+    <div class="legal-inner">
+      <div class="legal-label">Legal Disclaimer</div>
+      <p>This article summarizes published research on AOD-9604. It is not medical advice, diagnosis, treatment, or a recommendation for human use. AOD-9604 is not approved as a medicine in the European Union, the United Kingdom, the United States, or any comparable regulatory jurisdiction. The compound did not meet its primary weight-loss endpoint in the Phase 2b clinical trial conducted by its original developer, and no peer-reviewed evidence supports claims of proven efficacy for obesity, fat loss, or joint repair in humans. The "GRAS" (Generally Recognized as Safe) designation applies to use as a food ingredient only and is not equivalent to a demonstration of therapeutic efficacy. AOD-9604 is prohibited at all times by the World Anti-Doping Agency. Content is for educational and research purposes only. The compound is sold strictly as a research chemical for laboratory and in-vitro research. Purchasers must be qualified researchers aged 18 or over. Consult a qualified healthcare provider for any medical questions. Lipa is a trade name of Go Exe B.V., registered in the Netherlands.</p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section" id="notify">
+    <div class="cta-inner">
+      <div class="section-eyebrow">Stay Informed</div>
+      <div class="section-title">New research, delivered quietly.</div>
+      <div class="section-sub">Join the waitlist. We'll email you when new compound overviews are published and when the store opens across Europe.</div>
+      <form class="cta-form" id="waitlist-form" onsubmit="handleWaitlist(event)">
+        <input class="cta-input" type="email" placeholder="Your email" required id="waitlist-email">
+        <button class="cta-submit" type="submit">Join Waitlist</button>
+      </form>
+      <div class="cta-fine" id="waitlist-msg">No spam. Unsubscribe anytime.</div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-left">&copy; 2026 Lipa Health. All rights reserved.</div>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/methodology.html">Methodology</a>
+      <a href="/research.html">Research</a>
+      <a href="/privacy.html">Privacy</a>
+    </div>
+  </footer>
+
+  <script>
+    // TOC active highlighting via IntersectionObserver
+    const tocLinks = document.querySelectorAll('.toc-list a');
+    const sections = Array.from(tocLinks).map(link => {
+      const id = link.getAttribute('href').slice(1);
+      return document.getElementById(id);
+    }).filter(Boolean);
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          tocLinks.forEach(l => l.classList.remove('active'));
+          const match = document.querySelector('.toc-list a[href="#' + id + '"]');
+          if (match) match.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+
+    // Supabase waitlist
+    const SUPABASE_URL = 'https://dqihkpicbswxzwkoxwnb.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRxaWhrcGljYnN3eHp3a294d25iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM5NjczODcsImV4cCI6MjA1OTU0MzM4N30.SifN_Rkhi5BwGXSfJz4jiM4VBzMdJPYE_6JjjC2S4RA';
+
+    async function handleWaitlist(e) {
+      e.preventDefault();
+      const email = document.getElementById('waitlist-email').value;
+      try {
+        await fetch(SUPABASE_URL + '/rest/v1/waitlist', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_ANON,
+            'Authorization': 'Bearer ' + SUPABASE_ANON,
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({ email: email, product: 'research-aod-9604' })
+        });
+      } catch (err) { /* silent */ }
+      document.getElementById('waitlist-email').value = '';
+      document.getElementById('waitlist-msg').textContent = "You're on the list. We'll be in touch.";
+      document.getElementById('waitlist-msg').style.color = 'rgba(255,255,255,0.7)';
+    }
+  </script>
+
+</body>
+</html>

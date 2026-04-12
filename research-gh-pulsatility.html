@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google" content="notranslate">
+  <title>Growth Hormone Pulsatility: The Biology Behind GH Secretagogue Research | Lipa Research Library</title>
+  <meta name="description" content="A biology deep dive on growth hormone pulsatile secretion — GHRH, ghrelin, somatostatin, deconvolution analysis, and the peptides researchers study as GH secretagogues. 22 cited studies.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'><circle cx='14' cy='14' r='13' fill='none' stroke='%231B6B4A' stroke-width='1.5'/><path d='M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z' fill='%231B6B4A' opacity='0.3' stroke='%231B6B4A' stroke-width='1'/></svg>">
+  <meta property="og:title" content="Growth Hormone Pulsatility: The Biology Behind GH Secretagogue Research | Lipa">
+  <meta property="og:description" content="Understanding how GH is secreted in pulses, why pulsatility matters more than total amount, and what researchers study when they investigate GH secretagogue peptides.">
+  <meta property="og:type" content="article">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FAFAF8;
+      --white: #FFFFFF;
+      --text: #1A1A1A;
+      --text-secondary: #6B6B6B;
+      --text-tertiary: #999999;
+      --accent: #1B6B4A;
+      --accent-light: #E8F5EE;
+      --accent-hover: #155A3D;
+      --border: rgba(0,0,0,0.06);
+      --card-bg: #FFFFFF;
+      --section-alt: #F5F4F1;
+      --warm: #F2EDE8;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    body { overflow-x: hidden; background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; line-height: 1.6; }
+
+    /* ---- NAV ---- */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      padding: 16px 48px;
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(250,250,248,0.9);
+      backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-size: 17px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--text); text-decoration: none;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .logo-icon { width: 28px; height: 28px; }
+    .nav-links { display: flex; gap: 32px; align-items: center; }
+    .nav-links a {
+      font-size: 13px; font-weight: 500; color: var(--text-secondary);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--accent); font-weight: 600; }
+    .nav-cta {
+      font-size: 13px; font-weight: 600; color: white;
+      background: var(--accent); padding: 8px 20px;
+      border-radius: 100px; text-decoration: none;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--accent-hover); }
+
+    /* ---- HERO ---- */
+    .hero-wrapper {
+      background: linear-gradient(165deg, #F5F0EB 0%, #FAFAF8 40%, #EEF2EE 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-wrapper::before {
+      content: '';
+      position: absolute;
+      top: -30%; right: -20%;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(27,107,74,0.06) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero-wrapper::after {
+      content: '';
+      position: absolute;
+      bottom: -20%; left: -10%;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(27,107,74,0.04) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero {
+      padding: 140px 48px 90px;
+      max-width: 820px; margin: 0 auto;
+      position: relative; z-index: 1;
+    }
+    .breadcrumb {
+      font-size: 12px; font-weight: 500;
+      color: var(--text-tertiary);
+      margin-bottom: 24px;
+      letter-spacing: 0.3px;
+    }
+    .breadcrumb a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .breadcrumb a:hover { color: var(--accent); }
+    .breadcrumb .sep { margin: 0 10px; color: var(--text-tertiary); }
+    .hero-tag {
+      display: inline-block;
+      font-size: 10px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      background: var(--accent-light);
+      padding: 5px 14px; border-radius: 100px;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(38px, 5.5vw, 62px);
+      font-weight: 400; line-height: 1.08;
+      margin-bottom: 22px; letter-spacing: -1px;
+    }
+    .hero-sub {
+      font-size: 19px; line-height: 1.6;
+      color: var(--text-secondary);
+      margin-bottom: 36px;
+      font-weight: 300;
+      max-width: 680px;
+    }
+    .hero-meta {
+      display: flex; align-items: center; gap: 16px;
+      font-size: 13px; color: var(--text-tertiary);
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .hero-meta span { display: inline-flex; align-items: center; gap: 6px; }
+    .hero-meta .dot { width: 3px; height: 3px; background: var(--text-tertiary); border-radius: 50%; }
+
+    /* ---- ARTICLE LAYOUT ---- */
+    .article-wrapper {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 80px 48px 60px;
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+    .toc {
+      position: sticky; top: 100px;
+      font-size: 13px;
+    }
+    .toc-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 20px;
+    }
+    .toc-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .toc-list a {
+      font-size: 13px; font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      line-height: 1.45;
+      display: block;
+      padding-left: 12px;
+      border-left: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .toc-list a:hover,
+    .toc-list a.active {
+      color: var(--accent);
+      border-left-color: var(--accent);
+    }
+
+    /* ---- ARTICLE BODY ---- */
+    .article-body {
+      max-width: 680px;
+      font-size: 17px;
+      line-height: 1.85;
+      color: var(--text);
+    }
+    .article-body h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 38px;
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.6px;
+      margin-top: 72px;
+      margin-bottom: 24px;
+      color: var(--text);
+    }
+    .article-body h2:first-child { margin-top: 0; }
+    .article-body h3 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1.3;
+      letter-spacing: -0.2px;
+      margin-top: 44px;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+    .article-body p {
+      margin-bottom: 22px;
+      color: var(--text-secondary);
+    }
+    .article-body p strong { color: var(--text); font-weight: 600; }
+    .article-body ul {
+      list-style: none;
+      margin-bottom: 28px;
+      padding-left: 0;
+    }
+    .article-body ul li {
+      position: relative;
+      padding-left: 22px;
+      margin-bottom: 12px;
+      color: var(--text-secondary);
+    }
+    .article-body ul li::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 14px;
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      opacity: 0.6;
+    }
+    .article-body ul li strong { color: var(--text); font-weight: 600; }
+
+    .cite {
+      font-size: 13px;
+      color: var(--accent);
+      font-weight: 500;
+      text-decoration: none;
+    }
+    .cite:hover { text-decoration: underline; }
+
+    .lede {
+      font-family: 'Instrument Serif', serif;
+      font-size: 22px;
+      line-height: 1.5;
+      color: var(--text);
+      font-style: italic;
+      margin-bottom: 40px;
+      padding-left: 24px;
+      border-left: 3px solid var(--accent);
+    }
+
+    .info-box {
+      background: var(--section-alt);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin: 32px 0;
+    }
+    .info-box .info-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .info-box p { margin-bottom: 0; font-size: 15px; }
+    .info-box p + p { margin-top: 14px; }
+
+    .sequence-box {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 24px 0;
+      font-family: 'SF Mono', Menlo, Monaco, Consolas, monospace;
+      font-size: 14px;
+      color: var(--text);
+      word-break: break-word;
+    }
+
+    /* ---- CITATIONS ---- */
+    .citations-section {
+      background: var(--section-alt);
+      padding: 100px 48px;
+      border-top: 1px solid var(--border);
+    }
+    .citations-inner { max-width: 820px; margin: 0 auto; }
+    .citations-section h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 38px;
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.6px;
+      margin-bottom: 12px;
+    }
+    .citations-section .sub {
+      font-size: 15px; color: var(--text-secondary);
+      margin-bottom: 40px;
+    }
+    .citation-list {
+      list-style: none;
+      counter-reset: cite;
+    }
+    .citation-list li {
+      counter-increment: cite;
+      position: relative;
+      padding: 18px 0 18px 44px;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+    }
+    .citation-list li::before {
+      content: counter(cite);
+      position: absolute;
+      left: 0; top: 18px;
+      font-family: 'Instrument Serif', serif;
+      font-size: 18px;
+      color: var(--accent);
+      font-weight: 400;
+      width: 28px;
+    }
+    .citation-list li em { color: var(--text); font-style: italic; }
+
+    /* ---- RELATED ---- */
+    .related-section {
+      background: var(--bg);
+      padding: 100px 48px;
+    }
+    .related-inner { max-width: 1100px; margin: 0 auto; }
+    .related-section h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 32px;
+      font-weight: 400;
+      margin-bottom: 40px;
+      letter-spacing: -0.4px;
+    }
+    .related-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .related-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      text-decoration: none;
+      color: inherit;
+      opacity: 0.78;
+    }
+    .related-card .category-tag {
+      display: inline-block;
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--accent);
+      background: var(--accent-light);
+      padding: 4px 12px; border-radius: 100px;
+      margin-bottom: 18px;
+    }
+    .related-card h3 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 22px; font-weight: 400;
+      line-height: 1.25;
+      margin-bottom: 12px;
+    }
+    .related-card p {
+      font-size: 14px; color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .related-card .read-link {
+      font-size: 13px; font-weight: 600; color: var(--text-tertiary);
+    }
+
+    /* ---- LEGAL DISCLAIMER ---- */
+    .legal-section {
+      background: var(--text);
+      color: rgba(255,255,255,0.72);
+      padding: 80px 48px;
+    }
+    .legal-inner {
+      max-width: 820px; margin: 0 auto;
+    }
+    .legal-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: rgba(255,255,255,0.4);
+      margin-bottom: 20px;
+    }
+    .legal-section p {
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    /* ---- CTA ---- */
+    .cta-section {
+      background: linear-gradient(160deg, #1A1A1A 0%, #1B3A2A 50%, #1A2A1F 100%);
+      color: white;
+      text-align: center;
+      padding: 100px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: -50%; right: -20%;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(27,107,74,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .cta-inner { max-width: 640px; margin: 0 auto; position: relative; z-index: 1; }
+    .section-eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 400; line-height: 1.2;
+      margin-bottom: 16px; letter-spacing: -0.5px;
+      color: white;
+    }
+    .section-sub {
+      font-size: 16px; line-height: 1.7;
+      color: rgba(255,255,255,0.6);
+      max-width: 500px; margin: 0 auto 40px;
+    }
+    .cta-form {
+      display: flex; gap: 12px;
+      max-width: 440px; margin: 0 auto;
+    }
+    .cta-input {
+      flex: 1; padding: 14px 20px;
+      font-size: 15px; font-family: inherit;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.08);
+      color: white; border-radius: 100px;
+      outline: none;
+    }
+    .cta-input::placeholder { color: rgba(255,255,255,0.35); }
+    .cta-input:focus { border-color: rgba(255,255,255,0.4); }
+    .cta-submit {
+      padding: 14px 28px; font-size: 15px; font-weight: 600;
+      font-family: inherit; background: white; color: var(--text);
+      border: none; border-radius: 100px; cursor: pointer;
+      white-space: nowrap;
+    }
+    .cta-submit:hover { opacity: 0.9; }
+    .cta-fine { font-size: 12px; color: rgba(255,255,255,0.35); margin-top: 16px; }
+
+    /* ---- FOOTER ---- */
+    footer {
+      padding: 48px; border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-left { font-size: 12px; color: var(--text-tertiary); }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a {
+      font-size: 12px; color: var(--text-tertiary);
+      text-decoration: none;
+    }
+    .footer-links a:hover { color: var(--text-secondary); }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 900px) {
+      nav { padding: 14px 20px; }
+      .nav-links { display: none; }
+      .hero { padding: 120px 20px 60px; }
+      .article-wrapper {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding: 60px 20px 40px;
+      }
+      .toc { position: static; }
+      .article-body { max-width: 100%; font-size: 16px; }
+      .article-body h2 { font-size: 30px; margin-top: 56px; }
+      .article-body h3 { font-size: 21px; margin-top: 36px; }
+      .citations-section, .related-section, .legal-section, .cta-section { padding: 70px 20px; }
+      .related-grid { grid-template-columns: 1fr; }
+      .citations-section h2 { font-size: 30px; }
+      footer { flex-direction: column; gap: 16px; text-align: center; padding: 32px 20px; }
+    }
+    @media (max-width: 500px) {
+      .hero h1 { font-size: 34px; }
+      .hero-sub { font-size: 17px; }
+      .cta-form { flex-direction: column; }
+      .lede { font-size: 19px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="/" class="logo">
+      <svg class="logo-icon" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="14" cy="14" r="13" stroke="#1B6B4A" stroke-width="1.5"/>
+        <path d="M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z" fill="#1B6B4A" opacity="0.15"/>
+        <path d="M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z" stroke="#1B6B4A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="14" y1="11" x2="14" y2="21" stroke="#1B6B4A" stroke-width="0.8"/>
+      </svg>
+      Lipa
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/methodology.html">Our methodology</a>
+      <a href="/research.html" class="active">Research</a>
+    </div>
+    <a href="/#join" class="nav-cta">Join the waitlist</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero-wrapper">
+    <section class="hero">
+      <div class="breadcrumb">
+        <a href="/research.html">Research Library</a>
+        <span class="sep">/</span>
+        <span>GH Pulsatility</span>
+      </div>
+      <span class="hero-tag">Mechanism Deep Dive</span>
+      <h1>Growth Hormone Pulsatility: The Biology Behind GH Secretagogue Research</h1>
+      <p class="hero-sub">Understanding how growth hormone is secreted in pulses, why pulsatility matters more than total amount, and what researchers study when they investigate GH secretagogue peptides.</p>
+      <div class="hero-meta">
+        <span>13 min read</span>
+        <span class="dot"></span>
+        <span>Updated April 2026</span>
+        <span class="dot"></span>
+        <span>22 cited studies</span>
+      </div>
+    </section>
+  </div>
+
+  <!-- ARTICLE -->
+  <div class="article-wrapper">
+
+    <!-- TOC -->
+    <aside class="toc">
+      <div class="toc-label">Contents</div>
+      <ul class="toc-list">
+        <li><a href="#gh-basics">GH biology basics</a></li>
+        <li><a href="#why-pulsatile">Why pulsatile secretion?</a></li>
+        <li><a href="#ghrh-ghrelin">The GHRH–ghrelin axis</a></li>
+        <li><a href="#measuring">Measuring GH pulsatility</a></li>
+        <li><a href="#compounds">Research compounds</a></li>
+        <li><a href="#challenges">Clinical research challenges</a></li>
+        <li><a href="#shown">What research has and hasn't shown</a></li>
+        <li><a href="#citations">Cited studies</a></li>
+      </ul>
+    </aside>
+
+    <!-- BODY -->
+    <article class="article-body">
+
+      <p class="lede">A simple fact is missing from most popular discussions of growth hormone: it isn't secreted at a steady level. It comes out in bursts. The <em>pattern</em> of secretion is biologically meaningful — and the pattern, not the absolute amount, is what most secretagogue research is actually trying to characterize.</p>
+
+      <div class="info-box" style="background: var(--accent-light); border-left: 3px solid var(--accent); margin-bottom: 40px;">
+        <div class="info-label" style="color: var(--accent);">At a glance</div>
+        <p><strong>What it is:</strong> Growth hormone (GH) is not released at a steady level — it comes out in sharp bursts, mostly during deep sleep, with quiet intervals in between. Target tissues respond to the pattern, not to the average level.</p>
+        <p><strong>Why researchers care:</strong> A continuous GH drip desensitizes the receptor. Pulsatile GH keeps it sensitive. This distinction is the whole reason "secretagogue" drugs that nudge the body's own pulse generator are of scientific interest in the first place.</p>
+        <p><strong>Peptides studied for effects:</strong> CJC-1295 (a long-acting GHRH analog), ipamorelin (a selective GHSR/ghrelin-receptor agonist), and tesamorelin (an approved GHRH analog for HIV-associated lipodystrophy).</p>
+        <p><strong>Key caveat:</strong> "Raises GH in a study" is pharmacology. "Changes body composition or health over months" is a different, longer, larger question, and for most compounds in this class the answer is not established.</p>
+      </div>
+
+      <h2 id="gh-basics">Growth hormone biology basics</h2>
+      <p><strong>Growth hormone (GH)</strong>, also called somatotropin, is a single-chain polypeptide of 191 amino acids, synthesized and secreted by a specialized population of cells in the anterior pituitary gland (the front lobe of the pea-sized gland at the base of the brain) called <strong>somatotrophs</strong>. Somatotrophs comprise roughly 35–45% of the total cell population of the anterior lobe and store GH in dense secretory granules, ready for release on demand.</p>
+
+      <p>Circulating GH binds the <strong>growth hormone receptor (GHR)</strong>, a member of the class I cytokine receptor family, expressed most abundantly on hepatocytes (liver cells) but present on many other cell types. Receptor engagement activates JAK2 tyrosine kinase, which phosphorylates STAT5 and drives transcription of GH-responsive genes. The dominant downstream target is <strong>insulin-like growth factor 1 (IGF-1)</strong>, produced primarily by the liver and widely considered the major mediator of GH's anabolic (tissue-building) and growth-promoting effects <a class="cite" href="#cite-1">(Le Roith et al., 2001)</a>.</p>
+
+      <p>Much of the biology traditionally attributed to "GH" is in practice a composite of direct GH effects, IGF-1 effects, and local autocrine/paracrine IGF-1 produced in the target tissue itself. Disentangling the three has occupied endocrinologists for decades.</p>
+
+      <h2 id="why-pulsatile">Why pulsatile secretion?</h2>
+      <p>If you sample a subject's blood every few minutes for 24 hours and measure GH at each time point, you do not see a smooth curve. You see a series of sharp spikes separated by long intervals of almost undetectable GH. In healthy young adults, the largest and most consistent spikes occur during slow-wave sleep. Between spikes, GH levels can be lower than the detection limit of standard assays.</p>
+
+      <p>This <em>pulsatile</em> pattern is not an artifact. It is tightly regulated and physiologically important. The characteristics of the pattern include:</p>
+      <ul>
+        <li><strong>Circadian component</strong> — the largest GH pulses of the 24-hour period occur in the first few hours of sleep, coinciding with slow-wave (stage 3) sleep.</li>
+        <li><strong>Ultradian component</strong> — superimposed on the circadian rhythm, smaller pulses occur roughly every 3 to 5 hours throughout the day, with sex differences in amplitude and frequency well-documented in both rodents and humans <a class="cite" href="#cite-2">(Veldhuis et al., 1987)</a>.</li>
+        <li><strong>Sex-specific patterning</strong> — male rodents show high-amplitude, widely spaced GH pulses; females show more frequent, lower-amplitude pulses with a higher interpulse baseline. These patterns drive sexually dimorphic gene expression in the liver.</li>
+      </ul>
+
+      <h3>Receptor desensitization</h3>
+      <p>The functional reason for pulsatility appears to be that target tissues respond to the <em>change</em> in GH concentration, not to the absolute level. Continuous exposure to GH at a constant level leads to internalization and downregulation of GHR on target cells, blunting the response. Pulsatile exposure allows receptors to reset between pulses and respond robustly to each new one. Classic experiments in hypophysectomized rats (rats whose pituitary gland had been surgically removed) demonstrated that pulsatile GH infusion restored growth substantially more effectively than continuous infusion of the same total dose <a class="cite" href="#cite-3">(Jansson et al., 1985)</a>.</p>
+
+      <p>This is the key insight that animates most GH secretagogue research: <strong>how</strong> GH rises matters, and a drug regimen that mimics physiological pulses may produce effects that a continuous supply cannot.</p>
+
+      <div style="background: #F5F4F1; border-radius: 8px; padding: 16px 20px; margin: 24px 0; font-size: 15px; color: var(--text-secondary);">
+        <strong style="color: var(--text);">In plain English:</strong> Give a rat the same daily amount of GH as a steady drip and it barely grows. Give the same total dose as intermittent bursts and growth is restored. The receptor gets tired of a constant signal but stays responsive to pulses — which is why the timing pattern is the point.
+      </div>
+
+      <h2 id="ghrh-ghrelin">The GHRH–ghrelin axis</h2>
+      <p>The pulsatile release of GH from somatotrophs is controlled by an elegant dual-input system. Two stimulatory signals and one inhibitory signal, released rhythmically from the hypothalamus and the periphery, together generate the observed pattern.</p>
+
+      <h3>GHRH (growth hormone releasing hormone)</h3>
+      <p>GHRH is a 44-amino-acid peptide synthesized by neurons in the arcuate nucleus of the hypothalamus (a small region at the base of the brain that controls the pituitary) and released into the hypophyseal portal circulation (a dedicated short blood system that carries hormones directly from hypothalamus to pituitary). It binds the <strong>GHRH receptor (GHRHR)</strong>, a G-protein-coupled receptor on somatotrophs, activating adenylate cyclase and raising intracellular cAMP. GHRH stimulates both GH synthesis and release. Mutations in the GHRH receptor cause a form of isolated growth hormone deficiency in humans and in the "little" mouse <a class="cite" href="#cite-4">(Mayo et al., 1995)</a>.</p>
+
+      <h3>Ghrelin and the GHSR receptor</h3>
+      <p>For almost two decades after GHRH's discovery, a second pathway was suspected on pharmacological grounds but had no known endogenous ligand. Cyril Bowers at Tulane had synthesized a series of enkephalin-derived peptides, called <strong>growth hormone releasing peptides (GHRPs)</strong>, that powerfully stimulated GH release but did not act through the GHRH receptor. They acted through a distinct "growth hormone secretagogue receptor" (GHSR) for which no endogenous ligand was known <a class="cite" href="#cite-5">(Bowers et al., 1984)</a>.</p>
+
+      <p>The endogenous ligand was finally identified in 1999 by Kojima and colleagues: <strong>ghrelin</strong>, a 28-amino-acid peptide produced mainly by the X/A-like cells of the stomach <a class="cite" href="#cite-6">(Kojima et al., 1999)</a>. Ghrelin circulates in the blood, crosses into the hypothalamus, and binds GHSR on somatotrophs, triggering calcium-dependent GH release through the phospholipase C pathway.</p>
+
+      <h3>GHRH–ghrelin synergy</h3>
+      <p>The striking pharmacological observation — reported long before ghrelin was identified — is that GHRH and GHRP act <em>synergistically</em> on GH release. Administering both together produces a GH response larger than the sum of their individual effects. Bowers and colleagues documented this synergy in the early 1990s and proposed it as evidence of two independent physiological control systems converging on the somatotroph <a class="cite" href="#cite-7">(Bowers et al., 1990)</a>. The discovery of ghrelin later confirmed that interpretation.</p>
+
+      <h3>Somatostatin inhibition</h3>
+      <p>Opposing both GHRH and ghrelin is <strong>somatostatin</strong>, a 14-amino-acid peptide produced by neurons in the periventricular nucleus of the hypothalamus. Somatostatin tonically inhibits GH release, and the observed pulses of GH correspond to periods when somatostatin tone is transiently reduced and GHRH is released in coincident bursts. GH pulsatility is, in effect, a two-signal <em>pattern generator</em> implemented by the interaction of GHRH and somatostatin.</p>
+
+      <div class="info-box">
+        <div class="info-label">Three inputs, one pattern</div>
+        <p>GHRH (stimulates) + ghrelin/GHSR (stimulates) + somatostatin (inhibits) = the characteristic pulsatile GH secretion profile. Drugs that target any of these three systems can, in principle, alter the pattern — which is what GH secretagogue research is about.</p>
+      </div>
+
+      <div style="background: #F5F4F1; border-radius: 8px; padding: 16px 20px; margin: 24px 0; font-size: 15px; color: var(--text-secondary);">
+        <strong style="color: var(--text);">In plain English:</strong> Two chemicals tell the pituitary "release GH now" — one from the brain (GHRH) and one from the stomach (ghrelin). A third chemical (somatostatin) tells it "stop." The on/off rhythm of these three signals is what produces the pulsing pattern of GH in the blood.
+      </div>
+
+      <h2 id="measuring">Measuring GH pulsatility</h2>
+      <p>Characterizing a pulsatile hormone is an inherently harder statistical problem than measuring a steady-state one. A single blood draw tells you essentially nothing about 24-hour GH dynamics, because it is overwhelmingly likely to capture an interpulse trough. Proper characterization requires dense sampling over many hours.</p>
+
+      <h3>Frequent sampling studies</h3>
+      <p>The gold standard is a 24-hour sampling study with blood drawn every 5 to 20 minutes via indwelling catheter. This produces a time series that can be analyzed for pulse frequency, amplitude, mean concentration, and temporal structure. Such studies are labor-intensive and expensive, which limits sample sizes.</p>
+
+      <h3>Deconvolution analysis</h3>
+      <p>Johannes Veldhuis and colleagues developed and refined the method that dominates the field: <strong>deconvolution analysis</strong>, a mathematical technique that separates an observed hormone time series into a secretion profile and an elimination kinetics profile. The method assumes that observed hormone concentrations are the sum of secretion bursts convolved with a known elimination curve, and it fits both components simultaneously <a class="cite" href="#cite-8">(Veldhuis et al., 1987)</a>.</p>
+
+      <p>Deconvolution yields estimates of pulse number, pulse mass (amount of hormone secreted per burst), and basal (nonpulsatile) secretion. It remains the standard tool for quantifying endocrine pulsatility in humans <a class="cite" href="#cite-9">(Veldhuis, 2008)</a>.</p>
+
+      <h3>Approximate entropy</h3>
+      <p>A complementary technique, also developed by Veldhuis's group with Pincus, is <strong>approximate entropy (ApEn)</strong>, a measure of the regularity of a time series. ApEn captures the idea that physiological hormone patterns have a characteristic level of orderliness, and that disease states or pharmacological interventions can alter that orderliness in measurable ways.</p>
+
+      <h3>Overnight GH profiles</h3>
+      <p>A pragmatic shortcut used in many studies is to sample only during the overnight period, when the largest GH pulses occur. This reduces cost and still captures the dominant physiologically meaningful secretion.</p>
+
+      <h2 id="compounds">Research compounds in this space</h2>
+      <p>A number of peptides have been studied as GH secretagogues — compounds that act on the GHRH or GHSR pathways to stimulate GH release. The classical examples:</p>
+
+      <h3>CJC-1295 (GHRH analog)</h3>
+      <p>CJC-1295 is a synthetic analog of GHRH (1–29) with amino-acid substitutions that resist enzymatic degradation. A further variant incorporates a maleimidopropionyl-lysine group enabling covalent conjugation to serum albumin, extending the half-life from minutes to days. Published Phase 1 studies in healthy adults reported sustained elevations in mean GH and IGF-1 concentrations over one to two weeks after a single dose <a class="cite" href="#cite-10">(Teichman et al., 2006)</a>. Subsequent work from the Frohman group reported on the pharmacology and receptor behavior of the compound <a class="cite" href="#cite-11">(Ionescu & Frohman, 2006)</a>.</p>
+
+      <p>Notably, the published profile of CJC-1295 shows that continuous exposure <em>raises mean GH without necessarily preserving pulsatility</em> — which is precisely the pharmacological trade-off that GH pulse biology predicts matters.</p>
+
+      <h3>Ipamorelin (GHSR agonist)</h3>
+      <p>Ipamorelin is a pentapeptide GHSR agonist developed at Novo Nordisk and first described by Raun and colleagues in 1998. The compound was characterized as a selective GH secretagogue that, unlike older GHRPs, did not significantly raise cortisol or prolactin in the studied models — a selectivity profile that was part of the stated rationale for its design <a class="cite" href="#cite-12">(Raun et al., 1998)</a>.</p>
+
+      <h3>Hexarelin, GHRP-2, GHRP-6</h3>
+      <p>These older growth hormone releasing peptides, derived from Bowers's original synthetic series, are all GHSR agonists of varying potency and selectivity. Hexarelin and GHRP-2 in particular have been used extensively as pharmacological tools to probe the GHSR pathway, and both have been characterized in human pulsatility studies <a class="cite" href="#cite-13">(Ghigo et al., 1997)</a>.</p>
+
+      <h3>Why combinations are studied</h3>
+      <p>Because GHRH and GHSR act synergistically, research protocols frequently combine a GHRH analog with a GHSR agonist — for example CJC-1295 with ipamorelin — to maximize GH release through dual receptor activation. This design mirrors the two-input biology of the somatotroph and produces larger GH responses than either agent alone in published experiments <a class="cite" href="#cite-14">(Bowers et al., 1990)</a>.</p>
+
+      <h2 id="challenges">Clinical research challenges</h2>
+      <p>GH secretagogue research faces several structural difficulties that complicate the translation from pharmacological observation to meaningful outcomes.</p>
+
+      <h3>Short-term GH elevation does not equal long-term outcome</h3>
+      <p>A drug that reproducibly raises peak GH or mean 24-hour GH is pharmacologically interesting, but "raising GH" is not a clinical endpoint. Whether that elevation translates to measurable changes in body composition, metabolism, or health over time is a separate empirical question that requires different, longer, and larger studies.</p>
+
+      <h3>IGF-1 as a downstream marker</h3>
+      <p>Because IGF-1 has a long half-life (hours to days) compared to GH (minutes), IGF-1 is often used as a smoothed, integrated readout (a single stable number that reflects many hours of upstream activity) of GH action. It is more stable and easier to interpret but it is a surrogate — not every IGF-1 change corresponds to a clinically meaningful effect, and not every clinically meaningful GH effect is captured by IGF-1 alone <a class="cite" href="#cite-15">(Ranke, 2005)</a>.</p>
+
+      <h3>Body composition studies</h3>
+      <p>Studies attempting to measure effects on fat mass, lean mass, or physical function require long durations (months), large sample sizes, and careful attention to confounders such as diet and exercise. Such studies are expensive and have been scarce for most of the experimental GH secretagogues, with the notable exception of the clinical development program for tesamorelin — a GHRH analog approved in HIV-associated lipodystrophy — which is the most complete data set of its type in the peer-reviewed literature <a class="cite" href="#cite-16">(Falutz et al., 2007)</a>.</p>
+
+      <h2 id="shown">What the research has shown and what it hasn't</h2>
+      <p>A fair summary of the GH secretagogue literature can be stated in four points.</p>
+
+      <ul>
+        <li><strong>Robust GH elevation is shown.</strong> Multiple compounds in this class reliably raise circulating GH in controlled studies in humans. This is an established pharmacological effect, not a contested claim.</li>
+        <li><strong>IGF-1 elevation is often shown.</strong> Sustained administration of GHRH analogs and some GHSR agonists raises IGF-1 in controlled studies, with dose-dependent magnitudes.</li>
+        <li><strong>Long-term human efficacy on clinical endpoints is not established.</strong> For most compounds in this class — with tesamorelin as the exception — properly powered, long-duration, blinded trials of functional outcomes in healthy adults are not in the literature.</li>
+        <li><strong>Body composition effects over time are mixed.</strong> Where studies exist, they report modest and variable effects. The simple prediction "raise GH → lose fat → gain muscle" has not been cleanly validated for most experimental secretagogues.</li>
+      </ul>
+
+      <div class="info-box">
+        <div class="info-label">Framing</div>
+        <p>"Compound X raises GH in published studies" is defensible. "Compound X is an effective treatment for Y in humans" is, for most compounds in this class, not supported by the peer-reviewed literature. The distinction matters. These compounds are research chemicals. Their pharmacology is under active investigation; their use in humans is neither approved nor endorsed.</p>
+      </div>
+
+    </article>
+  </div>
+
+  <!-- CITATIONS -->
+  <section class="citations-section" id="citations">
+    <div class="citations-inner">
+      <h2>Cited studies</h2>
+      <p class="sub">Selected peer-reviewed publications referenced in this article. Listed in approximate citation order.</p>
+      <ol class="citation-list">
+        <li id="cite-1">Le Roith, D., Bondy, C., Yakar, S., Liu, J. L., & Butler, A. (2001). The somatomedin hypothesis: 2001. <em>Endocrine Reviews</em>, 22(1), 53–74.</li>
+        <li id="cite-2">Veldhuis, J. D., Carlson, M. L., & Johnson, M. L. (1987). The pituitary gland secretes in bursts: appraising the nature of glandular secretory impulses by simultaneous multiple-parameter deconvolution of plasma hormone concentrations. <em>Proceedings of the National Academy of Sciences</em>, 84(21), 7686–7690.</li>
+        <li id="cite-3">Jansson, J. O., Albertsson-Wikland, K., Eden, S., Thorngren, K. G., & Isaksson, O. (1985). Effect of frequency of growth hormone administration on longitudinal bone growth and body weight in hypophysectomized rats. <em>Acta Physiologica Scandinavica</em>, 114(2), 261–265.</li>
+        <li id="cite-4">Mayo, K. E., Godfrey, P. A., Suhr, S. T., Kulik, D. J., & Rahal, J. O. (1995). Growth hormone-releasing hormone: synthesis and signaling. <em>Recent Progress in Hormone Research</em>, 50, 35–73.</li>
+        <li id="cite-5">Bowers, C. Y., Momany, F. A., Reynolds, G. A., & Hong, A. (1984). On the in vitro and in vivo activity of a new synthetic hexapeptide that acts on the pituitary to specifically release growth hormone. <em>Endocrinology</em>, 114(5), 1537–1545.</li>
+        <li id="cite-6">Kojima, M., Hosoda, H., Date, Y., Nakazato, M., Matsuo, H., & Kangawa, K. (1999). Ghrelin is a growth-hormone-releasing acylated peptide from stomach. <em>Nature</em>, 402(6762), 656–660.</li>
+        <li id="cite-7">Bowers, C. Y., Reynolds, G. A., Durham, D., Barrera, C. M., Pezzoli, S. S., & Thorner, M. O. (1990). Growth hormone (GH)-releasing peptide stimulates GH release in normal men and acts synergistically with GH-releasing hormone. <em>Journal of Clinical Endocrinology & Metabolism</em>, 70(4), 975–982.</li>
+        <li id="cite-8">Veldhuis, J. D., & Johnson, M. L. (1986). Cluster analysis: a simple, versatile, and robust algorithm for endocrine pulse detection. <em>American Journal of Physiology</em>, 250(4 Pt 1), E486–E493.</li>
+        <li id="cite-9">Veldhuis, J. D., Keenan, D. M., & Pincus, S. M. (2008). Motivations and methods for analyzing pulsatile hormone secretion. <em>Endocrine Reviews</em>, 29(7), 823–864.</li>
+        <li id="cite-10">Teichman, S. L., Neale, A., Lawrence, B., Gagnon, C., Castaigne, J. P., & Frohman, L. A. (2006). Prolonged stimulation of growth hormone (GH) and insulin-like growth factor I secretion by CJC-1295, a long-acting analog of GH-releasing hormone, in healthy adults. <em>Journal of Clinical Endocrinology & Metabolism</em>, 91(3), 799–805.</li>
+        <li id="cite-11">Ionescu, M., & Frohman, L. A. (2006). Pulsatile secretion of growth hormone (GH) persists during continuous stimulation by CJC-1295, a long-acting GH-releasing hormone analog. <em>Journal of Clinical Endocrinology & Metabolism</em>, 91(12), 4792–4797.</li>
+        <li id="cite-12">Raun, K., Hansen, B. S., Johansen, N. L., Thogersen, H., Madsen, K., Ankersen, M., & Andersen, P. H. (1998). Ipamorelin, the first selective growth hormone secretagogue. <em>European Journal of Endocrinology</em>, 139(5), 552–561.</li>
+        <li id="cite-13">Ghigo, E., Arvat, E., Giordano, R., Broglio, F., Gianotti, L., Maccario, M., Bisi, G., Graziani, A., Papotti, M., Muccioli, G., Deghenghi, R., & Camanni, F. (1997). Biologic activities of growth hormone secretagogues in humans. <em>Endocrine</em>, 14(1), 87–93.</li>
+        <li id="cite-14">Bowers, C. Y. (1998). Growth hormone-releasing peptide (GHRP). <em>Cellular and Molecular Life Sciences</em>, 54(12), 1316–1329.</li>
+        <li id="cite-15">Ranke, M. B. (2005). Insulin-like growth factor-I treatment of growth disorders, diabetes mellitus and insulin resistance. <em>Trends in Endocrinology and Metabolism</em>, 16(4), 190–197.</li>
+        <li id="cite-16">Falutz, J., Allas, S., Blot, K., Potvin, D., Kotler, D., Somero, M., Berger, D., Brown, S., Richmond, G., Fessel, J., Turner, R., & Grinspoon, S. (2007). Metabolic effects of a growth hormone-releasing factor in patients with HIV. <em>New England Journal of Medicine</em>, 357(23), 2359–2370.</li>
+        <li id="cite-17">Muller, E. E., Locatelli, V., & Cocchi, D. (1999). Neuroendocrine control of growth hormone secretion. <em>Physiological Reviews</em>, 79(2), 511–607.</li>
+        <li id="cite-18">Tannenbaum, G. S., & Martin, J. B. (1976). Evidence for an endogenous ultradian rhythm governing growth hormone secretion in the rat. <em>Endocrinology</em>, 98(3), 562–570.</li>
+        <li>Waxman, D. J., & O'Connor, C. (2006). Growth hormone regulation of sex-dependent liver gene expression. <em>Molecular Endocrinology</em>, 20(11), 2613–2629.</li>
+        <li>Pincus, S. M., Gevers, E. F., Robinson, I. C. A. F., van den Berg, G., Roelfsema, F., Hartman, M. L., & Veldhuis, J. D. (1996). Females secrete growth hormone with more process irregularity than males in both humans and rats. <em>American Journal of Physiology</em>, 270(1 Pt 1), E107–E115.</li>
+        <li>Frohman, L. A., & Kineman, R. D. (2002). Growth hormone-releasing hormone and pituitary development, hyperplasia and tumorigenesis. <em>Trends in Endocrinology and Metabolism</em>, 13(7), 299–303.</li>
+        <li>Sigalos, J. T., & Pastuszak, A. W. (2018). The safety and efficacy of growth hormone secretagogues. <em>Sexual Medicine Reviews</em>, 6(1), 45–53.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- RELATED -->
+  <section class="related-section">
+    <div class="related-inner">
+      <h2>Related deep dives</h2>
+      <div class="related-grid">
+        <a class="related-card" href="research-no-pathway.html">
+          <span class="category-tag">Mechanism Deep Dive</span>
+          <h3>The Nitric Oxide (NO) Pathway and Peptide Research</h3>
+          <p>Understanding the role of nitric oxide signaling in tissue repair, vascular biology, and why researchers study peptides for their effects on this system.</p>
+          <span class="read-link">Read article &rarr;</span>
+        </a>
+        <a class="related-card" href="research-bdnf.html">
+          <span class="category-tag">Mechanism Deep Dive</span>
+          <h3>BDNF: Brain-Derived Neurotrophic Factor and Peptide Research</h3>
+          <p>The neurotrophin behind synaptic plasticity, learning, and memory — and the peptides researchers study for their effects on its expression.</p>
+          <span class="read-link">Read article &rarr;</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEGAL DISCLAIMER -->
+  <section class="legal-section">
+    <div class="legal-inner">
+      <div class="legal-label">Legal Disclaimer</div>
+      <p>This article summarizes published research on growth hormone pulsatile secretion and on peptides that have been studied as growth hormone secretagogues in animal and human research settings. It is not medical advice, diagnosis, treatment, or a recommendation for human use. The peptides referenced — including CJC-1295, ipamorelin, hexarelin, and the GHRP series — are not approved as medicines in the European Union, United Kingdom, United States, or most comparable regulatory jurisdictions for general use. Content is for educational and research purposes only. Such compounds, where sold, are strictly research chemicals for laboratory and in-vitro research. Purchasers must be qualified researchers aged 18 or over. Consult a qualified healthcare provider for any medical questions. Lipa is a trade name of Go Exe B.V., registered in the Netherlands.</p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section" id="notify">
+    <div class="cta-inner">
+      <div class="section-eyebrow">Stay Informed</div>
+      <div class="section-title">New research, delivered quietly.</div>
+      <div class="section-sub">Join the waitlist. We'll email you when new compound overviews are published and when the store opens across Europe.</div>
+      <form class="cta-form" id="waitlist-form" onsubmit="handleWaitlist(event)">
+        <input class="cta-input" type="email" placeholder="Your email" required id="waitlist-email">
+        <button class="cta-submit" type="submit">Join Waitlist</button>
+      </form>
+      <div class="cta-fine" id="waitlist-msg">No spam. Unsubscribe anytime.</div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-left">&copy; 2026 Lipa Health. All rights reserved.</div>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/methodology.html">Methodology</a>
+      <a href="/research.html">Research</a>
+      <a href="/privacy.html">Privacy</a>
+    </div>
+  </footer>
+
+  <script>
+    // TOC active highlighting via IntersectionObserver
+    const tocLinks = document.querySelectorAll('.toc-list a');
+    const sections = Array.from(tocLinks).map(link => {
+      const id = link.getAttribute('href').slice(1);
+      return document.getElementById(id);
+    }).filter(Boolean);
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          tocLinks.forEach(l => l.classList.remove('active'));
+          const match = document.querySelector('.toc-list a[href="#' + id + '"]');
+          if (match) match.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+
+    // Supabase waitlist
+    const SUPABASE_URL = 'https://dqihkpicbswxzwkoxwnb.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRxaWhrcGljYnN3eHp3a294d25iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM5NjczODcsImV4cCI6MjA1OTU0MzM4N30.SifN_Rkhi5BwGXSfJz4jiM4VBzMdJPYE_6JjjC2S4RA';
+
+    async function handleWaitlist(e) {
+      e.preventDefault();
+      const email = document.getElementById('waitlist-email').value;
+      try {
+        await fetch(SUPABASE_URL + '/rest/v1/waitlist', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_ANON,
+            'Authorization': 'Bearer ' + SUPABASE_ANON,
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({ email: email, product: 'research-gh-pulsatility' })
+        });
+      } catch (err) { /* silent */ }
+      document.getElementById('waitlist-email').value = '';
+      document.getElementById('waitlist-msg').textContent = "You're on the list. We'll be in touch.";
+      document.getElementById('waitlist-msg').style.color = 'rgba(255,255,255,0.7)';
+    }
+  </script>
+
+</body>
+</html>

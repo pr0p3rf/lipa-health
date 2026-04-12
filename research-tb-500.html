@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google" content="notranslate">
+  <title>TB-500: The Research Behind Thymosin Beta-4 Fragment | Lipa Research Library</title>
+  <meta name="description" content="A plain-English review of published research on TB-500, its proposed mechanisms, and the current state of evidence. 24 cited studies.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'><circle cx='14' cy='14' r='13' fill='none' stroke='%231B6B4A' stroke-width='1.5'/><path d='M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z' fill='%231B6B4A' opacity='0.3' stroke='%231B6B4A' stroke-width='1'/></svg>">
+  <meta property="og:title" content="TB-500: The Research Behind Thymosin Beta-4 Fragment | Lipa">
+  <meta property="og:description" content="A plain-English review of published research on TB-500 and Thymosin Beta-4. Cited studies. Current state of evidence.">
+  <meta property="og:type" content="article">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FAFAF8;
+      --white: #FFFFFF;
+      --text: #1A1A1A;
+      --text-secondary: #6B6B6B;
+      --text-tertiary: #999999;
+      --accent: #1B6B4A;
+      --accent-light: #E8F5EE;
+      --accent-hover: #155A3D;
+      --border: rgba(0,0,0,0.06);
+      --card-bg: #FFFFFF;
+      --section-alt: #F5F4F1;
+      --warm: #F2EDE8;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    body { overflow-x: hidden; background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; line-height: 1.6; }
+
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      padding: 16px 48px;
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(250,250,248,0.9);
+      backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-size: 17px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--text); text-decoration: none;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .logo-icon { width: 28px; height: 28px; }
+    .nav-links { display: flex; gap: 32px; align-items: center; }
+    .nav-links a {
+      font-size: 13px; font-weight: 500; color: var(--text-secondary);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--accent); font-weight: 600; }
+    .nav-cta {
+      font-size: 13px; font-weight: 600; color: white;
+      background: var(--accent); padding: 8px 20px;
+      border-radius: 100px; text-decoration: none;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--accent-hover); }
+
+    .hero-wrapper {
+      background: linear-gradient(165deg, #F5F0EB 0%, #FAFAF8 40%, #EEF2EE 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-wrapper::before {
+      content: '';
+      position: absolute;
+      top: -30%; right: -20%;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(27,107,74,0.06) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero-wrapper::after {
+      content: '';
+      position: absolute;
+      bottom: -20%; left: -10%;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(27,107,74,0.04) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero {
+      padding: 140px 48px 90px;
+      max-width: 820px; margin: 0 auto;
+      position: relative; z-index: 1;
+    }
+    .breadcrumb {
+      font-size: 12px; font-weight: 500;
+      color: var(--text-tertiary);
+      margin-bottom: 24px;
+      letter-spacing: 0.3px;
+    }
+    .breadcrumb a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .breadcrumb a:hover { color: var(--accent); }
+    .breadcrumb .sep { margin: 0 10px; color: var(--text-tertiary); }
+    .hero-tag {
+      display: inline-block;
+      font-size: 10px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      background: var(--accent-light);
+      padding: 5px 14px; border-radius: 100px;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(38px, 5.5vw, 62px);
+      font-weight: 400; line-height: 1.08;
+      margin-bottom: 22px; letter-spacing: -1px;
+    }
+    .hero-sub {
+      font-size: 19px; line-height: 1.6;
+      color: var(--text-secondary);
+      margin-bottom: 36px;
+      font-weight: 300;
+      max-width: 680px;
+    }
+    .hero-meta {
+      display: flex; align-items: center; gap: 16px;
+      font-size: 13px; color: var(--text-tertiary);
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .hero-meta span { display: inline-flex; align-items: center; gap: 6px; }
+    .hero-meta .dot { width: 3px; height: 3px; background: var(--text-tertiary); border-radius: 50%; }
+
+    .article-wrapper {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 80px 48px 60px;
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+    .toc {
+      position: sticky; top: 100px;
+      font-size: 13px;
+    }
+    .toc-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 20px;
+    }
+    .toc-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .toc-list a {
+      font-size: 13px; font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      line-height: 1.45;
+      display: block;
+      padding-left: 12px;
+      border-left: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .toc-list a:hover,
+    .toc-list a.active {
+      color: var(--accent);
+      border-left-color: var(--accent);
+    }
+
+    .article-body {
+      max-width: 680px;
+      font-size: 17px;
+      line-height: 1.85;
+      color: var(--text);
+    }
+    .article-body h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 38px;
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.6px;
+      margin-top: 72px;
+      margin-bottom: 24px;
+      color: var(--text);
+    }
+    .article-body h2:first-child { margin-top: 0; }
+    .article-body h3 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1.3;
+      letter-spacing: -0.2px;
+      margin-top: 44px;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+    .article-body p {
+      margin-bottom: 22px;
+      color: var(--text-secondary);
+    }
+    .article-body p strong { color: var(--text); font-weight: 600; }
+    .article-body ul {
+      list-style: none;
+      margin-bottom: 28px;
+      padding-left: 0;
+    }
+    .article-body ul li {
+      position: relative;
+      padding-left: 22px;
+      margin-bottom: 12px;
+      color: var(--text-secondary);
+    }
+    .article-body ul li::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 14px;
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      opacity: 0.6;
+    }
+    .article-body ul li strong { color: var(--text); font-weight: 600; }
+
+    .cite {
+      font-size: 13px;
+      color: var(--accent);
+      font-weight: 500;
+      text-decoration: none;
+    }
+    .cite:hover { text-decoration: underline; }
+
+    .lede {
+      font-family: 'Instrument Serif', serif;
+      font-size: 22px;
+      line-height: 1.5;
+      color: var(--text);
+      font-style: italic;
+      margin-bottom: 40px;
+      padding-left: 24px;
+      border-left: 3px solid var(--accent);
+    }
+
+    .info-box {
+      background: var(--section-alt);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin: 32px 0;
+    }
+    .info-box .info-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .info-box p { margin-bottom: 0; font-size: 15px; }
+    .info-box p + p { margin-top: 14px; }
+
+    .sequence-box {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 24px 0;
+      font-family: 'SF Mono', Menlo, Monaco, Consolas, monospace;
+      font-size: 14px;
+      color: var(--text);
+      word-break: break-word;
+    }
+
+    .citations-section {
+      background: var(--section-alt);
+      padding: 100px 48px;
+      border-top: 1px solid var(--border);
+    }
+    .citations-inner { max-width: 820px; margin: 0 auto; }
+    .citations-section h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 38px;
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.6px;
+      margin-bottom: 12px;
+    }
+    .citations-section .sub {
+      font-size: 15px; color: var(--text-secondary);
+      margin-bottom: 40px;
+    }
+    .citation-list {
+      list-style: none;
+      counter-reset: cite;
+    }
+    .citation-list li {
+      counter-increment: cite;
+      position: relative;
+      padding: 18px 0 18px 44px;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+    }
+    .citation-list li::before {
+      content: counter(cite);
+      position: absolute;
+      left: 0; top: 18px;
+      font-family: 'Instrument Serif', serif;
+      font-size: 18px;
+      color: var(--accent);
+      font-weight: 400;
+      width: 28px;
+    }
+    .citation-list li em { color: var(--text); font-style: italic; }
+
+    .related-section {
+      background: var(--bg);
+      padding: 100px 48px;
+    }
+    .related-inner { max-width: 1100px; margin: 0 auto; }
+    .related-section h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 32px;
+      font-weight: 400;
+      margin-bottom: 40px;
+      letter-spacing: -0.4px;
+    }
+    .related-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .related-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      text-decoration: none;
+      color: inherit;
+      opacity: 0.78;
+    }
+    .related-card .category-tag {
+      display: inline-block;
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--accent);
+      background: var(--accent-light);
+      padding: 4px 12px; border-radius: 100px;
+      margin-bottom: 18px;
+    }
+    .related-card h3 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 22px; font-weight: 400;
+      line-height: 1.25;
+      margin-bottom: 12px;
+    }
+    .related-card p {
+      font-size: 14px; color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .related-card .read-link {
+      font-size: 13px; font-weight: 600; color: var(--text-tertiary);
+    }
+
+    .legal-section {
+      background: var(--text);
+      color: rgba(255,255,255,0.72);
+      padding: 80px 48px;
+    }
+    .legal-inner {
+      max-width: 820px; margin: 0 auto;
+    }
+    .legal-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: rgba(255,255,255,0.4);
+      margin-bottom: 20px;
+    }
+    .legal-section p {
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    .cta-section {
+      background: linear-gradient(160deg, #1A1A1A 0%, #1B3A2A 50%, #1A2A1F 100%);
+      color: white;
+      text-align: center;
+      padding: 100px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: -50%; right: -20%;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(27,107,74,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .cta-inner { max-width: 640px; margin: 0 auto; position: relative; z-index: 1; }
+    .section-eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 400; line-height: 1.2;
+      margin-bottom: 16px; letter-spacing: -0.5px;
+      color: white;
+    }
+    .section-sub {
+      font-size: 16px; line-height: 1.7;
+      color: rgba(255,255,255,0.6);
+      max-width: 500px; margin: 0 auto 40px;
+    }
+    .cta-form {
+      display: flex; gap: 12px;
+      max-width: 440px; margin: 0 auto;
+    }
+    .cta-input {
+      flex: 1; padding: 14px 20px;
+      font-size: 15px; font-family: inherit;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.08);
+      color: white; border-radius: 100px;
+      outline: none;
+    }
+    .cta-input::placeholder { color: rgba(255,255,255,0.35); }
+    .cta-input:focus { border-color: rgba(255,255,255,0.4); }
+    .cta-submit {
+      padding: 14px 28px; font-size: 15px; font-weight: 600;
+      font-family: inherit; background: white; color: var(--text);
+      border: none; border-radius: 100px; cursor: pointer;
+      white-space: nowrap;
+    }
+    .cta-submit:hover { opacity: 0.9; }
+    .cta-fine { font-size: 12px; color: rgba(255,255,255,0.35); margin-top: 16px; }
+
+    footer {
+      padding: 48px; border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-left { font-size: 12px; color: var(--text-tertiary); }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a {
+      font-size: 12px; color: var(--text-tertiary);
+      text-decoration: none;
+    }
+    .footer-links a:hover { color: var(--text-secondary); }
+
+    @media (max-width: 900px) {
+      nav { padding: 14px 20px; }
+      .nav-links { display: none; }
+      .hero { padding: 120px 20px 60px; }
+      .article-wrapper {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding: 60px 20px 40px;
+      }
+      .toc { position: static; }
+      .article-body { max-width: 100%; font-size: 16px; }
+      .article-body h2 { font-size: 30px; margin-top: 56px; }
+      .article-body h3 { font-size: 21px; margin-top: 36px; }
+      .citations-section, .related-section, .legal-section, .cta-section { padding: 70px 20px; }
+      .related-grid { grid-template-columns: 1fr; }
+      .citations-section h2 { font-size: 30px; }
+      footer { flex-direction: column; gap: 16px; text-align: center; padding: 32px 20px; }
+    }
+    @media (max-width: 500px) {
+      .hero h1 { font-size: 34px; }
+      .hero-sub { font-size: 17px; }
+      .cta-form { flex-direction: column; }
+      .lede { font-size: 19px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="/" class="logo">
+      <svg class="logo-icon" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="14" cy="14" r="13" stroke="#1B6B4A" stroke-width="1.5"/>
+        <path d="M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z" fill="#1B6B4A" opacity="0.15"/>
+        <path d="M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z" stroke="#1B6B4A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="14" y1="11" x2="14" y2="21" stroke="#1B6B4A" stroke-width="0.8"/>
+      </svg>
+      Lipa
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/methodology.html">Our methodology</a>
+      <a href="/research.html" class="active">Research</a>
+    </div>
+    <a href="/#join" class="nav-cta">Join the waitlist</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero-wrapper">
+    <section class="hero">
+      <div class="breadcrumb">
+        <a href="/research.html">Research Library</a>
+        <span class="sep">/</span>
+        <span>TB-500</span>
+      </div>
+      <span class="hero-tag">Thymosin Fragment</span>
+      <h1>TB-500: The Research Behind Thymosin Beta-4 Fragment</h1>
+      <p class="hero-sub">A plain-English review of published research on TB-500, its proposed mechanisms, and the current state of evidence.</p>
+      <div class="hero-meta">
+        <span>11 min read</span>
+        <span class="dot"></span>
+        <span>Updated April 2026</span>
+        <span class="dot"></span>
+        <span>24 cited studies</span>
+      </div>
+    </section>
+  </div>
+
+  <!-- ARTICLE -->
+  <div class="article-wrapper">
+
+    <!-- TOC -->
+    <aside class="toc">
+      <div class="toc-label">Contents</div>
+      <ul class="toc-list">
+        <li><a href="#what-is">What is TB-500?</a></li>
+        <li><a href="#origin">Discovery and origin</a></li>
+        <li><a href="#mechanisms">Proposed mechanisms</a></li>
+        <li><a href="#research-areas">Key research areas</a></li>
+        <li><a href="#clinical">Clinical trials status</a></li>
+        <li><a href="#evidence">Current state of evidence</a></li>
+        <li><a href="#wada">WADA status</a></li>
+        <li><a href="#does-not-show">What research does not show</a></li>
+        <li><a href="#dosing">Published dosing ranges</a></li>
+        <li><a href="#citations">Cited studies</a></li>
+      </ul>
+    </aside>
+
+    <!-- BODY -->
+    <article class="article-body">
+
+      <p class="lede">TB-500 is often discussed as if it were Thymosin Beta-4 itself. The literature tells a more specific story — one about a small synthetic fragment, an actin-binding protein, and a body of preclinical research that has yet to translate cleanly into human medicine.</p>
+
+      <div class="info-box" style="background: var(--accent-light); border-left: 3px solid var(--accent); margin-bottom: 40px;">
+        <div class="info-label" style="color: var(--accent);">At a glance</div>
+        <p><strong>What:</strong> A short synthetic peptide fragment derived from the active binding region of Thymosin Beta-4, a naturally occurring protein found in nearly every cell.</p>
+        <p><strong>Research areas:</strong> Cardiac tissue repair · Wound healing · Corneal repair · Hair follicle biology · Tendon injury models</p>
+        <p><strong>Evidence:</strong> Strong preclinical research on full-length Thymosin Beta-4; limited Phase 2 human data in ophthalmology; almost none on the TB-500 fragment itself.</p>
+        <p><strong>Status:</strong> Not approved as a medicine anywhere. WADA-prohibited since 2011. Sold as a research chemical only.</p>
+      </div>
+
+      <h2 id="what-is">What is TB-500?</h2>
+      <p>TB-500 is a synthetic peptide marketed and researched as a fragment or analog of <strong>Thymosin Beta-4</strong> (TB-4), a naturally occurring 43-amino-acid protein found in virtually every cell of the human body. TB-4 is one of the most abundant proteins in mammalian tissues — present in particularly high concentrations in platelets, wound fluid, and the cytosol of most cell types <a class="cite" href="#cite-1">(Safer et al., 1991)</a>.</p>
+
+      <p>The distinction between TB-500 and full-length TB-4 is important and frequently blurred. Full-length Thymosin Beta-4 is the endogenous molecule investigated in formal clinical trials by RegeneRx Biopharmaceuticals and described throughout the peer-reviewed literature. TB-500 as sold in the research chemical market is typically a shorter synthetic sequence corresponding to the active actin-binding domain of TB-4, often described in commercial documentation as the 17-amino-acid region containing the central binding motif <a class="cite" href="#cite-2">(Goldstein et al., 2012)</a>.</p>
+
+      <p>When the research literature refers to "Thymosin Beta-4," it almost always means the full endogenous protein. When the literature refers to "TB-500," it is usually in the context of its use as a research tool or a veterinary preparation. Readers examining primary sources should pay close attention to which molecule each paper is actually studying.</p>
+
+      <div class="sequence-box">Full Tβ4: Ac-SDKPDMAEIEKFDKSKLKKTETQEKNPLPSKETIEQEKQAGES</div>
+
+      <h2 id="origin">Discovery and origin</h2>
+      <p>Thymosin Beta-4 was first isolated from bovine thymus by <strong>Teresa Low and Allan Goldstein</strong> in 1981, as part of a broader effort to characterize the "thymosin" family of peptides thought at the time to be involved in thymic function and immunity <a class="cite" href="#cite-3">(Low et al., 1981)</a>. Subsequent work revealed that the protein's most significant biological role was not immunological at all, but rather its function as the major intracellular <strong>G-actin sequestering protein</strong> — the molecule responsible for maintaining the pool of unpolymerized actin monomers that cells draw upon during movement, division, and shape change <a class="cite" href="#cite-4">(Safer et al., 1990)</a>.</p>
+
+      <p>Research at the National Institutes of Health and collaborating institutions characterized the protein's structure, its binding kinetics, and its expression patterns across tissues. By the late 1990s and early 2000s, attention shifted toward the protein's apparent role in wound repair, angiogenesis, and tissue regeneration — findings that ultimately led to the formation of <strong>RegeneRx Biopharmaceuticals</strong>, a company founded to develop Thymosin Beta-4-based therapeutics for cardiac repair, wound healing, and ophthalmic indications.</p>
+
+      <h2 id="mechanisms">Proposed mechanisms of action</h2>
+      <p>The mechanistic literature on Thymosin Beta-4 is unusually well-developed for a peptide of this class. Several pathways are described with varying degrees of experimental support.</p>
+
+      <h3>Actin sequestration and cell migration</h3>
+      <p>The most fundamental and best-characterized mechanism is TB-4's role as a G-actin sequestering peptide. By binding monomeric actin in a 1:1 complex, TB-4 regulates the balance between free and polymerized actin inside cells — a balance that directly determines a cell's ability to migrate, change shape, and organize its cytoskeleton (the internal protein scaffolding of a cell) during repair processes <a class="cite" href="#cite-5">(Huff et al., 2001)</a>. The central binding motif (LKKTETQ) is conserved across the beta-thymosin family and is the region from which TB-500 derives most of its actin-binding activity.</p>
+
+      <div style="background: #F5F4F1; border-radius: 8px; padding: 16px 20px; margin: 24px 0; font-size: 15px; color: var(--text-secondary);">
+        <strong style="color: var(--text);">In plain English:</strong> Thymosin Beta-4's main job is to hold a reserve pool of actin — the protein cells use to move, change shape, and rebuild themselves after injury. That's the mechanistic basis for why researchers have looked at it for wound repair.
+      </div>
+
+      <h3>Angiogenesis</h3>
+      <p>Multiple in-vitro and animal studies have reported that TB-4 promotes endothelial cell migration, tube formation, and new vessel growth. In a widely cited study, Malinda and colleagues described dose-dependent stimulation of endothelial cell migration and angiogenic sprouting in standard assays <a class="cite" href="#cite-6">(Malinda et al., 1997)</a>.</p>
+
+      <h3>Anti-inflammatory signaling</h3>
+      <p>The literature describes TB-4 as down-modulating inflammatory cytokine (immune signaling molecule) production in wound environments, with reports of reduced NF-kB activation and altered chemokine profiles in injury models <a class="cite" href="#cite-7">(Sosne et al., 2007)</a>.</p>
+
+      <h3>Cell survival and anti-apoptotic effects</h3>
+      <p>Published experiments have reported that exposure to TB-4 is associated with reduced apoptosis (programmed cell death) in cardiomyocytes (heart muscle cells) and other cell types subjected to stress, with the PI3K/Akt pathway proposed as a mediator <a class="cite" href="#cite-8">(Bock-Marquette et al., 2004)</a>.</p>
+
+      <div class="info-box">
+        <div class="info-label">A note on mechanism</div>
+        <p>Much of the published mechanistic work concerns full-length Thymosin Beta-4, not the TB-500 fragment specifically. Whether a truncated sequence recapitulates every function of the parent molecule is itself an active research question. Claims that "TB-500 works through actin binding" rest on the assumption that the fragment preserves the central binding domain's activity — a reasonable assumption, but not one that has been characterized with the same rigor as the parent protein.</p>
+      </div>
+
+      <h2 id="research-areas">Key research areas</h2>
+
+      <h3>Cardiac tissue repair</h3>
+      <p>Some of the most widely cited TB-4 research concerns the heart. In 2004, Bock-Marquette and colleagues published a landmark paper in <em>Nature</em> reporting that Thymosin Beta-4 administration in a mouse model of myocardial infarction was associated with improved cardiac function, reduced scar formation, and evidence of cardiomyocyte survival <a class="cite" href="#cite-8">(Bock-Marquette et al., 2004)</a>. A 2007 follow-up from <strong>Paul Riley's</strong> laboratory at University College London, published in <em>Nature</em>, reported that TB-4 treatment could mobilize epicardial progenitor cells and contribute to vascular regeneration in the injured adult heart <a class="cite" href="#cite-9">(Smart et al., 2007)</a>. Subsequent work from the same group extended these findings to the reactivation of dormant epicardial progenitors capable of differentiating into cardiomyocytes under specific conditions <a class="cite" href="#cite-10">(Smart et al., 2011)</a>.</p>
+
+      <p>These papers generated substantial interest in the cardiology community and underpinned much of the early translational enthusiasm around Thymosin Beta-4.</p>
+
+      <div style="background: #F5F4F1; border-radius: 8px; padding: 16px 20px; margin: 24px 0; font-size: 15px; color: var(--text-secondary);">
+        <strong style="color: var(--text);">In plain English:</strong> High-profile mouse studies suggested TB-4 could help the heart recover after a heart attack. It's an exciting result in animals — but it never translated into an approved human cardiac therapy.
+      </div>
+
+      <h3>Wound healing</h3>
+      <p>The wound healing literature on TB-4 is extensive. Malinda and colleagues reported in <em>FASEB Journal</em> that topical Thymosin Beta-4 accelerated closure of full-thickness skin wounds in rat and mouse models, with histological evidence of faster re-epithelialization and angiogenesis <a class="cite" href="#cite-11">(Malinda et al., 1999)</a>. Philp and colleagues extended this work in diabetic and aged mouse wound models, where impaired healing is a well-characterized problem <a class="cite" href="#cite-12">(Philp et al., 2003)</a>.</p>
+
+      <h3>Corneal repair</h3>
+      <p><strong>Gabriel Sosne</strong> and collaborators at Wayne State University have published extensively on Thymosin Beta-4 in ophthalmic research. Their work has characterized effects on corneal epithelial migration, dry eye models, and chemical injury repair in the cornea <a class="cite" href="#cite-13">(Sosne et al., 2002)</a>. A series of papers reported that topical TB-4 accelerated corneal re-epithelialization in rat and rabbit models of alkali injury <a class="cite" href="#cite-14">(Sosne et al., 2010)</a>.</p>
+
+      <h3>Hair follicle research</h3>
+      <p>Philp and colleagues reported in 2004 that Thymosin Beta-4 expression was elevated in activated hair follicle stem cells and that exogenous TB-4 could influence follicle development in mouse models <a class="cite" href="#cite-15">(Philp et al., 2004)</a>. This finding led to speculation about hair growth applications that has persisted in commercial discussions, though translation to human dermatology has been limited.</p>
+
+      <h3>Tendon injury models</h3>
+      <p>A smaller literature has examined TB-4 in tendon injury models. Reports have described accelerated healing of collagenase-induced tendinopathy in rats treated with Thymosin Beta-4, with histological evidence of improved collagen organization <a class="cite" href="#cite-16">(Xu et al., 2014)</a>.</p>
+
+      <h2 id="clinical">Clinical trials status</h2>
+      <p>RegeneRx Biopharmaceuticals pursued Thymosin Beta-4 (branded as <strong>RGN-259</strong> for ophthalmic use and <strong>RGN-352</strong> for systemic indications) through several early-phase clinical trials. Published results have described Phase 2 trials in dry eye disease and neurotrophic keratopathy, with reports of improved corneal healing in some subgroups <a class="cite" href="#cite-17">(Sosne et al., 2015)</a>.</p>
+
+      <p>Additional exploratory trials examined venous stasis ulcers, epidermolysis bullosa, and pressure ulcer healing, with published interim data suggesting tolerability and some signals of accelerated wound closure <a class="cite" href="#cite-18">(Goldstein et al., 2012)</a>. However, none of these programs have resulted in regulatory approval for any indication in any major jurisdiction. Pivotal Phase 3 data supporting market authorization has not been published.</p>
+
+      <h2 id="evidence">Current state of evidence</h2>
+      <p>A careful reading of the literature distinguishes between three categories of knowledge:</p>
+
+      <ul>
+        <li><strong>Strong preclinical evidence</strong> for full-length Thymosin Beta-4 in wound healing, cardiac repair, and corneal regeneration models. This is a genuinely substantial body of work spanning more than two decades.</li>
+        <li><strong>Limited human clinical data</strong>, concentrated in ophthalmology and dermatology, with some Phase 2 signals but no pivotal Phase 3 outcomes that have resulted in approved therapies.</li>
+        <li><strong>Very limited data specific to TB-500 as a fragment</strong> separate from full-length TB-4. Most commonly cited studies concern the parent protein, and the pharmacokinetic and activity equivalence of the fragment is not systematically characterized in the peer-reviewed literature.</li>
+      </ul>
+
+      <p>This third point is worth emphasizing. The research chemical commonly sold as "TB-500" trades on the reputation of Thymosin Beta-4's formal clinical and preclinical research program, while itself being a distinct — and less well-characterized — molecular entity.</p>
+
+      <div style="background: #F5F4F1; border-radius: 8px; padding: 16px 20px; margin: 24px 0; font-size: 15px; color: var(--text-secondary);">
+        <strong style="color: var(--text);">In plain English:</strong> Most of the impressive research is on the full natural protein, not the shorter fragment sold as TB-500. Whether the fragment does everything the full protein does remains unproven.
+      </div>
+
+      <h2 id="wada">WADA prohibited status</h2>
+      <p>The World Anti-Doping Agency added TB-500 and other Thymosin Beta-4-related compounds to its Prohibited List in 2011, classified under <strong>S2 (Peptide Hormones, Growth Factors, Related Substances and Mimetics)</strong>. The prohibition applies at all times — both in and out of competition — and reflects WADA's concern about compounds with potential anabolic or recovery-enhancing properties in the absence of approved medical use <a class="cite" href="#cite-19">(WADA, 2011)</a>. As with other S2 entries, WADA's classification is a regulatory determination and does not by itself constitute evidence for or against efficacy.</p>
+
+      <h2 id="does-not-show">What the research does not show</h2>
+      <p>Honesty about absent evidence is as important as cataloging present findings.</p>
+
+      <ul>
+        <li><strong>No approved therapeutic indication</strong> for TB-4 or TB-500 in any major jurisdiction.</li>
+        <li><strong>No published human RCTs specifically on TB-500 as a fragment</strong>, as distinct from full-length Thymosin Beta-4.</li>
+        <li><strong>Extrapolation from mouse cardiac studies to human cardiac outcomes</strong> has not been demonstrated. Translation from small-animal infarct models to human clinical benefit has historically been a difficult path.</li>
+        <li><strong>Long-term safety in humans is uncharacterized.</strong></li>
+        <li><strong>The equivalence of TB-500 and full-length Tβ4 is assumed, not proven</strong> across the full range of biological activities described for the parent protein.</li>
+      </ul>
+
+      <h2 id="dosing">Published dosing ranges</h2>
+      <p>In the context of published research — not as instruction — rodent studies have used full-length Thymosin Beta-4 at doses commonly in the range of <strong>150 μg to 6 mg per kilogram</strong>, with considerable variation depending on route of administration and injury model. Early human trials of RGN-259 and RGN-352 reported tolerable dose ranges in published protocols, but these are clinical trial parameters under controlled conditions, not general guidance <a class="cite" href="#cite-20">(Ruff et al., 2010)</a>.</p>
+
+      <p>No established human dosing for TB-500 as a research-chemical-market fragment exists in the peer-reviewed literature. Discussions of protocols that appear in non-peer-reviewed sources are not supported by published clinical trial evidence.</p>
+
+      <h3>Commonly studied alongside: BPC-157</h3>
+      <p>In commercial and online discussion, TB-500 is frequently paired with BPC-157, another research peptide. There is no peer-reviewed literature on the combination specifically — the two compounds have almost entirely separate research histories. Any discussion of synergistic effects is extrapolation, not established science.</p>
+
+      <div class="info-box">
+        <div class="info-label">Framing</div>
+        <p>This article summarizes published research. Where dosing is discussed, the context is always literature-derived and refers to experimental conditions. At no point should this be read as instruction for human use. TB-500 is not an approved medicine. There is no established human protocol in the peer-reviewed literature.</p>
+      </div>
+
+    </article>
+  </div>
+
+  <!-- CITATIONS -->
+  <section class="citations-section" id="citations">
+    <div class="citations-inner">
+      <h2>Cited studies</h2>
+      <p class="sub">Selected peer-reviewed publications referenced in this article. Listed in approximate citation order.</p>
+      <ol class="citation-list">
+        <li id="cite-1">Safer, D., Elzinga, M., & Nachmias, V. T. (1991). Thymosin beta 4 and Fx, an actin-sequestering peptide, are indistinguishable. <em>Journal of Biological Chemistry</em>, 266(7), 4029–4032.</li>
+        <li id="cite-2">Goldstein, A. L., Hannappel, E., Sosne, G., & Kleinman, H. K. (2012). Thymosin β4: a multi-functional regenerative peptide. Basic properties and clinical applications. <em>Expert Opinion on Biological Therapy</em>, 12(1), 37–51.</li>
+        <li id="cite-3">Low, T. L., Hu, S. K., & Goldstein, A. L. (1981). Complete amino acid sequence of bovine thymosin beta 4: a thymic hormone that induces terminal deoxynucleotidyl transferase activity in thymocyte populations. <em>Proceedings of the National Academy of Sciences</em>, 78(2), 1162–1166.</li>
+        <li id="cite-4">Safer, D., Golla, R., & Nachmias, V. T. (1990). Isolation of a 5-kilodalton actin-sequestering peptide from human blood platelets. <em>Proceedings of the National Academy of Sciences</em>, 87(7), 2536–2540.</li>
+        <li id="cite-5">Huff, T., Müller, C. S., Otto, A. M., Netzker, R., & Hannappel, E. (2001). β-Thymosins, small acidic peptides with multiple functions. <em>The International Journal of Biochemistry & Cell Biology</em>, 33(3), 205–220.</li>
+        <li id="cite-6">Malinda, K. M., Goldstein, A. L., & Kleinman, H. K. (1997). Thymosin β4 stimulates directional migration of human umbilical vein endothelial cells. <em>FASEB Journal</em>, 11(6), 474–481.</li>
+        <li id="cite-7">Sosne, G., Qiu, P., Christopherson, P. L., & Wheater, M. K. (2007). Thymosin beta 4 suppression of corneal NFκB: a potential anti-inflammatory pathway. <em>Experimental Eye Research</em>, 84(4), 663–669.</li>
+        <li id="cite-8">Bock-Marquette, I., Saxena, A., White, M. D., DiMaio, J. M., & Srivastava, D. (2004). Thymosin β4 activates integrin-linked kinase and promotes cardiac cell migration, survival and cardiac repair. <em>Nature</em>, 432(7016), 466–472.</li>
+        <li id="cite-9">Smart, N., Risebro, C. A., Melville, A. A. D., Moses, K., Schwartz, R. J., Chien, K. R., & Riley, P. R. (2007). Thymosin β4 induces adult epicardial progenitor mobilization and neovascularization. <em>Nature</em>, 445(7124), 177–182.</li>
+        <li id="cite-10">Smart, N., Bollini, S., Dubé, K. N., Vieira, J. M., Zhou, B., Davidson, S., et al. (2011). De novo cardiomyocytes from within the activated adult heart after injury. <em>Nature</em>, 474(7353), 640–644.</li>
+        <li id="cite-11">Malinda, K. M., Sidhu, G. S., Mani, H., Banaudha, K., Maheshwari, R. K., Goldstein, A. L., & Kleinman, H. K. (1999). Thymosin β4 accelerates wound healing. <em>Journal of Investigative Dermatology</em>, 113(3), 364–368.</li>
+        <li id="cite-12">Philp, D., Badamchian, M., Scheremeta, B., Nguyen, M., Goldstein, A. L., & Kleinman, H. K. (2003). Thymosin β4 and a synthetic peptide containing its actin-binding domain promote dermal wound repair in db/db diabetic mice and in aged mice. <em>Wound Repair and Regeneration</em>, 11(1), 19–24.</li>
+        <li id="cite-13">Sosne, G., Chan, C. C., Thai, K., Kennedy, M., Szliter, E. A., Hazlett, L. D., & Kleinman, H. K. (2002). Thymosin beta 4 promotes corneal wound healing and modulates inflammatory mediators in vivo. <em>Experimental Eye Research</em>, 74(2), 293–299.</li>
+        <li id="cite-14">Sosne, G., Qiu, P., Goldstein, A. L., & Wheater, M. (2010). Biological activities of thymosin β4 defined by active sites in short peptide sequences. <em>FASEB Journal</em>, 24(7), 2144–2151.</li>
+        <li id="cite-15">Philp, D., Nguyen, M., Scheremeta, B., St-Surin, S., Villa, A. M., Orgel, A., et al. (2004). Thymosin β4 increases hair growth by activation of hair follicle stem cells. <em>FASEB Journal</em>, 18(2), 385–387.</li>
+        <li id="cite-16">Xu, B., Yang, M., Li, Z., Zhang, Y., Jiang, Z., Guan, S., & Jiang, D. (2014). Thymosin β4 ameliorates collagen-induced tendinopathy in a rat model. <em>International Journal of Molecular Medicine</em>, 33(5), 1247–1253.</li>
+        <li id="cite-17">Sosne, G., Dunn, S. P., & Kim, C. (2015). Thymosin β4 significantly improves signs and symptoms of severe dry eye in a phase 2 randomized trial. <em>Cornea</em>, 34(5), 491–496.</li>
+        <li id="cite-18">Goldstein, A. L., & Hannappel, E. (2012). Thymosin β4: actin-sequestering protein moonlights to repair injured tissues. <em>Annals of the New York Academy of Sciences</em>, 1270(1), 1–6.</li>
+        <li id="cite-19">World Anti-Doping Agency. (2011). The 2011 Prohibited List: International Standard. Montreal: WADA.</li>
+        <li id="cite-20">Ruff, D., Crockford, D., Girardi, G., & Zhang, Y. (2010). A randomized, placebo-controlled, single and multiple dose study of intravenous thymosin β4 in healthy volunteers. <em>Annals of the New York Academy of Sciences</em>, 1194(1), 223–229.</li>
+        <li>Crockford, D., Turjman, N., Allan, C., & Angel, J. (2010). Thymosin β4: structure, function, and biological properties supporting current and future clinical applications. <em>Annals of the New York Academy of Sciences</em>, 1194(1), 179–189.</li>
+        <li>Philp, D., & Kleinman, H. K. (2010). Animal studies with thymosin β4, a multifunctional tissue repair and regeneration peptide. <em>Annals of the New York Academy of Sciences</em>, 1194(1), 81–86.</li>
+        <li>Kleinman, H. K., & Sosne, G. (2016). Thymosin β4 promotes dermal healing. <em>Vitamins and Hormones</em>, 102, 251–275.</li>
+        <li>Sosne, G., Ousler, G. W., & Kim, C. (2016). Thymosin β4 ophthalmic solution for dry eye: a randomized, placebo-controlled, Phase II clinical trial. <em>Journal of Ocular Pharmacology and Therapeutics</em>, 31(9), 515–521.</li>
+        <li>Mannherz, H. G., & Hannappel, E. (2009). The β-thymosins: intracellular and extracellular activities of a versatile actin binding protein family. <em>Cell Motility and the Cytoskeleton</em>, 66(10), 839–851.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- RELATED -->
+  <section class="related-section">
+    <div class="related-inner">
+      <h2>Related compounds</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/research-bpc-157.html">
+          <span class="category-tag">Gastric Pentadecapeptide</span>
+          <h3>BPC-157: The Complete Research Overview</h3>
+          <p>A plain-English review of the published research on Body Protection Compound-157, proposed mechanisms, and current state of evidence.</p>
+          <span class="read-link">Read article →</span>
+        </a>
+        <a class="related-card" href="/research.html">
+          <span class="category-tag">Copper Tripeptide</span>
+          <h3>GHK-Cu: The Copper Peptide Research</h3>
+          <p>A review of published research on GHK-Cu, one of the most studied peptides in cosmetic and biomedical science.</p>
+          <span class="read-link">Coming soon</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEGAL DISCLAIMER -->
+  <section class="legal-section">
+    <div class="legal-inner">
+      <div class="legal-label">Legal Disclaimer</div>
+      <p>This article summarizes published research on TB-500 and Thymosin Beta-4. It is not medical advice, diagnosis, treatment, or a recommendation for human use. TB-500 is not approved as a medicine in the European Union, United Kingdom, United States, or any major regulatory jurisdiction. Content is for educational and research purposes only. The compound is sold strictly as a research chemical for laboratory and in-vitro research. Purchasers must be qualified researchers aged 18 or over. Consult a qualified healthcare provider for any medical questions. Lipa is a trade name of Go Exe B.V., registered in the Netherlands.</p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section" id="notify">
+    <div class="cta-inner">
+      <div class="section-eyebrow">Stay Informed</div>
+      <div class="section-title">New research, delivered quietly.</div>
+      <div class="section-sub">Join the waitlist. We'll email you when new compound overviews are published and when the store opens across Europe.</div>
+      <form class="cta-form" id="waitlist-form" onsubmit="handleWaitlist(event)">
+        <input class="cta-input" type="email" placeholder="Your email" required id="waitlist-email">
+        <button class="cta-submit" type="submit">Join Waitlist</button>
+      </form>
+      <div class="cta-fine" id="waitlist-msg">No spam. Unsubscribe anytime.</div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-left">&copy; 2026 Lipa Health. All rights reserved.</div>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/methodology.html">Methodology</a>
+      <a href="/research.html">Research</a>
+      <a href="/privacy.html">Privacy</a>
+    </div>
+  </footer>
+
+  <script>
+    const tocLinks = document.querySelectorAll('.toc-list a');
+    const sections = Array.from(tocLinks).map(link => {
+      const id = link.getAttribute('href').slice(1);
+      return document.getElementById(id);
+    }).filter(Boolean);
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          tocLinks.forEach(l => l.classList.remove('active'));
+          const match = document.querySelector('.toc-list a[href="#' + id + '"]');
+          if (match) match.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+
+    const SUPABASE_URL = 'https://dqihkpicbswxzwkoxwnb.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRxaWhrcGljYnN3eHp3a294d25iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM5NjczODcsImV4cCI6MjA1OTU0MzM4N30.SifN_Rkhi5BwGXSfJz4jiM4VBzMdJPYE_6JjjC2S4RA';
+
+    async function handleWaitlist(e) {
+      e.preventDefault();
+      const email = document.getElementById('waitlist-email').value;
+      try {
+        await fetch(SUPABASE_URL + '/rest/v1/waitlist', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_ANON,
+            'Authorization': 'Bearer ' + SUPABASE_ANON,
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({ email: email, product: 'research-tb-500' })
+        });
+      } catch (err) { /* silent */ }
+      document.getElementById('waitlist-email').value = '';
+      document.getElementById('waitlist-msg').textContent = "You're on the list. We'll be in touch.";
+      document.getElementById('waitlist-msg').style.color = 'rgba(255,255,255,0.7)';
+    }
+  </script>
+
+</body>
+</html>

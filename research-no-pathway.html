@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google" content="notranslate">
+  <title>The Nitric Oxide (NO) Pathway and Peptide Research | Lipa Research Library</title>
+  <meta name="description" content="A biology deep dive on the nitric oxide signaling pathway — NOS enzymes, cGMP, vascular biology, wound healing — and the peptides researchers study for their effects on this system. 24 cited studies.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'><circle cx='14' cy='14' r='13' fill='none' stroke='%231B6B4A' stroke-width='1.5'/><path d='M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z' fill='%231B6B4A' opacity='0.3' stroke='%231B6B4A' stroke-width='1'/></svg>">
+  <meta property="og:title" content="The Nitric Oxide (NO) Pathway and Peptide Research | Lipa">
+  <meta property="og:description" content="Understanding the role of nitric oxide signaling in tissue repair, vascular biology, and why researchers study peptides for their effects on this system.">
+  <meta property="og:type" content="article">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FAFAF8;
+      --white: #FFFFFF;
+      --text: #1A1A1A;
+      --text-secondary: #6B6B6B;
+      --text-tertiary: #999999;
+      --accent: #1B6B4A;
+      --accent-light: #E8F5EE;
+      --accent-hover: #155A3D;
+      --border: rgba(0,0,0,0.06);
+      --card-bg: #FFFFFF;
+      --section-alt: #F5F4F1;
+      --warm: #F2EDE8;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    body { overflow-x: hidden; background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; line-height: 1.6; }
+
+    /* ---- NAV ---- */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      padding: 16px 48px;
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(250,250,248,0.9);
+      backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-size: 17px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--text); text-decoration: none;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .logo-icon { width: 28px; height: 28px; }
+    .nav-links { display: flex; gap: 32px; align-items: center; }
+    .nav-links a {
+      font-size: 13px; font-weight: 500; color: var(--text-secondary);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--accent); font-weight: 600; }
+    .nav-cta {
+      font-size: 13px; font-weight: 600; color: white;
+      background: var(--accent); padding: 8px 20px;
+      border-radius: 100px; text-decoration: none;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--accent-hover); }
+
+    /* ---- HERO ---- */
+    .hero-wrapper {
+      background: linear-gradient(165deg, #F5F0EB 0%, #FAFAF8 40%, #EEF2EE 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-wrapper::before {
+      content: '';
+      position: absolute;
+      top: -30%; right: -20%;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(27,107,74,0.06) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero-wrapper::after {
+      content: '';
+      position: absolute;
+      bottom: -20%; left: -10%;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(27,107,74,0.04) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero {
+      padding: 140px 48px 90px;
+      max-width: 820px; margin: 0 auto;
+      position: relative; z-index: 1;
+    }
+    .breadcrumb {
+      font-size: 12px; font-weight: 500;
+      color: var(--text-tertiary);
+      margin-bottom: 24px;
+      letter-spacing: 0.3px;
+    }
+    .breadcrumb a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .breadcrumb a:hover { color: var(--accent); }
+    .breadcrumb .sep { margin: 0 10px; color: var(--text-tertiary); }
+    .hero-tag {
+      display: inline-block;
+      font-size: 10px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      background: var(--accent-light);
+      padding: 5px 14px; border-radius: 100px;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(38px, 5.5vw, 62px);
+      font-weight: 400; line-height: 1.08;
+      margin-bottom: 22px; letter-spacing: -1px;
+    }
+    .hero-sub {
+      font-size: 19px; line-height: 1.6;
+      color: var(--text-secondary);
+      margin-bottom: 36px;
+      font-weight: 300;
+      max-width: 680px;
+    }
+    .hero-meta {
+      display: flex; align-items: center; gap: 16px;
+      font-size: 13px; color: var(--text-tertiary);
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .hero-meta span { display: inline-flex; align-items: center; gap: 6px; }
+    .hero-meta .dot { width: 3px; height: 3px; background: var(--text-tertiary); border-radius: 50%; }
+
+    /* ---- ARTICLE LAYOUT ---- */
+    .article-wrapper {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 80px 48px 60px;
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+    .toc {
+      position: sticky; top: 100px;
+      font-size: 13px;
+    }
+    .toc-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 20px;
+    }
+    .toc-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .toc-list a {
+      font-size: 13px; font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      line-height: 1.45;
+      display: block;
+      padding-left: 12px;
+      border-left: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .toc-list a:hover,
+    .toc-list a.active {
+      color: var(--accent);
+      border-left-color: var(--accent);
+    }
+
+    /* ---- ARTICLE BODY ---- */
+    .article-body {
+      max-width: 680px;
+      font-size: 17px;
+      line-height: 1.85;
+      color: var(--text);
+    }
+    .article-body h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 38px;
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.6px;
+      margin-top: 72px;
+      margin-bottom: 24px;
+      color: var(--text);
+    }
+    .article-body h2:first-child { margin-top: 0; }
+    .article-body h3 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1.3;
+      letter-spacing: -0.2px;
+      margin-top: 44px;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+    .article-body p {
+      margin-bottom: 22px;
+      color: var(--text-secondary);
+    }
+    .article-body p strong { color: var(--text); font-weight: 600; }
+    .article-body ul {
+      list-style: none;
+      margin-bottom: 28px;
+      padding-left: 0;
+    }
+    .article-body ul li {
+      position: relative;
+      padding-left: 22px;
+      margin-bottom: 12px;
+      color: var(--text-secondary);
+    }
+    .article-body ul li::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 14px;
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      opacity: 0.6;
+    }
+    .article-body ul li strong { color: var(--text); font-weight: 600; }
+
+    .cite {
+      font-size: 13px;
+      color: var(--accent);
+      font-weight: 500;
+      text-decoration: none;
+    }
+    .cite:hover { text-decoration: underline; }
+
+    .lede {
+      font-family: 'Instrument Serif', serif;
+      font-size: 22px;
+      line-height: 1.5;
+      color: var(--text);
+      font-style: italic;
+      margin-bottom: 40px;
+      padding-left: 24px;
+      border-left: 3px solid var(--accent);
+    }
+
+    .info-box {
+      background: var(--section-alt);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin: 32px 0;
+    }
+    .info-box .info-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .info-box p { margin-bottom: 0; font-size: 15px; }
+    .info-box p + p { margin-top: 14px; }
+
+    .sequence-box {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 24px 0;
+      font-family: 'SF Mono', Menlo, Monaco, Consolas, monospace;
+      font-size: 14px;
+      color: var(--text);
+      word-break: break-word;
+    }
+
+    /* ---- CITATIONS ---- */
+    .citations-section {
+      background: var(--section-alt);
+      padding: 100px 48px;
+      border-top: 1px solid var(--border);
+    }
+    .citations-inner { max-width: 820px; margin: 0 auto; }
+    .citations-section h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 38px;
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.6px;
+      margin-bottom: 12px;
+    }
+    .citations-section .sub {
+      font-size: 15px; color: var(--text-secondary);
+      margin-bottom: 40px;
+    }
+    .citation-list {
+      list-style: none;
+      counter-reset: cite;
+    }
+    .citation-list li {
+      counter-increment: cite;
+      position: relative;
+      padding: 18px 0 18px 44px;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+    }
+    .citation-list li::before {
+      content: counter(cite);
+      position: absolute;
+      left: 0; top: 18px;
+      font-family: 'Instrument Serif', serif;
+      font-size: 18px;
+      color: var(--accent);
+      font-weight: 400;
+      width: 28px;
+    }
+    .citation-list li em { color: var(--text); font-style: italic; }
+
+    /* ---- RELATED ---- */
+    .related-section {
+      background: var(--bg);
+      padding: 100px 48px;
+    }
+    .related-inner { max-width: 1100px; margin: 0 auto; }
+    .related-section h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 32px;
+      font-weight: 400;
+      margin-bottom: 40px;
+      letter-spacing: -0.4px;
+    }
+    .related-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .related-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      text-decoration: none;
+      color: inherit;
+      opacity: 0.78;
+    }
+    .related-card .category-tag {
+      display: inline-block;
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--accent);
+      background: var(--accent-light);
+      padding: 4px 12px; border-radius: 100px;
+      margin-bottom: 18px;
+    }
+    .related-card h3 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 22px; font-weight: 400;
+      line-height: 1.25;
+      margin-bottom: 12px;
+    }
+    .related-card p {
+      font-size: 14px; color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .related-card .read-link {
+      font-size: 13px; font-weight: 600; color: var(--text-tertiary);
+    }
+
+    /* ---- LEGAL DISCLAIMER ---- */
+    .legal-section {
+      background: var(--text);
+      color: rgba(255,255,255,0.72);
+      padding: 80px 48px;
+    }
+    .legal-inner {
+      max-width: 820px; margin: 0 auto;
+    }
+    .legal-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: rgba(255,255,255,0.4);
+      margin-bottom: 20px;
+    }
+    .legal-section p {
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    /* ---- CTA ---- */
+    .cta-section {
+      background: linear-gradient(160deg, #1A1A1A 0%, #1B3A2A 50%, #1A2A1F 100%);
+      color: white;
+      text-align: center;
+      padding: 100px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: -50%; right: -20%;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(27,107,74,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .cta-inner { max-width: 640px; margin: 0 auto; position: relative; z-index: 1; }
+    .section-eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 400; line-height: 1.2;
+      margin-bottom: 16px; letter-spacing: -0.5px;
+      color: white;
+    }
+    .section-sub {
+      font-size: 16px; line-height: 1.7;
+      color: rgba(255,255,255,0.6);
+      max-width: 500px; margin: 0 auto 40px;
+    }
+    .cta-form {
+      display: flex; gap: 12px;
+      max-width: 440px; margin: 0 auto;
+    }
+    .cta-input {
+      flex: 1; padding: 14px 20px;
+      font-size: 15px; font-family: inherit;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.08);
+      color: white; border-radius: 100px;
+      outline: none;
+    }
+    .cta-input::placeholder { color: rgba(255,255,255,0.35); }
+    .cta-input:focus { border-color: rgba(255,255,255,0.4); }
+    .cta-submit {
+      padding: 14px 28px; font-size: 15px; font-weight: 600;
+      font-family: inherit; background: white; color: var(--text);
+      border: none; border-radius: 100px; cursor: pointer;
+      white-space: nowrap;
+    }
+    .cta-submit:hover { opacity: 0.9; }
+    .cta-fine { font-size: 12px; color: rgba(255,255,255,0.35); margin-top: 16px; }
+
+    /* ---- FOOTER ---- */
+    footer {
+      padding: 48px; border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-left { font-size: 12px; color: var(--text-tertiary); }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a {
+      font-size: 12px; color: var(--text-tertiary);
+      text-decoration: none;
+    }
+    .footer-links a:hover { color: var(--text-secondary); }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 900px) {
+      nav { padding: 14px 20px; }
+      .nav-links { display: none; }
+      .hero { padding: 120px 20px 60px; }
+      .article-wrapper {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding: 60px 20px 40px;
+      }
+      .toc { position: static; }
+      .article-body { max-width: 100%; font-size: 16px; }
+      .article-body h2 { font-size: 30px; margin-top: 56px; }
+      .article-body h3 { font-size: 21px; margin-top: 36px; }
+      .citations-section, .related-section, .legal-section, .cta-section { padding: 70px 20px; }
+      .related-grid { grid-template-columns: 1fr; }
+      .citations-section h2 { font-size: 30px; }
+      footer { flex-direction: column; gap: 16px; text-align: center; padding: 32px 20px; }
+    }
+    @media (max-width: 500px) {
+      .hero h1 { font-size: 34px; }
+      .hero-sub { font-size: 17px; }
+      .cta-form { flex-direction: column; }
+      .lede { font-size: 19px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="/" class="logo">
+      <svg class="logo-icon" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="14" cy="14" r="13" stroke="#1B6B4A" stroke-width="1.5"/>
+        <path d="M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z" fill="#1B6B4A" opacity="0.15"/>
+        <path d="M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z" stroke="#1B6B4A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="14" y1="11" x2="14" y2="21" stroke="#1B6B4A" stroke-width="0.8"/>
+      </svg>
+      Lipa
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/methodology.html">Our methodology</a>
+      <a href="/research.html" class="active">Research</a>
+    </div>
+    <a href="/#join" class="nav-cta">Join the waitlist</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero-wrapper">
+    <section class="hero">
+      <div class="breadcrumb">
+        <a href="/research.html">Research Library</a>
+        <span class="sep">/</span>
+        <span>Nitric Oxide Pathway</span>
+      </div>
+      <span class="hero-tag">Mechanism Deep Dive</span>
+      <h1>The Nitric Oxide (NO) Pathway and Peptide Research</h1>
+      <p class="hero-sub">Understanding the role of nitric oxide signaling in tissue repair, vascular biology, and why researchers study peptides for their effects on this system.</p>
+      <div class="hero-meta">
+        <span>13 min read</span>
+        <span class="dot"></span>
+        <span>Updated April 2026</span>
+        <span class="dot"></span>
+        <span>24 cited studies</span>
+      </div>
+    </section>
+  </div>
+
+  <!-- ARTICLE -->
+  <div class="article-wrapper">
+
+    <!-- TOC -->
+    <aside class="toc">
+      <div class="toc-label">Contents</div>
+      <ul class="toc-list">
+        <li><a href="#discovery">Discovery of NO signaling</a></li>
+        <li><a href="#what-is-no">What is nitric oxide?</a></li>
+        <li><a href="#pathway">The NO pathway in detail</a></li>
+        <li><a href="#roles">Biological roles</a></li>
+        <li><a href="#peptides">Peptides studied for NO effects</a></li>
+        <li><a href="#research-areas">Key research areas</a></li>
+        <li><a href="#tissue-modeling">Tissue modeling connection</a></li>
+        <li><a href="#methods">Measuring NO activity</a></li>
+        <li><a href="#citations">Cited studies</a></li>
+      </ul>
+    </aside>
+
+    <!-- BODY -->
+    <article class="article-body">
+
+      <p class="lede">For most of the twentieth century, the idea that a gas could act as a signaling molecule inside the body was considered absurd. Then, in the late 1980s, three laboratories converged on the same unlikely answer — and rewrote the textbooks on vascular biology, wound healing, and cellular communication.</p>
+
+      <div class="info-box" style="background: var(--accent-light); border-left: 3px solid var(--accent); margin-bottom: 40px;">
+        <div class="info-label" style="color: var(--accent);">At a glance</div>
+        <p><strong>What it is:</strong> Nitric oxide (NO) is a tiny, short-lived gas molecule that cells use as a local signal — controlling blood vessel dilation, platelet behavior, wound repair, immune defense, and even certain kinds of memory formation.</p>
+        <p><strong>Why researchers care:</strong> Because NO sits upstream of angiogenesis, vasodilation, fibroblast recruitment and gastric protection, a compound that nudges the NO pathway has a plausible mechanistic route to affecting many tissue-level outcomes at once.</p>
+        <p><strong>Peptides studied for effects:</strong> BPC-157 is the primary example in the preclinical literature; angiogenic peptides like TB-500 (thymosin beta-4) and VEGF-derived fragments also intersect with NO biology.</p>
+        <p><strong>Key caveat:</strong> NO measurements are always indirect — "NO pathway effects" in the peptide literature almost always mean downstream proxies (nitrite, cGMP, or pharmacological blockade with L-NAME), not NO itself.</p>
+      </div>
+
+      <h2 id="discovery">Discovery of nitric oxide as a signaling molecule</h2>
+      <p>In 1980, Robert Furchgott and John Zawadzki published a now-famous paper in <em>Nature</em> describing an unexpected observation. When they stripped the inner endothelial lining (the single-cell layer that lines blood vessels) from isolated rabbit aorta preparations, the blood vessels lost their ability to relax in response to acetylcholine. Something released by the endothelium — which they called <strong>endothelium-derived relaxing factor (EDRF)</strong> — was apparently required for the relaxation response <a class="cite" href="#cite-1">(Furchgott & Zawadzki, 1980)</a>.</p>
+
+      <p>For nearly a decade, the chemical identity of EDRF remained contested. Then, in 1986, Furchgott and Louis Ignarro independently proposed that EDRF was in fact nitric oxide — a small, short-lived free radical gas (a molecule with an unpaired electron, making it highly reactive) <a class="cite" href="#cite-2">(Ignarro et al., 1987)</a>. Salvador Moncada's group in London published converging biochemical evidence shortly afterward, demonstrating NO release from vascular endothelial cells <a class="cite" href="#cite-3">(Palmer et al., 1987)</a>.</p>
+
+      <p>The finding that a gas could function as an intracellular and intercellular messenger overturned decades of assumptions in signaling biology. In 1998, Furchgott, Ignarro, and Ferid Murad shared the Nobel Prize in Physiology or Medicine for their work on nitric oxide as a signaling molecule in the cardiovascular system.</p>
+
+      <h2 id="what-is-no">What is nitric oxide (NO)?</h2>
+      <p>Nitric oxide is, chemically, one of the simplest molecules in biology: a single nitrogen atom bonded to a single oxygen atom, with one unpaired electron that makes it a free radical. It exists as a gas at physiological temperatures and dissolves freely in both aqueous and lipid phases, which lets it diffuse across cell membranes without any transporter.</p>
+
+      <ul>
+        <li><strong>Small gaseous signaling molecule</strong> — at roughly 30 daltons, it is among the smallest biological messengers known.</li>
+        <li><strong>Short half-life in vivo</strong> — on the order of seconds, because NO reacts rapidly with oxygen, superoxide, and heme-containing proteins.</li>
+        <li><strong>Synthesized by NO synthases</strong> — a family of enzymes that convert L-arginine into L-citrulline, releasing NO as a by-product.</li>
+      </ul>
+
+      <p>The short half-life is not a design flaw — it is the feature. A signal that dissipates in seconds cannot travel far, which makes NO an ideal <em>local</em> messenger for communication between adjacent cells within a tissue <a class="cite" href="#cite-4">(Moncada et al., 1991)</a>.</p>
+
+      <h2 id="pathway">The NO pathway in detail</h2>
+      <p>The canonical nitric oxide signaling cascade can be described in five steps. Each is an enzyme-mediated event, and each has been characterized in substantial biochemical detail.</p>
+
+      <h3>L-arginine as substrate</h3>
+      <p>The starting material is the amino acid L-arginine. All mammalian NO synthesis begins with the oxidation of one of L-arginine's two guanidinium nitrogens. The reaction consumes molecular oxygen and NADPH, yielding L-citrulline and nitric oxide in stoichiometric amounts.</p>
+
+      <h3>The NOS enzyme family</h3>
+      <p>Three isoforms of nitric oxide synthase exist in mammals, encoded by three separate genes:</p>
+      <ul>
+        <li><strong>nNOS (neuronal NOS, NOS1)</strong> — constitutively expressed in neurons and skeletal muscle; calcium-dependent; produces NO at low levels as a rapid neuromodulator.</li>
+        <li><strong>iNOS (inducible NOS, NOS2)</strong> — expressed after stimulation by cytokines or bacterial products; calcium-independent; produces larger, sustained amounts of NO as part of innate immune defense.</li>
+        <li><strong>eNOS (endothelial NOS, NOS3)</strong> — constitutively expressed in vascular endothelium; calcium-dependent; the principal source of NO that regulates vascular tone <a class="cite" href="#cite-5">(Alderton et al., 2001)</a>.</li>
+      </ul>
+
+      <h3>Guanylate cyclase activation</h3>
+      <p>Once released, NO diffuses into nearby cells and binds the heme iron at the active site of <strong>soluble guanylate cyclase (sGC)</strong>. Binding induces a conformational change that dramatically increases the enzyme's catalytic activity — by several hundred fold. Soluble guanylate cyclase is, in effect, a purpose-built NO receptor <a class="cite" href="#cite-6">(Denninger & Marletta, 1999)</a>.</p>
+
+      <h3>cGMP as second messenger</h3>
+      <p>Activated sGC converts GTP into cyclic guanosine monophosphate (cGMP), which accumulates rapidly in the cytoplasm. cGMP is the second messenger that mediates most of NO's downstream biological effects. It is removed by phosphodiesterases — notably PDE5 in vascular smooth muscle, the target of sildenafil.</p>
+
+      <h3>Protein kinase G activation</h3>
+      <p>Elevated cGMP activates <strong>cGMP-dependent protein kinase (PKG)</strong>, which phosphorylates a range of downstream targets including IP3 receptors, myosin light chain phosphatase, and several ion channels. The net effect in vascular smooth muscle is relaxation; in platelets, inhibition of aggregation; in neurons, modulation of synaptic activity.</p>
+
+      <div class="info-box">
+        <div class="info-label">Summary of the cascade</div>
+        <p>L-arginine → NOS enzyme → NO gas → diffusion → soluble guanylate cyclase → cGMP → PKG → downstream effects. Each step is an established, well-characterized biochemical event. The full cascade runs in seconds.</p>
+      </div>
+
+      <div style="background: #F5F4F1; border-radius: 8px; padding: 16px 20px; margin: 24px 0; font-size: 15px; color: var(--text-secondary);">
+        <strong style="color: var(--text);">In plain English:</strong> A cell uses a specialized enzyme (NOS) to turn an amino acid into NO gas. The gas drifts into neighboring cells, docks onto a dedicated receptor enzyme, and triggers a chain of events that — among other things — relaxes blood vessels. The whole thing happens in seconds and travels maybe a few cell diameters.
+      </div>
+
+      <h2 id="roles">Biological roles</h2>
+      <p>Once nitric oxide's role as a signaling molecule was established, investigators rapidly found it implicated in physiological systems throughout the body. The range is unusually broad.</p>
+
+      <h3>Vascular function</h3>
+      <p>Endothelial NO is the principal mediator of vasodilation (blood vessel widening) in most vascular beds. Loss of endothelial NO production — a state called "endothelial dysfunction" — is one of the earliest measurable abnormalities in atherosclerosis and hypertension <a class="cite" href="#cite-7">(Vanhoutte et al., 2017)</a>.</p>
+
+      <h3>Wound healing and tissue repair</h3>
+      <p>NO plays multiple, sometimes opposing roles across the phases of wound healing. Early after injury, iNOS-derived NO participates in inflammation and pathogen defense. Later, eNOS-derived NO supports angiogenesis, fibroblast proliferation, and collagen deposition. Mice lacking iNOS show delayed cutaneous wound closure; mice lacking eNOS show impaired angiogenic responses <a class="cite" href="#cite-8">(Witte & Barbul, 2002)</a>.</p>
+
+      <h3>Angiogenesis</h3>
+      <p>NO is required for the sprouting and migration of new blood vessels (angiogenesis — new blood vessel formation from existing ones) in response to vascular endothelial growth factor (VEGF). Pharmacological inhibition of NOS blocks VEGF-induced angiogenesis in multiple models, placing NO downstream of many pro-angiogenic signals <a class="cite" href="#cite-9">(Cooke, 2003)</a>.</p>
+
+      <h3>Immune function</h3>
+      <p>Macrophages activated by bacterial lipopolysaccharide or interferon-gamma upregulate iNOS and release NO at cytotoxic concentrations, which contributes to killing intracellular pathogens. The same chemistry, unregulated, contributes to tissue damage in sepsis and chronic inflammation.</p>
+
+      <h3>Neurotransmission</h3>
+      <p>In the central nervous system, nNOS-derived NO acts as a retrograde messenger at glutamatergic synapses, contributing to long-term potentiation in the hippocampus and to activity-dependent synaptic plasticity more broadly.</p>
+
+      <h3>Gastric mucosal protection</h3>
+      <p>NO is one of several factors maintaining the integrity of the gastric mucosal barrier. Pharmacological NOS inhibition sensitizes the stomach to injury from ethanol, NSAIDs, and stress, a finding that has been exploited in hundreds of preclinical gastric injury studies <a class="cite" href="#cite-10">(Whittle, 1995)</a>.</p>
+
+      <h2 id="peptides">Peptides studied for NO pathway effects</h2>
+      <p>Because the NO pathway sits at the intersection of vascular biology, tissue repair, and inflammation, it has become a focal point for researchers studying peptides with reported tissue-modeling effects. The peptides that most often appear in the NO-pathway literature are those whose observed actions map plausibly onto NO biology.</p>
+
+      <h3>BPC-157</h3>
+      <p>The pentadecapeptide BPC-157 has been studied by Sikiric and colleagues for its interactions with the NO system for over two decades. Published experiments in rat models report that many of the peptide's protective effects against gastric injury, vascular occlusion, and tissue damage are attenuated by co-administration of L-NAME (a non-selective NOS inhibitor) and restored by L-arginine <a class="cite" href="#cite-11">(Sikiric et al., 2014)</a>. The group has described this interaction as "protection against NO blockade" and has proposed NO pathway modulation as a unifying mechanistic hypothesis <a class="cite" href="#cite-12">(Sikiric et al., 2018)</a>.</p>
+
+      <h3>Angiogenic peptides</h3>
+      <p>A broader class of peptides — including VEGF-derived fragments and thymosin beta-4 (TB-500) — is studied for pro-angiogenic effects that intersect with NO biology, since angiogenesis in most models is partially NO-dependent <a class="cite" href="#cite-13">(Smart et al., 2007)</a>.</p>
+
+      <div class="info-box">
+        <div class="info-label">A note on framing</div>
+        <p>The statement "researchers study peptide X for its effects on the NO pathway" is descriptive. It reflects what is in the peer-reviewed literature. It is not a claim about human efficacy, and it is not a recommendation for human use. The compounds discussed here are research chemicals. Their study in animal models is a matter of scientific record; their use in humans is neither approved nor endorsed.</p>
+      </div>
+
+      <h2 id="research-areas">Key research areas</h2>
+
+      <h3>Vascular biology</h3>
+      <p>The vascular biology literature on NO is vast. The definitive review by Moncada, Palmer, and Higgs in <em>Pharmacological Reviews</em> remains the starting point for most students of the field; it synthesizes the first decade of NO research and maps the core biochemistry and physiology that subsequent work has built upon <a class="cite" href="#cite-14">(Moncada et al., 1991)</a>.</p>
+
+      <h3>Gastric protection</h3>
+      <p>Sikiric and colleagues at the University of Zagreb developed much of the modern literature on gastric cytoprotection and its relationship to NO. Their experimental paradigm — inducing gastric injury, blocking NOS with L-NAME, and examining how candidate agents restore protection — has been applied to dozens of compounds and to hundreds of injury models <a class="cite" href="#cite-15">(Sikiric et al., 2012)</a>.</p>
+
+      <h3>Wound healing</h3>
+      <p>Beyond the gastric mucosa, a body of work by Schaffer, Efron, and Barbul has examined NO's role in cutaneous wound healing, measuring nitrate/nitrite accumulation at wound sites and characterizing the phenotype of NOS-deficient mice in standard wound models <a class="cite" href="#cite-16">(Schaffer et al., 1997)</a>.</p>
+
+      <h3>Tendon repair</h3>
+      <p>A smaller literature has examined NO signaling in tendon healing. Murrell and colleagues published a series of papers demonstrating that NOS expression is upregulated after experimental tendon injury and that NOS inhibition impairs healing in rat Achilles tendon models <a class="cite" href="#cite-17">(Murrell et al., 1997)</a>.</p>
+
+      <h2 id="tissue-modeling">Why peptide researchers care about NO</h2>
+      <p>The NO pathway is appealing to peptide researchers for a specific reason: it is <strong>upstream of many of the tissue processes they want to measure</strong>. Angiogenesis, vasodilation, fibroblast recruitment, collagen deposition, and inflammatory resolution are all downstream of, or partially dependent on, NO signaling. A compound that modulates NO — whether by upregulating NOS expression, protecting against NOS inhibition, or altering cGMP dynamics — has a plausible mechanistic route to affecting many tissue outcomes at once.</p>
+
+      <p>This is also why the NO pathway acts as something of a "stress test" in preclinical experiments. If a candidate peptide's protective effect against injury is abolished by L-NAME (a drug that blocks NO synthesis) and restored by L-arginine (the amino acid starting material for NO), investigators infer that NO is somewhere in the causal chain. If the effect persists unchanged under NOS blockade, investigators infer a NO-independent mechanism. The L-NAME/L-arginine paradigm is a simple, fast, and widely used way to generate mechanistic hypotheses <a class="cite" href="#cite-18">(Sikiric et al., 2014)</a>.</p>
+
+      <div style="background: #F5F4F1; border-radius: 8px; padding: 16px 20px; margin: 24px 0; font-size: 15px; color: var(--text-secondary);">
+        <strong style="color: var(--text);">In plain English:</strong> Researchers test whether a peptide works through NO by turning the NO system off with a blocker drug and seeing if the peptide's effect disappears. If it does, NO is probably involved. If it doesn't, NO probably isn't. This simple trick is the workhorse of the NO-pathway peptide literature.
+      </div>
+
+      <h2 id="methods">Methods for measuring NO activity</h2>
+      <p>Because NO itself is so short-lived, investigators rarely measure the molecule directly. Instead they measure stable end-products, downstream second messengers, or enzymatic precursors. The most common techniques include:</p>
+
+      <ul>
+        <li><strong>Griess reaction</strong> — a century-old colorimetric assay that detects nitrite (NO2−), the stable oxidation product of NO in aqueous solution. Simple, cheap, and widely used for bulk tissue measurements <a class="cite" href="#cite-19">(Green et al., 1982)</a>.</li>
+        <li><strong>DAF-FM diacetate</strong> — a fluorescent probe that reacts with NO to yield a stable fluorescent triazole. Suitable for live-cell imaging and microscopy.</li>
+        <li><strong>Electron paramagnetic resonance (EPR)</strong> — the only technique that directly detects NO via its unpaired electron, typically using iron-based spin traps. Technically demanding but mechanistically definitive.</li>
+        <li><strong>cGMP immunoassays</strong> — measure the second messenger rather than NO itself. A functional readout of activation of the canonical pathway.</li>
+        <li><strong>NOS activity assay</strong> — measures the conversion of radiolabelled L-arginine to L-citrulline in tissue homogenates, providing an enzymatic rate rather than a concentration.</li>
+        <li><strong>Western blot for NOS isoforms</strong> — quantifies protein abundance of eNOS, iNOS, or nNOS, useful for studying expression changes over time.</li>
+      </ul>
+
+      <p>In the peptide literature, the Griess reaction and NOS pharmacological blockade (L-NAME) remain the two most common experimental tools. Neither is perfect; both are tractable; together they form the backbone of the NO-pathway phenotyping used in preclinical studies <a class="cite" href="#cite-20">(Bryan & Grisham, 2007)</a>.</p>
+
+      <div class="info-box">
+        <div class="info-label">The limits of the methods</div>
+        <p>Every NO assay is indirect in some way. Griess measures nitrite, not NO. cGMP measures downstream signaling, not the molecule itself. EPR can see NO but only in specialized conditions. The practical consequence is that "NO pathway effects" reported in the peptide literature should always be read with attention to which assay was used and what it actually measured.</p>
+      </div>
+
+    </article>
+  </div>
+
+  <!-- CITATIONS -->
+  <section class="citations-section" id="citations">
+    <div class="citations-inner">
+      <h2>Cited studies</h2>
+      <p class="sub">Selected peer-reviewed publications referenced in this article. Listed in approximate citation order.</p>
+      <ol class="citation-list">
+        <li id="cite-1">Furchgott, R. F., & Zawadzki, J. V. (1980). The obligatory role of endothelial cells in the relaxation of arterial smooth muscle by acetylcholine. <em>Nature</em>, 288(5789), 373–376.</li>
+        <li id="cite-2">Ignarro, L. J., Buga, G. M., Wood, K. S., Byrns, R. E., & Chaudhuri, G. (1987). Endothelium-derived relaxing factor produced and released from artery and vein is nitric oxide. <em>Proceedings of the National Academy of Sciences</em>, 84(24), 9265–9269.</li>
+        <li id="cite-3">Palmer, R. M. J., Ferrige, A. G., & Moncada, S. (1987). Nitric oxide release accounts for the biological activity of endothelium-derived relaxing factor. <em>Nature</em>, 327(6122), 524–526.</li>
+        <li id="cite-4">Moncada, S., Palmer, R. M. J., & Higgs, E. A. (1991). Nitric oxide: physiology, pathophysiology, and pharmacology. <em>Pharmacological Reviews</em>, 43(2), 109–142.</li>
+        <li id="cite-5">Alderton, W. K., Cooper, C. E., & Knowles, R. G. (2001). Nitric oxide synthases: structure, function and inhibition. <em>Biochemical Journal</em>, 357(3), 593–615.</li>
+        <li id="cite-6">Denninger, J. W., & Marletta, M. A. (1999). Guanylate cyclase and the NO/cGMP signaling pathway. <em>Biochimica et Biophysica Acta</em>, 1411(2–3), 334–350.</li>
+        <li id="cite-7">Vanhoutte, P. M., Shimokawa, H., Feletou, M., & Tang, E. H. C. (2017). Endothelial dysfunction and vascular disease — a 30th anniversary update. <em>Acta Physiologica</em>, 219(1), 22–96.</li>
+        <li id="cite-8">Witte, M. B., & Barbul, A. (2002). Role of nitric oxide in wound repair. <em>American Journal of Surgery</em>, 183(4), 406–412.</li>
+        <li id="cite-9">Cooke, J. P. (2003). NO and angiogenesis. <em>Atherosclerosis Supplements</em>, 4(4), 53–60.</li>
+        <li id="cite-10">Whittle, B. J. R. (1995). Nitric oxide in physiology and pathology. <em>The Histochemical Journal</em>, 27(10), 727–737.</li>
+        <li id="cite-11">Sikiric, P., Seiwerth, S., Rucman, R., Turkovic, B., Rokotov, D. S., Brcic, L., et al. (2014). Stable gastric pentadecapeptide BPC 157-NO-system relation. <em>Current Pharmaceutical Design</em>, 20(7), 1126–1135.</li>
+        <li id="cite-12">Sikiric, P., Seiwerth, S., Rucman, R., Kolenc, D., Vuletic, L. B., Drmic, D., et al. (2018). Brain-gut axis and pentadecapeptide BPC 157: theoretical and practical implications. <em>Current Neuropharmacology</em>, 14(8), 857–865.</li>
+        <li id="cite-13">Smart, N., Risebro, C. A., Melville, A. A. D., Moses, K., Schwartz, R. J., Chien, K. R., & Riley, P. R. (2007). Thymosin beta-4 induces adult epicardial progenitor mobilization and neovascularization. <em>Nature</em>, 445(7124), 177–182.</li>
+        <li id="cite-14">Moncada, S., & Higgs, E. A. (1993). The L-arginine–nitric oxide pathway. <em>New England Journal of Medicine</em>, 329(27), 2002–2012.</li>
+        <li id="cite-15">Sikiric, P., Seiwerth, S., Brcic, L., Blagaic, A. B., Zoricic, I., Sever, M., et al. (2012). Revised Robert's cytoprotection and adaptive cytoprotection and stable gastric pentadecapeptide BPC 157. Possible significance and implications for novel mediator. <em>Current Pharmaceutical Design</em>, 16(10), 1224–1234.</li>
+        <li id="cite-16">Schaffer, M. R., Tantry, U., Efron, P. A., Ahrendt, G. M., Thornton, F. J., & Barbul, A. (1997). Diabetes-impaired healing and reduced wound nitric oxide synthesis: a possible pathophysiologic correlation. <em>Surgery</em>, 121(5), 513–519.</li>
+        <li id="cite-17">Murrell, G. A. C., Szabo, C., Hannafin, J. A., Jang, D., Dolan, M. M., Deng, X. H., et al. (1997). Modulation of tendon healing by nitric oxide. <em>Inflammation Research</em>, 46(1), 19–27.</li>
+        <li id="cite-18">Sikiric, P., Seiwerth, S., Brcic, L., Sever, M., Klicek, R., Radic, B., et al. (2014). Stress in gastrointestinal tract and stable gastric pentadecapeptide BPC 157. <em>Current Pharmaceutical Design</em>, 19(1), 126–132.</li>
+        <li id="cite-19">Green, L. C., Wagner, D. A., Glogowski, J., Skipper, P. L., Wishnok, J. S., & Tannenbaum, S. R. (1982). Analysis of nitrate, nitrite, and [15N]nitrate in biological fluids. <em>Analytical Biochemistry</em>, 126(1), 131–138.</li>
+        <li id="cite-20">Bryan, N. S., & Grisham, M. B. (2007). Methods to detect nitric oxide and its metabolites in biological samples. <em>Free Radical Biology and Medicine</em>, 43(5), 645–657.</li>
+        <li>Ignarro, L. J. (1990). Biosynthesis and metabolism of endothelium-derived nitric oxide. <em>Annual Review of Pharmacology and Toxicology</em>, 30, 535–560.</li>
+        <li>Bredt, D. S., & Snyder, S. H. (1994). Nitric oxide: a physiologic messenger molecule. <em>Annual Review of Biochemistry</em>, 63, 175–195.</li>
+        <li>Garthwaite, J. (2008). Concepts of neural nitric oxide-mediated transmission. <em>European Journal of Neuroscience</em>, 27(11), 2783–2802.</li>
+        <li>Forstermann, U., & Sessa, W. C. (2012). Nitric oxide synthases: regulation and function. <em>European Heart Journal</em>, 33(7), 829–837.</li>
+        <li>Kojima, H., Nakatsubo, N., Kikuchi, K., Kawahara, S., Kirino, Y., Nagoshi, H., Hirata, Y., & Nagano, T. (1998). Detection and imaging of nitric oxide with novel fluorescent indicators: diaminofluoresceins. <em>Analytical Chemistry</em>, 70(13), 2446–2453.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- RELATED -->
+  <section class="related-section">
+    <div class="related-inner">
+      <h2>Related deep dives</h2>
+      <div class="related-grid">
+        <a class="related-card" href="research-bdnf.html">
+          <span class="category-tag">Mechanism Deep Dive</span>
+          <h3>BDNF: Brain-Derived Neurotrophic Factor and Peptide Research</h3>
+          <p>The neurotrophin behind synaptic plasticity, learning, and memory — and the peptides researchers study for their effects on its expression.</p>
+          <span class="read-link">Read article &rarr;</span>
+        </a>
+        <a class="related-card" href="research-bpc-157.html">
+          <span class="category-tag">Compound Overview</span>
+          <h3>BPC-157: The Complete Research Overview</h3>
+          <p>A plain-English review of published research on Body Protection Compound-157, its proposed mechanisms, and the current state of evidence.</p>
+          <span class="read-link">Read article &rarr;</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEGAL DISCLAIMER -->
+  <section class="legal-section">
+    <div class="legal-inner">
+      <div class="legal-label">Legal Disclaimer</div>
+      <p>This article summarizes published research on the nitric oxide signaling pathway and on peptides that have been studied in animal and cell-culture models for their effects on this pathway. It is not medical advice, diagnosis, treatment, or a recommendation for human use. The peptides referenced — including BPC-157 — are not approved as medicines in the European Union, United Kingdom, United States, or any major regulatory jurisdiction. Content is for educational and research purposes only. Such compounds, where sold, are strictly research chemicals for laboratory and in-vitro research. Purchasers must be qualified researchers aged 18 or over. Consult a qualified healthcare provider for any medical questions. Lipa is a trade name of Go Exe B.V., registered in the Netherlands.</p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section" id="notify">
+    <div class="cta-inner">
+      <div class="section-eyebrow">Stay Informed</div>
+      <div class="section-title">New research, delivered quietly.</div>
+      <div class="section-sub">Join the waitlist. We'll email you when new compound overviews are published and when the store opens across Europe.</div>
+      <form class="cta-form" id="waitlist-form" onsubmit="handleWaitlist(event)">
+        <input class="cta-input" type="email" placeholder="Your email" required id="waitlist-email">
+        <button class="cta-submit" type="submit">Join Waitlist</button>
+      </form>
+      <div class="cta-fine" id="waitlist-msg">No spam. Unsubscribe anytime.</div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-left">&copy; 2026 Lipa Health. All rights reserved.</div>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/methodology.html">Methodology</a>
+      <a href="/research.html">Research</a>
+      <a href="/privacy.html">Privacy</a>
+    </div>
+  </footer>
+
+  <script>
+    // TOC active highlighting via IntersectionObserver
+    const tocLinks = document.querySelectorAll('.toc-list a');
+    const sections = Array.from(tocLinks).map(link => {
+      const id = link.getAttribute('href').slice(1);
+      return document.getElementById(id);
+    }).filter(Boolean);
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          tocLinks.forEach(l => l.classList.remove('active'));
+          const match = document.querySelector('.toc-list a[href="#' + id + '"]');
+          if (match) match.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+
+    // Supabase waitlist
+    const SUPABASE_URL = 'https://dqihkpicbswxzwkoxwnb.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRxaWhrcGljYnN3eHp3a294d25iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM5NjczODcsImV4cCI6MjA1OTU0MzM4N30.SifN_Rkhi5BwGXSfJz4jiM4VBzMdJPYE_6JjjC2S4RA';
+
+    async function handleWaitlist(e) {
+      e.preventDefault();
+      const email = document.getElementById('waitlist-email').value;
+      try {
+        await fetch(SUPABASE_URL + '/rest/v1/waitlist', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_ANON,
+            'Authorization': 'Bearer ' + SUPABASE_ANON,
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({ email: email, product: 'research-no-pathway' })
+        });
+      } catch (err) { /* silent */ }
+      document.getElementById('waitlist-email').value = '';
+      document.getElementById('waitlist-msg').textContent = "You're on the list. We'll be in touch.";
+      document.getElementById('waitlist-msg').style.color = 'rgba(255,255,255,0.7)';
+    }
+  </script>
+
+</body>
+</html>

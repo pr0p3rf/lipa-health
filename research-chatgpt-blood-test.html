@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google" content="notranslate">
+  <title>Why ChatGPT can't actually interpret your blood test (and what it does well) | Lipa</title>
+  <meta name="description" content="A clear-eyed look at what general AI tools like ChatGPT, Claude, and Gemini can and can't do with a blood test. Hallucinated citations, frozen knowledge, no memory, no retraction awareness, no funding tracking. What the research actually shows about AI in medicine.">
+  <meta name="keywords" content="ChatGPT blood test, AI blood test interpretation, ChatGPT medical accuracy, AI hallucinated PMID, can ChatGPT analyze blood test, ChatGPT vs doctor, Claude blood test, Gemini health analysis, AI in medicine accuracy">
+  <link rel="canonical" href="https://lipa.health/research-chatgpt-blood-test.html">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'><circle cx='14' cy='14' r='13' fill='none' stroke='%231B6B4A' stroke-width='1.5'/><path d='M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z' fill='%231B6B4A' opacity='0.3' stroke='%231B6B4A' stroke-width='1'/></svg>">
+
+  <meta property="og:title" content="Why ChatGPT can't actually interpret your blood test — Lipa">
+  <meta property="og:description" content="A clear-eyed look at what general AI tools like ChatGPT, Claude, and Gemini can and can't do with a blood test.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://lipa.health/research-chatgpt-blood-test.html">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Why ChatGPT can't actually interpret your blood test (and what it does well)",
+    "description": "A clear-eyed look at what general AI tools like ChatGPT, Claude, and Gemini can and can't do with a blood test. Hallucinated citations, frozen knowledge, no memory, no retraction awareness.",
+    "datePublished": "2026-04-11",
+    "dateModified": "2026-04-11",
+    "author": {
+      "@type": "Organization",
+      "name": "Lipa Health",
+      "url": "https://lipa.health"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Lipa Health",
+      "url": "https://lipa.health",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://lipa.health/og-image.png"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://lipa.health/research-chatgpt-blood-test.html"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://lipa.health/"},
+      {"@type": "ListItem", "position": 2, "name": "Research", "item": "https://lipa.health/research.html"},
+      {"@type": "ListItem", "position": 3, "name": "Why ChatGPT can't interpret your blood test"}
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Can ChatGPT analyze my blood test?",
+        "acceptedAnswer": {"@type": "Answer", "text": "ChatGPT can read a blood test and produce a plausible-sounding summary, but it has significant limitations: it has no curated medical research corpus, frequently fabricates citations and PMIDs, has no memory between sessions, has knowledge frozen at its training cutoff (months or years old), cannot remove retracted papers, and cannot track who funded the research it cites. OpenAI's terms of service explicitly prohibit using ChatGPT for unsupervised medical diagnosis."}
+      },
+      {
+        "@type": "Question",
+        "name": "Is ChatGPT accurate for medical questions?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Research shows mixed results. A 2024 JAMA Network Open study by Goh et al. found GPT-4 alone scored 92% on diagnostic reasoning vignettes versus 74% for physicians using conventional resources — but that study tested controlled vignettes, not real-world blood test analysis with messy lab inputs. ChatGPT remains prone to hallucinating clinical details, fabricating PMIDs, and missing context that requires longitudinal patient data."}
+      },
+      {
+        "@type": "Question",
+        "name": "Why does ChatGPT make up PMIDs and citations?",
+        "acceptedAnswer": {"@type": "Answer", "text": "ChatGPT and other large language models generate text by predicting plausible next tokens, not by retrieving facts from a database. When asked to provide a citation, the model generates something that looks like a citation — author names, journal title, year, PMID — but these are statistical guesses, not real lookups. This is the well-documented hallucination problem. Multiple studies have shown that LLMs frequently produce fabricated citations when asked to support medical claims."}
+      },
+      {
+        "@type": "Question",
+        "name": "What's the difference between ChatGPT and a tool like Lipa for blood tests?",
+        "acceptedAnswer": {"@type": "Answer", "text": "ChatGPT generates responses from its frozen training data using statistical prediction. Lipa uses a curated corpus of millions of peer-reviewed medical studies, retrieves the relevant ones for your specific markers, grades their evidence quality, tracks their funding sources, and only cites real, verifiable papers with PMIDs. Lipa also persists your test history, removes retracted papers within hours, and refreshes its corpus daily. The model is the ingredient — the product is what you build around it."}
+      },
+      {
+        "@type": "Question",
+        "name": "Will OpenAI or Anthropic build a blood test analyzer?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Unlikely. OpenAI's usage policies explicitly prohibit using ChatGPT to provide medical diagnosis without clinician supervision, and Anthropic's policies state Claude is not designed to provide medical advice. The big AI companies have substantial liability exposure and have repeatedly stated they will not market their models as medical devices. The blood test interpretation space is left to specialized tools that build proper medical research pipelines on top of language models."}
+      },
+      {
+        "@type": "Question",
+        "name": "What is ChatGPT actually good at when it comes to health?",
+        "acceptedAnswer": {"@type": "Answer", "text": "ChatGPT and similar tools can be useful for: explaining medical terminology in plain English, helping you formulate questions to ask your physician, summarizing publicly-available health information, brainstorming possible considerations, and reformatting information for accessibility. They are not reliable for: citing the actual research behind a claim, interpreting specific lab values against current evidence, tracking your results over time, or making decisions that depend on the most recent peer-reviewed literature."}
+      }
+    ]
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --white: #FFFFFF;
+      --cream: #F8F5EF;
+      --cream-alt: #F2EFE7;
+      --ink: #0F1A15;
+      --ink-soft: #1A2520;
+      --ink-border: rgba(255,255,255,0.08);
+      --ink-text-dim: rgba(255,255,255,0.62);
+      --ink-text-muted: rgba(255,255,255,0.38);
+      --text: #0F1A15;
+      --text-secondary: #5A635D;
+      --text-tertiary: #8A928C;
+      --accent: #1B6B4A;
+      --accent-light: #E8F0EA;
+      --accent-hover: #155A3D;
+      --border: rgba(15,26,21,0.08);
+      --border-strong: rgba(15,26,21,0.14);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body {
+      background: var(--white);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 17px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 18px 40px;
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo { font-size: 16px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; display: flex; align-items: center; gap: 10px; color: var(--text); }
+    .logo-icon { width: 26px; height: 26px; }
+    .nav-right { display: flex; align-items: center; gap: 28px; }
+    .nav-links { display: flex; gap: 28px; font-size: 13px; font-weight: 500; }
+    .nav-links a { color: var(--text-secondary); transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--text); font-weight: 600; }
+    .nav-cta { font-size: 13px; font-weight: 600; color: var(--white); background: var(--accent); padding: 10px 22px; border-radius: 980px; transition: background 0.2s; }
+    .nav-cta:hover { background: var(--accent-hover); }
+
+    .article-hero {
+      background: var(--cream);
+      padding: 160px 40px 80px;
+      border-bottom: 1px solid var(--border);
+    }
+    .article-container { max-width: 760px; margin: 0 auto; }
+    .breadcrumb {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+      color: var(--text-tertiary);
+      margin-bottom: 28px;
+    }
+    .breadcrumb a { color: var(--text-secondary); transition: color 0.2s; }
+    .breadcrumb a:hover { color: var(--accent); }
+    .breadcrumb .sep { margin: 0 10px; color: var(--text-tertiary); }
+    .article-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+    .article-title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: clamp(36px, 5vw, 60px);
+      font-weight: 400;
+      line-height: 1.04;
+      letter-spacing: -0.025em;
+      color: var(--text);
+      margin-bottom: 28px;
+    }
+    .article-deck {
+      font-size: clamp(17px, 1.5vw, 21px);
+      line-height: 1.55;
+      color: var(--text-secondary);
+      margin-bottom: 36px;
+      max-width: 680px;
+    }
+    .article-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-tertiary);
+      letter-spacing: 0.3px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .article-meta strong { color: var(--text); font-weight: 500; }
+
+    .article-body { padding: 80px 40px 40px; }
+    .article-body h2 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: clamp(28px, 3vw, 36px);
+      font-weight: 500;
+      line-height: 1.15;
+      letter-spacing: -0.015em;
+      color: var(--text);
+      margin: 64px 0 24px;
+    }
+    .article-body h2:first-child { margin-top: 0; }
+    .article-body h3 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 22px;
+      font-weight: 500;
+      letter-spacing: -0.005em;
+      color: var(--text);
+      margin: 40px 0 16px;
+    }
+    .article-body p {
+      font-size: 17px;
+      line-height: 1.75;
+      color: var(--text);
+      margin-bottom: 22px;
+    }
+    .article-body p strong { font-weight: 600; }
+    .article-body p em { font-style: italic; color: var(--text-secondary); }
+    .article-body ul, .article-body ol { margin: 0 0 24px 24px; }
+    .article-body li { font-size: 17px; line-height: 1.75; color: var(--text); margin-bottom: 8px; }
+    .article-body .pull-quote {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: clamp(22px, 2.4vw, 28px);
+      font-weight: 500;
+      line-height: 1.3;
+      letter-spacing: -0.012em;
+      color: var(--text);
+      margin: 48px 0;
+      padding: 32px 0 32px 32px;
+      border-left: 3px solid var(--accent);
+    }
+    .article-body .cite {
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      vertical-align: super;
+      line-height: 0;
+      margin-left: 2px;
+    }
+    .article-body .cite a {
+      color: var(--accent);
+      border-bottom: 1px solid rgba(27,107,74,0.3);
+    }
+    .article-body table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 32px 0;
+      font-size: 14px;
+    }
+    .article-body th {
+      text-align: left;
+      padding: 14px 16px;
+      background: var(--cream);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      border-bottom: 1px solid var(--border-strong);
+    }
+    .article-body td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .article-body td:first-child { font-weight: 500; }
+
+    .keypoint {
+      background: var(--cream);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 12px 12px 0;
+      padding: 24px 28px;
+      margin: 36px 0;
+    }
+    .keypoint-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .keypoint-text { font-size: 16px; line-height: 1.65; color: var(--text); }
+
+    .references { background: var(--cream); padding: 80px 40px; border-top: 1px solid var(--border); }
+    .references-inner { max-width: 760px; margin: 0 auto; }
+    .references h2 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 32px;
+      font-weight: 500;
+      margin-bottom: 32px;
+      color: var(--text);
+    }
+    .ref-list { counter-reset: ref-counter; }
+    .ref-item {
+      counter-increment: ref-counter;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 14px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .ref-item:last-child { border-bottom: none; }
+    .ref-item::before {
+      content: counter(ref-counter);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .ref-title { color: var(--text); font-weight: 500; }
+    .ref-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-tertiary);
+      margin-top: 4px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .ref-meta .ref-pmid { color: var(--accent); }
+    .ref-meta .ref-pmid a { color: var(--accent); border-bottom: 1px solid rgba(27,107,74,0.3); }
+    .ref-meta .ref-grade {
+      font-weight: 600;
+      background: var(--accent-light);
+      color: var(--accent);
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 9px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .faq { background: var(--white); padding: 80px 40px; border-top: 1px solid var(--border); }
+    .faq-inner { max-width: 760px; margin: 0 auto; }
+    .faq h2 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 32px;
+      font-weight: 500;
+      margin-bottom: 32px;
+      color: var(--text);
+    }
+    .faq-item { padding: 24px 0; border-bottom: 1px solid var(--border); }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-q {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .faq-a { font-size: 15px; line-height: 1.65; color: var(--text-secondary); }
+
+    .article-cta {
+      background: var(--ink);
+      color: var(--white);
+      padding: 100px 40px;
+      text-align: center;
+      border-top: 1px solid var(--ink-border);
+    }
+    .article-cta h2 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: clamp(32px, 4vw, 48px);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.022em;
+      color: var(--white);
+      margin-bottom: 24px;
+      max-width: 620px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .article-cta p {
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--ink-text-dim);
+      max-width: 560px;
+      margin: 0 auto 40px;
+    }
+    .btn-primary {
+      display: inline-block;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--white);
+      background: var(--accent);
+      padding: 18px 36px;
+      border-radius: 980px;
+      transition: all 0.2s;
+      box-shadow: 0 6px 24px rgba(27,107,74,0.18);
+    }
+    .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+    .related { background: var(--white); padding: 80px 40px; border-top: 1px solid var(--border); }
+    .related-inner { max-width: 1100px; margin: 0 auto; }
+    .related h2 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 32px;
+      font-weight: 500;
+      margin-bottom: 32px;
+      color: var(--text);
+    }
+    .related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .related-card {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .related-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .related-card.placeholder { opacity: 0.55; cursor: not-allowed; }
+    .related-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .related-title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 19px;
+      font-weight: 500;
+      line-height: 1.25;
+      color: var(--text);
+    }
+
+    footer.page-footer {
+      background: var(--ink);
+      color: var(--ink-text-dim);
+      padding: 48px 40px;
+      font-size: 12px;
+      text-align: center;
+      border-top: 1px solid var(--ink-border);
+    }
+    footer.page-footer a { color: var(--ink-text-dim); margin: 0 16px; }
+    footer.page-footer a:hover { color: var(--white); }
+
+    @media (max-width: 900px) {
+      nav { padding: 14px 20px; }
+      .nav-links { display: none; }
+      .article-hero { padding: 120px 20px 56px; }
+      .article-body { padding: 56px 20px 32px; }
+      .references, .faq, .related { padding: 60px 20px; }
+      .related-grid { grid-template-columns: 1fr; }
+      .article-cta { padding: 64px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">
+    <svg class="logo-icon" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="14" cy="14" r="13" stroke="#1B6B4A" stroke-width="1.5"/>
+      <path d="M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z" fill="#1B6B4A" opacity="0.15"/>
+      <path d="M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z" stroke="#1B6B4A" stroke-width="1.2"/>
+      <line x1="14" y1="11" x2="14" y2="21" stroke="#1B6B4A" stroke-width="0.8"/>
+    </svg>
+    Lipa
+  </a>
+  <div class="nav-right">
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/methodology.html">Our methodology</a>
+      <a href="/research.html" class="active">Research</a>
+    </div>
+    <a href="/#join" class="nav-cta">Join the waitlist</a>
+  </div>
+</nav>
+
+<section class="article-hero">
+  <div class="article-container">
+    <div class="breadcrumb">
+      <a href="/">Home</a><span class="sep">/</span><a href="/research.html">Research</a><span class="sep">/</span>ChatGPT &amp; blood tests
+    </div>
+    <div class="article-tag">AI in medicine · Methodology</div>
+    <h1 class="article-title">Why ChatGPT can't actually interpret your blood test (and what it does well).</h1>
+    <p class="article-deck">A clear-eyed look at what general AI tools like ChatGPT, Claude, and Gemini can and can't do with your bloodwork — written by people who use language models every day, and who built their own product on top of one. Honest about what's good. Honest about what's broken.</p>
+    <div class="article-meta">
+      <span><strong>11 min read</strong></span>
+      <span><strong>14</strong> cited studies</span>
+      <span>Last reviewed <strong>April 2026</strong></span>
+    </div>
+  </div>
+</section>
+
+<article class="article-body">
+  <div class="article-container">
+
+    <h2>This isn't an attack on language models</h2>
+    <p>Lipa uses language models too. We use them at the very end of our analysis pipeline to compose the plain-English explanations our members read. We have nothing against ChatGPT or Claude or Gemini — they are remarkable tools and they have made many things possible that weren't a few years ago.</p>
+    <p>This article is honest about what they can and can't do for one specific task: interpreting your blood test. That task happens to be the thing we built Lipa around, so we have spent a lot of time thinking carefully about where language models excel and where they fail. We use them ourselves. We also know what they can't do alone.</p>
+
+    <h2>The "AI scored 92% on diagnosis" study, in context</h2>
+    <p>You may have seen the headline. In November 2024, a study published in <em>JAMA Network Open</em> by Goh and colleagues randomized 50 physicians to use either GPT-4 or conventional resources for diagnostic reasoning on a set of clinical case vignettes<span class="cite">[1]</span>. The widely-shared finding: GPT-4 alone scored about 92% on the diagnostic reasoning task, while physicians using GPT-4 scored 76%, and physicians using conventional resources scored 74%. The model alone outperformed clinicians using the same model.</p>
+    <p>It's a real result. It deserves to be taken seriously. But it also deserves to be contextualized.</p>
+    <p><strong>What the study tested:</strong> diagnostic reasoning on standardized clinical vignettes. Cases were curated, well-formatted, and designed to test differential diagnosis capability. Researchers gave GPT-4 clean, structured inputs and graded its answers against gold-standard diagnoses.</p>
+    <p><strong>What the study didn't test:</strong></p>
+    <ul>
+      <li>Real-world blood test interpretation with messy lab PDFs and missing context</li>
+      <li>Whether the model's cited reasoning relied on real or hallucinated sources</li>
+      <li>Longitudinal patient data — your prior tests, your trends, your history</li>
+      <li>Whether the answers would change with the latest research from the past 6 months</li>
+      <li>Funding-source awareness in cited studies</li>
+      <li>Removal of retracted papers from the model's reasoning</li>
+      <li>The complete patient context: medications, lifestyle, family history, current symptoms</li>
+    </ul>
+    <p>In other words: a controlled benchmark on clean inputs is not the same as reading a real patient's blood test. The 92% number is impressive and important — but it tells you what GPT-4 can do in a sterile environment, not what it does with your hs-CRP at 2.8 mg/L on a PDF you took with your phone in bad lighting.</p>
+
+    <div class="keypoint">
+      <div class="keypoint-label">In plain English</div>
+      <div class="keypoint-text">GPT-4 is remarkably good at standardized diagnostic reasoning vignettes. That doesn't mean ChatGPT can interpret your specific blood test reliably. The benchmark and the real-world task are different problems.</div>
+    </div>
+
+    <h2>The hallucination problem</h2>
+    <p>Language models work by predicting plausible next tokens, not by retrieving facts from a database. When you ask ChatGPT to support a claim with a citation, the model generates something that <em>looks</em> like a citation: an author name, a journal title, a year, a PMID. These are all statistically reasonable guesses based on the model's training data — but they are not lookups against a real database.</p>
+    <p>The result is the well-documented <strong>hallucination</strong> problem. A 2023 ACM survey of hallucination in language generation systems catalogued the failure modes across natural language tasks<span class="cite">[2]</span>. In the medical domain, multiple studies have specifically tested LLM citation generation and found that a substantial fraction of cited references — often more than 30 percent — are fabricated<span class="cite">[3]</span><span class="cite">[4]</span>. The model produces plausible-sounding PMIDs that don't exist, real PMIDs assigned to wrong papers, real papers with the wrong authors, or real authors paired with fabricated journal titles.</p>
+    <p>For someone trying to understand their blood test, this is a fatal flaw. If you ask ChatGPT "what does the research say about my hs-CRP being 2.8 mg/L?" it will confidently give you an answer with citations. The answer might be correct. The citations might be real. Or the citations might be invented. You have no way to tell without checking each one against PubMed manually — and at that point, you've done the work yourself.</p>
+    <p>This is the single biggest reason general LLMs are not appropriate for blood test interpretation as a standalone tool. The user has no signal to distinguish a confidently-stated correct answer from a confidently-stated wrong one.</p>
+
+    <div class="pull-quote">A user has no signal to distinguish a confidently-stated correct answer from a confidently-stated hallucinated one.</div>
+
+    <h2>The frozen knowledge problem</h2>
+    <p>Language models have a <strong>knowledge cutoff</strong>. The training data is collected up to a certain date, the model is trained, and then released. Once deployed, the model knows nothing that happened after its cutoff. ChatGPT, Claude, and Gemini all have cutoffs — typically months to over a year before the time you're using them.</p>
+    <p>This matters for blood test interpretation because <em>medical research moves</em>. A 2026 systematic review and meta-analysis on omega-3 supplementation and hs-CRP — the kind of paper that would reasonably change your understanding of an intervention — won't be in a model whose cutoff was 2024. Your "AI" interpretation will rely on the literature available before that systematic review existed, even though the new evidence is the more reliable answer.</p>
+    <p>This isn't fixable by clever prompting. The model literally does not have the data. It will confidently summarize an older state of the literature and present it as the current consensus.</p>
+
+    <h2>The retraction problem</h2>
+    <p>Worse: language models also can't <em>remove</em> papers that have been retracted. When a study turns out to be fraudulent, methodologically broken, or simply wrong, journals issue retraction notices. Reputable databases like PubMed flag retracted papers. Real medical research workflows exclude them.</p>
+    <p>A language model trained on text that included a retracted paper has no mechanism to "unlearn" that paper. The retracted findings remain encoded in the model weights, and the model will continue to cite them as if they were current evidence. There is no patch. There is no recall.</p>
+    <p>This is a documented problem in the LLM-in-medicine literature<span class="cite">[5]</span>. For blood test interpretation, where the wrong answer can lead to wrong decisions, the inability to remove retracted papers is a serious limitation.</p>
+
+    <h2>The memory problem</h2>
+    <p>ChatGPT does not remember your previous tests. Each conversation is largely a fresh start. The latest versions have introduced limited memory features, but these are not designed to track longitudinal patient data — they are designed to remember conversational preferences.</p>
+    <p>For blood test interpretation, longitudinal data is often the most informative signal. Your hs-CRP at 2.8 mg/L is one data point. Your hs-CRP at 2.8 mg/L following 1.4 mg/L six months ago is a trajectory. Your hs-CRP at 2.8 mg/L following 1.4 mg/L six months ago following 4.0 mg/L two years ago is a story. The trajectory is the medicine.</p>
+    <p>A general AI tool with no persistent memory of your prior tests can only see the snapshot. It can't see the trend. It can't compare to your baseline. It can't notice that your fasting insulin has been creeping up for 18 months while your fasting glucose has stayed normal — the kind of subclinical pattern that early-warning matters for.</p>
+
+    <h2>The funding-source problem</h2>
+    <p>Most cited research is influenced — sometimes obviously, sometimes subtly — by who paid for it. Industry-funded studies have a <em>well-documented</em> tendency to produce results favorable to the funder<span class="cite">[6]</span><span class="cite">[7]</span>. Independent academic studies and government-funded research are not free of bias either, but the structural incentives are different.</p>
+    <p>A serious medical research synthesis weights independent and government-funded research more heavily than industry-sponsored research, and at minimum makes the funding source visible so the reader can judge for themselves. This is standard practice in evidence-based medicine and in any well-conducted systematic review<span class="cite">[8]</span>.</p>
+    <p>Language models don't track funding sources. When ChatGPT cites a paper (or hallucinates one), it doesn't tell you who funded the underlying research. You can ask, and the model will confidently tell you something — but the answer is generated from training-data statistics, not from a database lookup. There is no audit trail.</p>
+
+    <h2>The "no doctors will use it" problem (which is also a market gap)</h2>
+    <p>OpenAI's usage policies explicitly prohibit using ChatGPT to provide unsupervised medical diagnosis<span class="cite">[9]</span>. Anthropic's policies state that Claude is not designed to provide medical advice<span class="cite">[10]</span>. Google's Gemini policies are similar. These are not minor disclaimers — they are deliberate liability decisions by companies with very large legal exposure.</p>
+    <p>What this means in practice: the major AI companies will not market their models as medical tools. They will not run a "Use ChatGPT for your blood test" advertising campaign. They will not optimize their systems for clinical reliability. They will continue to be excellent general-purpose tools, and they will continue to leave the medical interpretation space to specialized products.</p>
+    <p>The space is open by design. The question is what you build in it.</p>
+
+    <h2>What ChatGPT is actually good at, when it comes to your health</h2>
+    <p>This article isn't a takedown. Language models are remarkable tools, and they have legitimate uses for someone trying to understand their own biology:</p>
+
+    <table>
+      <thead>
+        <tr><th>Task</th><th>ChatGPT is good at this</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Explaining medical terminology in plain English</td>
+          <td>Yes — translating "subclinical hypothyroidism" into "your thyroid is working harder than it should" is exactly what LLMs do well</td>
+        </tr>
+        <tr>
+          <td>Helping you formulate questions to ask your physician</td>
+          <td>Yes — drafting the four sentences you'll say in your appointment is a legitimate use</td>
+        </tr>
+        <tr>
+          <td>Summarizing publicly-available health information</td>
+          <td>Yes — within the limits of its training data and your willingness to verify</td>
+        </tr>
+        <tr>
+          <td>Brainstorming possible considerations for a complex situation</td>
+          <td>Yes — but treat output as a starting list, not a conclusion</td>
+        </tr>
+        <tr>
+          <td>Reformatting or simplifying information for accessibility</td>
+          <td>Yes — particularly translating between languages or reading levels</td>
+        </tr>
+        <tr>
+          <td>Citing the actual research behind a claim</td>
+          <td>No — citations are statistically generated, not retrieved</td>
+        </tr>
+        <tr>
+          <td>Interpreting your specific lab values against current evidence</td>
+          <td>No — frozen knowledge, no longitudinal data, no funding tracking</td>
+        </tr>
+        <tr>
+          <td>Tracking your results over time</td>
+          <td>No — no persistent patient memory</td>
+        </tr>
+        <tr>
+          <td>Decisions that depend on the most recent literature</td>
+          <td>No — knowledge cutoff is months or years old, retractions not handled</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>What we built instead, and why</h2>
+    <p>Lipa is what you get when you take everything language models are good at and combine them with everything they're not. The model is the ingredient. The product is what you build around it.</p>
+    <p>Specifically, Lipa wraps the language model with five things ChatGPT alone doesn't have:</p>
+    <ol>
+      <li><strong>A curated, real research corpus.</strong> We ingest peer-reviewed studies daily from PubMed, Europe PMC, Cochrane, ClinicalTrials.gov, bioRxiv, medRxiv, and major clinical guideline bodies. The corpus is real. Every paper has a real PMID. The model retrieves from this corpus rather than generating from training-data memory.</li>
+      <li><strong>Citation grounding with no fabrication.</strong> Every claim Lipa generates is forced through a grounding step that ties it back to a specific retrieved paper. If the model wants to cite something, it has to cite something from the retrieved set. Hallucinated PMIDs are structurally impossible.</li>
+      <li><strong>Daily corpus refresh + retraction handling.</strong> When a new paper publishes, we ingest it within 24 hours. When a paper is retracted, we remove it from the retrieval pool within hours. The corpus stays current.</li>
+      <li><strong>Funding-source tracking.</strong> Every paper in our corpus is tagged with its funding source — independent academic, government, non-profit, industry, mixed, or undeclared. Independent research is weighted higher in our grading. The funding label is visible on every insight you see.</li>
+      <li><strong>Persistent memory of your biology.</strong> Every test you upload is saved to a vault we own and you control. Year-over-year trends, cross-marker patterns, longitudinal trajectories — these all become visible only when multiple tests are read together. The trajectory is the medicine.</li>
+    </ol>
+    <p>None of these are individually magic. They are deliberate engineering decisions to address specific failure modes of using language models alone.</p>
+
+    <div class="keypoint">
+      <div class="keypoint-label">The honest summary</div>
+      <div class="keypoint-text">If you want to understand a single medical term in plain English, ChatGPT is excellent. If you want to interpret your specific blood test against the current peer-reviewed literature, with verifiable citations, persistent memory, retraction-aware research, and funding-source transparency — you need a system built for that specific job. That's what Lipa is.</div>
+    </div>
+
+    <h2>The bigger point</h2>
+    <p>The fact that GPT-4 can score 92% on a diagnostic reasoning vignette is meaningful. It changes what specialized tools have to do to add value. It means that thin wrappers around an LLM API — products that just send your blood test to ChatGPT and reformat the response — are not differentiated. Anyone can build that. The model does most of the work.</p>
+    <p>But the model alone is not enough for any task that requires real, verifiable evidence, longitudinal context, and rigorous research handling. For blood test interpretation specifically, the moat is the layer around the model: the curated corpus, the retrieval, the grading, the funding tracking, the persistent vault, the personalized matching. That's where Lipa lives. That's why we built it.</p>
+    <p>We use language models. We don't pretend they do everything.</p>
+  </div>
+</article>
+
+<section class="references">
+  <div class="references-inner">
+    <h2>Cited research</h2>
+    <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 24px;">All citations link to the source publication. Funding source labels reflect declared funding in the published paper. Evidence grades use Lipa's GRADE-style framework — see <a href="/methodology.html" style="color: var(--accent); border-bottom: 1px solid rgba(27,107,74,0.3);">our methodology</a>.</p>
+
+    <ol class="ref-list">
+      <li class="ref-item">
+        <div>
+          <div class="ref-title">Goh E, Gallo R, Hom J, et al. Large language model influence on diagnostic reasoning: a randomized clinical trial.</div>
+          <div class="ref-meta">
+            <span>JAMA Network Open · 2024</span>
+            <span class="ref-pmid"><a href="https://pubmed.ncbi.nlm.nih.gov/39466245/">PMID: 39466245</a></span>
+            <span class="ref-grade">Grade A+</span>
+            <span>Independent · academic</span>
+          </div>
+        </div>
+      </li>
+      <li class="ref-item">
+        <div>
+          <div class="ref-title">Ji Z, Lee N, Frieske R, et al. Survey of Hallucination in Natural Language Generation.</div>
+          <div class="ref-meta">
+            <span>ACM Computing Surveys · 2023</span>
+            <span class="ref-pmid"><a href="https://dl.acm.org/doi/10.1145/3571730">DOI: 10.1145/3571730</a></span>
+            <span class="ref-grade">Grade A</span>
+            <span>Independent · academic</span>
+          </div>
+        </div>
+      </li>
+      <li class="ref-item">
+        <div>
+          <div class="ref-title">Bhattacharyya M, Miller VM, Bhattacharyya D, Miller LE. High Rates of Fabricated and Inaccurate References in ChatGPT-Generated Medical Content.</div>
+          <div class="ref-meta">
+            <span>Cureus · 2023</span>
+            <span class="ref-pmid"><a href="https://pubmed.ncbi.nlm.nih.gov/37325364/">PMID: 37325364</a></span>
+            <span class="ref-grade">Grade B</span>
+            <span>Independent · academic</span>
+          </div>
+        </div>
+      </li>
+      <li class="ref-item">
+        <div>
+          <div class="ref-title">Walters WH, Wilder EI. Fabrication and errors in the bibliographic citations generated by ChatGPT.</div>
+          <div class="ref-meta">
+            <span>Sci Rep · 2023</span>
+            <span class="ref-pmid"><a href="https://pubmed.ncbi.nlm.nih.gov/37711943/">PMID: 37711943</a></span>
+            <span class="ref-grade">Grade A</span>
+            <span>Independent · academic</span>
+          </div>
+        </div>
+      </li>
+      <li class="ref-item">
+        <div>
+          <div class="ref-title">Lecler A, Duron L, Soyer P. Revolutionizing radiology with GPT-based models: Current applications, future possibilities and limitations of ChatGPT.</div>
+          <div class="ref-meta">
+            <span>Diagn Interv Imaging · 2023</span>
+            <span class="ref-pmid"><a href="https://pubmed.ncbi.nlm.nih.gov/36801488/">PMID: 36801488</a></span>
+            <span class="ref-grade">Grade B</span>
+            <span>Independent · academic</span>
+          </div>
+        </div>
+      </li>
+      <li class="ref-item">
+        <div>
+          <div class="ref-title">Lundh A, Lexchin J, Mintzes B, Schroll JB, Bero L. Industry sponsorship and research outcome.</div>
+          <div class="ref-meta">
+            <span>Cochrane Database Syst Rev · 2017</span>
+            <span class="ref-pmid"><a href="https://pubmed.ncbi.nlm.nih.gov/28207928/">PMID: 28207928</a></span>
+            <span class="ref-grade">Grade A+</span>
+            <span>Non-profit · Cochrane</span>
+          </div>
+        </div>
+      </li>
+      <li class="ref-item">
+        <div>
+          <div class="ref-title">Bekelman JE, Li Y, Gross CP. Scope and impact of financial conflicts of interest in biomedical research: a systematic review.</div>
+          <div class="ref-meta">
+            <span>JAMA · 2003</span>
+            <span class="ref-pmid"><a href="https://pubmed.ncbi.nlm.nih.gov/12533125/">PMID: 12533125</a></span>
+            <span class="ref-grade">Grade A</span>
+            <span>Independent · academic</span>
+          </div>
+        </div>
+      </li>
+      <li class="ref-item">
+        <div>
+          <div class="ref-title">Higgins JPT, Thomas J, Chandler J, et al. (editors). Cochrane Handbook for Systematic Reviews of Interventions.</div>
+          <div class="ref-meta">
+            <span>Cochrane · current edition</span>
+            <span class="ref-pmid"><a href="https://training.cochrane.org/handbook">handbook.cochrane.org</a></span>
+            <span class="ref-grade">Grade A+</span>
+            <span>Non-profit · Cochrane</span>
+          </div>
+        </div>
+      </li>
+      <li class="ref-item">
+        <div>
+          <div class="ref-title">OpenAI. Usage Policies (medical advice and unsupervised diagnosis prohibition).</div>
+          <div class="ref-meta">
+            <span>OpenAI · current</span>
+            <span class="ref-pmid"><a href="https://openai.com/policies/usage-policies/">openai.com/policies</a></span>
+            <span class="ref-grade">Primary source</span>
+            <span>Industry · OpenAI</span>
+          </div>
+        </div>
+      </li>
+      <li class="ref-item">
+        <div>
+          <div class="ref-title">Anthropic. Usage Policies (limitations on medical advice).</div>
+          <div class="ref-meta">
+            <span>Anthropic · current</span>
+            <span class="ref-pmid"><a href="https://www.anthropic.com/legal/aup">anthropic.com/legal/aup</a></span>
+            <span class="ref-grade">Primary source</span>
+            <span>Industry · Anthropic</span>
+          </div>
+        </div>
+      </li>
+      <li class="ref-item">
+        <div>
+          <div class="ref-title">Singhal K, Azizi S, Tu T, et al. Large language models encode clinical knowledge (Med-PaLM).</div>
+          <div class="ref-meta">
+            <span>Nature · 2023</span>
+            <span class="ref-pmid"><a href="https://pubmed.ncbi.nlm.nih.gov/37438534/">PMID: 37438534</a></span>
+            <span class="ref-grade">Grade A+</span>
+            <span>Industry · Google DeepMind (declared)</span>
+          </div>
+        </div>
+      </li>
+      <li class="ref-item">
+        <div>
+          <div class="ref-title">Singhal K, Tu T, Gottweis J, et al. Towards Expert-Level Medical Question Answering with Large Language Models (Med-PaLM 2).</div>
+          <div class="ref-meta">
+            <span>arXiv · 2023 / Nature 2025</span>
+            <span class="ref-pmid"><a href="https://arxiv.org/abs/2305.09617">arXiv:2305.09617</a></span>
+            <span class="ref-grade">Grade A</span>
+            <span>Industry · Google DeepMind (declared)</span>
+          </div>
+        </div>
+      </li>
+      <li class="ref-item">
+        <div>
+          <div class="ref-title">Athaluri SA, Manthena SV, Kesapragada VSRKM, et al. Exploring the Boundaries of Reality: Investigating the Phenomenon of AI Hallucination Through ChatGPT References.</div>
+          <div class="ref-meta">
+            <span>Cureus · 2023</span>
+            <span class="ref-pmid"><a href="https://pubmed.ncbi.nlm.nih.gov/37194034/">PMID: 37194034</a></span>
+            <span class="ref-grade">Grade B</span>
+            <span>Independent · academic</span>
+          </div>
+        </div>
+      </li>
+      <li class="ref-item">
+        <div>
+          <div class="ref-title">Hatem R, Simmons B, Thornton JE. A call to address AI "hallucinations" and how healthcare professionals can mitigate their risks.</div>
+          <div class="ref-meta">
+            <span>Cureus · 2023</span>
+            <span class="ref-pmid"><a href="https://pubmed.ncbi.nlm.nih.gov/37789998/">PMID: 37789998</a></span>
+            <span class="ref-grade">Grade B</span>
+            <span>Independent · academic</span>
+          </div>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section class="faq">
+  <div class="faq-inner">
+    <h2>Frequently asked questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">Can ChatGPT analyze my blood test?</div>
+      <div class="faq-a">ChatGPT can read a blood test and produce a plausible-sounding summary, but it has significant limitations: it has no curated medical research corpus, frequently fabricates citations and PMIDs, has no memory between sessions, has knowledge frozen at its training cutoff (months or years old), cannot remove retracted papers, and cannot track who funded the research it cites. OpenAI's terms of service explicitly prohibit using ChatGPT for unsupervised medical diagnosis.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Is ChatGPT accurate for medical questions?</div>
+      <div class="faq-a">Research shows mixed results. A 2024 JAMA Network Open study by Goh et al. found GPT-4 alone scored 92% on diagnostic reasoning vignettes versus 74% for physicians using conventional resources — but that study tested controlled vignettes, not real-world blood test analysis with messy lab inputs. ChatGPT remains prone to hallucinating clinical details, fabricating PMIDs, and missing context that requires longitudinal patient data.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Why does ChatGPT make up PMIDs and citations?</div>
+      <div class="faq-a">ChatGPT and other large language models generate text by predicting plausible next tokens, not by retrieving facts from a database. When asked to provide a citation, the model generates something that looks like a citation — author names, journal title, year, PMID — but these are statistical guesses, not real lookups. This is the well-documented hallucination problem. Multiple peer-reviewed studies have shown that LLMs frequently produce fabricated citations when asked to support medical claims.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What's the difference between ChatGPT and a tool like Lipa for blood tests?</div>
+      <div class="faq-a">ChatGPT generates responses from its frozen training data using statistical prediction. Lipa uses a curated corpus of millions of peer-reviewed medical studies, retrieves the relevant ones for your specific markers, grades their evidence quality, tracks their funding sources, and only cites real, verifiable papers with PMIDs. Lipa also persists your test history, removes retracted papers within hours, and refreshes its corpus daily. The model is the ingredient — the product is what you build around it.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Will OpenAI or Anthropic build a blood test analyzer?</div>
+      <div class="faq-a">Unlikely. OpenAI's usage policies explicitly prohibit using ChatGPT to provide medical diagnosis without clinician supervision, and Anthropic's policies state Claude is not designed to provide medical advice. The big AI companies have substantial liability exposure and have repeatedly stated they will not market their models as medical devices. The blood test interpretation space is left to specialized tools that build proper medical research pipelines on top of language models.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What is ChatGPT actually good at when it comes to health?</div>
+      <div class="faq-a">ChatGPT and similar tools can be useful for: explaining medical terminology in plain English, helping you formulate questions to ask your physician, summarizing publicly-available health information, brainstorming possible considerations, and reformatting information for accessibility. They are not reliable for: citing the actual research behind a claim, interpreting specific lab values against current evidence, tracking your results over time, or making decisions that depend on the most recent peer-reviewed literature.</div>
+    </div>
+  </div>
+</section>
+
+<section class="article-cta">
+  <h2>The model is the ingredient. The product is what you build around it.</h2>
+  <p>Lipa wraps language models with the things they can't do alone: a real research corpus, citation grounding, daily refresh, funding tracking, and a persistent vault of your biology. Free preview, no credit card.</p>
+  <a href="/#join" class="btn-primary">Join the waitlist</a>
+</section>
+
+<section class="related">
+  <div class="related-inner">
+    <h2>Related deep dives</h2>
+    <div class="related-grid">
+      <a href="/research-hs-crp.html" class="related-card">
+        <div class="related-tag">Cardiovascular · Inflammatory</div>
+        <div class="related-title">hs-CRP, fully explained.</div>
+      </a>
+      <div class="related-card placeholder">
+        <div class="related-tag">Methodology</div>
+        <div class="related-title">Why your doctor's "normal" lab results miss what you're feeling.</div>
+      </div>
+      <a href="/methodology.html" class="related-card">
+        <div class="related-tag">Methodology</div>
+        <div class="related-title">Inside Lipa: how we read the research, grade the evidence, and track the funding.</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer class="page-footer">
+  <div>
+    <a href="/">Home</a>
+    <a href="/methodology.html">Our methodology</a>
+    <a href="/research.html">Research</a>
+    <a href="/privacy.html">Privacy</a>
+  </div>
+  <div style="margin-top: 16px; opacity: 0.5;">Lipa Health &copy; 2026</div>
+</footer>
+
+</body>
+</html>

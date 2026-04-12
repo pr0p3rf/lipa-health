@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google" content="notranslate">
+  <title>HPLC and Mass Spectrometry: How Peptide Purity Is Really Measured | Lipa Research Library</title>
+  <meta name="description" content="Understanding the two analytical techniques that define quality in the research peptide industry — how they work, what they measure, and how to read their output.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'><circle cx='14' cy='14' r='13' fill='none' stroke='%231B6B4A' stroke-width='1.5'/><path d='M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z' fill='%231B6B4A' opacity='0.3' stroke='%231B6B4A' stroke-width='1'/></svg>">
+  <meta property="og:title" content="HPLC and Mass Spectrometry: How Peptide Purity Is Really Measured | Lipa">
+  <meta property="og:description" content="The two analytical techniques that define quality in the research peptide industry.">
+  <meta property="og:type" content="article">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FAFAF8;
+      --white: #FFFFFF;
+      --text: #1A1A1A;
+      --text-secondary: #6B6B6B;
+      --text-tertiary: #999999;
+      --accent: #1B6B4A;
+      --accent-light: #E8F5EE;
+      --accent-hover: #155A3D;
+      --border: rgba(0,0,0,0.06);
+      --card-bg: #FFFFFF;
+      --section-alt: #F5F4F1;
+      --warm: #F2EDE8;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    body { overflow-x: hidden; background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; line-height: 1.6; }
+
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      padding: 16px 48px;
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(250,250,248,0.9);
+      backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-size: 17px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--text); text-decoration: none;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .logo-icon { width: 28px; height: 28px; }
+    .nav-links { display: flex; gap: 32px; align-items: center; }
+    .nav-links a {
+      font-size: 13px; font-weight: 500; color: var(--text-secondary);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--accent); font-weight: 600; }
+    .nav-cta {
+      font-size: 13px; font-weight: 600; color: white;
+      background: var(--accent); padding: 8px 20px;
+      border-radius: 100px; text-decoration: none;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--accent-hover); }
+
+    .hero-wrapper {
+      background: linear-gradient(165deg, #F5F0EB 0%, #FAFAF8 40%, #EEF2EE 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-wrapper::before {
+      content: '';
+      position: absolute;
+      top: -30%; right: -20%;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(27,107,74,0.06) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero-wrapper::after {
+      content: '';
+      position: absolute;
+      bottom: -20%; left: -10%;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(27,107,74,0.04) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero {
+      padding: 140px 48px 90px;
+      max-width: 820px; margin: 0 auto;
+      position: relative; z-index: 1;
+    }
+    .breadcrumb {
+      font-size: 12px; font-weight: 500;
+      color: var(--text-tertiary);
+      margin-bottom: 24px;
+      letter-spacing: 0.3px;
+    }
+    .breadcrumb a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .breadcrumb a:hover { color: var(--accent); }
+    .breadcrumb .sep { margin: 0 10px; color: var(--text-tertiary); }
+    .hero-tag {
+      display: inline-block;
+      font-size: 10px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      background: var(--accent-light);
+      padding: 5px 14px; border-radius: 100px;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(38px, 5.5vw, 62px);
+      font-weight: 400; line-height: 1.08;
+      margin-bottom: 22px; letter-spacing: -1px;
+    }
+    .hero-sub {
+      font-size: 19px; line-height: 1.6;
+      color: var(--text-secondary);
+      margin-bottom: 36px;
+      font-weight: 300;
+      max-width: 680px;
+    }
+    .hero-meta {
+      display: flex; align-items: center; gap: 16px;
+      font-size: 13px; color: var(--text-tertiary);
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .hero-meta span { display: inline-flex; align-items: center; gap: 6px; }
+    .hero-meta .dot { width: 3px; height: 3px; background: var(--text-tertiary); border-radius: 50%; }
+
+    .article-wrapper {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 80px 48px 60px;
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+    .toc {
+      position: sticky; top: 100px;
+      font-size: 13px;
+    }
+    .toc-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 20px;
+    }
+    .toc-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .toc-list a {
+      font-size: 13px; font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      line-height: 1.45;
+      display: block;
+      padding-left: 12px;
+      border-left: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .toc-list a:hover,
+    .toc-list a.active {
+      color: var(--accent);
+      border-left-color: var(--accent);
+    }
+
+    .article-body {
+      max-width: 680px;
+      font-size: 17px;
+      line-height: 1.85;
+      color: var(--text);
+    }
+    .article-body h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 38px;
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.6px;
+      margin-top: 72px;
+      margin-bottom: 24px;
+      color: var(--text);
+    }
+    .article-body h2:first-child { margin-top: 0; }
+    .article-body h3 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1.3;
+      letter-spacing: -0.2px;
+      margin-top: 44px;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+    .article-body p {
+      margin-bottom: 22px;
+      color: var(--text-secondary);
+    }
+    .article-body p strong { color: var(--text); font-weight: 600; }
+    .article-body ul {
+      list-style: none;
+      margin-bottom: 28px;
+      padding-left: 0;
+    }
+    .article-body ul li {
+      position: relative;
+      padding-left: 22px;
+      margin-bottom: 12px;
+      color: var(--text-secondary);
+    }
+    .article-body ul li::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 14px;
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      opacity: 0.6;
+    }
+    .article-body ul li strong { color: var(--text); font-weight: 600; }
+
+    .cite {
+      font-size: 13px;
+      color: var(--accent);
+      font-weight: 500;
+      text-decoration: none;
+    }
+    .cite:hover { text-decoration: underline; }
+
+    .lede {
+      font-family: 'Instrument Serif', serif;
+      font-size: 22px;
+      line-height: 1.5;
+      color: var(--text);
+      font-style: italic;
+      margin-bottom: 40px;
+      padding-left: 24px;
+      border-left: 3px solid var(--accent);
+    }
+
+    .info-box {
+      background: var(--section-alt);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin: 32px 0;
+    }
+    .info-box .info-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .info-box p { margin-bottom: 0; font-size: 15px; }
+    .info-box p + p { margin-top: 14px; }
+
+    .sequence-box {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 24px 0;
+      font-family: 'SF Mono', Menlo, Monaco, Consolas, monospace;
+      font-size: 14px;
+      color: var(--text);
+      word-break: break-word;
+    }
+
+    .related-section {
+      background: var(--bg);
+      padding: 100px 48px;
+    }
+    .related-inner { max-width: 1100px; margin: 0 auto; }
+    .related-section h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 32px;
+      font-weight: 400;
+      margin-bottom: 40px;
+      letter-spacing: -0.4px;
+    }
+    .related-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .related-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      text-decoration: none;
+      color: inherit;
+      opacity: 0.78;
+    }
+    .related-card .category-tag {
+      display: inline-block;
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--accent);
+      background: var(--accent-light);
+      padding: 4px 12px; border-radius: 100px;
+      margin-bottom: 18px;
+    }
+    .related-card h3 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 22px; font-weight: 400;
+      line-height: 1.25;
+      margin-bottom: 12px;
+    }
+    .related-card p {
+      font-size: 14px; color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .related-card .read-link {
+      font-size: 13px; font-weight: 600; color: var(--text-tertiary);
+    }
+
+    .legal-section {
+      background: var(--text);
+      color: rgba(255,255,255,0.72);
+      padding: 80px 48px;
+    }
+    .legal-inner {
+      max-width: 820px; margin: 0 auto;
+    }
+    .legal-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: rgba(255,255,255,0.4);
+      margin-bottom: 20px;
+    }
+    .legal-section p {
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    .cta-section {
+      background: linear-gradient(160deg, #1A1A1A 0%, #1B3A2A 50%, #1A2A1F 100%);
+      color: white;
+      text-align: center;
+      padding: 100px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: -50%; right: -20%;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(27,107,74,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .cta-inner { max-width: 640px; margin: 0 auto; position: relative; z-index: 1; }
+    .section-eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 400; line-height: 1.2;
+      margin-bottom: 16px; letter-spacing: -0.5px;
+      color: white;
+    }
+    .section-sub {
+      font-size: 16px; line-height: 1.7;
+      color: rgba(255,255,255,0.6);
+      max-width: 500px; margin: 0 auto 40px;
+    }
+    .cta-form {
+      display: flex; gap: 12px;
+      max-width: 440px; margin: 0 auto;
+    }
+    .cta-input {
+      flex: 1; padding: 14px 20px;
+      font-size: 15px; font-family: inherit;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.08);
+      color: white; border-radius: 100px;
+      outline: none;
+    }
+    .cta-input::placeholder { color: rgba(255,255,255,0.35); }
+    .cta-input:focus { border-color: rgba(255,255,255,0.4); }
+    .cta-submit {
+      padding: 14px 28px; font-size: 15px; font-weight: 600;
+      font-family: inherit; background: white; color: var(--text);
+      border: none; border-radius: 100px; cursor: pointer;
+      white-space: nowrap;
+    }
+    .cta-submit:hover { opacity: 0.9; }
+    .cta-fine { font-size: 12px; color: rgba(255,255,255,0.35); margin-top: 16px; }
+
+    footer {
+      padding: 48px; border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-left { font-size: 12px; color: var(--text-tertiary); }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a {
+      font-size: 12px; color: var(--text-tertiary);
+      text-decoration: none;
+    }
+    .footer-links a:hover { color: var(--text-secondary); }
+
+    @media (max-width: 900px) {
+      nav { padding: 14px 20px; }
+      .nav-links { display: none; }
+      .hero { padding: 120px 20px 60px; }
+      .article-wrapper {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding: 60px 20px 40px;
+      }
+      .toc { position: static; }
+      .article-body { max-width: 100%; font-size: 16px; }
+      .article-body h2 { font-size: 30px; margin-top: 56px; }
+      .article-body h3 { font-size: 21px; margin-top: 36px; }
+      .related-section, .legal-section, .cta-section { padding: 70px 20px; }
+      .related-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 16px; text-align: center; padding: 32px 20px; }
+    }
+    @media (max-width: 500px) {
+      .hero h1 { font-size: 34px; }
+      .hero-sub { font-size: 17px; }
+      .cta-form { flex-direction: column; }
+      .lede { font-size: 19px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="/" class="logo">
+      <svg class="logo-icon" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="14" cy="14" r="13" stroke="#1B6B4A" stroke-width="1.5"/>
+        <path d="M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z" fill="#1B6B4A" opacity="0.15"/>
+        <path d="M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z" stroke="#1B6B4A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="14" y1="11" x2="14" y2="21" stroke="#1B6B4A" stroke-width="0.8"/>
+      </svg>
+      Lipa
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/methodology.html">Our methodology</a>
+      <a href="/research.html" class="active">Research</a>
+    </div>
+    <a href="/#join" class="nav-cta">Join the waitlist</a>
+  </nav>
+
+  <div class="hero-wrapper">
+    <section class="hero">
+      <div class="breadcrumb">
+        <a href="/research.html">Research Library</a>
+        <span class="sep">/</span>
+        <span>HPLC and Mass Spectrometry</span>
+      </div>
+      <span class="hero-tag">Methodology</span>
+      <h1>HPLC and Mass Spectrometry: How Peptide Purity Is Really Measured</h1>
+      <p class="hero-sub">Understanding the two analytical techniques that define quality in the research peptide industry.</p>
+      <div class="hero-meta">
+        <span>8 min read</span>
+        <span class="dot"></span>
+        <span>Updated April 2026</span>
+      </div>
+    </section>
+  </div>
+
+  <div class="article-wrapper">
+
+    <aside class="toc">
+      <div class="toc-label">Contents</div>
+      <ul class="toc-list">
+        <li><a href="#why-two">Why two techniques are needed</a></li>
+        <li><a href="#hplc">High-Performance Liquid Chromatography</a></li>
+        <li><a href="#reading-chromatogram">Reading a chromatogram</a></li>
+        <li><a href="#area-percent">Area-percent and what purity means</a></li>
+        <li><a href="#impurities">Common impurities in synthesis</a></li>
+        <li><a href="#ms">Mass Spectrometry</a></li>
+        <li><a href="#expected-mass">Expected vs. observed mass</a></li>
+        <li><a href="#identity-matters">Why identity matters</a></li>
+        <li><a href="#orthogonal">Orthogonal methods</a></li>
+        <li><a href="#reading-coa">Reading a professional COA</a></li>
+        <li><a href="#mistakes">Common mistakes in interpretation</a></li>
+      </ul>
+    </aside>
+
+    <article class="article-body">
+
+      <p class="lede">HPLC tells you how much of something you have. Mass spectrometry tells you what it is. The quality of a research peptide rests on the fact that these are different questions and both need to be answered.</p>
+
+      <div class="info-box" style="background: var(--accent-light); border-left: 3px solid var(--accent); margin-bottom: 40px;">
+        <div class="info-label" style="color: var(--accent);">At a glance</div>
+        <p><strong>What this covers:</strong> How HPLC separates a peptide from its impurities, how mass spectrometry confirms identity, and how the "purity %" number on a Certificate of Analysis is actually calculated.</p>
+        <p><strong>Why it matters:</strong> A "99% pure" claim only has meaning if you know what the 99% is. Purity and identity are different questions and both analytical techniques are needed.</p>
+        <p><strong>Key takeaways:</strong> HPLC answers "how homogeneous" · Mass spec answers "what is it" · Area-percent purity is a proxy, not a mass measurement · Real COAs show the raw traces</p>
+        <p><strong>Who this is for:</strong> Researchers and buyers who want to understand what is behind the headline numbers on a peptide COA.</p>
+      </div>
+
+      <h2 id="why-two">Why two techniques are needed</h2>
+      <p>A common shorthand in the research peptide world is "99% pure." The number sounds precise, and in a sense it is, but it hides an important subtlety: a purity number, on its own, does not tell you <em>what</em> is 99% pure. You could in principle have a vial containing a single, cleanly synthesized, 99% pure compound that is not the compound you ordered. Purity is a statement about homogeneity. Identity is a different statement about chemistry. A research-grade analytical report needs to address both.</p>
+
+      <p>The two techniques that between them answer the two questions are <strong>High-Performance Liquid Chromatography (HPLC)</strong> — which measures purity by separating the sample and quantifying the main component against its impurities — and <strong>Mass Spectrometry (MS)</strong>, which measures identity by determining the molecular weight of the main component and comparing it to the theoretical mass calculated from the intended peptide sequence. Neither technique substitutes for the other. Both are needed.</p>
+
+      <h2 id="hplc">High-Performance Liquid Chromatography (HPLC)</h2>
+
+      <h3>How it works</h3>
+      <p>HPLC is a separation technique. A small, dissolved sample of the peptide is injected into a stream of solvent (the <strong>mobile phase</strong>, the liquid that carries the sample) and pushed under high pressure through a stainless-steel column packed with a chemically functionalized stationary phase (the solid material the molecules temporarily stick to). Different molecules in the sample partition between the mobile and stationary phases to different degrees depending on their chemical properties, which causes them to emerge from the column at different times. A detector placed at the outlet records the arrival of each component as a function of time, producing a <strong>chromatogram</strong>.</p>
+
+      <h3>Reverse-phase HPLC for peptides</h3>
+      <p>For peptide analysis the dominant variant is <strong>reverse-phase HPLC</strong>, in which the stationary phase is a non-polar hydrocarbon-coated silica (most commonly C18 — an octadecyl chain, 18 carbons long) and the mobile phase is a mixture of water and an organic solvent like acetonitrile, typically with a small amount of trifluoroacetic acid as a mobile-phase modifier. Under these conditions, more hydrophobic (water-repelling) peptides interact more strongly with the stationary phase and elute (come off the column) later than more hydrophilic (water-loving) peptides. By running a gradient — gradually increasing the organic content of the mobile phase during the run — a wide range of peptides can be resolved into distinct, sharp peaks.</p>
+
+      <h3>UV detection</h3>
+      <p>The detector most commonly paired with reverse-phase HPLC for peptide work is a <strong>UV absorbance detector</strong>, typically monitoring at 214 nm, where the peptide bond itself absorbs, or at 280 nm, where aromatic residues (tryptophan, tyrosine, phenylalanine) absorb. The 214 nm channel is the more general-purpose choice because every peptide bond absorbs there regardless of residue composition. Other detection methods — diode-array, evaporative light scattering, charged aerosol — exist and have their places, but UV at 214 nm is the industry baseline for routine peptide purity analysis.</p>
+
+      <h2 id="reading-chromatogram">Reading a chromatogram</h2>
+      <p>A chromatogram is read as a time-series trace, with time on the x-axis (the <strong>retention time</strong>) and detector signal on the y-axis. Each peak represents a compound emerging from the column. For a well-purified synthetic peptide, the trace shows one dominant peak — tall, symmetrical, sitting at its characteristic retention time — with a flat baseline before and after. Small additional peaks may be present, representing low-level impurities.</p>
+
+      <p>Several features distinguish a healthy chromatogram from a suspicious one:</p>
+
+      <ul>
+        <li><strong>Peak shape.</strong> A clean, narrow, symmetrical peak suggests good chromatography. Broad, tailing, or fronted peaks can indicate column degradation, sample overload, or compound heterogeneity.</li>
+        <li><strong>Baseline quality.</strong> A flat, quiet baseline before and after the main peak is the expected background. Rising or noisy baselines suggest instrument or sample issues.</li>
+        <li><strong>Resolution from impurities.</strong> Impurity peaks should be separated from the main peak with a return to baseline between them, not merging into shoulders.</li>
+        <li><strong>Retention time at expected value.</strong> For a known compound under standardized conditions, the retention time is a characteristic fingerprint.</li>
+      </ul>
+
+      <h2 id="area-percent">Area-percent and what "98% pure" actually means</h2>
+      <p>The purity figure reported on a COA is almost always an <strong>area-percent</strong> calculation. For each peak on the chromatogram, the software integrates the area under the curve — the detector signal multiplied by time. The area of the main peak is divided by the sum of the areas of all peaks, and the result is expressed as a percentage.</p>
+
+      <p>Written as a simple formula, this is: purity (%) = (area of main peak / sum of all peak areas) × 100.</p>
+
+      <p>A result of "98.5% purity" therefore means that 98.5% of the UV-absorbing material that eluted from the column during the analytical run was associated with the main peak. It does <strong>not</strong> mean that 98.5% of the mass in the vial is the target compound. Water, salt, residual solvent, and any compound that does not absorb significantly at 214 nm will not contribute to the area-percent calculation at all.</p>
+
+      <p>This is not a criticism of the technique — it is simply a matter of reading the number accurately. For a lyophilized (freeze-dried) peptide that has been properly desalted and dried, the area-percent number is a meaningful proxy for mass purity of the target compound. For a poorly-prepared sample, it is less meaningful. The assumption does work for well-prepared research-grade peptides and breaks down for sloppy ones.</p>
+
+      <div style="background: #F5F4F1; border-radius: 8px; padding: 16px 20px; margin: 24px 0; font-size: 15px; color: var(--text-secondary);">
+        <strong style="color: var(--text);">In plain English:</strong> "98% pure" means 98% of the signal the UV detector saw came from the main peak — not that 98% of the powder in the vial is the target molecule. For a well-prepared sample the two are close; for a sloppy one they are not.
+      </div>
+
+      <h2 id="impurities">Common impurities in synthetic peptide production</h2>
+      <p>Synthetic peptides are generally made by <strong>solid-phase peptide synthesis</strong>, in which the peptide is assembled one residue at a time on a resin support, with each coupling followed by a deprotection step. The chemistry is mature and usually efficient, but no coupling is perfectly quantitative, and a number of characteristic side-products show up in crude peptide mixtures.</p>
+
+      <ul>
+        <li><strong>Deletion sequences.</strong> A peptide missing one or more residues because a coupling step failed. Deletion peptides elute at different retention times from the target and are resolved by HPLC purification.</li>
+        <li><strong>Truncated sequences.</strong> Chains that stopped early because a subsequent coupling failed entirely.</li>
+        <li><strong>Diastereomers.</strong> Peptides containing a D-amino acid where an L-amino acid was intended, typically produced by racemization during coupling.</li>
+        <li><strong>Oxidation products.</strong> Methionine or cysteine residues oxidized during synthesis or workup.</li>
+        <li><strong>Acetylation or other side-chain modifications.</strong> Uncontrolled side reactions, typically at low levels.</li>
+      </ul>
+
+      <p>Purification — typically by preparative reverse-phase HPLC — removes most of these impurities, and the analytical HPLC run on the final product is the verification that the purification did its job.</p>
+
+      <h2 id="ms">Mass Spectrometry (MS)</h2>
+
+      <h3>How it works</h3>
+      <p>Mass spectrometry measures molecular mass by ionizing the sample (giving molecules an electrical charge) and separating the resulting ions according to their mass-to-charge ratio (m/z). The instrument has three core components: an ion source, which converts molecules in solution into gas-phase ions; a mass analyzer, which separates ions by m/z; and a detector, which records the ions that arrive. The result is a <strong>mass spectrum</strong>: a plot of ion abundance against m/z.</p>
+
+      <h3>Electrospray ionization (ESI)</h3>
+      <p>The ion source most commonly used for peptide analysis is <strong>electrospray ionization (ESI)</strong>. In an ESI source, the sample solution is sprayed through a fine needle held at high voltage, producing a mist of charged droplets. As the solvent evaporates, the droplets shrink and eventually release intact peptide ions into the gas phase. ESI is a gentle ionization method — it preserves the peptide in its intact molecular form, which is exactly what is needed for identity confirmation.</p>
+
+      <p>Peptides ionized by ESI typically carry multiple protons (charges), so a single peptide can produce several peaks in the mass spectrum corresponding to different charge states (+1, +2, +3, and so on). Software converts the observed m/z values back to a single <strong>deconvoluted mass</strong> representing the molecular weight of the neutral compound.</p>
+
+      <h2 id="expected-mass">Expected mass vs. observed mass</h2>
+      <p>A peptide's expected mass is calculated from its sequence. Each amino acid contributes its residue mass (the mass of the free amino acid minus the water lost when it joined the peptide chain). The total peptide mass is the sum of residue masses plus one water molecule (for the free N-terminus and C-terminus), with corrections for any terminal modifications such as N-terminal acetylation or C-terminal amidation.</p>
+
+      <p>The resulting number is the <strong>monoisotopic mass</strong>: the mass of the molecule in which all atoms are the most abundant naturally-occurring isotope. For small peptides, modern mass spectrometers can measure the observed mass to within a fraction of a dalton, so the comparison between calculated and observed mass is a sharp identity check.</p>
+
+      <div class="info-box">
+        <div class="info-label">Identity check in practice</div>
+        <p>A typical COA entry might read something like: "Expected mass: 1412.66 Da. Observed mass: 1412.65 Da. Match: confirmed." Researchers reading the document can verify the expected mass themselves from the published sequence — it is a reproducible calculation — and cross-check that the observed value matches.</p>
+      </div>
+
+      <h2 id="identity-matters">Why identity matters (you cannot rely on HPLC alone)</h2>
+      <p>It is worth spelling out why identity confirmation is not redundant with purity analysis. HPLC with UV detection measures homogeneity — how cleanly the sample is dominated by a single component — but it does not measure <em>which</em> component. Two different peptides with similar hydrophobicity and similar UV absorbance can elute at similar retention times and produce similar-looking peaks. A peak at the expected retention time on an HPLC chromatogram is consistent with the target compound, but it is not proof of identity on its own.</p>
+
+      <p>Mass spectrometry closes the gap because different peptides have different masses, and the match between the calculated and observed mass is specific in a way that retention time is not. A researcher who has both an HPLC purity of 99% and a mass spectrometry identity confirmation within 0.01 Da of the expected mass has strong joint evidence that the vial contains the intended compound at the intended purity.</p>
+
+      <div style="background: #F5F4F1; border-radius: 8px; padding: 16px 20px; margin: 24px 0; font-size: 15px; color: var(--text-secondary);">
+        <strong style="color: var(--text);">In plain English:</strong> HPLC could in principle show a clean 99% peak for the wrong molecule. Mass spec weighs the molecule to a fraction of a dalton and compares it to the exact expected weight calculated from the intended sequence. That's why you need both.
+      </div>
+
+      <h2 id="orthogonal">Orthogonal methods</h2>
+      <p>Beyond HPLC and MS, several other techniques are occasionally used to characterize research peptides, usually in specialized circumstances.</p>
+
+      <ul>
+        <li><strong>Nuclear Magnetic Resonance (NMR).</strong> Provides detailed structural information and can confirm amino acid composition and connectivity. Used more often for novel compounds and research-grade reference materials than for routine batch release, because it is slower and more expensive than HPLC–MS.</li>
+        <li><strong>Amino acid analysis.</strong> The peptide is hydrolyzed to its free amino acids, which are then quantified individually. This technique confirms composition and is used to establish absolute peptide content, which HPLC area-percent does not measure directly.</li>
+        <li><strong>Capillary electrophoresis.</strong> A separation technique orthogonal to HPLC, sometimes used to cross-check purity by a different physical principle.</li>
+      </ul>
+
+      <p>For routine research peptide characterization, HPLC paired with mass spectrometry answers the operational question of "is this the right compound, and how pure is it?" The other techniques are orthogonal confirmations rather than replacements.</p>
+
+      <h2 id="reading-coa">Reading a professional COA from an independent lab</h2>
+      <p>A well-constructed independent Certificate of Analysis will present, at minimum, the HPLC chromatogram, the purity number with the integration method disclosed, the mass spectrum or at least the observed mass deconvolution, the calculated expected mass for comparison, the batch number tied to the physical vial, and the analyst and laboratory identification. A researcher reading the document can verify the expected mass from the peptide sequence independently, inspect the chromatogram for the features described above, and satisfy themselves that the observed mass matches the calculated value.</p>
+
+      <p>A COA that reports only a headline purity number without the underlying chromatogram and mass spectrum is substantially less useful. It is not necessarily wrong — the underlying data may be entirely legitimate — but it does not allow independent verification of the kind that the documents exist to support.</p>
+
+      <h2 id="mistakes">Common mistakes in interpretation</h2>
+      <p>A few recurring errors are worth naming explicitly, because they appear frequently in discussions of research peptide quality.</p>
+
+      <ul>
+        <li><strong>Confusing purity with potency.</strong> Purity is a statement about the fraction of detected material that is the target compound. Potency is a statement about biological activity per unit mass. The two are related but not the same; a pure peptide can have reduced potency due to improper handling after synthesis, and HPLC cannot measure biological activity.</li>
+        <li><strong>Ignoring identity in favour of purity.</strong> A high purity number without a corresponding identity confirmation is an incomplete claim about the material. Identity is the more load-bearing piece of information.</li>
+        <li><strong>Trusting manufacturer COAs without independent verification.</strong> The manufacturer has an obvious commercial interest in favourable numbers. Independent laboratory reports are structurally more credible.</li>
+        <li><strong>Over-interpreting precision.</strong> Real HPLC purity measurements have variance; seeing "99.00%" on five batches in a row is not plausibly the output of an honest analytical process, and should be read as a red flag rather than a mark of consistency.</li>
+        <li><strong>Ignoring what is <em>not</em> tested.</strong> A COA that reports HPLC purity and mass spectrometry identity but omits endotoxin, heavy metals, and bioburden is not a complete picture of the material's suitability for research use.</li>
+      </ul>
+
+      <div class="info-box">
+        <div class="info-label">Framing</div>
+        <p>This article is methodological. It describes how analytical techniques are used to characterize research-grade peptides and how their output should be read. It is not medical advice, does not endorse human use of any research chemical, and does not describe dosing, administration, or any application beyond laboratory reagent characterization.</p>
+      </div>
+
+    </article>
+  </div>
+
+  <section class="related-section">
+    <div class="related-inner">
+      <h2>Related methodology</h2>
+      <div class="related-grid">
+        <a class="related-card" href="research-coa-guide.html">
+          <span class="category-tag">Methodology</span>
+          <h3>How to Read a Certificate of Analysis</h3>
+          <p>A researcher's guide to the structure of a COA, endotoxin testing, and spotting fakes and manipulation.</p>
+          <span class="read-link">Read the guide</span>
+        </a>
+        <a class="related-card" href="research-storage.html">
+          <span class="category-tag">Methodology</span>
+          <h3>Research Peptide Storage and Stability</h3>
+          <p>How lyophilized peptides are preserved, what happens after reconstitution, and the published literature on stability.</p>
+          <span class="read-link">Read the guide</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="legal-section">
+    <div class="legal-inner">
+      <div class="legal-label">Legal Disclaimer</div>
+      <p>This article is methodological and educational. It describes how HPLC and mass spectrometry are used to characterize research-grade reference compounds, and how their output is interpreted. It is not medical advice, diagnosis, treatment, or a recommendation for human use of any research chemical. Nothing in this article should be read as endorsing the human use of any unapproved compound. Research peptides referred to here are sold strictly as research chemicals for laboratory and in-vitro research purposes only, and are not approved as medicines in the European Union, United Kingdom, United States, or any major regulatory jurisdiction. Purchasers must be qualified researchers aged 18 or over. Consult a qualified healthcare provider for any medical questions. Lipa is a trade name of Go Exe B.V., registered in the Netherlands.</p>
+    </div>
+  </section>
+
+  <section class="cta-section" id="notify">
+    <div class="cta-inner">
+      <div class="section-eyebrow">Stay Informed</div>
+      <div class="section-title">New research, delivered quietly.</div>
+      <div class="section-sub">Join the waitlist. We'll email you when new compound overviews are published and when the store opens across Europe.</div>
+      <form class="cta-form" id="waitlist-form" onsubmit="handleWaitlist(event)">
+        <input class="cta-input" type="email" placeholder="Your email" required id="waitlist-email">
+        <button class="cta-submit" type="submit">Join Waitlist</button>
+      </form>
+      <div class="cta-fine" id="waitlist-msg">No spam. Unsubscribe anytime.</div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-left">&copy; 2026 Lipa Health. All rights reserved.</div>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/methodology.html">Methodology</a>
+      <a href="/research.html">Research</a>
+      <a href="/privacy.html">Privacy</a>
+    </div>
+  </footer>
+
+  <script>
+    const tocLinks = document.querySelectorAll('.toc-list a');
+    const sections = Array.from(tocLinks).map(link => {
+      const id = link.getAttribute('href').slice(1);
+      return document.getElementById(id);
+    }).filter(Boolean);
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          tocLinks.forEach(l => l.classList.remove('active'));
+          const match = document.querySelector('.toc-list a[href="#' + id + '"]');
+          if (match) match.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+
+    const SUPABASE_URL = 'https://dqihkpicbswxzwkoxwnb.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRxaWhrcGljYnN3eHp3a294d25iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM5NjczODcsImV4cCI6MjA1OTU0MzM4N30.SifN_Rkhi5BwGXSfJz4jiM4VBzMdJPYE_6JjjC2S4RA';
+
+    async function handleWaitlist(e) {
+      e.preventDefault();
+      const email = document.getElementById('waitlist-email').value;
+      try {
+        await fetch(SUPABASE_URL + '/rest/v1/waitlist', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_ANON,
+            'Authorization': 'Bearer ' + SUPABASE_ANON,
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({ email: email, product: 'research-hplc-explained' })
+        });
+      } catch (err) { /* silent */ }
+      document.getElementById('waitlist-email').value = '';
+      document.getElementById('waitlist-msg').textContent = "You're on the list. We'll be in touch.";
+      document.getElementById('waitlist-msg').style.color = 'rgba(255,255,255,0.7)';
+    }
+  </script>
+
+</body>
+</html>
