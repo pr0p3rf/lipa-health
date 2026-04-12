@@ -67,7 +67,7 @@ export const TIER_INFO = {
     ],
   },
   insight: {
-    name: "Lipa Insight",
+    name: "Lipa Life",
     price: 89,
     priceDisplay: "€89/year",
     interval: "year",

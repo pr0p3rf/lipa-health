@@ -50,7 +50,7 @@ const TIERS: Tier[] = [
   },
   {
     id: "essential",
-    name: "Lipa Insight",
+    name: "Lipa Life",
     tagline: "Your ongoing health companion. The full picture.",
     price: "€89",
     priceDetail: "per year · €29 credited if upgrading within 30 days",
@@ -66,7 +66,7 @@ const TIERS: Tier[] = [
       "PDF export + doctor sharing",
       "Priority support",
     ],
-    cta: "Get Insight — €89/year",
+    cta: "Get Lipa Life — €89/year",
   },
 ];
 
@@ -152,7 +152,7 @@ function PricingContent() {
             One test or the full picture.
           </h1>
           <p className="text-[16px] text-[#6B6B6B] max-w-xl mx-auto">
-            Start with a single analysis or get ongoing insights with Lipa Insight. No hidden fees. Cancel anytime.
+            Start with a single analysis or get ongoing insights with Lipa Life. No hidden fees. Cancel anytime.
           </p>
         </div>
 
@@ -269,7 +269,7 @@ function PricingContent() {
         {/* Coming soon note */}
         <div className="mt-12 text-center">
           <p className="text-[11px] text-[#999] max-w-2xl mx-auto leading-relaxed">
-            Lipa One is a one-time purchase — no subscription required. If you upgrade to Lipa Insight within 30 days, your €29 is credited toward the annual price. We don't sell blood tests — bring your own from any lab, any country. See our guide on where to test.
+            Lipa One is a one-time purchase — no subscription required. If you upgrade to Lipa Life within 30 days, your €29 is credited toward the annual price. We don't sell blood tests — bring your own from any lab, any country. See our guide on where to test.
           </p>
         </div>
 

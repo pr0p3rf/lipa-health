@@ -245,13 +245,13 @@ function PaywallOverlay({ featureName }: { featureName: string }) {
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#F8F5EF]/80 to-[#F8F5EF] z-10 flex items-end justify-center pb-8">
         <div style={GLASS_CARD} className="p-6 max-w-md text-center">
           <div className="text-[11px] uppercase tracking-wider text-[#1B6B4A] font-semibold mb-3">
-            Lipa Insight
+            Lipa Life
           </div>
           <h3 className="text-[18px] font-semibold mb-2" style={{ fontFamily: FRAUNCES, fontWeight: 500 }}>
             Unlock {featureName}
           </h3>
           <p className="text-[13px] text-[#5A635D] mb-4 leading-relaxed">
-            Upgrade to Lipa Insight for the full analysis: all 100+ biomarkers, full citations, 16+ risk calculations, personalized action plan, vault, and research alerts. &euro;79/year. 30-day money-back guarantee.
+            Upgrade to Lipa Life for the full analysis: all 100+ biomarkers, full citations, 16+ risk calculations, personalized action plan, vault, and research alerts. &euro;79/year. 30-day money-back guarantee.
           </p>
           <a
             href="/pricing"

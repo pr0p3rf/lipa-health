@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
     if ((recentUploads || 0) >= dailyLimit) {
       return NextResponse.json(
         { error: tier === "free"
-          ? "Free accounts can upload 1 test per day. Upgrade to Lipa Insight for more."
+          ? "Free accounts can upload 1 test per day. Upgrade to Lipa Life for more."
           : "You've reached the daily upload limit. Try again tomorrow."
         },
         { status: 429 }
