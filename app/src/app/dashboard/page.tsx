@@ -2096,7 +2096,7 @@ function BiomarkerCard({
 
       {/* EXPANDED DETAIL PANEL — slides down below the compact card */}
       {expanded && analysis && (
-        <div className="px-5 py-5" style={{ borderTop: "1px solid rgba(255,255,255,0.3)", background: "rgba(255,255,255,0.35)" }}>
+        <div className="px-5 py-4" style={{ borderTop: "1px solid rgba(15,26,21,0.06)", background: "#FAFAF8" }}>
 
           {/* Zone bar visualization (InsideTracker style) */}
           {result.ref_low !== null && result.ref_high !== null && (
@@ -2156,19 +2156,24 @@ function BiomarkerCard({
           })()}
 
           {/* What this means */}
-          <div className="mb-5">
-            <div className="text-[11px] uppercase tracking-wider text-[#8A928C] font-medium mb-2">
+          <div className="mb-4">
+            <div className="text-[10px] uppercase tracking-wider text-[#8A928C] font-medium mb-1.5">
               What this means
             </div>
-            <p className="text-[14px] text-[#0F1A15] leading-relaxed">{analysis.what_it_means}</p>
+            <p className="text-[13px] text-[#0F1A15] leading-relaxed">{analysis.what_it_means}</p>
           </div>
 
           {/* What the research shows */}
-          <div className="mb-5">
-            <div className="text-[11px] uppercase tracking-wider text-[#8A928C] font-medium mb-2">
+          <div className="mb-4">
+            <div className="text-[10px] uppercase tracking-wider text-[#8A928C] font-medium mb-1.5">
               What the research shows
+              {analysis.citation_count > 0 && (
+                <span className="normal-case tracking-normal font-normal text-[#1B6B4A] ml-2">
+                  · {analysis.citation_count} studies
+                </span>
+              )}
             </div>
-            <p className="text-[14px] text-[#0F1A15] leading-relaxed">{analysis.what_research_shows}</p>
+            <p className="text-[13px] text-[#0F1A15] leading-relaxed">{analysis.what_research_shows}</p>
           </div>
 
           {/* Related patterns */}
