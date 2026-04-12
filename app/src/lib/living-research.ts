@@ -92,12 +92,16 @@ export interface LivingResearchAnalysis {
 }
 
 // ---------------------------------------------------------------------
-// OpenAI client (for embeddings)
+// OpenAI client (for embeddings) — lazy init to allow env loading
 // ---------------------------------------------------------------------
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY!,
-});
+let _openai: OpenAI | null = null;
+function getOpenAI(): OpenAI {
+  if (!_openai) {
+    _openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
+  }
+  return _openai;
+}
 
 // ---------------------------------------------------------------------
 // Biomarker name normalization
@@ -213,7 +217,7 @@ export async function retrieveStudiesForBiomarker(
   const queryText = contextParts.join(" ");
 
   // Embed query
-  const embeddingResponse = await openai.embeddings.create({
+  const embeddingResponse = await getOpenAI().embeddings.create({
     model: "text-embedding-3-small",
     input: queryText,
     dimensions: 1536,

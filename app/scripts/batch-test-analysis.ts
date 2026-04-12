@@ -24,6 +24,10 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as dotenv from 'dotenv';
+
+// Load env vars BEFORE any other imports that use them
+dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
+
 import { createClient } from '@supabase/supabase-js';
 import Anthropic from '@anthropic-ai/sdk';
 import { analyzeBiomarker, generateActionPlan } from '../src/lib/living-research';
