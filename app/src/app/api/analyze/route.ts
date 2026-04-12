@@ -165,14 +165,18 @@ export async function POST(request: NextRequest) {
     // Priority: manual date > extracted from PDF > today
     const date = testDate || extractedTestDate || new Date().toISOString().split("T")[0];
 
-    const records = biomarkers.map((b: any) => ({
+    // Filter out markers with non-numeric values (e.g., "Negative", "Normal", "<0.01")
+    const validBiomarkers = biomarkers.filter((b: any) => typeof b.value === "number" && !isNaN(b.value));
+    console.log(`[analyze] ${validBiomarkers.length}/${biomarkers.length} markers have numeric values`);
+
+    const records = validBiomarkers.map((b: any) => ({
       user_id: userId,
       test_date: date,
       biomarker: b.name,
       value: b.value,
       unit: b.unit || null,
-      ref_low: b.ref_low || null,
-      ref_high: b.ref_high || null,
+      ref_low: typeof b.ref_low === "number" ? b.ref_low : null,
+      ref_high: typeof b.ref_high === "number" ? b.ref_high : null,
       category: b.category || "other",
     }));
 
@@ -185,6 +189,8 @@ export async function POST(request: NextRequest) {
 
       if (insertError) {
         console.error("DB insert error:", insertError);
+        console.error("First record:", JSON.stringify(records[0]));
+        console.error("Record count:", records.length);
         return NextResponse.json(
           { error: "Failed to save results", details: insertError.message },
           { status: 500 }
