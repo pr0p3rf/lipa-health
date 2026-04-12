@@ -19,11 +19,20 @@ const SUGGESTED_QUESTIONS = [
 
 export function AskLipa({ userId }: { userId: string }) {
   const [open, setOpen] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+  const [showInvite, setShowInvite] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Show invite bubble after 3 seconds
+  useEffect(() => {
+    if (open || dismissed) return;
+    const timer = setTimeout(() => setShowInvite(true), 3000);
+    return () => clearTimeout(timer);
+  }, [open, dismissed]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -105,9 +114,39 @@ export function AskLipa({ userId }: { userId: string }) {
 
   return (
     <>
+      {/* Invite bubble */}
+      {showInvite && !open && (
+        <div
+          className="fixed bottom-24 right-6 z-50 max-w-[280px] animate-in slide-in-from-bottom-4 fade-in duration-500"
+          style={{
+            background: "rgba(255,255,255,0.95)",
+            backdropFilter: "blur(16px)",
+            borderRadius: "16px 16px 4px 16px",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
+            padding: "14px 18px",
+          }}
+        >
+          <button
+            onClick={() => { setDismissed(true); setShowInvite(false); }}
+            className="absolute top-2 right-2 text-[#8A928C] hover:text-[#0F1A15] p-1"
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+          </button>
+          <p className="text-[13px] text-[#0F1A15] leading-snug pr-4">
+            Have questions about your results? <strong className="text-[#1B6B4A]">Ask Lipa</strong> — I have your full panel loaded.
+          </p>
+          <button
+            onClick={() => { setOpen(true); setShowInvite(false); setDismissed(true); }}
+            className="mt-2 text-[12px] font-semibold text-[#1B6B4A] hover:underline"
+          >
+            Ask a question →
+          </button>
+        </div>
+      )}
+
       {/* Floating button */}
       <button
-        onClick={() => setOpen(!open)}
+        onClick={() => { setOpen(!open); setShowInvite(false); setDismissed(true); }}
         className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-105"
         style={{
           background: "#1B6B4A",
