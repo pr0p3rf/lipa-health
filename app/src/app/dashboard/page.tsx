@@ -1251,7 +1251,7 @@ export default function DashboardPage() {
           </div>
         </div>
       </main>
-      {userId && results.length > 0 && <AskLipa userId={userId} />}
+      {userId && <AskLipa userId={userId} />}
     </>
   );
 }
