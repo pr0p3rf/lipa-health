@@ -137,21 +137,21 @@ const FREE_TIER_RISK_CALC_LIMIT = 1;
 // ---------------------------------------------------------------------
 
 const GLASS_CARD = {
-  background: "rgba(255,255,255,0.6)",
-  backdropFilter: "blur(20px)",
-  WebkitBackdropFilter: "blur(20px)",
-  border: "1px solid rgba(255,255,255,0.3)",
+  background: "rgba(255,255,255,0.55)",
+  backdropFilter: "saturate(160%) blur(24px)",
+  WebkitBackdropFilter: "saturate(160%) blur(24px)",
+  border: "1px solid rgba(255,255,255,0.35)",
   borderRadius: "20px",
-  boxShadow: "0 8px 32px rgba(15,26,21,0.06)",
+  boxShadow: "0 8px 32px rgba(15,26,21,0.06), inset 0 1px 0 rgba(255,255,255,0.5)",
 } as const;
 
 const GLASS_CARD_INNER = {
-  background: "rgba(255,255,255,0.45)",
-  backdropFilter: "blur(12px)",
-  WebkitBackdropFilter: "blur(12px)",
-  border: "1px solid rgba(255,255,255,0.25)",
+  background: "rgba(255,255,255,0.4)",
+  backdropFilter: "saturate(140%) blur(16px)",
+  WebkitBackdropFilter: "saturate(140%) blur(16px)",
+  border: "1px solid rgba(255,255,255,0.3)",
   borderRadius: "16px",
-  boxShadow: "0 4px 16px rgba(15,26,21,0.04)",
+  boxShadow: "0 4px 16px rgba(15,26,21,0.04), inset 0 1px 0 rgba(255,255,255,0.4)",
 } as const;
 
 const FRAUNCES = "'Fraunces', Georgia, serif";
@@ -619,8 +619,14 @@ export default function DashboardPage() {
   return (
     <>
       <AppNav />
-      <main className="min-h-screen bg-gradient-to-br from-[#F8F5EF] via-[#F0EDE5] to-[#E8F5EE]/30" suppressHydrationWarning>
-        <div className="max-w-6xl mx-auto px-6 py-10" suppressHydrationWarning>
+      <main className="min-h-screen relative overflow-hidden" style={{ background: "linear-gradient(135deg, #F8F5EF 0%, #F0EDE5 35%, #E8F5EE 70%, #F8F5EF 100%)" }} suppressHydrationWarning>
+        {/* Decorative gradient orbs for glass depth */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+          <div className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full opacity-70" style={{ background: "radial-gradient(circle, rgba(27,107,74,0.15) 0%, transparent 70%)", filter: "blur(60px)" }} />
+          <div className="absolute top-[40%] -left-40 w-[400px] h-[400px] rounded-full opacity-70" style={{ background: "radial-gradient(circle, rgba(230,190,140,0.2) 0%, transparent 70%)", filter: "blur(60px)" }} />
+          <div className="absolute bottom-[20%] right-[10%] w-[350px] h-[350px] rounded-full opacity-60" style={{ background: "radial-gradient(circle, rgba(180,220,200,0.25) 0%, transparent 70%)", filter: "blur(60px)" }} />
+        </div>
+        <div className="max-w-6xl mx-auto px-6 py-10 relative z-10" suppressHydrationWarning>
 
           {/* ============================================================ */}
           {/* LAYER 1: HOME / EXECUTIVE SUMMARY                           */}
