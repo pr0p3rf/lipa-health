@@ -1222,8 +1222,8 @@ export default function DashboardPage() {
             })}
           </div>
 
-          {/* Footer */}
-          <div className="mt-12 pb-8">
+          {/* Footer — extra pb on mobile for bottom nav */}
+          <div className="mt-12 pb-8 sm:pb-8 pb-24">
             <div className="flex justify-center mb-6">
               <a
                 href="/upload"
