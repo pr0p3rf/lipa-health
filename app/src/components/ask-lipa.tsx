@@ -192,7 +192,7 @@ export function AskLipa({ userId }: { userId: string }) {
             </div>
             <div>
               <div className="text-[14px] font-semibold text-[#0F1A15]">Ask Lipa</div>
-              <div className="text-[11px] text-[#8A928C]">Your results + 55,000+ peer-reviewed studies</div>
+              <div className="text-[11px] text-[#8A928C]">Your Personal Health Assistant</div>
             </div>
           </div>
 
