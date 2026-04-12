@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { AppNav } from "@/components/app-nav";
+import { AskLipa } from "@/components/ask-lipa";
 import { useEffect, useState, useCallback, useMemo, type ReactNode } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
@@ -1224,6 +1225,7 @@ export default function DashboardPage() {
           </div>
         </div>
       </main>
+      {userId && results.length > 0 && <AskLipa userId={userId} />}
     </>
   );
 }
