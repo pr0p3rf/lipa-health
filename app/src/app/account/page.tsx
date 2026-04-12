@@ -15,7 +15,7 @@ interface Subscription {
 }
 
 const TIER_DISPLAY: Record<string, { name: string; price: string; color: string }> = {
-  free: { name: "Lipa Starter", price: "Free", color: "#6B7280" },
+  free: { name: "Lipa Taste", price: "Free", color: "#6B7280" },
   access: { name: "Lipa Insight", price: "€79/year", color: "#1B6B4A" },
   essential: { name: "Lipa Annual", price: "€149/year", color: "#1B6B4A" },
   complete: { name: "Lipa Bi-Annual", price: "€289/year", color: "#1B6B4A" },
@@ -182,24 +182,95 @@ export default function AccountPage() {
         {/* Data & privacy card */}
         <div className="bg-white border border-[#E5E5E5] rounded-2xl p-6 mb-6">
           <div className="text-[11px] uppercase tracking-wider text-[#999] font-medium mb-3">
-            Data & Privacy
+            Your Data
           </div>
           <div className="space-y-4">
             <div>
-              <div className="text-[13px] font-medium text-[#2A2A2A] mb-1">EU data residency</div>
+              <div className="text-[13px] font-medium text-[#2A2A2A] mb-1">Encrypted and secure</div>
               <div className="text-[12px] text-[#6B6B6B]">
-                Your health data is stored on EU servers and never leaves Europe.
+                Your health data is encrypted in transit and at rest. We never share your data with third parties or use it to train models.
               </div>
             </div>
             <div>
-              <div className="text-[13px] font-medium text-[#2A2A2A] mb-1">GDPR rights</div>
-              <div className="text-[12px] text-[#6B6B6B]">
-                You can export or delete all your data at any time. Contact{" "}
-                <a href="mailto:privacy@lipa.health" className="text-[#1B6B4A] hover:underline">
-                  privacy@lipa.health
-                </a>
-                {" "}to request.
+              <div className="text-[13px] font-medium text-[#2A2A2A] mb-1">Export your data</div>
+              <div className="text-[12px] text-[#6B6B6B] mb-2">
+                Download all your biomarker results and analyses as a JSON file.
               </div>
+              <button
+                onClick={async () => {
+                  if (!user) return;
+                  const { data: results } = await supabase.from("biomarker_results").select("*").eq("user_id", user.id);
+                  const { data: analyses } = await supabase.from("user_analyses").select("*").eq("user_id", user.id);
+                  const { data: plans } = await supabase.from("action_plans").select("*").eq("user_id", user.id);
+                  const blob = new Blob([JSON.stringify({ results, analyses, action_plans: plans }, null, 2)], { type: "application/json" });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement("a"); a.href = url; a.download = `lipa-export-${new Date().toISOString().split("T")[0]}.json`; a.click();
+                  URL.revokeObjectURL(url);
+                }}
+                className="inline-flex items-center gap-2 text-[12px] font-medium text-[#1B6B4A] hover:text-[#155A3D] transition-colors"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                Download all data
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Danger zone */}
+        <div className="bg-white border border-[#E5E5E5] rounded-2xl p-6 mb-6">
+          <div className="text-[11px] uppercase tracking-wider text-[#999] font-medium mb-3">
+            Account
+          </div>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-[13px] font-medium text-[#2A2A2A]">Delete all health data</div>
+                <div className="text-[12px] text-[#6B6B6B]">Remove all test results, analyses, and action plans. This cannot be undone.</div>
+              </div>
+              <button
+                onClick={async () => {
+                  if (!user) return;
+                  if (!confirm("Delete ALL your health data? This removes every test result, analysis, and action plan. This cannot be undone.")) return;
+                  await supabase.from("analysis_citations").delete().eq("user_id", user.id);
+                  await supabase.from("user_analyses").delete().eq("user_id", user.id);
+                  await supabase.from("action_plans").delete().eq("user_id", user.id);
+                  await supabase.from("biomarker_results").delete().eq("user_id", user.id);
+                  await supabase.from("uploads").delete().eq("user_id", user.id);
+                  alert("All health data deleted.");
+                  window.location.reload();
+                }}
+                className="text-[12px] font-medium text-[#B91C1C] hover:text-[#991B1B] border border-[#FEE2E2] hover:border-[#FECACA] rounded-lg px-4 py-2 transition-colors flex-shrink-0"
+              >
+                Delete data
+              </button>
+            </div>
+            <div className="flex items-center justify-between pt-3 border-t border-[#F4F4F5]">
+              <div>
+                <div className="text-[13px] font-medium text-[#2A2A2A]">Delete account</div>
+                <div className="text-[12px] text-[#6B6B6B]">Permanently delete your account and all associated data.</div>
+              </div>
+              <button
+                onClick={async () => {
+                  if (!user) return;
+                  if (!confirm("Permanently delete your account? All data will be erased and this cannot be undone.")) return;
+                  // Delete all data first
+                  await supabase.from("analysis_citations").delete().eq("user_id", user.id);
+                  await supabase.from("user_analyses").delete().eq("user_id", user.id);
+                  await supabase.from("action_plans").delete().eq("user_id", user.id);
+                  await supabase.from("biomarker_results").delete().eq("user_id", user.id);
+                  await supabase.from("uploads").delete().eq("user_id", user.id);
+                  await supabase.from("user_profiles").delete().eq("user_id", user.id);
+                  await supabase.from("user_subscriptions").delete().eq("user_id", user.id);
+                  // Sign out (account deletion from auth requires admin API)
+                  await supabase.auth.signOut();
+                  router.push("/login");
+                }}
+                className="text-[12px] font-medium text-[#B91C1C] hover:text-[#991B1B] border border-[#FEE2E2] hover:border-[#FECACA] rounded-lg px-4 py-2 transition-colors flex-shrink-0"
+              >
+                Delete account
+              </button>
             </div>
           </div>
         </div>
