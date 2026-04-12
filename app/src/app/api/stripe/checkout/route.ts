@@ -23,11 +23,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!["access", "essential", "complete"].includes(tier)) {
+    if (!["one", "insight"].includes(tier)) {
       return NextResponse.json({ error: "Invalid tier" }, { status: 400 });
     }
 
-    const priceId = TIER_PRICES[tier as Exclude<SubscriptionTier, "free">];
+    const priceId = TIER_PRICES[tier as keyof typeof TIER_PRICES];
     if (!priceId) {
       return NextResponse.json(
         { error: `Price ID not configured for tier: ${tier}` },
@@ -48,14 +48,24 @@ export async function POST(request: NextRequest) {
       { onConflict: "user_id" }
     );
 
-    // Create checkout session
+    // Create checkout session — Lipa One is one-time, Life is subscription
     const origin = request.headers.get("origin") || "https://lipa.health";
-    const checkoutUrl = await createCheckoutSession(
-      customerId,
-      priceId,
-      `${origin}/dashboard?subscription=success`,
-      `${origin}/pricing?subscription=cancel`
-    );
+    const mode = tier === "one" ? "payment" : "subscription";
+    const { getStripe } = await import("@/lib/stripe");
+    const stripeClient = getStripe();
+
+    const session = await stripeClient.checkout.sessions.create({
+      customer: customerId,
+      payment_method_types: ["card"],
+      line_items: [{ price: priceId, quantity: 1 }],
+      mode,
+      success_url: `${origin}/dashboard?subscription=success`,
+      cancel_url: `${origin}/pricing?subscription=cancel`,
+      allow_promotion_codes: true,
+      metadata: { tier, userId },
+    });
+
+    const checkoutUrl = session.url!;
 
     return NextResponse.json({ url: checkoutUrl });
   } catch (error: any) {

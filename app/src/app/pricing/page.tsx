@@ -6,7 +6,7 @@ import { supabase } from "@/lib/supabase";
 import { useRouter, useSearchParams } from "next/navigation";
 
 interface Tier {
-  id: "free" | "access" | "essential" | "complete";
+  id: "free" | "one" | "insight";
   name: string;
   tagline: string;
   price: string;
@@ -18,55 +18,55 @@ interface Tier {
 
 const TIERS: Tier[] = [
   {
-    id: "free",
-    name: "Free Preview",
-    tagline: "See what Lipa can do with your blood test.",
-    price: "Free",
-    priceDetail: null,
-    features: [
-      "Upload 1 blood test",
-      "Preview: 10 markers analyzed",
-      "Basic status overview",
-      "See what the full analysis includes",
-    ],
-    cta: "Try Free",
-  },
-  {
-    id: "access",
-    name: "Lipa One",
-    tagline: "Full analysis of any blood test. One-time.",
-    price: "€29",
-    priceDetail: "one-time · no subscription",
+    id: "insight",
+    name: "Lipa Life",
+    tagline: "Your health companion. Full analysis, ongoing tracking, unlimited chat.",
+    price: "€89",
+    priceDetail: "per year · first analysis included",
+    featured: true,
     features: [
       "Every marker analyzed in plain English",
       "Full action plan (nutrition, supplements, sleep, movement)",
       "16+ risk calculations + biological age",
       "Cross-marker pattern detection",
-      "PDF report for your doctor",
-      "Ask Lipa chat for 7 days",
-      "Peer-reviewed citations on every insight",
-    ],
-    cta: "Get Full Analysis",
-  },
-  {
-    id: "essential",
-    name: "Lipa Life",
-    tagline: "Your ongoing health companion. The full picture.",
-    price: "€89",
-    priceDetail: "per year · €29 credited if upgrading within 30 days",
-    featured: true,
-    features: [
-      "Everything in Lipa One",
       "Up to 12 test uploads per year",
-      "Vault: your complete biological history",
+      "Vault — your complete biological history",
       "Trend tracking with bio-age trajectory",
-      "Ask Lipa chat — unlimited, forever",
+      "Ask Lipa — your personal health assistant, unlimited",
       "Wearable integration (Apple Health, Oura, Whoop)",
       "Personalized research alerts for your markers",
       "PDF export + doctor sharing",
-      "Priority support",
     ],
     cta: "Get Lipa Life — €89/year",
+  },
+  {
+    id: "one",
+    name: "Lipa One",
+    tagline: "Full analysis of one blood test. No subscription.",
+    price: "€29",
+    priceDetail: "one-time · credited toward Life if you upgrade",
+    features: [
+      "Every marker analyzed in plain English",
+      "Full action plan across 6 life domains",
+      "Risk calculations + biological age",
+      "Cross-marker pattern detection",
+      "PDF report for your doctor",
+      "Ask Lipa chat for 7 days",
+    ],
+    cta: "Get Single Analysis — €29",
+  },
+  {
+    id: "free",
+    name: "Free Preview",
+    tagline: "Upload a test and see what Lipa can do.",
+    price: "Free",
+    priceDetail: null,
+    features: [
+      "Upload 1 blood test",
+      "5 markers analyzed",
+      "Basic status overview",
+    ],
+    cta: "Try Free",
   },
 ];
 
@@ -148,8 +148,8 @@ function PricingContent() {
           <div className="text-[11px] uppercase tracking-[2px] text-[#1B6B4A] font-semibold mb-4">
             Pricing
           </div>
-          <h1 className="text-[48px] leading-tight font-normal mb-6" style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 400 }}>
-            One test or the full picture.
+          <h1 className="text-[48px] leading-tight font-semibold mb-6 tracking-tight" style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}>
+            Understand your biology.<br/>Keep going.
           </h1>
           <p className="text-[16px] text-[#6B6B6B] max-w-xl mx-auto">
             Start with a single analysis or get ongoing insights with Lipa Life. No hidden fees. Cancel anytime.
