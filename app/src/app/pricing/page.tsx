@@ -148,7 +148,7 @@ function PricingContent() {
           <div className="text-[11px] uppercase tracking-[2px] text-[#1B6B4A] font-semibold mb-4">
             Pricing
           </div>
-          <h1 className="text-[48px] leading-tight font-semibold mb-6 tracking-tight" style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}>
+          <h1 className="text-[44px] leading-tight font-semibold mb-6 tracking-tight">
             Understand your biology.<br/>Keep going.
           </h1>
           <p className="text-[16px] text-[#6B6B6B] max-w-xl mx-auto">
