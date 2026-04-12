@@ -12,6 +12,7 @@ import {
 } from "@/lib/risk-calculations";
 import { getNextTestSuggestions, type NextTestSuggestion } from "@/lib/next-tests";
 import { detectPatterns, type DetectedPattern } from "@/lib/pattern-detection";
+import { getDemographicOptimalRange } from "@/lib/demographic-ranges";
 
 // ---------------------------------------------------------------------
 // Types
@@ -583,7 +584,13 @@ export default function DashboardPage() {
                 onToggle={() =>
                   setExpandedBiomarker(isExpanded ? null : result.id)
                 }
-                optimalRange={optimalRanges[result.biomarker.toLowerCase()] || optimalRanges[(analysis?.biomarker_name || "").toLowerCase()]}
+                optimalRange={(() => {
+                  // Prefer demographic-adjusted range if user has age+sex
+                  const demoRange = getDemographicOptimalRange(result.biomarker, profile.age, profile.sex);
+                  if (demoRange) return { optimal_low: demoRange.optimal_low, optimal_high: demoRange.optimal_high, canonical_name: result.biomarker };
+                  // Fall back to static biomarker_reference
+                  return optimalRanges[result.biomarker.toLowerCase()] || optimalRanges[(analysis?.biomarker_name || "").toLowerCase()];
+                })()}
                 isFree={isFree}
               />
             );
