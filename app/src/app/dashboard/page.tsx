@@ -1546,7 +1546,7 @@ function BiomarkerCard({
                       backgroundColor: "rgba(27, 107, 74, 0.15)",
                       border: "1px solid rgba(27, 107, 74, 0.25)",
                     }}
-                    title={`Optimal range: ${optimalRange.optimal_low}\u2013${optimalRange.optimal_high} ${result.unit || ""}`}
+                    title={`Optimal range: ${optimalRange.optimal_low}–${optimalRange.optimal_high} ${result.unit || ""}`}
                   />
                 )}
                 {/* Value marker */}
@@ -1563,7 +1563,7 @@ function BiomarkerCard({
                 <span>{result.ref_low} {result.unit}</span>
                 {optimalRange && optimalRange.optimal_low !== null && optimalRange.optimal_high !== null && (
                   <span className="text-[#1B6B4A] font-medium">
-                    optimal: {optimalRange.optimal_low}\u2013{optimalRange.optimal_high}
+                    optimal: {optimalRange.optimal_low}–{optimalRange.optimal_high}
                   </span>
                 )}
                 <span>{result.ref_high} {result.unit}</span>
@@ -1575,7 +1575,7 @@ function BiomarkerCard({
                   style={{ background: "rgba(254,243,199,0.5)", border: "1px solid rgba(245,158,11,0.15)" }}
                 >
                   <p className="text-[11px] text-[#B45309] leading-snug">
-                    <strong>Your lab says &quot;normal&quot;</strong> &mdash; but your value of {result.value} {result.unit} sits outside the research-supported optimal range ({optimalRange!.optimal_low}\u2013{optimalRange!.optimal_high}). The research suggests this may be worth attention.
+                    <strong>Your lab says &quot;normal&quot;</strong> &mdash; but your value of {result.value} {result.unit} sits outside the research-supported optimal range ({optimalRange!.optimal_low}–{optimalRange!.optimal_high}). The research suggests this may be worth attention.
                   </p>
                 </div>
               )}
