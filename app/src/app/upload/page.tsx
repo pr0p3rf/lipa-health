@@ -333,7 +333,7 @@ function AnalyzingProgress({ state, fileNames }: { state: UploadState; fileNames
             Analyzing your biology
           </h2>
           <p className="text-[13px] text-[#6B6B6B]">
-            This is not a quick summary — every marker is individually researched.
+            Sit tight — we're reading the research for each of your markers.
           </p>
         </div>
 
