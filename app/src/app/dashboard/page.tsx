@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { AppNav } from "@/components/app-nav";
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useCallback, useMemo, type ReactNode } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import {
@@ -155,6 +155,88 @@ const GLASS_CARD_INNER = {
 
 const FRAUNCES = "'Fraunces', Georgia, serif";
 const MONO = "'JetBrains Mono', monospace";
+
+const TRANSITION = "all 0.35s cubic-bezier(0.22,1,0.36,1)";
+
+// ---------------------------------------------------------------------
+// Body system definitions
+// ---------------------------------------------------------------------
+
+type BodySystemKey = "cardiovascular" | "metabolic" | "hormonal" | "inflammatory" | "nutritional";
+
+interface BodySystem {
+  key: BodySystemKey;
+  name: string;
+  categories: string[];
+  icon: ReactNode;
+}
+
+const BODY_SYSTEMS: BodySystem[] = [
+  {
+    key: "cardiovascular",
+    name: "Cardiovascular",
+    categories: ["lipid", "cardiac", "cardiovascular"],
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+      </svg>
+    ),
+  },
+  {
+    key: "metabolic",
+    name: "Metabolic",
+    categories: ["metabolic"],
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+      </svg>
+    ),
+  },
+  {
+    key: "hormonal",
+    name: "Hormonal",
+    categories: ["hormonal", "thyroid"],
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="3" />
+        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+      </svg>
+    ),
+  },
+  {
+    key: "inflammatory",
+    name: "Inflammatory",
+    categories: ["inflammatory", "hematology"],
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      </svg>
+    ),
+  },
+  {
+    key: "nutritional",
+    name: "Nutritional",
+    categories: ["nutrient", "nutritional", "liver", "kidney", "other"],
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5" />
+        <path d="M8.5 8.5v.01" />
+        <path d="M16 15.5v.01" />
+        <path d="M12 12v.01" />
+        <path d="M11 17v.01" />
+        <path d="M7 14v.01" />
+      </svg>
+    ),
+  },
+];
+
+function getBodySystemForCategory(category: string): BodySystemKey {
+  const cat = category.toLowerCase();
+  for (const sys of BODY_SYSTEMS) {
+    if (sys.categories.includes(cat)) return sys.key;
+  }
+  return "nutritional"; // default fallback
+}
 
 // ---------------------------------------------------------------------
 // Paywall overlay component
@@ -404,6 +486,8 @@ export default function DashboardPage() {
       if (analysis.status === "out_of_range") {
         return {
           biomarker: r.biomarker,
+          value: r.value,
+          unit: r.unit,
           status: analysis.status,
           flag: analysis.flag,
           message: analysis.flag === "low"
@@ -417,6 +501,8 @@ export default function DashboardPage() {
       if (analysis.status === "borderline") {
         return {
           biomarker: r.biomarker,
+          value: r.value,
+          unit: r.unit,
           status: analysis.status,
           flag: analysis.flag,
           message: `${r.biomarker} could use attention`,
@@ -430,6 +516,47 @@ export default function DashboardPage() {
 
   // Add a positive finding if there are optimal markers
   const allGood = keyFindings.length === 0 && statusCounts.optimal > 0;
+
+  // "One Big Thing" — the single most important finding
+  const oneBigThing = keyFindings.length > 0
+    ? keyFindings[0]
+    : null;
+
+  // Body systems data
+  const systemData = BODY_SYSTEMS.map((sys) => {
+    const sysResults = latestResults.filter(
+      (r) => getBodySystemForCategory(r.category) === sys.key
+    );
+    const sysStatuses = sysResults.map((r) => {
+      const a = analyses.find((x) => x.biomarker_result_id === r.id);
+      return a?.status || "normal";
+    });
+    const optimalCount = sysStatuses.filter((s) => s === "optimal" || s === "normal").length;
+    const hasOutOfRange = sysStatuses.some((s) => s === "out_of_range");
+    const hasBorderline = sysStatuses.some((s) => s === "borderline");
+    const systemStatus: "green" | "amber" | "red" = hasOutOfRange
+      ? "red"
+      : hasBorderline
+      ? "amber"
+      : "green";
+
+    return {
+      ...sys,
+      results: sysResults,
+      total: sysResults.length,
+      optimalCount,
+      systemStatus,
+    };
+  }).filter((s) => s.total > 0);
+
+  // Group markers by body system for Layer 6
+  const markersBySystem = BODY_SYSTEMS.map((sys) => {
+    const sysResults = (selectedCategory
+      ? latestResults.filter((r) => r.category === selectedCategory && getBodySystemForCategory(r.category) === sys.key)
+      : latestResults.filter((r) => getBodySystemForCategory(r.category) === sys.key)
+    );
+    return { system: sys, results: sysResults };
+  }).filter((s) => s.results.length > 0);
 
   // Empty state
   if (!loadingData && results.length === 0) {
@@ -481,10 +608,12 @@ export default function DashboardPage() {
   }
 
   const isFree = userTier === "free";
-  const visibleResults = isFree ? filteredResults.slice(0, FREE_TIER_MARKER_LIMIT) : filteredResults;
-  const lockedCount = isFree ? Math.max(0, filteredResults.length - FREE_TIER_MARKER_LIMIT) : 0;
   const visibleCalculations = isFree ? calculations.slice(0, FREE_TIER_RISK_CALC_LIMIT) : calculations;
   const lockedCalcCount = isFree ? Math.max(0, calculations.length - FREE_TIER_RISK_CALC_LIMIT) : 0;
+
+  // For paywall: determine total visible/locked markers
+  const allMarkerNames = latestResults.map((r) => r.biomarker);
+  const totalMarkers = latestResults.length;
 
   return (
     <>
@@ -493,25 +622,28 @@ export default function DashboardPage() {
         <div className="max-w-6xl mx-auto px-6 py-10" suppressHydrationWarning>
 
           {/* ============================================================ */}
-          {/* 1. SUMMARY HERO                                              */}
+          {/* LAYER 1: HOME / EXECUTIVE SUMMARY                           */}
           {/* ============================================================ */}
           <div className="mb-10">
-            <div className="flex items-baseline justify-between mb-1">
-              <h1
-                className="text-[34px] tracking-tight text-[#0F1A15]"
-                style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
-              >
-                {allGood ? "Everything looks great" : "Here's what stood out"}
-              </h1>
-              <div className="text-[13px] text-[#8A928C] font-mono" style={{ fontFamily: MONO }}>
-                {latestTestDate ? new Date(latestTestDate).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : ""}
+            {/* Top row: heading + actions */}
+            <div className="flex items-start justify-between mb-6 gap-4 flex-wrap">
+              <div>
+                <div className="flex items-center gap-3 mb-1">
+                  <div className="text-[13px] text-[#8A928C] font-mono" style={{ fontFamily: MONO }}>
+                    {latestTestDate ? new Date(latestTestDate).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }) : ""}
+                  </div>
+                  <div className="text-[13px] text-[#8A928C]">
+                    &middot; {latestResults.length} markers analyzed
+                  </div>
+                </div>
+                <h1
+                  className="text-[32px] tracking-tight text-[#0F1A15] leading-tight"
+                  style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
+                >
+                  Your Results
+                </h1>
               </div>
-            </div>
-            <div className="flex items-center justify-between mb-6">
-              <p className="text-[14px] text-[#5A635D]">
-                {latestResults.length} biomarkers &middot; Analyzed with Living Research&trade;
-              </p>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-shrink-0">
                 {testDates.length > 1 && (
                   <select
                     className="text-[12px] text-[#5A635D] bg-white/60 border border-white/30 rounded-lg px-3 py-1.5 backdrop-blur-sm"
@@ -529,7 +661,6 @@ export default function DashboardPage() {
                 )}
                 <button
                   onClick={() => {
-                    // Export as JSON for now
                     const exportData = {
                       test_date: latestTestDate,
                       biomarkers: latestResults.map((r) => {
@@ -544,7 +675,8 @@ export default function DashboardPage() {
                     a.href = url; a.download = `lipa-results-${latestTestDate}.json`; a.click();
                     URL.revokeObjectURL(url);
                   }}
-                  className="text-[11px] font-medium text-[#5A635D] hover:text-[#1B6B4A] bg-white/60 border border-white/30 rounded-lg px-3 py-1.5 backdrop-blur-sm transition-colors flex items-center gap-1.5"
+                  className="text-[11px] font-medium text-[#5A635D] hover:text-[#1B6B4A] bg-white/60 border border-white/30 rounded-lg px-3 py-1.5 backdrop-blur-sm flex items-center gap-1.5"
+                  style={{ transition: TRANSITION }}
                 >
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" />
@@ -558,7 +690,8 @@ export default function DashboardPage() {
                     await fetch("/api/delete-data", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ userId }) });
                     window.location.reload();
                   }}
-                  className="text-[11px] font-medium text-[#8A928C] hover:text-[#B91C1C] bg-white/60 border border-white/30 rounded-lg px-3 py-1.5 backdrop-blur-sm transition-colors flex items-center gap-1.5"
+                  className="text-[11px] font-medium text-[#8A928C] hover:text-[#B91C1C] bg-white/60 border border-white/30 rounded-lg px-3 py-1.5 backdrop-blur-sm flex items-center gap-1.5"
+                  style={{ transition: TRANSITION }}
                 >
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                     <path d="M3 6h18" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" /><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
@@ -568,10 +701,10 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            {/* Key findings cards */}
+            {/* "One Big Thing" — warm narrative */}
             {allGood ? (
               <div
-                className="p-6 transition-all duration-300"
+                className="p-6 mb-6"
                 style={{
                   ...GLASS_CARD,
                   background: "rgba(232,245,238,0.5)",
@@ -585,35 +718,71 @@ export default function DashboardPage() {
                     </svg>
                   </div>
                   <div>
-                    <div className="text-[16px] font-semibold text-[#1B6B4A] mb-0.5">All markers in a healthy range</div>
-                    <p className="text-[13px] text-[#5A635D]">
-                      {statusCounts.optimal} optimal, {statusCounts.normal} within normal range. Keep up what you're doing.
+                    <div
+                      className="text-[18px] text-[#1B6B4A] mb-1"
+                      style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
+                    >
+                      Everything looks great
+                    </div>
+                    <p className="text-[14px] text-[#5A635D] leading-relaxed">
+                      All {latestResults.length} markers came back in a healthy range. {statusCounts.optimal} are in the optimal zone. Keep doing what you're doing.
                     </p>
                   </div>
                 </div>
               </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                {keyFindings.map((f: any) => (
-                  <div
+            ) : oneBigThing ? (
+              <div
+                className="p-6 mb-6"
+                style={{
+                  ...GLASS_CARD,
+                  background: (oneBigThing as any).status === "out_of_range"
+                    ? "rgba(254,226,226,0.4)"
+                    : "rgba(254,243,199,0.4)",
+                  border: (oneBigThing as any).status === "out_of_range"
+                    ? "1px solid rgba(185,28,28,0.12)"
+                    : "1px solid rgba(180,83,9,0.12)",
+                }}
+              >
+                <div className="text-[11px] uppercase tracking-wider text-[#8A928C] font-medium mb-2">
+                  Most important finding
+                </div>
+                <div
+                  className="text-[20px] text-[#0F1A15] mb-2 leading-snug"
+                  style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
+                >
+                  {(oneBigThing as any).message}
+                </div>
+                <p className="text-[14px] text-[#5A635D] leading-relaxed">
+                  {(oneBigThing as any).detail}
+                </p>
+              </div>
+            ) : null}
+
+            {/* Key findings grid (remaining findings after the "one big thing") */}
+            {keyFindings.length > 1 && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
+                {keyFindings.slice(1).map((f: any) => (
+                  <button
                     key={f.biomarker}
-                    className="p-4 transition-all duration-300 cursor-pointer hover:-translate-y-0.5"
+                    className="text-left p-4"
                     style={{
                       ...GLASS_CARD,
                       background: f.status === "out_of_range"
-                        ? "rgba(254,226,226,0.5)"
-                        : "rgba(254,243,199,0.5)",
+                        ? "rgba(254,226,226,0.4)"
+                        : "rgba(254,243,199,0.4)",
                       border: f.status === "out_of_range"
-                        ? "1px solid rgba(185,28,28,0.15)"
-                        : "1px solid rgba(180,83,9,0.15)",
+                        ? "1px solid rgba(185,28,28,0.12)"
+                        : "1px solid rgba(180,83,9,0.12)",
                       boxShadow: "0 4px 20px rgba(15,26,21,0.04)",
+                      transition: TRANSITION,
                     }}
                     onClick={() => {
                       const r = latestResults.find((lr) => lr.biomarker === f.biomarker);
                       if (r) setExpandedBiomarker(r.id);
-                      // scroll to biomarkers section
                       document.getElementById("biomarkers-section")?.scrollIntoView({ behavior: "smooth" });
                     }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; }}
                   >
                     <div className="flex items-start gap-3">
                       <div
@@ -623,28 +792,110 @@ export default function DashboardPage() {
                         }}
                       />
                       <div className="min-w-0">
-                        <div className="text-[15px] font-semibold text-[#0F1A15] mb-1">{f.message}</div>
+                        <div className="flex items-baseline gap-2 mb-1">
+                          <span className="text-[14px] font-semibold text-[#0F1A15]">{f.biomarker}</span>
+                          <span className="text-[13px] text-[#5A635D]" style={{ fontFamily: FRAUNCES }}>{f.value}</span>
+                          <span className="text-[10px] text-[#8A928C]" style={{ fontFamily: MONO }}>{f.unit}</span>
+                        </div>
                         <p className="text-[13px] text-[#5A635D] line-clamp-2">{f.detail}</p>
                       </div>
                     </div>
-                  </div>
+                  </button>
                 ))}
               </div>
             )}
+
+            {/* Quick status strip */}
+            <div className="flex items-center gap-4 flex-wrap text-[13px]">
+              {statusCounts.optimal > 0 && (
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-[#1B6B4A]" />
+                  <span className="text-[#5A635D]">{statusCounts.optimal} optimal</span>
+                </span>
+              )}
+              {statusCounts.normal > 0 && (
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-[#71717A]" />
+                  <span className="text-[#5A635D]">{statusCounts.normal} in range</span>
+                </span>
+              )}
+              {statusCounts.borderline > 0 && (
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-[#F59E0B]" />
+                  <span className="text-[#5A635D]">{statusCounts.borderline} borderline</span>
+                </span>
+              )}
+              {statusCounts.out_of_range > 0 && (
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-[#EF4444]" />
+                  <span className="text-[#5A635D]">{statusCounts.out_of_range} need attention</span>
+                </span>
+              )}
+            </div>
           </div>
 
           {/* ============================================================ */}
-          {/* 2. STATUS OVERVIEW                                           */}
+          {/* LAYER 2: BODY SYSTEMS VIEW                                  */}
           {/* ============================================================ */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10">
-            <StatusCard label="Optimal" count={statusCounts.optimal} dotColor="#1B6B4A" />
-            <StatusCard label="In range" count={statusCounts.normal} dotColor="#71717A" />
-            <StatusCard label="Borderline" count={statusCounts.borderline} dotColor="#F59E0B" />
-            <StatusCard label="Out of range" count={statusCounts.out_of_range} dotColor="#EF4444" />
-          </div>
+          {systemData.length > 0 && (
+            <div className="mb-10">
+              <h2
+                className="text-[22px] tracking-tight text-[#0F1A15] mb-1"
+                style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
+              >
+                Body Systems
+              </h2>
+              <p className="text-[13px] text-[#5A635D] mb-4">
+                How your markers group across major systems.
+              </p>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                {systemData.map((sys) => {
+                  const statusColor =
+                    sys.systemStatus === "red"
+                      ? { bg: "rgba(254,226,226,0.4)", border: "rgba(185,28,28,0.15)", icon: "#B91C1C", text: "#B91C1C" }
+                      : sys.systemStatus === "amber"
+                      ? { bg: "rgba(254,243,199,0.4)", border: "rgba(180,83,9,0.15)", icon: "#B45309", text: "#B45309" }
+                      : { bg: "rgba(232,245,238,0.4)", border: "rgba(27,107,74,0.15)", icon: "#1B6B4A", text: "#1B6B4A" };
+                  return (
+                    <button
+                      key={sys.key}
+                      className="text-left p-4"
+                      style={{
+                        ...GLASS_CARD,
+                        background: statusColor.bg,
+                        border: `1px solid ${statusColor.border}`,
+                        transition: TRANSITION,
+                      }}
+                      onClick={() => {
+                        document.getElementById(`system-${sys.key}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+                      }}
+                      onMouseEnter={(e) => {
+                        (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
+                        (e.currentTarget as HTMLElement).style.boxShadow = "0 12px 40px rgba(15,26,21,0.1)";
+                      }}
+                      onMouseLeave={(e) => {
+                        (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+                        (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 32px rgba(15,26,21,0.06)";
+                      }}
+                    >
+                      <div className="mb-3" style={{ color: statusColor.icon }}>
+                        {sys.icon}
+                      </div>
+                      <div className="text-[14px] font-semibold text-[#0F1A15] mb-1">
+                        {sys.name}
+                      </div>
+                      <div className="text-[12px]" style={{ color: statusColor.text }}>
+                        {sys.optimalCount}/{sys.total} markers optimal
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* ============================================================ */}
-          {/* 3. PATTERNS DETECTED (paid only)                             */}
+          {/* LAYER 3: CROSS-MARKER PATTERNS (visible to all users)       */}
           {/* ============================================================ */}
           {detectedPatterns.length > 0 && (
             <div className="mb-10">
@@ -666,7 +917,7 @@ export default function DashboardPage() {
           )}
 
           {/* ============================================================ */}
-          {/* 4. ACTION PLAN                                               */}
+          {/* LAYER 4: ACTION PLAN                                        */}
           {/* ============================================================ */}
           {!isFree && actionPlan && actionPlan.domains && actionPlan.domains.length > 0 && (
             <div className="mb-10">
@@ -715,7 +966,6 @@ export default function DashboardPage() {
           {/* Free tier action plan teaser — blurred preview */}
           {isFree && actionPlan && actionPlan.domains && (
             <div className="mb-10 relative overflow-hidden" style={{ ...GLASS_CARD, padding: 0 }}>
-              {/* Blurred preview of actual content */}
               <div className="p-6 select-none" style={{ filter: "blur(5px)", opacity: 0.6, pointerEvents: "none" }}>
                 <h2 className="text-[20px] tracking-tight text-[#0F1A15] mb-3" style={{ fontFamily: FRAUNCES, fontWeight: 500 }}>
                   Your Action Plan
@@ -729,7 +979,6 @@ export default function DashboardPage() {
                   ))}
                 </div>
               </div>
-              {/* Overlay with CTA */}
               <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-transparent via-white/40 to-white/70">
                 <div className="text-center px-6">
                   <div className="text-[13px] text-[#5A635D] mb-3">
@@ -748,7 +997,7 @@ export default function DashboardPage() {
           )}
 
           {/* ============================================================ */}
-          {/* 5. RISK INSIGHTS                                             */}
+          {/* LAYER 5: RISK INSIGHTS                                      */}
           {/* ============================================================ */}
           {visibleCalculations.length > 0 && (
             <div className="mb-10">
@@ -798,12 +1047,11 @@ export default function DashboardPage() {
 
               {isFree && lockedCalcCount > 0 && (
                 <div className="mt-4 relative overflow-hidden" style={{ ...GLASS_CARD, padding: 0 }}>
-                  {/* Blurred preview of locked calculations */}
                   <div className="p-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-3 select-none" style={{ filter: "blur(4px)", opacity: 0.5, pointerEvents: "none" }}>
                     {["Bio-Age (KDM)", "HOMA-IR", "FIB-4 Liver"].map((name) => (
                       <div key={name} className="bg-white/50 rounded-2xl p-4">
                         <div className="text-[12px] text-[#5A635D]">{name}</div>
-                        <div className="text-[22px] mt-1" style={{ fontFamily: FRAUNCES }}>—</div>
+                        <div className="text-[22px] mt-1" style={{ fontFamily: FRAUNCES }}>&mdash;</div>
                       </div>
                     ))}
                   </div>
@@ -826,7 +1074,7 @@ export default function DashboardPage() {
           )}
 
           {/* ============================================================ */}
-          {/* 6. BIOMARKERS                                                */}
+          {/* LAYER 6: BIOMARKERS (grouped by body system)                */}
           {/* ============================================================ */}
           <div id="biomarkers-section" className="mb-10">
             <h2
@@ -856,86 +1104,123 @@ export default function DashboardPage() {
               ))}
             </div>
 
-            {/* Biomarker grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {visibleResults.map((result) => {
-                const analysis = analyses.find((a) => a.biomarker_result_id === result.id);
-                const biomarkerCitations = citations.filter((c) => c.biomarker_result_id === result.id);
-                const isExpanded = expandedBiomarker === result.id;
+            {/* Grouped by body system */}
+            {markersBySystem.map(({ system, results: sysResults }) => {
+              // Apply free tier limit across all systems
+              const visibleInSystem = (() => {
+                if (!isFree) return sysResults;
+                // Count how many markers were shown before this system
+                let countBefore = 0;
+                for (const grp of markersBySystem) {
+                  if (grp.system.key === system.key) break;
+                  countBefore += grp.results.length;
+                }
+                const remainingSlots = Math.max(0, FREE_TIER_MARKER_LIMIT - countBefore);
+                return sysResults.slice(0, remainingSlots);
+              })();
 
-                return (
-                  <BiomarkerCard
-                    key={result.id}
-                    result={result}
-                    analysis={analysis}
-                    citations={biomarkerCitations}
-                    expanded={isExpanded}
-                    onToggle={() =>
-                      setExpandedBiomarker(isExpanded ? null : result.id)
-                    }
-                    optimalRange={(() => {
-                      const demoRange = getDemographicOptimalRange(result.biomarker, profile.age, profile.sex);
-                      if (demoRange) return { optimal_low: demoRange.optimal_low, optimal_high: demoRange.optimal_high, canonical_name: result.biomarker };
-                      return optimalRanges[result.biomarker.toLowerCase()] || optimalRanges[(analysis?.biomarker_name || "").toLowerCase()];
-                    })()}
-                    isFree={isFree}
-                    allMarkerNames={latestResults.map((r) => r.biomarker)}
-                  />
-                );
-              })}
-            </div>
+              const lockedInSystem = isFree ? sysResults.length - visibleInSystem.length : 0;
+
+              if (visibleInSystem.length === 0 && lockedInSystem === 0) return null;
+
+              return (
+                <div key={system.key} id={`system-${system.key}`} className="mb-8">
+                  {/* System heading */}
+                  <div className="flex items-center gap-2.5 mb-4">
+                    <div className="text-[#1B6B4A]">{system.icon}</div>
+                    <h3
+                      className="text-[17px] font-semibold text-[#0F1A15]"
+                      style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
+                    >
+                      {system.name}
+                    </h3>
+                    <span className="text-[12px] text-[#8A928C]">
+                      {sysResults.length} marker{sysResults.length !== 1 ? "s" : ""}
+                    </span>
+                  </div>
+
+                  {/* Grid of compact marker cards */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {visibleInSystem.map((result) => {
+                      const analysis = analyses.find((a) => a.biomarker_result_id === result.id);
+                      const biomarkerCitations = citations.filter((c) => c.biomarker_result_id === result.id);
+                      const isExpanded = expandedBiomarker === result.id;
+
+                      return (
+                        <BiomarkerCard
+                          key={result.id}
+                          result={result}
+                          analysis={analysis}
+                          citations={biomarkerCitations}
+                          expanded={isExpanded}
+                          onToggle={() =>
+                            setExpandedBiomarker(isExpanded ? null : result.id)
+                          }
+                          optimalRange={(() => {
+                            const demoRange = getDemographicOptimalRange(result.biomarker, profile.age, profile.sex);
+                            if (demoRange) return { optimal_low: demoRange.optimal_low, optimal_high: demoRange.optimal_high, canonical_name: result.biomarker };
+                            return optimalRanges[result.biomarker.toLowerCase()] || optimalRanges[(analysis?.biomarker_name || "").toLowerCase()];
+                          })()}
+                          isFree={isFree}
+                          allMarkerNames={allMarkerNames}
+                          detectedPatterns={detectedPatterns}
+                        />
+                      );
+                    })}
+                  </div>
+
+                  {/* Locked markers in this system */}
+                  {isFree && lockedInSystem > 0 && (
+                    <div className="mt-3 relative overflow-hidden" style={{ ...GLASS_CARD, padding: 0 }}>
+                      <div className="p-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-3 select-none" style={{ filter: "blur(5px)", opacity: 0.5, pointerEvents: "none" }}>
+                        {sysResults.slice(visibleInSystem.length, visibleInSystem.length + 3).map((r) => {
+                          const a = analyses.find((x) => x.biomarker_result_id === r.id);
+                          return (
+                            <div key={r.id} className="bg-white/50 rounded-2xl p-4">
+                              <div className="text-[13px] font-semibold">{r.biomarker}</div>
+                              <div className="text-[24px] mt-1" style={{ fontFamily: FRAUNCES }}>{r.value} <span className="text-[11px] text-[#8A928C]" style={{ fontFamily: MONO }}>{r.unit}</span></div>
+                              <div className="text-[11px] text-[#5A635D] mt-1 line-clamp-1">{a?.summary || ""}</div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-transparent via-white/30 to-white/60">
+                        <div className="text-center px-6">
+                          <p className="text-[13px] text-[#5A635D] mb-3">
+                            {lockedInSystem} more {system.name.toLowerCase()} markers analyzed
+                          </p>
+                          <a
+                            href="/pricing"
+                            className="inline-flex text-[12px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-5 py-2.5 rounded-full transition-all duration-300"
+                          >
+                            See all {totalMarkers} markers
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
 
-          {/* Locked markers — blurred preview */}
-          {isFree && lockedCount > 0 && (
-            <div className="mb-10 relative overflow-hidden" style={{ ...GLASS_CARD, padding: 0 }}>
-              {/* Show a few locked markers blurred */}
-              <div className="p-6 select-none" style={{ filter: "blur(5px)", opacity: 0.5, pointerEvents: "none" }}>
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {filteredResults.slice(FREE_TIER_MARKER_LIMIT, FREE_TIER_MARKER_LIMIT + 6).map((r) => {
-                    const a = analyses.find((x) => x.biomarker_result_id === r.id);
-                    return (
-                      <div key={r.id} className="bg-white/50 rounded-2xl p-4">
-                        <div className="text-[13px] font-semibold">{r.biomarker}</div>
-                        <div className="text-[24px] mt-1" style={{ fontFamily: FRAUNCES }}>{r.value} <span className="text-[11px] text-[#8A928C]" style={{ fontFamily: MONO }}>{r.unit}</span></div>
-                        <div className="text-[11px] text-[#5A635D] mt-1 line-clamp-1">{a?.summary || ""}</div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-              <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-transparent via-white/30 to-white/60">
-                <div className="text-center px-6">
-                  <h3 className="text-[20px] mb-2 text-[#0F1A15]" style={{ fontFamily: FRAUNCES, fontWeight: 500 }}>
-                    {lockedCount} more markers analyzed
-                  </h3>
-                  <p className="text-[13px] text-[#5A635D] mb-4 max-w-md mx-auto">
-                    Full citations, risk calculations, cross-marker patterns, and your personalized action plan.
-                  </p>
-                  <a
-                    href="/pricing"
-                    className="inline-flex items-center gap-2 text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-6 py-3 rounded-full transition-all duration-300 hover:-translate-y-0.5"
-                    style={{ boxShadow: "0 4px 16px rgba(27,107,74,0.2)" }}
-                  >
-                    See all {filteredResults.length} markers
-                  </a>
-                </div>
-              </div>
-            </div>
-          )}
-
           {/* Footer */}
-          <div className="mt-12 text-center pb-8">
-            <a
-              href="/upload"
-              className="inline-flex items-center gap-2 text-[13px] font-semibold text-[#1B6B4A] hover:text-[#155A3D] transition-colors"
-            >
-              Upload another blood test
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                <path d="M5 12h14" />
-                <path d="M12 5l7 7-7 7" />
-              </svg>
-            </a>
+          <div className="mt-12 pb-8">
+            <div className="flex justify-center mb-6">
+              <a
+                href="/upload"
+                className="inline-flex items-center gap-2 text-[13px] font-semibold text-[#1B6B4A] hover:text-[#155A3D] transition-colors"
+              >
+                Upload another blood test
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M5 12h14" />
+                  <path d="M12 5l7 7-7 7" />
+                </svg>
+              </a>
+            </div>
+            <p className="text-[10px] text-[#8A928C] text-center leading-relaxed max-w-lg mx-auto">
+              This analysis is educational content based on peer-reviewed research, not medical advice. Consult your healthcare provider before making any health decisions. Lipa does not diagnose or treat medical conditions.
+            </p>
           </div>
         </div>
       </main>
@@ -946,33 +1231,6 @@ export default function DashboardPage() {
 // =====================================================================
 // SUB-COMPONENTS
 // =====================================================================
-
-// ---------------------------------------------------------------------
-// Status card (glassmorphic)
-// ---------------------------------------------------------------------
-
-function StatusCard({ label, count, dotColor }: { label: string; count: number; dotColor: string }) {
-  return (
-    <div
-      className="p-5 transition-all duration-300 hover:-translate-y-0.5"
-      style={{
-        ...GLASS_CARD,
-        boxShadow: count > 0 ? "0 8px 32px rgba(15,26,21,0.06)" : "0 4px 16px rgba(15,26,21,0.03)",
-      }}
-    >
-      <div className="flex items-center gap-2 mb-3">
-        <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: dotColor }} />
-        <div className="text-[12px] text-[#5A635D] font-medium">{label}</div>
-      </div>
-      <div
-        className="text-[32px] tracking-tight text-[#0F1A15]"
-        style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
-      >
-        {count}
-      </div>
-    </div>
-  );
-}
 
 // ---------------------------------------------------------------------
 // Filter chip
@@ -994,7 +1252,7 @@ function FilterChip({
   return (
     <button
       onClick={onClick}
-      className={`flex items-center gap-2 px-3.5 py-1.5 text-[12px] font-medium transition-all duration-300 ${
+      className={`flex items-center gap-2 px-3.5 py-1.5 text-[12px] font-medium ${
         active
           ? "text-white shadow-sm"
           : "text-[#5A635D] hover:text-[#0F1A15]"
@@ -1005,11 +1263,13 @@ function FilterChip({
               background: "#1B6B4A",
               borderRadius: "20px",
               boxShadow: "0 4px 12px rgba(27,107,74,0.25)",
+              transition: TRANSITION,
             }
           : {
               ...GLASS_CARD,
               borderRadius: "20px",
               boxShadow: "0 2px 8px rgba(15,26,21,0.03)",
+              transition: TRANSITION,
             }
       }
     >
@@ -1023,7 +1283,7 @@ function FilterChip({
 }
 
 // ---------------------------------------------------------------------
-// Pattern card (glassmorphic)
+// Pattern card
 // ---------------------------------------------------------------------
 
 const SEVERITY_STYLES: Record<string, { bg: string; text: string; border: string; label: string }> = {
@@ -1038,10 +1298,11 @@ function PatternCard({ pattern }: { pattern: DetectedPattern }) {
 
   return (
     <div
-      className="overflow-hidden transition-all duration-300 hover:-translate-y-0.5"
+      className="overflow-hidden"
       style={{
         ...GLASS_CARD,
         borderLeft: `3px solid ${sev.border}`,
+        transition: TRANSITION,
       }}
     >
       <button
@@ -1064,7 +1325,8 @@ function PatternCard({ pattern }: { pattern: DetectedPattern }) {
           <svg
             width="16" height="16" viewBox="0 0 24 24" fill="none"
             stroke="#8A928C" strokeWidth="2"
-            className={`transition-transform duration-300 flex-shrink-0 mt-1 ${expanded ? "rotate-180" : ""}`}
+            className={`flex-shrink-0 mt-1`}
+            style={{ transition: TRANSITION, transform: expanded ? "rotate(180deg)" : "rotate(0)" }}
           >
             <polyline points="6 9 12 15 18 9" />
           </svg>
@@ -1134,8 +1396,8 @@ function ActionPlanDomainCard({ domain }: { domain: any }) {
 
   return (
     <div
-      className="overflow-hidden transition-all duration-300 hover:-translate-y-0.5"
-      style={GLASS_CARD}
+      className="overflow-hidden"
+      style={{ ...GLASS_CARD, transition: TRANSITION }}
     >
       <button
         onClick={() => setExpanded(!expanded)}
@@ -1161,7 +1423,7 @@ function ActionPlanDomainCard({ domain }: { domain: any }) {
           <svg
             width="16" height="16" viewBox="0 0 24 24" fill="none"
             stroke="#8A928C" strokeWidth="2"
-            className={`transition-transform duration-300 ${expanded ? "rotate-180" : ""}`}
+            style={{ transition: TRANSITION, transform: expanded ? "rotate(180deg)" : "rotate(0)" }}
           >
             <polyline points="6 9 12 15 18 9" />
           </svg>
@@ -1249,7 +1511,7 @@ function ActionPlanDomainCard({ domain }: { domain: any }) {
 }
 
 // ---------------------------------------------------------------------
-// Insight card (risk calculations, glassmorphic)
+// Insight card (risk calculations)
 // ---------------------------------------------------------------------
 
 const INSIGHT_COLORS: Record<RiskCalculation["interpretation"], { bg: string; text: string; dot: string }> = {
@@ -1275,8 +1537,21 @@ function InsightCard({
 
   return (
     <div
-      className="overflow-hidden transition-all duration-300 hover:-translate-y-0.5"
-      style={GLASS_CARD}
+      className="overflow-hidden"
+      style={{
+        ...GLASS_CARD,
+        transition: TRANSITION,
+      }}
+      onMouseEnter={(e) => {
+        if (!expanded) {
+          (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
+          (e.currentTarget as HTMLElement).style.boxShadow = "0 12px 40px rgba(15,26,21,0.1)";
+        }
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+        (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 32px rgba(15,26,21,0.06)";
+      }}
     >
       <button
         onClick={onToggle}
@@ -1329,7 +1604,7 @@ function InsightCard({
 }
 
 // ---------------------------------------------------------------------
-// Profile editor (glassmorphic)
+// Profile editor
 // ---------------------------------------------------------------------
 
 function ProfileEditor({
@@ -1425,63 +1700,112 @@ function ProfileEditor({
 }
 
 // ---------------------------------------------------------------------
-// Biomarker card (glassmorphic compact card with arc gauge)
+// Zone bar visualization (InsideTracker style)
 // ---------------------------------------------------------------------
 
-function ArcGauge({ value, low, high, statusColor, size = 52 }: { value: number; low: number; high: number; statusColor: string; size?: number }) {
-  // Position of value within reference range, clamped 0-100
-  const pct = Math.max(0, Math.min(100, ((value - low) / (high - low)) * 100));
-  // Arc goes from -135deg to +135deg (270 degree sweep)
-  const angleDeg = -135 + (pct / 100) * 270;
-  const r = (size - 8) / 2;
-  const cx = size / 2;
-  const cy = size / 2;
+function ZoneBar({
+  value,
+  refLow,
+  refHigh,
+  optimalRange,
+  unit,
+  statusColor,
+}: {
+  value: number;
+  refLow: number;
+  refHigh: number;
+  optimalRange?: OptimalRange;
+  unit: string | null;
+  statusColor: string;
+}) {
+  // Define the full visual range with padding beyond ref range
+  const rangePadding = (refHigh - refLow) * 0.15;
+  const visualMin = refLow - rangePadding;
+  const visualMax = refHigh + rangePadding;
+  const visualRange = visualMax - visualMin;
 
-  // Arc path for the track
-  const startAngle = -135;
-  const endAngle = 135;
-  const toRad = (deg: number) => (deg * Math.PI) / 180;
-  const arcPath = (start: number, end: number) => {
-    const s = toRad(start);
-    const e = toRad(end);
-    const x1 = cx + r * Math.cos(s);
-    const y1 = cy + r * Math.sin(s);
-    const x2 = cx + r * Math.cos(e);
-    const y2 = cy + r * Math.sin(e);
-    const largeArc = end - start > 180 ? 1 : 0;
-    return `M ${x1} ${y1} A ${r} ${r} 0 ${largeArc} 1 ${x2} ${y2}`;
-  };
+  const toPercent = (v: number) =>
+    Math.max(0, Math.min(100, ((v - visualMin) / visualRange) * 100));
 
-  // Indicator dot position
-  const indicatorAngle = toRad(angleDeg);
-  const dotX = cx + r * Math.cos(indicatorAngle);
-  const dotY = cy + r * Math.sin(indicatorAngle);
+  const refLowPct = toPercent(refLow);
+  const refHighPct = toPercent(refHigh);
+  const valuePct = toPercent(value);
+
+  // Optimal zone
+  const hasOptimal = optimalRange && optimalRange.optimal_low !== null && optimalRange.optimal_high !== null;
+  const optLowPct = hasOptimal ? toPercent(optimalRange!.optimal_low!) : 0;
+  const optHighPct = hasOptimal ? toPercent(optimalRange!.optimal_high!) : 0;
 
   return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-      {/* Track */}
-      <path
-        d={arcPath(startAngle, endAngle)}
-        fill="none"
-        stroke="rgba(15,26,21,0.07)"
-        strokeWidth="3"
-        strokeLinecap="round"
-      />
-      {/* Filled portion */}
-      <path
-        d={arcPath(startAngle, angleDeg)}
-        fill="none"
-        stroke={statusColor}
-        strokeWidth="3"
-        strokeLinecap="round"
-        opacity="0.4"
-      />
-      {/* Dot */}
-      <circle cx={dotX} cy={dotY} r="4" fill={statusColor} />
-      <circle cx={dotX} cy={dotY} r="2" fill="white" />
-    </svg>
+    <div className="w-full">
+      {/* The bar */}
+      <div className="relative h-2 rounded-full overflow-hidden" style={{ background: "rgba(15,26,21,0.04)" }}>
+        {/* Out of range red zones (left) */}
+        <div
+          className="absolute top-0 h-full rounded-l-full"
+          style={{ left: 0, width: `${refLowPct}%`, background: "rgba(239,68,68,0.12)" }}
+        />
+        {/* Out of range red zones (right) */}
+        <div
+          className="absolute top-0 h-full rounded-r-full"
+          style={{ left: `${refHighPct}%`, width: `${100 - refHighPct}%`, background: "rgba(239,68,68,0.12)" }}
+        />
+
+        {/* Borderline amber zones */}
+        {hasOptimal && (
+          <>
+            <div
+              className="absolute top-0 h-full"
+              style={{ left: `${refLowPct}%`, width: `${Math.max(0, optLowPct - refLowPct)}%`, background: "rgba(245,158,11,0.15)" }}
+            />
+            <div
+              className="absolute top-0 h-full"
+              style={{ left: `${optHighPct}%`, width: `${Math.max(0, refHighPct - optHighPct)}%`, background: "rgba(245,158,11,0.15)" }}
+            />
+          </>
+        )}
+
+        {/* Optimal green zone */}
+        {hasOptimal ? (
+          <div
+            className="absolute top-0 h-full"
+            style={{ left: `${optLowPct}%`, width: `${optHighPct - optLowPct}%`, background: "rgba(27,107,74,0.18)" }}
+          />
+        ) : (
+          <div
+            className="absolute top-0 h-full"
+            style={{ left: `${refLowPct}%`, width: `${refHighPct - refLowPct}%`, background: "rgba(27,107,74,0.12)" }}
+          />
+        )}
+
+        {/* Value dot */}
+        <div
+          className="absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full border-2 border-white"
+          style={{
+            left: `calc(${valuePct}% - 7px)`,
+            backgroundColor: statusColor,
+            boxShadow: `0 2px 8px ${statusColor}40`,
+          }}
+        />
+      </div>
+
+      {/* Labels */}
+      <div className="flex justify-between items-center mt-1.5">
+        <span className="text-[10px] text-[#8A928C]" style={{ fontFamily: MONO }}>{refLow}{unit ? ` ${unit}` : ""}</span>
+        {hasOptimal && (
+          <span className="text-[10px] text-[#1B6B4A] font-medium" style={{ fontFamily: MONO }}>
+            optimal: {optimalRange!.optimal_low}&ndash;{optimalRange!.optimal_high}
+          </span>
+        )}
+        <span className="text-[10px] text-[#8A928C]" style={{ fontFamily: MONO }}>{refHigh}{unit ? ` ${unit}` : ""}</span>
+      </div>
+    </div>
   );
 }
+
+// ---------------------------------------------------------------------
+// Biomarker card (compact card + expandable detail)
+// ---------------------------------------------------------------------
 
 function BiomarkerCard({
   result,
@@ -1492,6 +1816,7 @@ function BiomarkerCard({
   optimalRange,
   isFree,
   allMarkerNames,
+  detectedPatterns,
 }: {
   result: BiomarkerResult;
   analysis: Analysis | undefined;
@@ -1501,6 +1826,7 @@ function BiomarkerCard({
   optimalRange?: OptimalRange;
   isFree?: boolean;
   allMarkerNames?: string[];
+  detectedPatterns?: DetectedPattern[];
 }) {
   const status = analysis?.status || "normal";
   const statusStyle = STATUS_STYLES[status];
@@ -1523,50 +1849,48 @@ function BiomarkerCard({
 
   const [citationsOpen, setCitationsOpen] = useState(false);
 
+  // Find related patterns for this marker
+  const relatedPatterns = (detectedPatterns || []).filter((p) =>
+    p.markers_matched.some((m) => m.toLowerCase() === result.biomarker.toLowerCase())
+  );
+
   return (
     <div
-      className={`overflow-hidden transition-all duration-300 ${expanded ? "sm:col-span-2 lg:col-span-3" : "hover:-translate-y-0.5"}`}
+      className={`overflow-hidden ${expanded ? "sm:col-span-2 lg:col-span-3" : ""}`}
       style={{
         ...GLASS_CARD,
         boxShadow: expanded ? "0 12px 40px rgba(15,26,21,0.08)" : "0 8px 32px rgba(15,26,21,0.06)",
+        transition: TRANSITION,
+      }}
+      onMouseEnter={(e) => {
+        if (!expanded) {
+          (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
+          (e.currentTarget as HTMLElement).style.boxShadow = "0 12px 40px rgba(15,26,21,0.1)";
+        }
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+        (e.currentTarget as HTMLElement).style.boxShadow = expanded
+          ? "0 12px 40px rgba(15,26,21,0.08)"
+          : "0 8px 32px rgba(15,26,21,0.06)";
       }}
     >
       {/* COMPACT CARD VIEW */}
       <button
         onClick={onToggle}
-        className="w-full text-left px-5 py-4 transition-colors"
+        className="w-full text-left px-5 py-4"
       >
-        <div className="flex items-start gap-3">
-          {/* Arc gauge */}
-          {result.ref_low !== null && result.ref_high !== null ? (
-            <div className="flex-shrink-0 mt-0.5">
-              <ArcGauge
-                value={result.value}
-                low={result.ref_low}
-                high={result.ref_high}
-                statusColor={statusStyle.dot}
-                size={48}
-              />
-            </div>
-          ) : (
-            <div
-              className="w-12 h-12 flex-shrink-0 rounded-full flex items-center justify-center"
-              style={{ background: `${statusStyle.bg}` }}
-            >
-              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: statusStyle.dot }} />
-            </div>
-          )}
-
+        <div className="flex items-center justify-between gap-3">
           <div className="flex-1 min-w-0">
             {/* Name */}
-            <div className="text-[15px] font-semibold text-[#0F1A15] mb-1 truncate">
+            <div className="text-[14px] font-semibold text-[#0F1A15] mb-1 truncate">
               {result.biomarker}
             </div>
 
-            {/* Big number + unit */}
-            <div className="flex items-baseline gap-1">
+            {/* Big number + unit + status pill on same line */}
+            <div className="flex items-baseline gap-2">
               <span
-                className="text-[28px] tracking-tight text-[#0F1A15]"
+                className="text-[28px] tracking-tight text-[#0F1A15] leading-none"
                 style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
               >
                 {result.value}
@@ -1577,20 +1901,38 @@ function BiomarkerCard({
               >
                 {result.unit}
               </span>
-            </div>
-
-            {/* Status pill + summary */}
-            <div className="flex items-center gap-2 mt-1.5">
               <div
-                className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full"
+                className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full ml-1"
                 style={{ backgroundColor: statusStyle.bg, color: statusStyle.text }}
               >
                 <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: statusStyle.dot }} />
                 {statusStyle.label}
               </div>
             </div>
+
+            {/* Thin horizontal range bar */}
+            {result.ref_low !== null && result.ref_high !== null && (
+              <div className="mt-2.5 w-full">
+                <div className="relative h-1.5 rounded-full" style={{ background: "rgba(15,26,21,0.05)" }}>
+                  <div
+                    className="absolute top-0 h-1.5 rounded-full"
+                    style={{ left: "5%", right: "5%", backgroundColor: "rgba(27,107,74,0.1)" }}
+                  />
+                  <div
+                    className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full border-[1.5px] border-white"
+                    style={{
+                      left: `calc(${Math.max(2, Math.min(98, rangePosition))}% - 5px)`,
+                      backgroundColor: statusStyle.dot,
+                      boxShadow: `0 1px 4px ${statusStyle.dot}40`,
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Summary (truncated to 1 line) */}
             {analysis?.summary && (
-              <p className="text-[12px] text-[#5A635D] mt-1.5 line-clamp-1 leading-snug">{analysis.summary}</p>
+              <p className="text-[12px] text-[#5A635D] mt-2 line-clamp-1 leading-snug">{analysis.summary}</p>
             )}
           </div>
 
@@ -1598,66 +1940,37 @@ function BiomarkerCard({
           <svg
             width="14" height="14" viewBox="0 0 24 24" fill="none"
             stroke="#8A928C" strokeWidth="2"
-            className={`flex-shrink-0 mt-1 transition-transform duration-300 ${expanded ? "rotate-180" : ""}`}
+            className="flex-shrink-0"
+            style={{ transition: TRANSITION, transform: expanded ? "rotate(180deg)" : "rotate(0)" }}
           >
             <polyline points="6 9 12 15 18 9" />
           </svg>
         </div>
       </button>
 
-      {/* EXPANDED DETAIL PANEL */}
+      {/* EXPANDED DETAIL PANEL — slides down below the compact card */}
       {expanded && analysis && (
         <div className="px-5 py-5" style={{ borderTop: "1px solid rgba(255,255,255,0.3)", background: "rgba(255,255,255,0.35)" }}>
 
-          {/* Range visualization */}
+          {/* Zone bar visualization (InsideTracker style) */}
           {result.ref_low !== null && result.ref_high !== null && (
             <div className="mb-5">
-              <div className="relative h-2.5 rounded-full" style={{ background: "rgba(15,26,21,0.05)" }}>
-                {/* Lab reference range */}
-                <div
-                  className="absolute top-0 h-2.5 rounded-full"
-                  style={{ left: "5%", right: "5%", backgroundColor: "rgba(15,26,21,0.06)" }}
-                />
-                {/* Optimal range overlay */}
-                {optimalRange && optimalRange.optimal_low !== null && optimalRange.optimal_high !== null && (
-                  <div
-                    className="absolute top-0 h-2.5 rounded-full"
-                    style={{
-                      left: `${Math.max(5, ((optimalRange.optimal_low - result.ref_low) / (result.ref_high - result.ref_low)) * 90 + 5)}%`,
-                      right: `${Math.max(5, 95 - ((optimalRange.optimal_high - result.ref_low) / (result.ref_high - result.ref_low)) * 90 + 5)}%`,
-                      backgroundColor: "rgba(27, 107, 74, 0.15)",
-                      border: "1px solid rgba(27, 107, 74, 0.25)",
-                    }}
-                    title={`Optimal range: ${optimalRange.optimal_low}–${optimalRange.optimal_high} ${result.unit || ""}`}
-                  />
-                )}
-                {/* Value marker */}
-                <div
-                  className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-2 border-white"
-                  style={{
-                    left: `calc(${Math.max(0, Math.min(100, rangePosition))}% - 8px)`,
-                    backgroundColor: statusStyle.dot,
-                    boxShadow: `0 2px 8px ${statusStyle.dot}40`,
-                  }}
-                />
-              </div>
-              <div className="flex justify-between text-[10px] text-[#8A928C] mt-1.5 font-mono" style={{ fontFamily: MONO }}>
-                <span>{result.ref_low} {result.unit}</span>
-                {optimalRange && optimalRange.optimal_low !== null && optimalRange.optimal_high !== null && (
-                  <span className="text-[#1B6B4A] font-medium">
-                    optimal: {optimalRange.optimal_low}–{optimalRange.optimal_high}
-                  </span>
-                )}
-                <span>{result.ref_high} {result.unit}</span>
-              </div>
+              <ZoneBar
+                value={result.value}
+                refLow={result.ref_low}
+                refHigh={result.ref_high}
+                optimalRange={optimalRange}
+                unit={result.unit}
+                statusColor={statusStyle.dot}
+              />
 
               {isNormalButSuboptimal && (
                 <div
-                  className="mt-2.5 px-3 py-2 rounded-xl"
+                  className="mt-3 px-3 py-2 rounded-xl"
                   style={{ background: "rgba(254,243,199,0.5)", border: "1px solid rgba(245,158,11,0.15)" }}
                 >
                   <p className="text-[11px] text-[#B45309] leading-snug">
-                    <strong>Your lab says &quot;normal&quot;</strong> &mdash; but your value of {result.value} {result.unit} sits outside the research-supported optimal range ({optimalRange!.optimal_low}–{optimalRange!.optimal_high}). The research suggests this may be worth attention.
+                    <strong>Your lab says &quot;normal&quot;</strong> &mdash; but your value of {result.value} {result.unit} sits outside the research-supported optimal range ({optimalRange!.optimal_low}&ndash;{optimalRange!.optimal_high}). The research suggests this may be worth attention.
                   </p>
                 </div>
               )}
@@ -1706,19 +2019,42 @@ function BiomarkerCard({
 
           {/* What the research shows */}
           <div className="mb-5">
-            <div className="text-[11px] uppercase tracking-wider text-[#8A928C] font-medium mb-2 flex items-center gap-2">
+            <div className="text-[11px] uppercase tracking-wider text-[#8A928C] font-medium mb-2">
               What the research shows
-              {analysis.citation_count > 0 && (
-                <span className="normal-case tracking-normal font-normal text-[#1B6B4A]">
-                  &middot; {analysis.citation_count} studies cited
-                </span>
-              )}
             </div>
             <p className="text-[14px] text-[#0F1A15] leading-relaxed">{analysis.what_research_shows}</p>
           </div>
 
           {/* Related patterns */}
-          {analysis.related_patterns && (
+          {relatedPatterns.length > 0 && (
+            <div className="mb-5">
+              <div className="text-[11px] uppercase tracking-wider text-[#8A928C] font-medium mb-2">
+                Related patterns
+              </div>
+              <div className="space-y-2">
+                {relatedPatterns.map((p) => (
+                  <div key={p.id} className="p-3" style={GLASS_CARD_INNER}>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-[13px] font-medium text-[#0F1A15]">{p.name}</span>
+                      <span
+                        className="text-[9px] uppercase tracking-wider font-semibold px-1.5 py-0.5 rounded-full"
+                        style={{
+                          backgroundColor: (SEVERITY_STYLES[p.severity] || SEVERITY_STYLES.watch).bg,
+                          color: (SEVERITY_STYLES[p.severity] || SEVERITY_STYLES.watch).text,
+                        }}
+                      >
+                        {(SEVERITY_STYLES[p.severity] || SEVERITY_STYLES.watch).label}
+                      </span>
+                    </div>
+                    <p className="text-[12px] text-[#5A635D] leading-snug">{p.summary}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Fallback to analysis.related_patterns text if no detected patterns match */}
+          {relatedPatterns.length === 0 && analysis.related_patterns && (
             <div className="mb-5">
               <div className="text-[11px] uppercase tracking-wider text-[#8A928C] font-medium mb-2">
                 Related patterns
@@ -1727,50 +2063,19 @@ function BiomarkerCard({
             </div>
           )}
 
-          {/* Suggested exploration */}
-          {analysis.suggested_exploration && (
-            <div className="mb-5">
-              <div className="text-[11px] uppercase tracking-wider text-[#8A928C] font-medium mb-2">
-                Explore further
-              </div>
-              <p className="text-[14px] text-[#0F1A15] leading-relaxed">{analysis.suggested_exploration}</p>
-            </div>
-          )}
-
-          {/* What to test next — filter out tests already in this panel */}
-          {(() => {
-            const nextTests = getNextTestSuggestions(result.biomarker, status)
-              .filter((t) => !(allMarkerNames || []).some((name: string) => name.toLowerCase().includes(t.test_name.toLowerCase().split(" ")[0]) || t.test_name.toLowerCase().includes(name.toLowerCase().split(" ")[0])));
-            if (nextTests.length === 0) return null;
-            return (
-              <div className="mb-5">
-                <div className="text-[11px] uppercase tracking-wider text-[#1B6B4A] font-medium mb-2">
-                  What to test next
-                </div>
-                <div className="space-y-2">
-                  {nextTests.slice(0, 4).map((t) => (
-                    <div key={t.test_name} className="p-3" style={GLASS_CARD_INNER}>
-                      <div className="text-[13px] font-medium text-[#0F1A15] mb-1">{t.test_name}</div>
-                      <div className="text-[11px] text-[#5A635D] leading-snug">{t.why}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            );
-          })()}
-
-          {/* Citations — collapsed by default */}
+          {/* Citations — COLLAPSED by default behind toggle */}
           {citations.length > 0 && (
             <div className="mb-5">
               <button
                 onClick={(e) => { e.stopPropagation(); setCitationsOpen(!citationsOpen); }}
-                className="flex items-center gap-2 text-[11px] uppercase tracking-wider text-[#8A928C] font-medium mb-3 hover:text-[#5A635D] transition-colors"
+                className="flex items-center gap-2 text-[12px] font-medium text-[#1B6B4A] hover:text-[#155A3D] mb-3"
+                style={{ transition: TRANSITION }}
               >
-                Studies cited ({citations.length})
+                Show {citations.length} {citations.length === 1 ? "study" : "studies"}
                 <svg
                   width="12" height="12" viewBox="0 0 24 24" fill="none"
                   stroke="currentColor" strokeWidth="2"
-                  className={`transition-transform duration-300 ${citationsOpen ? "rotate-180" : ""}`}
+                  style={{ transition: TRANSITION, transform: citationsOpen ? "rotate(180deg)" : "rotate(0)" }}
                 >
                   <polyline points="6 9 12 15 18 9" />
                 </svg>
@@ -1784,9 +2089,11 @@ function BiomarkerCard({
                       href={c.study.pmid ? `https://pubmed.ncbi.nlm.nih.gov/${c.study.pmid}/` : "#"}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block p-3 transition-all duration-300 hover:-translate-y-0.5"
-                      style={GLASS_CARD_INNER}
+                      className="block p-3"
+                      style={{ ...GLASS_CARD_INNER, transition: TRANSITION }}
                       onClick={(e) => e.stopPropagation()}
+                      onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)"; }}
+                      onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; }}
                     >
                       <div className="flex items-start justify-between gap-3 mb-1">
                         <div className="text-[12px] font-medium text-[#0F1A15] leading-snug line-clamp-2">
@@ -1814,6 +2121,28 @@ function BiomarkerCard({
               )}
             </div>
           )}
+
+          {/* What to test next — filter out tests already in this panel */}
+          {(() => {
+            const nextTests = getNextTestSuggestions(result.biomarker, status)
+              .filter((t) => !(allMarkerNames || []).some((name: string) => name.toLowerCase().includes(t.test_name.toLowerCase().split(" ")[0]) || t.test_name.toLowerCase().includes(name.toLowerCase().split(" ")[0])));
+            if (nextTests.length === 0) return null;
+            return (
+              <div className="mb-5">
+                <div className="text-[11px] uppercase tracking-wider text-[#1B6B4A] font-medium mb-2">
+                  What to test next
+                </div>
+                <div className="space-y-2">
+                  {nextTests.slice(0, 4).map((t) => (
+                    <div key={t.test_name} className="p-3" style={GLASS_CARD_INNER}>
+                      <div className="text-[13px] font-medium text-[#0F1A15] mb-1">{t.test_name}</div>
+                      <div className="text-[11px] text-[#5A635D] leading-snug">{t.why}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
 
           {/* Confidence + metadata */}
           <div className="pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.3)" }}>
