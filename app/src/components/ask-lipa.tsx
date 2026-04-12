@@ -9,6 +9,22 @@ interface Message {
 
 const FRAUNCES = "'Fraunces', Georgia, serif";
 
+// Simple markdown to HTML for chat messages
+function formatMarkdown(text: string): string {
+  let html = text;
+  // Bold
+  html = html.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+  // Italic
+  html = html.replace(/\*(.+?)\*/g, "<em>$1</em>");
+  // List items
+  html = html.replace(/^- (.+)$/gm, '<li style="margin-left:16px;list-style:disc">$1</li>');
+  // Double newlines = paragraph breaks
+  html = html.replace(/\n\n/g, '<div style="height:8px"></div>');
+  // Single newlines = line breaks
+  html = html.replace(/\n/g, "<br>");
+  return html;
+}
+
 const SUGGESTED_QUESTIONS = [
   "What should I focus on first?",
   "Why is my iron low?",
@@ -244,7 +260,12 @@ export function AskLipa({ userId }: { userId: string }) {
                         : undefined
                     }
                   >
-                    {msg.content || (
+                    {msg.content ? (
+                      <div
+                        className="prose-chat"
+                        dangerouslySetInnerHTML={{ __html: formatMarkdown(msg.content) }}
+                      />
+                    ) : (
                       <div className="flex items-center gap-2 text-[#8A928C]">
                         <div className="w-2 h-2 bg-[#1B6B4A] rounded-full animate-pulse" />
                         Thinking...
