@@ -967,7 +967,7 @@ export default function DashboardPage() {
                 </div>
               )}
 
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              <div className="space-y-3">
                 {(actionPlan.domains as any[]).map((domain: any) => (
                   <ActionPlanDomainCard key={domain.domain} domain={domain} />
                 ))}
@@ -988,11 +988,11 @@ export default function DashboardPage() {
                 <h2 className="text-[20px] tracking-tight text-[#0F1A15] mb-3" style={{ fontFamily: FRAUNCES, fontWeight: 500 }}>
                   Your Action Plan
                 </h2>
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {(actionPlan.domains as any[]).slice(0, 3).map((d: any) => (
-                    <div key={d.domain} className="bg-white/50 rounded-2xl p-4">
-                      <div className="text-[11px] uppercase tracking-wider text-[#1B6B4A] font-semibold mb-1">{d.domain}</div>
-                      <div className="text-[13px] text-[#5A635D]">{d.recommendations?.length || 0} recommendations</div>
+                <div className="space-y-2">
+                  {(actionPlan.domains as any[]).slice(0, 4).map((d: any) => (
+                    <div key={d.domain} className="bg-[#F8F5EF] rounded-xl p-4 flex items-center justify-between">
+                      <div className="text-[13px] font-medium text-[#0F1A15]">{DOMAIN_LABELS[d.domain] || d.domain}</div>
+                      <div className="text-[12px] text-[#8A928C]">{d.recommendations?.length || 0} items</div>
                     </div>
                   ))}
                 </div>
@@ -1450,10 +1450,10 @@ function ActionPlanDomainCard({ domain }: { domain: any }) {
       </button>
 
       {expanded && (
-        <div className="px-5 py-4" style={{ borderTop: "1px solid rgba(255,255,255,0.3)", background: "rgba(255,255,255,0.3)" }}>
+        <div className="px-5 py-4 bg-[#FAFAF8]" style={{ borderTop: "1px solid rgba(15,26,21,0.06)" }}>
           <div className="space-y-5">
             {recs.map((rec: any, i: number) => (
-              <div key={i} className="pb-4 last:pb-0" style={{ borderBottom: i < recs.length - 1 ? "1px solid rgba(255,255,255,0.4)" : "none" }}>
+              <div key={i} className="pb-4 last:pb-0" style={{ borderBottom: i < recs.length - 1 ? "1px solid rgba(15,26,21,0.06)" : "none" }}>
                 <p className="text-[14px] font-medium text-[#0F1A15] leading-relaxed mb-1">
                   {rec.text}
                 </p>
