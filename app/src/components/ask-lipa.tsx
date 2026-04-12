@@ -153,7 +153,7 @@ export function AskLipa({ userId }: { userId: string }) {
             </div>
             <div>
               <div className="text-[14px] font-semibold text-[#0F1A15]">Ask Lipa</div>
-              <div className="text-[11px] text-[#8A928C]">Your results + 55,000 studies</div>
+              <div className="text-[11px] text-[#8A928C]">Your results + 55,000+ peer-reviewed studies</div>
             </div>
           </div>
 
@@ -163,7 +163,7 @@ export function AskLipa({ userId }: { userId: string }) {
               /* Empty state with suggestions */
               <div>
                 <p className="text-[13px] text-[#5A635D] mb-4 leading-relaxed">
-                  I have your full blood test loaded. Ask me anything about your results — I'll answer using your specific values and peer-reviewed research.
+                  Unlike ChatGPT or general AI tools, Ask Lipa has your actual blood test results loaded and searches a curated corpus of 55,000+ peer-reviewed studies to answer your questions. Every response is grounded in your biology and real research.
                 </p>
                 <div className="space-y-2">
                   {SUGGESTED_QUESTIONS.map((q) => (
