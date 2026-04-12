@@ -675,6 +675,46 @@
     }
     .calc-cite .pmid { color: var(--accent); }
 
+    /* -------------------- PIPELINE (CREAM) -------------------- */
+    .pipeline {
+      background: var(--cream);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .pipeline-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 64px;
+    }
+    .pipeline-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 36px 32px;
+    }
+    .pipeline-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+    .pipeline-title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 22px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      margin-bottom: 12px;
+    }
+    .pipeline-body {
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+    }
+
     /* -------------------- LIMITATIONS (INK) -------------------- */
     .limits {
       background: var(--ink);
@@ -973,6 +1013,7 @@
       .vs-table th { font-size: 9px; }
       .value-grid { grid-template-columns: 1fr; gap: 16px; }
       .funding-split { grid-template-columns: 1fr; gap: 40px; }
+      .pipeline-grid { grid-template-columns: 1fr; gap: 16px; }
     }
   </style>
 </head>
@@ -1011,9 +1052,9 @@
 <div class="counter-strip on-ink">
   <div class="counter-grid">
     <div class="counter-cell">
-      <div class="counter-label">Studies in library</div>
-      <div class="counter-value mono">45M+</div>
-      <div class="counter-meta"><span class="counter-pulse"></span>updated daily</div>
+      <div class="counter-label">Curated studies</div>
+      <div class="counter-value mono">55,000+</div>
+      <div class="counter-meta"><span class="counter-pulse"></span>Updated continuously as new research publishes</div>
     </div>
     <div class="counter-cell">
       <div class="counter-label">Journals indexed</div>
@@ -1038,21 +1079,53 @@
   <div class="container">
     <div class="section-eyebrow">Data sources</div>
     <h2 class="display">The research<br>behind every insight.</h2>
-    <p class="lede">We pull from the same sources your doctor's medical school taught from. Every major medical society, every peer-reviewed journal that matters, updated daily.</p>
+    <p class="lede">We pull from the same sources your doctor's medical school taught from. Every major medical society, every peer-reviewed journal that matters, updated continuously.</p>
 
     <div class="ingest-grid">
       <div class="source-card">
         <div class="source-name">PubMed</div>
         <div class="source-org">US National Library of Medicine</div>
-        <p class="source-desc">The world's primary medical research database. Indexes NEJM, JAMA, The Lancet, BMJ, Nature Medicine, Circulation, and 5,300+ other peer-reviewed journals. The reference your physician and every medical school uses.</p>
+        <p class="source-desc">The world's primary medical research database. Indexes NEJM, JAMA, The Lancet, BMJ, Nature Medicine, Circulation, and 5,300+ other peer-reviewed journals. We curate 55,000+ studies specifically relevant to biomarker interpretation, risk assessment, and clinical decision-making.</p>
         <div class="source-stats">
           <div>
-            <div class="source-stat-label">Coverage</div>
-            <div class="source-stat-value">38M+ studies</div>
+            <div class="source-stat-label">Curated</div>
+            <div class="source-stat-value">55,000+ studies</div>
           </div>
           <div>
             <div class="source-stat-label">Journals</div>
             <div class="source-stat-value">5,300+</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="source-card">
+        <div class="source-name">NHANES</div>
+        <div class="source-org">CDC · National Center for Health Statistics</div>
+        <p class="source-desc">The National Health and Nutrition Examination Survey provides 300,000+ health profiles spanning decades of continuous US population sampling. We use NHANES data to compute demographic-adjusted optimal ranges by age and sex, and to calculate population percentile comparisons for every biomarker.</p>
+        <div class="source-stats">
+          <div>
+            <div class="source-stat-label">Profiles</div>
+            <div class="source-stat-value">300K+</div>
+          </div>
+          <div>
+            <div class="source-stat-label">Used for</div>
+            <div class="source-stat-value">Optimal ranges</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="source-card">
+        <div class="source-name">Clinical Practice Guidelines</div>
+        <div class="source-org">Endocrine Society · ESC/EAS · ADA · WHO</div>
+        <p class="source-desc">Authoritative clinical practice guidelines from the Endocrine Society, European Society of Cardiology / European Atherosclerosis Society (ESC/EAS), American Diabetes Association (ADA), World Health Organization (WHO), NICE, and USPSTF. When guidelines exist, they anchor our optimal ranges and recommendations.</p>
+        <div class="source-stats">
+          <div>
+            <div class="source-stat-label">Bodies</div>
+            <div class="source-stat-value">8+ major</div>
+          </div>
+          <div>
+            <div class="source-stat-label">Updated</div>
+            <div class="source-stat-value">As released</div>
           </div>
         </div>
       </div>
@@ -1090,17 +1163,17 @@
       </div>
 
       <div class="source-card">
-        <div class="source-name">Clinical Guidelines</div>
-        <div class="source-org">ESC · ADA · EASL · WHO · NICE · USPSTF</div>
-        <p class="source-desc">Authoritative recommendations from the European Society of Cardiology, American Diabetes Association, European Association for the Study of the Liver, World Health Organization, and major national guideline bodies. When guidelines exist, we cite them.</p>
+        <div class="source-name">ClinicalTrials.gov</div>
+        <div class="source-org">US National Library of Medicine</div>
+        <p class="source-desc">The world's largest registry of clinical studies. We track active and completed trials relevant to biomarker research, intervention studies, and emerging therapeutics to surface the most current evidence.</p>
         <div class="source-stats">
           <div>
-            <div class="source-stat-label">Bodies</div>
-            <div class="source-stat-value">6 major</div>
+            <div class="source-stat-label">Coverage</div>
+            <div class="source-stat-value">460K+ studies</div>
           </div>
           <div>
-            <div class="source-stat-label">Updated</div>
-            <div class="source-stat-value">As released</div>
+            <div class="source-stat-label">Focus</div>
+            <div class="source-stat-value">Active trials</div>
           </div>
         </div>
       </div>
@@ -1109,17 +1182,15 @@
     <div class="also-indexed">
       <div class="also-label">Also indexed, filtered, and weighted</div>
       <div class="also-chips">
-        <span class="chip">ClinicalTrials.gov</span>
         <span class="chip">bioRxiv</span>
         <span class="chip">medRxiv</span>
         <span class="chip">NCCIH (NIH Integrative)</span>
         <span class="chip">American Heart Association</span>
         <span class="chip">European Association for the Study of Diabetes</span>
         <span class="chip">International Osteoporosis Foundation</span>
-        <span class="chip">The Endocrine Society</span>
         <span class="chip">Cochrane Complementary Medicine</span>
-        <span class="chip">NHANES population cohort</span>
         <span class="chip">UK Biobank</span>
+        <span class="chip">EASL (Liver)</span>
       </div>
     </div>
   </div>
@@ -1130,12 +1201,12 @@
   <div class="container">
     <div class="section-eyebrow">Always fresh</div>
     <h2 class="display">Yesterday's research.<br>Today's insight.</h2>
-    <p class="lede">Medicine moves. A study published this morning can change what we know about a biomarker. Lipa's corpus refreshes every single day — so when new evidence lands, your next analysis sees it. Most "AI health" tools are frozen snapshots of 2023. We're not.</p>
+    <p class="lede">Medicine moves. A study published this morning can change what we know about a biomarker. Lipa's corpus refreshes continuously — so when new evidence lands, your next analysis sees it. Most "AI health" tools are frozen snapshots of 2023. We're not.</p>
 
     <div class="recency-grid">
       <div>
         <p style="font-size: 15px; line-height: 1.75; color: var(--text-secondary); max-width: 540px;">
-          The research library behind Lipa isn't a one-time build. Our ingestion pipeline runs nightly against PubMed, Europe PMC, Cochrane, and every major medical society's guideline feed. New systematic reviews, new trials, new consensus documents — they land in Lipa within 24 hours of publication. Older studies are re-scored as newer evidence changes what we know. And when a paper is retracted, it's removed from retrieval within hours, not years.
+          The research library behind Lipa isn't a one-time build. Our ingestion pipeline runs continuously against PubMed, Europe PMC, Cochrane, NHANES, and every major medical society's guideline feed. New systematic reviews, new trials, new consensus documents — they land in Lipa within hours of publication. Older studies are re-scored as newer evidence changes what we know. And when a paper is retracted, it's removed from retrieval within hours, not years.
         </p>
         <p style="font-size: 15px; line-height: 1.75; color: var(--text-secondary); max-width: 540px; margin-top: 16px;">
           That's what <em style="font-family: 'Fraunces', Georgia, serif; color: var(--accent);">Living</em> Research actually means: a corpus that keeps up with the research, so your analysis keeps up with it too.
@@ -1146,18 +1217,18 @@
         <div class="recency-label">Corpus freshness</div>
 
         <div class="recency-row">
-          <div class="recency-val mono" id="rec-latest">4h ago</div>
-          <div class="recency-meta"><span class="pulse-small"></span>Latest study ingested</div>
+          <div class="recency-val mono">Continuous</div>
+          <div class="recency-meta"><span class="pulse-small"></span>Updated continuously as new research publishes</div>
         </div>
 
         <div class="recency-row">
-          <div class="recency-val mono">2025</div>
+          <div class="recency-val mono">2026</div>
           <div class="recency-meta">Most recent publication year</div>
         </div>
 
         <div class="recency-row">
-          <div class="recency-val mono">73%</div>
-          <div class="recency-meta">of corpus published since 2020</div>
+          <div class="recency-val mono">55,000+</div>
+          <div class="recency-meta">Curated biomarker-relevant studies</div>
         </div>
 
         <div class="recency-row">
@@ -1179,14 +1250,14 @@
   <div class="container">
     <div class="section-eyebrow">How it works</div>
     <h2 class="display">From your upload<br>to cited insight.</h2>
-    <p class="lede">Four deliberate steps. Every insight you see is grounded in real peer-reviewed studies — not a model's best guess.</p>
+    <p class="lede">Six deliberate steps. Every insight you see is grounded in real peer-reviewed studies — not a model's best guess.</p>
 
     <div class="how-steps">
       <div class="how-step">
         <div class="step-num mono">01</div>
         <div class="step-content">
           <h3>Read the research</h3>
-          <p>Every single day, our engine ingests new studies from the world's major medical databases and guideline bodies. We keep only research that meets a quality bar: human studies, recent enough to be relevant, published in peer-reviewed venues, and from study types that actually inform clinical decisions — randomized trials, systematic reviews, large cohorts, and official guidelines.</p>
+          <p>Our engine continuously ingests new studies from the world's major medical databases and guideline bodies. We keep only research that meets a quality bar: human studies, recent enough to be relevant, published in peer-reviewed venues, and from study types that actually inform clinical decisions — randomized trials, systematic reviews, large cohorts, and official guidelines. 55,000+ curated studies and growing.</p>
         </div>
       </div>
 
@@ -1202,16 +1273,79 @@
         <div class="step-num mono">03</div>
         <div class="step-content">
           <h3>Match you to the research</h3>
-          <p>For each of your markers, we find the studies in our library that are most relevant to your specific value range, weighted by evidence quality and how recent the research is. Higher-grade studies — systematic reviews, major guidelines, large trials — are prioritized above smaller or older papers.</p>
+          <p>For each of your markers, we find the studies in our library that are most relevant to your specific value range, weighted by evidence quality and how recent the research is. Higher-grade studies — systematic reviews, major guidelines, large trials — are prioritized above smaller or older papers. Your optimal ranges are adjusted by age and sex using NHANES population data (300K+ profiles) and published clinical guidelines.</p>
         </div>
       </div>
 
       <div class="how-step">
         <div class="step-num mono">04</div>
         <div class="step-content">
+          <h3>Detect cross-marker patterns</h3>
+          <p>Individual markers tell part of the story. Lipa detects 6 clinical cross-marker patterns — combinations of markers that, together, tell you something neither marker reveals alone. Metabolic syndrome signatures, thyroid conversion issues, inflammatory cascades, iron metabolism patterns, cardiovascular risk clusters, and hormonal axis patterns are identified automatically across your full panel.</p>
+        </div>
+      </div>
+
+      <div class="how-step">
+        <div class="step-num mono">05</div>
+        <div class="step-content">
+          <h3>Calculate your risk and biological age</h3>
+          <p>We run 16+ peer-reviewed risk calculations on your panel — SCORE2, HOMA-IR, FIB-4, eGFR, AIP, and more — each from a named, published methodology. We also compute your biological age using an ensemble of KDM (Klemera-Doubal) and PhenoAge algorithms, and compare your results to population percentiles by age and sex.</p>
+        </div>
+      </div>
+
+      <div class="how-step">
+        <div class="step-num mono">06</div>
+        <div class="step-content">
           <h3>Explain and cite</h3>
           <p>We compose an analysis for each marker that is grounded exclusively in the studies we retrieved — no guesses, no invented references, no hallucinated PMIDs. Every sentence ties back to a specific paper. You can click any citation and land on the real study on PubMed.</p>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================== PIPELINE CAPABILITIES (CREAM) ================== -->
+<section class="pipeline">
+  <div class="container">
+    <div class="section-eyebrow">What's built</div>
+    <h2 class="display">The full<br>analysis pipeline.</h2>
+    <p class="lede">Every capability in Lipa today — from upload to insight to ongoing tracking. Built, tested, live.</p>
+
+    <div class="pipeline-grid">
+      <div class="pipeline-card">
+        <div class="pipeline-tag">Longevity</div>
+        <div class="pipeline-title">Biological age calculation</div>
+        <div class="pipeline-body">Ensemble biological age estimation using both KDM (Klemera-Doubal method) and PhenoAge algorithms. Your bio-age is computed from your actual biomarkers and compared against your chronological age, with a trajectory chart across uploads.</div>
+      </div>
+
+      <div class="pipeline-card">
+        <div class="pipeline-tag">Pattern detection</div>
+        <div class="pipeline-title">Cross-marker pattern detection</div>
+        <div class="pipeline-body">6 clinical patterns detected automatically: metabolic syndrome, thyroid conversion, inflammatory cascades, iron metabolism, cardiovascular risk clusters, and hormonal axis patterns. Each pattern is explained with the specific markers that triggered it.</div>
+      </div>
+
+      <div class="pipeline-card">
+        <div class="pipeline-tag">AI assistant</div>
+        <div class="pipeline-title">Ask Lipa</div>
+        <div class="pipeline-body">An AI health assistant with full context of your panel, your history, and your demographic profile. Backed by RAG retrieval from our 55,000+ curated study corpus. Ask questions about your results, get cited answers grounded in your actual data.</div>
+      </div>
+
+      <div class="pipeline-card">
+        <div class="pipeline-tag">Tracking</div>
+        <div class="pipeline-title">Vault with trend tracking</div>
+        <div class="pipeline-body">Every upload is stored in your personal vault. Marker trends over time, bio-age trajectory, risk score evolution — all visualized across uploads. Your biology, longitudinally. Encrypted, never shared.</div>
+      </div>
+
+      <div class="pipeline-card">
+        <div class="pipeline-tag">Personalization</div>
+        <div class="pipeline-title">Demographic-adjusted optimal ranges</div>
+        <div class="pipeline-body">Your optimal ranges aren't generic. They're adjusted by your age and sex using NHANES population data (300,000+ health profiles from the CDC) and published clinical guidelines from the Endocrine Society, ESC/EAS, ADA, and WHO.</div>
+      </div>
+
+      <div class="pipeline-card">
+        <div class="pipeline-tag">Comparison</div>
+        <div class="pipeline-title">Population percentile comparison</div>
+        <div class="pipeline-body">For every biomarker, see where you fall compared to the population — adjusted by your demographic group. Are you in the 12th percentile for vitamin D among 35-year-old males? You'll know, with the research context for what that means.</div>
       </div>
     </div>
   </div>
@@ -1228,7 +1362,7 @@
       <div class="grade-card">
         <span class="grade-badge grade-ext">Grade A+</span>
         <div class="grade-name">Extensive</div>
-        <div class="grade-desc">Systematic reviews and meta-analyses of randomized controlled trials. Cochrane reviews, published guidelines from major bodies (ESC, ADA, WHO).</div>
+        <div class="grade-desc">Systematic reviews and meta-analyses of randomized controlled trials. Cochrane reviews, published guidelines from major bodies (ESC, ADA, WHO, Endocrine Society).</div>
         <div class="grade-example">e.g. SCORE2 working group · Eur Heart J 2021</div>
       </div>
 
@@ -1274,27 +1408,27 @@
       <div class="funding-tags">
         <div class="ftag-row">
           <div class="ftag-label"><span class="ftag-dot ftag-ind"></span>Independent · academic</div>
-          <div class="ftag-meta">weight ×1.0</div>
+          <div class="ftag-meta">weight x1.0</div>
         </div>
         <div class="ftag-row">
           <div class="ftag-label"><span class="ftag-dot ftag-gov"></span>Government grants</div>
-          <div class="ftag-meta">weight ×1.0</div>
+          <div class="ftag-meta">weight x1.0</div>
         </div>
         <div class="ftag-row">
           <div class="ftag-label"><span class="ftag-dot ftag-non"></span>Non-profit foundation</div>
-          <div class="ftag-meta">weight ×0.95</div>
+          <div class="ftag-meta">weight x0.95</div>
         </div>
         <div class="ftag-row">
           <div class="ftag-label"><span class="ftag-dot ftag-mix"></span>Mixed · disclosed</div>
-          <div class="ftag-meta">weight ×0.85</div>
+          <div class="ftag-meta">weight x0.85</div>
         </div>
         <div class="ftag-row">
           <div class="ftag-label"><span class="ftag-dot ftag-phar"></span>Industry · pharma, device, food</div>
-          <div class="ftag-meta">weight ×0.70</div>
+          <div class="ftag-meta">weight x0.70</div>
         </div>
         <div class="ftag-row">
           <div class="ftag-label"><span class="ftag-dot ftag-und"></span>Undeclared</div>
-          <div class="ftag-meta">weight ×0.50</div>
+          <div class="ftag-meta">weight x0.50</div>
         </div>
       </div>
     </div>
@@ -1367,9 +1501,9 @@
 <!-- ================== RISK CALCULATIONS BIBLIOGRAPHY (WHITE) ================== -->
 <section class="calcs">
   <div class="container">
-    <div class="section-eyebrow">Calculations &amp; personalization</div>
+    <div class="section-eyebrow">16+ calculations &amp; personalization</div>
     <h2 class="display">Your numbers,<br>adjusted to you.</h2>
-    <p class="lede">We don't invent proprietary scores. When Lipa shows you a risk score or a biological age, it uses a real, named, published methodology. And your optimal ranges aren't one-size-fits-all — they're adjusted by your age and sex, based on the NHANES population study (300,000+ participants, CDC) and published clinical guidelines from the Endocrine Society, ESC, ADA, and other major bodies.</p>
+    <p class="lede">We don't invent proprietary scores. When Lipa shows you a risk score or a biological age, it uses a real, named, published methodology. And your optimal ranges aren't one-size-fits-all — they're adjusted by your age and sex, based on the NHANES population study (300,000+ participants, CDC) and published clinical guidelines from the Endocrine Society, ESC/EAS, ADA, and other major bodies.</p>
 
     <div class="calc-list">
       <div class="calc-row">
@@ -1396,7 +1530,7 @@
           <div class="calc-name-sub">Metabolic · triglyceride-glucose</div>
         </div>
         <div class="calc-desc">Triglyceride-glucose index, a validated surrogate for insulin resistance that requires only a standard lipid panel and fasting glucose. Useful where fasting insulin isn't available.</div>
-        <div class="calc-cite">Simental-Mendía LE et al. · Metab Syndr Relat Disord 2008;6(4):299–304<br><span class="pmid">PMID: 19067533</span></div>
+        <div class="calc-cite">Simental-Mendia LE et al. · Metab Syndr Relat Disord 2008;6(4):299–304<br><span class="pmid">PMID: 19067533</span></div>
       </div>
 
       <div class="calc-row">
@@ -1413,8 +1547,26 @@
           <div class="calc-name">KDM Bio-Age</div>
           <div class="calc-name-sub">Longevity · biological age</div>
         </div>
-        <div class="calc-desc">Klemera-Doubal method for biological age estimation. Uses a simplified 8-biomarker panel (albumin, creatinine, glucose, CRP, MCV, RDW, alkaline phosphatase, WBC) to estimate age deviation from chronological age.</div>
+        <div class="calc-desc">Klemera-Doubal method for biological age estimation. Uses a simplified 8-biomarker panel (albumin, creatinine, glucose, CRP, MCV, RDW, alkaline phosphatase, WBC) to estimate age deviation from chronological age. Part of our ensemble bio-age calculation alongside PhenoAge.</div>
         <div class="calc-cite">Klemera P, Doubal S · Mech Ageing Dev 2006;127(3):240–248<br><span class="pmid">PMID: 16318865</span></div>
+      </div>
+
+      <div class="calc-row">
+        <div>
+          <div class="calc-name">PhenoAge</div>
+          <div class="calc-name-sub">Longevity · biological age</div>
+        </div>
+        <div class="calc-desc">Levine's PhenoAge biological age algorithm, trained on mortality data from NHANES III. Uses 9 clinical chemistry markers plus chronological age to estimate phenotypic age. Part of our ensemble bio-age calculation alongside KDM.</div>
+        <div class="calc-cite">Levine ME et al. · Aging 2018;10(4):573–591<br><span class="pmid">PMID: 29676998</span></div>
+      </div>
+
+      <div class="calc-row">
+        <div>
+          <div class="calc-name">eGFR (CKD-EPI 2021)</div>
+          <div class="calc-name-sub">Kidney · glomerular filtration</div>
+        </div>
+        <div class="calc-desc">The race-free 2021 CKD-EPI equation for estimated glomerular filtration rate. The current standard for kidney function assessment, removing race as a coefficient.</div>
+        <div class="calc-cite">Inker LA et al. · N Engl J Med 2021;385(19):1737–1749<br><span class="pmid">PMID: 34554658</span></div>
       </div>
 
       <div class="calc-row">
@@ -1431,10 +1583,12 @@
           <div class="calc-name">Atherogenic Index of Plasma</div>
           <div class="calc-name-sub">Cardiovascular · lipoprotein size</div>
         </div>
-        <div class="calc-desc">log₁₀(TG/HDL-C), a validated marker of atherogenic lipoprotein particle size. Studied extensively as an adjunct to standard lipid panels for cardiovascular risk stratification.</div>
-        <div class="calc-cite">Dobiášová M, Frohlich J · Clin Biochem 2001;34(7):583–588<br><span class="pmid">PMID: 11738396</span></div>
+        <div class="calc-desc">log10(TG/HDL-C), a validated marker of atherogenic lipoprotein particle size. Studied extensively as an adjunct to standard lipid panels for cardiovascular risk stratification.</div>
+        <div class="calc-cite">Dobiasova M, Frohlich J · Clin Biochem 2001;34(7):583–588<br><span class="pmid">PMID: 11738396</span></div>
       </div>
     </div>
+
+    <p style="font-size: 14px; color: var(--text-secondary); margin-top: 32px; line-height: 1.7;">Plus additional calculations including Non-HDL cholesterol, LDL:HDL ratio, Triglyceride:HDL ratio, APRI (AST-to-Platelet Ratio Index), De Ritis ratio, and more — 16+ total peer-reviewed calculations across cardiovascular, metabolic, liver, kidney, and longevity domains.</p>
   </div>
 </section>
 
@@ -1470,8 +1624,13 @@
           <li>All 100+ biomarkers analyzed, fully cited</li>
           <li>Personalized action plan across 6 domains</li>
           <li>16+ peer-reviewed risk calculations</li>
+          <li>Biological age (KDM + PhenoAge ensemble)</li>
+          <li>Cross-marker pattern detection (6 patterns)</li>
+          <li>Ask Lipa AI assistant with full panel context + RAG</li>
           <li>Permanent vault &amp; year-over-year trending</li>
-          <li>Cross-marker pattern detection</li>
+          <li>Bio-age trajectory tracking</li>
+          <li>Demographic-adjusted optimal ranges (age + sex)</li>
+          <li>Population percentile comparison</li>
           <li>Alerts when new relevant research is published</li>
         </ul>
       </div>
@@ -1519,13 +1678,13 @@
       <div class="limit-card">
         <div class="limit-mark">— LIMIT —</div>
         <div class="limit-title">Bio-age is an estimate.</div>
-        <div class="limit-body">Biological age from blood biomarkers is a research calculation with wide confidence intervals. Different methods (KDM, PhenoAge, DunedinPACE) produce different numbers. We show the KDM estimate and label it clearly as illustrative.</div>
+        <div class="limit-body">Biological age from blood biomarkers is a research calculation with wide confidence intervals. Different methods (KDM, PhenoAge, DunedinPACE) produce different numbers. We show an ensemble estimate using both KDM and PhenoAge, and label it clearly as illustrative.</div>
       </div>
 
       <div class="limit-card">
         <div class="limit-mark">— LIMIT —</div>
         <div class="limit-title">Research is ongoing.</div>
-        <div class="limit-body">Evidence evolves. A study cited today may be superseded next year. Our daily corpus refresh is designed to surface new evidence quickly, but at any moment you are reading a snapshot.</div>
+        <div class="limit-body">Evidence evolves. A study cited today may be superseded next year. Our continuous corpus refresh is designed to surface new evidence quickly, but at any moment you are reading a snapshot.</div>
       </div>
 
       <div class="limit-card">
@@ -1570,18 +1729,6 @@
   </div>
   <div style="margin-top: 16px; opacity: 0.5;">Lipa Health &copy; 2026</div>
 </footer>
-
-<script>
-  // Live-ish counter: show time since last update on page load
-  (function() {
-    var updated = document.getElementById('ctr-updated');
-    if (!updated) return;
-    var now = new Date();
-    var last = new Date(now.getTime() - (3.5 + Math.random() * 2) * 60 * 60 * 1000);
-    var diffH = Math.round((now - last) / 3600000);
-    updated.textContent = diffH + 'h ago';
-  })();
-</script>
 
 <script src="/chat-widget.js"></script>
 </body>
