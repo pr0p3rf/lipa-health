@@ -1,10 +1,10 @@
 const translations = {
   en: {
     heroEyebrow: "",
-    heroTitle: "Finally understand<br>what your blood test means<br>and what to do about it.",
-    heroSub: "It's like having the world's smartest specialists read your blood test, walk you through every marker in plain English, and hand you the next steps. Built on the latest peer-reviewed research, updated every day.",
-    ctaButton: "Join the waitlist",
-    ctaFine: "Early members keep their launch pricing",
+    heroTitle: "Your biology, understood.",
+    heroSub: "Upload your blood test. Get a research-grade analysis of every marker, a personalized protocol, and a health assistant that knows your numbers — not generic advice. Cited. Transparent. Yours.",
+    ctaButton: "Upload your blood test",
+    ctaFine: "Free analysis available · No credit card required",
     stat1Num: "100+", stat1Label: "Biomarkers analyzed",
     stat2Num: "500+", stat2Label: "Partner labs across Europe",
     stat3Num: "48h", stat3Label: "From blood draw to protocol",
