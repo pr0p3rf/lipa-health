@@ -129,9 +129,9 @@ interface OptimalRange {
 // Free tier limits
 // ---------------------------------------------------------------------
 
-const FREE_TIER_MARKER_LIMIT = 10;
-const FREE_TIER_CITATION_LIMIT = 3;
-const FREE_TIER_RISK_CALC_LIMIT = 1;
+const FREE_TIER_MARKER_LIMIT = 5;
+const FREE_TIER_CITATION_LIMIT = 2;
+const FREE_TIER_RISK_CALC_LIMIT = 0; // No risk calcs on free — teaser only
 
 // ---------------------------------------------------------------------
 // Shared glass card styles
@@ -1303,6 +1303,51 @@ export default function DashboardPage() {
               );
             })}
           </div>
+
+          {/* Full upgrade CTA for free users */}
+          {isFree && (
+            <div className="mb-10 p-8 text-center" style={GLASS_CARD}>
+              <h3
+                className="text-[24px] mb-3 text-[#0F1A15]"
+                style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
+              >
+                You&apos;re seeing 5 of {latestResults.length} markers.
+              </h3>
+              <p className="text-[14px] text-[#5A635D] mb-2 max-w-lg mx-auto leading-relaxed">
+                Your full analysis is ready — every marker explained in plain English, cross-referenced against peer-reviewed research, with a personalized action plan.
+              </p>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl mx-auto my-6">
+                <div className="bg-[#F8F5EF] rounded-xl p-3 text-center">
+                  <div className="text-[20px] text-[#1B6B4A]" style={{ fontFamily: FRAUNCES, fontWeight: 600 }}>{latestResults.length}</div>
+                  <div className="text-[10px] text-[#8A928C] uppercase tracking-wider">Markers</div>
+                </div>
+                <div className="bg-[#F8F5EF] rounded-xl p-3 text-center">
+                  <div className="text-[20px] text-[#1B6B4A]" style={{ fontFamily: FRAUNCES, fontWeight: 600 }}>{computedCalculations.length}</div>
+                  <div className="text-[10px] text-[#8A928C] uppercase tracking-wider">Risk calcs</div>
+                </div>
+                <div className="bg-[#F8F5EF] rounded-xl p-3 text-center">
+                  <div className="text-[20px] text-[#1B6B4A]" style={{ fontFamily: FRAUNCES, fontWeight: 600 }}>6</div>
+                  <div className="text-[10px] text-[#8A928C] uppercase tracking-wider">Action domains</div>
+                </div>
+                <div className="bg-[#F8F5EF] rounded-xl p-3 text-center">
+                  <div className="text-[20px] text-[#1B6B4A]" style={{ fontFamily: FRAUNCES, fontWeight: 600 }}>7 days</div>
+                  <div className="text-[10px] text-[#8A928C] uppercase tracking-wider">Ask Lipa</div>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+                <a
+                  href="/pricing"
+                  className="inline-flex items-center gap-2 text-[14px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-8 py-3.5 rounded-full transition-all duration-300 hover:-translate-y-0.5"
+                  style={{ boxShadow: "0 4px 16px rgba(27,107,74,0.25)" }}
+                >
+                  Unlock full analysis — €29
+                </a>
+                <span className="text-[12px] text-[#8A928C]">or €89/year for vault + trends + unlimited chat</span>
+              </div>
+            </div>
+          )}
 
           {/* Footer — extra pb on mobile for bottom nav */}
           <div className="mt-12 pb-8 sm:pb-8 pb-24">
