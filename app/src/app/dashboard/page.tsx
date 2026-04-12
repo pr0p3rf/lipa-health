@@ -16,6 +16,7 @@ import { getNextTestSuggestions, type NextTestSuggestion } from "@/lib/next-test
 import { detectPatterns, type DetectedPattern } from "@/lib/pattern-detection";
 import { getDemographicOptimalRange } from "@/lib/demographic-ranges";
 import { getPopulationPercentile, type PercentileResult } from "@/lib/population-percentiles";
+import { calculateBiologicalAge, type BioAgeResult } from "@/lib/biological-age";
 
 // ---------------------------------------------------------------------
 // Types
@@ -443,6 +444,17 @@ export default function DashboardPage() {
     return runAllCalculations(bv, profile);
   }, [latestResults, profile]);
 
+  // Biological age (ensemble: KDM + PhenoAge)
+  const bioAge = useMemo<BioAgeResult | null>(() => {
+    if (latestResults.length === 0 || !profile.age) return null;
+    const bv = latestResults.map((r) => ({
+      name: r.biomarker,
+      value: r.value,
+      unit: r.unit,
+    }));
+    return calculateBiologicalAge(bv, profile.age, profile.sex);
+  }, [latestResults, profile]);
+
   // Cross-marker patterns
   const detectedPatterns = useMemo<DetectedPattern[]>(() => {
     if (latestResults.length === 0) return [];
@@ -851,6 +863,68 @@ export default function DashboardPage() {
               )}
             </div>
           </div>
+
+          {/* ============================================================ */}
+          {/* BIOLOGICAL AGE                                               */}
+          {/* ============================================================ */}
+          {bioAge && bioAge.ensemble_age !== null && (
+            <div className="mb-10" style={GLASS_CARD}>
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <div className="text-[11px] uppercase tracking-wider text-[#8A928C] font-medium mb-1">Biological Age</div>
+                    <div className="text-[10px] text-[#8A928C]">
+                      Ensemble: KDM + PhenoAge · {bioAge.contributing_biomarkers.length} biomarkers
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-[11px] text-[#8A928C]">Chronological</div>
+                    <div className="text-[20px] text-[#8A928C]" style={{ fontFamily: FRAUNCES }}>{bioAge.chronological_age}</div>
+                  </div>
+                </div>
+
+                <div className="flex items-baseline gap-4 mb-4">
+                  <div
+                    className="text-[48px] tracking-tight"
+                    style={{
+                      fontFamily: FRAUNCES,
+                      fontWeight: 500,
+                      color: bioAge.gap !== null && bioAge.gap < 0 ? "#1B6B4A" : bioAge.gap !== null && bioAge.gap > 2 ? "#B91C1C" : "#0F1A15",
+                    }}
+                  >
+                    {Math.round(bioAge.ensemble_age * 10) / 10}
+                  </div>
+                  {bioAge.gap !== null && (
+                    <div
+                      className="text-[16px] font-semibold px-3 py-1 rounded-full"
+                      style={{
+                        backgroundColor: bioAge.gap < 0 ? "#E8F5EE" : bioAge.gap > 2 ? "#FEE2E2" : "#F4F4F5",
+                        color: bioAge.gap < 0 ? "#1B6B4A" : bioAge.gap > 2 ? "#B91C1C" : "#5A635D",
+                      }}
+                    >
+                      {bioAge.gap > 0 ? "+" : ""}{Math.round(bioAge.gap * 10) / 10} years
+                    </div>
+                  )}
+                </div>
+
+                <p className="text-[13px] text-[#5A635D] leading-relaxed">
+                  {bioAge.interpretation}
+                </p>
+
+                {bioAge.method_details && (
+                  <div className="mt-4 pt-3 flex gap-4 text-[10px] text-[#8A928C]" style={{ borderTop: "1px solid rgba(15,26,21,0.06)" }}>
+                    {bioAge.method_details.kdm.age !== null && (
+                      <span>KDM: {Math.round(bioAge.method_details.kdm.age * 10) / 10} ({bioAge.method_details.kdm.biomarkers_used}/{bioAge.method_details.kdm.biomarkers_total} markers)</span>
+                    )}
+                    {bioAge.method_details.pheno.age !== null && (
+                      <span>PhenoAge: {Math.round(bioAge.method_details.pheno.age * 10) / 10} ({bioAge.method_details.pheno.biomarkers_used}/{bioAge.method_details.pheno.biomarkers_total} markers)</span>
+                    )}
+                    <span>±{bioAge.confidence_band} years</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* ============================================================ */}
           {/* LAYER 2: BODY SYSTEMS VIEW                                  */}
