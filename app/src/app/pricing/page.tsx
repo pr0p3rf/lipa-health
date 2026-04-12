@@ -19,68 +19,54 @@ interface Tier {
 const TIERS: Tier[] = [
   {
     id: "free",
-    name: "Lipa Starter",
-    tagline: "Your first analysis. On us.",
+    name: "Free Preview",
+    tagline: "See what Lipa can do with your blood test.",
     price: "Free",
     priceDetail: null,
     features: [
-      "1 blood test upload",
-      "Full Living Research™ analysis",
-      "Real peer-reviewed citations",
-      "Basic content access",
-      "Email newsletter",
+      "Upload 1 blood test",
+      "Preview: 10 markers analyzed",
+      "Basic status overview",
+      "See what the full analysis includes",
     ],
-    cta: "Start Free",
+    cta: "Try Free",
   },
   {
     id: "access",
-    name: "Lipa Insight",
-    tagline: "Unlimited analysis. Full tracking. No test bundle.",
-    price: "€79",
-    priceDetail: "per year · no test included",
+    name: "Lipa One",
+    tagline: "Full analysis of any blood test. One-time.",
+    price: "€29",
+    priceDetail: "one-time · no subscription",
     features: [
-      "Everything in Starter",
-      "Unlimited blood test uploads",
-      "Full history and trend tracking",
-      "Bio-age calculation (ensemble)",
-      "SCORE2 cardiovascular risk",
+      "Every marker analyzed in plain English",
+      "Full action plan (nutrition, supplements, sleep, movement)",
+      "16+ risk calculations + biological age",
       "Cross-marker pattern detection",
-      "Downloadable PDF reports",
-      "Wearable integration (Oura, Whoop, Apple Health)",
-      "Research alerts when new studies publish",
-      "Full research library access",
+      "PDF report for your doctor",
+      "Ask Lipa chat for 7 days",
+      "Peer-reviewed citations on every insight",
     ],
-    cta: "Get Insight",
+    cta: "Get Full Analysis",
   },
   {
     id: "essential",
-    name: "Lipa Annual",
-    tagline: "Everything in Insight, plus your annual test.",
-    price: "€149",
-    priceDetail: "per year · 1 premium test included",
+    name: "Lipa Insight",
+    tagline: "Your ongoing health companion. The full picture.",
+    price: "€89",
+    priceDetail: "per year · €29 credited if upgrading within 30 days",
     featured: true,
     features: [
-      "Everything in Insight",
-      "1 premium blood test included",
-      "100+ biomarkers tested",
-      "Priority customer support",
+      "Everything in Lipa One",
+      "Up to 12 test uploads per year",
+      "Vault: your complete biological history",
+      "Trend tracking with bio-age trajectory",
+      "Ask Lipa chat — unlimited, forever",
+      "Wearable integration (Apple Health, Oura, Whoop)",
+      "Personalized research alerts for your markers",
+      "PDF export + doctor sharing",
+      "Priority support",
     ],
-    cta: "Get Annual",
-  },
-  {
-    id: "complete",
-    name: "Lipa Bi-Annual",
-    tagline: "Twice-yearly testing for serious optimizers.",
-    price: "€289",
-    priceDetail: "per year · 2 tests included",
-    features: [
-      "Everything in Annual",
-      "2 premium blood tests per year",
-      "Quarterly trend reports",
-      "Cohort benchmarking",
-      "Early access to new features",
-    ],
-    cta: "Get Bi-Annual",
+    cta: "Get Insight — €89/year",
   },
 ];
 
@@ -163,10 +149,10 @@ function PricingContent() {
             Pricing
           </div>
           <h1 className="text-[48px] leading-tight font-normal mb-6" style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 400 }}>
-            Simple pricing. Real science.
+            One test or the full picture.
           </h1>
           <p className="text-[16px] text-[#6B6B6B] max-w-xl mx-auto">
-            Every plan includes the Living Research™ engine. No hidden fees. No upsells. Cancel anytime.
+            Start with a single analysis or get ongoing insights with Lipa Insight. No hidden fees. Cancel anytime.
           </p>
         </div>
 
@@ -177,7 +163,7 @@ function PricingContent() {
         )}
 
         {/* Pricing tiers */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        <div className="grid md:grid-cols-3 gap-6 mb-16 max-w-4xl mx-auto">
           {TIERS.map((tier) => (
             <div
               key={tier.id}
@@ -283,7 +269,7 @@ function PricingContent() {
         {/* Coming soon note */}
         <div className="mt-12 text-center">
           <p className="text-[11px] text-[#999] max-w-2xl mx-auto leading-relaxed">
-            Lipa Annual and Bi-Annual will include premium blood tests from our network of 1,300+ partner lab centers across Europe, launching Q2 2026. Until then, founding members can upload unlimited blood tests from any lab and lock in launch pricing for life.
+            Lipa One is a one-time purchase — no subscription required. If you upgrade to Lipa Insight within 30 days, your €29 is credited toward the annual price. We don't sell blood tests — bring your own from any lab, any country. See our guide on where to test.
           </p>
         </div>
 

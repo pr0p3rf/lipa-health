@@ -176,7 +176,17 @@ export function computeStatus(
     if (value >= optimalLow && value <= optimalHigh) {
       return { status: "optimal", flag: "optimal" };
     }
-    return { status: "borderline", flag: "borderline" };
+    // Only borderline if meaningfully outside optimal but still in lab range
+    // If value is within the middle 70% of lab range, call it "normal" not "borderline"
+    if (refLow !== null && refLow !== undefined && refHigh !== null && refHigh !== undefined) {
+      const rangeSize = refHigh - refLow;
+      const midLow = refLow + rangeSize * 0.15;
+      const midHigh = refHigh - rangeSize * 0.15;
+      if (value >= midLow && value <= midHigh) {
+        return { status: "normal", flag: "borderline" };
+      }
+    }
+    return { status: "borderline", flag: value < optimalLow ? "low" : "high" };
   }
 
   // No optimal range defined; if in lab range, it's normal
@@ -473,7 +483,7 @@ RULES:
 4. Organize into exactly 6 domains: nutrition, supplementation, sleep, movement, environment, lifestyle.
 5. Note which biomarker(s) each recommendation addresses.
 6. Focus on what's borderline or out of range. Don't give generic wellness advice for markers that are fine.
-7. Include 2-4 recommendations per domain. Skip domains with nothing relevant (empty array).
+7. Include 2-4 recommendations per domain. For environment and lifestyle, always include at least 1 recommendation if any markers are borderline or out of range — even general ones like reducing toxin exposure or managing stress. Only skip a domain if truly nothing applies.
 8. Short sentences. No jargon. If you must use a technical term, explain it in parentheses.
 9. IMPORTANT: If a marker is low or out of range, ALWAYS include a supplement recommendation in the supplementation domain — not just dietary advice. For example: low omega-3 → recommend fish oil supplement AND dietary fish. Low vitamin D → recommend D3 supplement AND sun exposure. Low iron → recommend iron bisglycinate AND iron-rich foods. People expect to see supplement recommendations when their markers are low.
 
