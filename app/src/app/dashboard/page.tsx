@@ -2144,7 +2144,29 @@ function BiomarkerCard({
           {/* What to test next — filter out tests already in this panel */}
           {(() => {
             const nextTests = getNextTestSuggestions(result.biomarker, status)
-              .filter((t) => !(allMarkerNames || []).some((name: string) => name.toLowerCase().includes(t.test_name.toLowerCase().split(" ")[0]) || t.test_name.toLowerCase().includes(name.toLowerCase().split(" ")[0])));
+              .filter((t) => {
+                const names = (allMarkerNames || []).map((n: string) => n.toLowerCase());
+                const testLower = t.test_name.toLowerCase();
+                // Direct name match
+                if (names.some((n: string) => n.includes(testLower.split(" ")[0]) || testLower.includes(n.split(" ")[0]))) return false;
+                // Panel name → component markers (if user has the components, skip the panel suggestion)
+                const PANEL_MARKERS: Record<string, string[]> = {
+                  "complete blood count": ["hemoglobin", "hematocrit", "mcv", "mch", "mchc", "rdw", "wbc", "platelet", "rbc"],
+                  "cbc": ["hemoglobin", "hematocrit", "mcv", "mch", "mchc", "rdw", "wbc", "platelet", "rbc"],
+                  "lipid panel": ["cholesterol", "hdl", "ldl", "triglyceride"],
+                  "iron panel": ["iron", "ferritin", "tibc", "transferrin"],
+                  "thyroid panel": ["tsh", "free t3", "free t4", "ft3", "ft4"],
+                  "metabolic panel": ["glucose", "creatinine", "bun", "sodium", "potassium", "calcium"],
+                  "liver panel": ["alt", "ast", "ggt", "bilirubin", "albumin"],
+                };
+                for (const [panel, markers] of Object.entries(PANEL_MARKERS)) {
+                  if (testLower.includes(panel)) {
+                    const matchCount = markers.filter((m) => names.some((n: string) => n.includes(m))).length;
+                    if (matchCount >= 2) return false; // User already has most of this panel
+                  }
+                }
+                return true;
+              });
             if (nextTests.length === 0) return null;
             return (
               <div className="mb-5">
