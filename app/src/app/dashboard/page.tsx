@@ -690,20 +690,28 @@ export default function DashboardPage() {
                   </select>
                 )}
                 <button
-                  onClick={() => {
-                    const exportData = {
-                      test_date: latestTestDate,
-                      biomarkers: latestResults.map((r) => {
-                        const a = analyses.find((x) => x.biomarker_result_id === r.id);
-                        return { name: r.biomarker, value: r.value, unit: r.unit, status: a?.status, summary: a?.summary };
-                      }),
-                      risk_calculations: calculations.map((c) => ({ name: c.name, value: c.value, interpretation: c.interpretation_label })),
-                    };
-                    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement("a");
-                    a.href = url; a.download = `lipa-results-${latestTestDate}.json`; a.click();
-                    URL.revokeObjectURL(url);
+                  onClick={async () => {
+                    if (!userId) return;
+                    const btn = document.activeElement as HTMLButtonElement;
+                    if (btn) btn.textContent = "Generating...";
+                    try {
+                      const res = await fetch("/api/export-pdf", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ userId, testDate: latestTestDate }),
+                      });
+                      if (!res.ok) throw new Error("Export failed");
+                      const blob = await res.blob();
+                      const url = URL.createObjectURL(blob);
+                      const a = document.createElement("a");
+                      a.href = url;
+                      a.download = `lipa-report-${latestTestDate}.pdf`;
+                      a.click();
+                      URL.revokeObjectURL(url);
+                    } catch (err) {
+                      alert("Export failed. Please try again.");
+                    }
+                    if (btn) btn.textContent = "Export PDF";
                   }}
                   className="text-[11px] font-medium text-[#5A635D] hover:text-[#1B6B4A] bg-white/60 border border-white/30 rounded-lg px-3 py-1.5 backdrop-blur-sm flex items-center gap-1.5"
                   style={{ transition: TRANSITION }}
@@ -711,7 +719,7 @@ export default function DashboardPage() {
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" />
                   </svg>
-                  Export
+                  Export PDF
                 </button>
                 <button
                   onClick={async () => {
