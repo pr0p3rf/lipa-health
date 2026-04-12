@@ -15,8 +15,10 @@ interface Subscription {
 }
 
 const TIER_DISPLAY: Record<string, { name: string; price: string; color: string }> = {
-  free: { name: "Lipa Taste", price: "Free", color: "#6B7280" },
-  access: { name: "Lipa Insight", price: "€79/year", color: "#1B6B4A" },
+  free: { name: "Free Preview", price: "Free", color: "#6B7280" },
+  one: { name: "Lipa One", price: "€29", color: "#1B6B4A" },
+  insight: { name: "Lipa Insight", price: "€89/year", color: "#1B6B4A" },
+  access: { name: "Lipa Insight", price: "€89/year", color: "#1B6B4A" },
   essential: { name: "Lipa Annual", price: "€149/year", color: "#1B6B4A" },
   complete: { name: "Lipa Bi-Annual", price: "€289/year", color: "#1B6B4A" },
 };

@@ -281,7 +281,7 @@ export default function DashboardPage() {
   const [profile, setProfile] = useState<UserProfile>({});
   const [actionPlan, setActionPlan] = useState<any>(null);
   const [optimalRanges, setOptimalRanges] = useState<Record<string, OptimalRange>>({});
-  const [userTier, setUserTier] = useState<"free" | "access" | "essential" | "complete">("free");
+  const [userTier, setUserTier] = useState<"free" | "one" | "insight" | "access" | "essential" | "complete">("free");
   const [expandedBiomarker, setExpandedBiomarker] = useState<number | null>(null);
   const [expandedInsight, setExpandedInsight] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);

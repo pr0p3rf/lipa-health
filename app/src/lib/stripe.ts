@@ -30,12 +30,11 @@ export const stripe = new Proxy({} as Stripe, {
 // Set these in .env.local after creating products in Stripe Dashboard
 
 export const TIER_PRICES = {
-  access: process.env.STRIPE_PRICE_ACCESS!,      // €79/year
-  essential: process.env.STRIPE_PRICE_ESSENTIAL!, // €149/year
-  complete: process.env.STRIPE_PRICE_COMPLETE!,   // €289/year
+  one: process.env.STRIPE_PRICE_ONE!,             // €29 one-time
+  insight: process.env.STRIPE_PRICE_INSIGHT!,      // €89/year
 } as const;
 
-export type SubscriptionTier = "free" | "access" | "essential" | "complete";
+export type SubscriptionTier = "free" | "one" | "insight";
 
 // ---------------------------------------------------------------------
 // Tier metadata
@@ -43,58 +42,44 @@ export type SubscriptionTier = "free" | "access" | "essential" | "complete";
 
 export const TIER_INFO = {
   free: {
-    name: "Lipa Starter",
+    name: "Free Preview",
     price: 0,
     priceDisplay: "Free",
     interval: null,
     features: [
-      "1 blood test upload",
-      "Full Living Research™ analysis",
-      "Real peer-reviewed citations",
-      "Basic content library",
-      "Email newsletter",
+      "Upload 1 blood test",
+      "Preview: 10 markers analyzed",
+      "Basic status overview",
     ],
   },
-  access: {
-    name: "Lipa Insight",
-    price: 79,
-    priceDisplay: "€79/year",
-    interval: "year",
+  one: {
+    name: "Lipa One",
+    price: 29,
+    priceDisplay: "€29",
+    interval: null, // one-time
     features: [
-      "Everything in Starter",
-      "Unlimited blood test uploads",
-      "Full history and trend tracking",
-      "Bio-age calculation (ensemble)",
-      "SCORE2 cardiovascular risk",
+      "Full analysis of every marker",
+      "Action plan across 6 life domains",
+      "Risk calculations + biological age",
       "Cross-marker pattern detection",
-      "Downloadable PDF reports",
+      "PDF report",
+      "Ask Lipa chat for 7 days",
+    ],
+  },
+  insight: {
+    name: "Lipa Insight",
+    price: 89,
+    priceDisplay: "€89/year",
+    interval: "year",
+    features: [
+      "Everything in Lipa One",
+      "Up to 12 test uploads per year",
+      "Vault: complete biological history",
+      "Trend tracking + bio-age trajectory",
+      "Ask Lipa chat — unlimited",
       "Wearable integration",
-      "Research alerts",
-      "Full research library access",
-    ],
-  },
-  essential: {
-    name: "Lipa Annual",
-    price: 149,
-    priceDisplay: "€149/year",
-    interval: "year",
-    features: [
-      "Everything in Insight",
-      "1 premium blood test included",
-      "Priority customer support",
-    ],
-  },
-  complete: {
-    name: "Lipa Bi-Annual",
-    price: 289,
-    priceDisplay: "€289/year",
-    interval: "year",
-    features: [
-      "Everything in Annual",
-      "2 premium blood tests per year",
-      "Quarterly trend reports",
-      "Cohort benchmarking",
-      "Early access to new features",
+      "Personalized research alerts",
+      "PDF export + doctor sharing",
     ],
   },
 } as const;
@@ -181,8 +166,7 @@ export async function createBillingPortalSession(
 // ---------------------------------------------------------------------
 
 export function tierFromPriceId(priceId: string): SubscriptionTier {
-  if (priceId === TIER_PRICES.access) return "access";
-  if (priceId === TIER_PRICES.essential) return "essential";
-  if (priceId === TIER_PRICES.complete) return "complete";
+  if (priceId === TIER_PRICES.one) return "one";
+  if (priceId === TIER_PRICES.insight) return "insight";
   return "free";
 }
