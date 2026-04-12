@@ -17,7 +17,7 @@ export default function UploadPage() {
   const [riskCalcCount, setRiskCalcCount] = useState(0);
   const [hasActionPlan, setHasActionPlan] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const [testDate, setTestDate] = useState(new Date().toISOString().split("T")[0]);
+  // Test date is now auto-extracted from the PDF by the analysis API
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -61,7 +61,7 @@ export default function UploadPage() {
       files.forEach((f) => formData.append("files", f));
     }
     formData.append("userId", user.id);
-    formData.append("testDate", testDate);
+    // testDate omitted — API extracts it from the PDF automatically
 
     try {
       const res = await fetch("/api/analyze", {
@@ -82,7 +82,7 @@ export default function UploadPage() {
       setErrorMsg(err.message || "Network error");
       setState("error");
     }
-  }, [testDate]);
+  }, []);
 
   function handleDrop(e: React.DragEvent) {
     e.preventDefault();
@@ -213,17 +213,6 @@ export default function UploadPage() {
         ) : (
           /* ---- Upload zone ---- */
           <>
-            {/* Test date selector */}
-            <div className="mb-4">
-              <label className="text-[12px] text-[#6B6B6B] font-medium block mb-1.5">Test date</label>
-              <input
-                type="date"
-                value={testDate}
-                onChange={(e) => setTestDate(e.target.value)}
-                className="text-[14px] border border-[#E5E5E5] rounded-xl px-4 py-2.5 focus:outline-none focus:border-[#1B6B4A] bg-white"
-              />
-            </div>
-
             <div
               onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
               onDragLeave={() => setDragOver(false)}

@@ -13,24 +13,26 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-const EXTRACTION_PROMPT = `You are a medical laboratory results parser. Analyze this blood test document and extract ALL biomarker results.
+const EXTRACTION_PROMPT = `You are a medical laboratory results parser. Analyze this blood test document and extract ALL biomarker results AND the test date.
 
-For each biomarker found, return a JSON array with objects containing:
-- "name": the biomarker name (standardized English name, e.g., "Vitamin D (25-OH)", "hs-CRP", "TSH", "Total Cholesterol")
-- "value": the numeric value (number only, no units)
-- "unit": the unit of measurement (e.g., "ng/mL", "mg/L", "mIU/L", "mg/dL")
-- "ref_low": lower bound of the lab reference range (number or null)
-- "ref_high": upper bound of the lab reference range (number or null)
-- "category": one of: "metabolic", "hormonal", "inflammatory", "cardiac", "liver", "kidney", "thyroid", "hematology", "nutrient", "lipid", "other"
+Return a JSON object with two fields:
+1. "test_date": the date the blood was collected/tested, in YYYY-MM-DD format. Look for "Date of collection", "Sample date", "Date", "Datum", "Data pobrania", or similar. If not found, use null.
+2. "biomarkers": an array of objects, each containing:
+   - "name": the biomarker name (standardized English name, e.g., "Vitamin D (25-OH)", "hs-CRP", "TSH", "Total Cholesterol")
+   - "value": the numeric value (number only, no units)
+   - "unit": the unit of measurement (e.g., "ng/mL", "mg/L", "mIU/L", "mg/dL")
+   - "ref_low": lower bound of the lab reference range (number or null)
+   - "ref_high": upper bound of the lab reference range (number or null)
+   - "category": one of: "metabolic", "hormonal", "inflammatory", "cardiac", "liver", "kidney", "thyroid", "hematology", "nutrient", "lipid", "other"
 
 Important:
 - Extract EVERY biomarker visible in the document
 - Use standardized English names even if the document is in Polish, German, Dutch, or Spanish
 - If a reference range shows "> X" or "< X", set the appropriate bound and leave the other as null
-- Return ONLY the JSON array, no other text
-- If you cannot read the document or find no biomarkers, return an empty array []
+- Return ONLY the JSON object, no other text
+- If you cannot read the document or find no biomarkers, return {"test_date": null, "biomarkers": []}
 
-Return format: [{"name": "...", "value": ..., "unit": "...", "ref_low": ..., "ref_high": ..., "category": "..."}, ...]`;
+Return format: {"test_date": "2026-04-10", "biomarkers": [{"name": "...", "value": ..., "unit": "...", "ref_low": ..., "ref_high": ..., "category": "..."}, ...]}`;
 
 export async function POST(request: NextRequest) {
   const overallStart = Date.now();
@@ -59,6 +61,7 @@ export async function POST(request: NextRequest) {
     // Process all files — extract biomarkers from each
     let allBiomarkers: any[] = [];
     let totalExtractTimeMs = 0;
+    let extractedTestDate: string | null = null;
 
     // ================================================================
     // STEP 1: Extract biomarkers from each file using Claude vision
@@ -108,11 +111,26 @@ export async function POST(request: NextRequest) {
           ? extractionMessage.content[0].text
           : "";
 
-      const jsonMatch = responseText.match(/\[[\s\S]*\]/);
-      const jsonStr = jsonMatch ? jsonMatch[0] : responseText;
+      // Parse response — handles both new format {"test_date": ..., "biomarkers": [...]} and legacy [...]
+      const jsonObjMatch = responseText.match(/\{[\s\S]*\}/);
+      const jsonArrMatch = responseText.match(/\[[\s\S]*\]/);
 
       try {
-        const fileBiomarkers = JSON.parse(jsonStr);
+        let fileBiomarkers: any[] = [];
+        if (jsonObjMatch) {
+          const parsed = JSON.parse(jsonObjMatch[0]);
+          if (parsed.biomarkers && Array.isArray(parsed.biomarkers)) {
+            fileBiomarkers = parsed.biomarkers;
+            // Use extracted test date if available and no manual date provided
+            if (parsed.test_date && !testDate) {
+              extractedTestDate = parsed.test_date;
+            }
+          } else if (Array.isArray(parsed)) {
+            fileBiomarkers = parsed;
+          }
+        } else if (jsonArrMatch) {
+          fileBiomarkers = JSON.parse(jsonArrMatch[0]);
+        }
         allBiomarkers.push(...fileBiomarkers);
         console.log(`[analyze] Extracted ${fileBiomarkers.length} biomarkers from ${file.name} in ${extractTimeMs}ms`);
       } catch {
@@ -134,7 +152,8 @@ export async function POST(request: NextRequest) {
     // ================================================================
     // STEP 2: Store biomarker results
     // ================================================================
-    const date = testDate || new Date().toISOString().split("T")[0];
+    // Priority: manual date > extracted from PDF > today
+    const date = testDate || extractedTestDate || new Date().toISOString().split("T")[0];
 
     const records = biomarkers.map((b: any) => ({
       user_id: userId,
