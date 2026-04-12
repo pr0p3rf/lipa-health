@@ -137,19 +137,16 @@ const FREE_TIER_RISK_CALC_LIMIT = 1;
 // ---------------------------------------------------------------------
 
 const GLASS_CARD = {
-  background: "rgba(255,255,255,0.92)",
-  backdropFilter: "saturate(120%) blur(20px)",
-  WebkitBackdropFilter: "saturate(120%) blur(20px)",
-  border: "1px solid rgba(255,255,255,0.15)",
+  background: "#FFFFFF",
+  border: "1px solid rgba(15,26,21,0.06)",
   borderRadius: "20px",
-  boxShadow: "0 8px 40px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06)",
+  boxShadow: "0 1px 3px rgba(15,26,21,0.04), 0 4px 16px rgba(15,26,21,0.03)",
 } as const;
 
 const GLASS_CARD_INNER = {
-  background: "rgba(248,245,239,0.7)",
-  border: "1px solid rgba(15,26,21,0.06)",
+  background: "#F8F5EF",
+  border: "1px solid rgba(15,26,21,0.05)",
   borderRadius: "16px",
-  boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
 } as const;
 
 const FRAUNCES = "'Fraunces', Georgia, serif";
@@ -639,7 +636,7 @@ export default function DashboardPage() {
   return (
     <>
       <AppNav />
-      <main className="min-h-screen" style={{ background: "#0F1A15" }} suppressHydrationWarning>
+      <main className="min-h-screen" style={{ background: "#F8F5EF" }} suppressHydrationWarning>
         <div className="max-w-6xl mx-auto px-6 py-10 relative z-10" suppressHydrationWarning>
 
           {/* ============================================================ */}
@@ -650,15 +647,15 @@ export default function DashboardPage() {
             <div className="flex items-start justify-between mb-6 gap-4 flex-wrap">
               <div>
                 <div className="flex items-center gap-3 mb-1">
-                  <div className="text-[13px] text-white/40 font-mono" style={{ fontFamily: MONO }}>
+                  <div className="text-[13px] text-[#8A928C] font-mono" style={{ fontFamily: MONO }}>
                     {latestTestDate ? new Date(latestTestDate).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }) : ""}
                   </div>
-                  <div className="text-[13px] text-white/50">
+                  <div className="text-[13px] text-[#8A928C]">
                     &middot; {latestResults.length} markers analyzed
                   </div>
                 </div>
                 <h1
-                  className="text-[32px] tracking-tight text-white leading-tight"
+                  className="text-[32px] tracking-tight text-[#0F1A15] leading-tight"
                   style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
                 >
                   Your Results
@@ -861,12 +858,12 @@ export default function DashboardPage() {
           {systemData.length > 0 && (
             <div className="mb-10">
               <h2
-                className="text-[22px] tracking-tight text-white mb-1"
+                className="text-[22px] tracking-tight text-[#0F1A15] mb-1"
                 style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
               >
                 Body Systems
               </h2>
-              <p className="text-[13px] text-white/40 mb-4">
+              <p className="text-[13px] text-[#8A928C] mb-4">
                 How your markers group across major systems.
               </p>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
@@ -921,7 +918,7 @@ export default function DashboardPage() {
           {detectedPatterns.length > 0 && (
             <div className="mb-10">
               <h2
-                className="text-[22px] tracking-tight text-white mb-1"
+                className="text-[22px] tracking-tight text-[#0F1A15] mb-1"
                 style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
               >
                 Patterns detected
@@ -943,7 +940,7 @@ export default function DashboardPage() {
           {!isFree && actionPlan && actionPlan.domains && actionPlan.domains.length > 0 && (
             <div className="mb-10">
               <h2
-                className="text-[22px] tracking-tight text-white mb-1"
+                className="text-[22px] tracking-tight text-[#0F1A15] mb-1"
                 style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
               >
                 Your Action Plan
@@ -1025,12 +1022,12 @@ export default function DashboardPage() {
               <div className="flex items-baseline justify-between mb-4">
                 <div>
                   <h2
-                    className="text-[22px] tracking-tight text-white"
+                    className="text-[22px] tracking-tight text-[#0F1A15]"
                     style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
                   >
                     Risk Insights
                   </h2>
-                  <p className="text-[13px] text-white/40">
+                  <p className="text-[13px] text-[#8A928C]">
                     Peer-reviewed calculations applied to your biomarkers.
                   </p>
                 </div>
@@ -1099,7 +1096,7 @@ export default function DashboardPage() {
           {/* ============================================================ */}
           <div id="biomarkers-section" className="mb-10">
             <h2
-              className="text-[22px] tracking-tight text-white mb-4"
+              className="text-[22px] tracking-tight text-[#0F1A15] mb-4"
               style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
             >
               Your Biomarkers
@@ -1239,7 +1236,7 @@ export default function DashboardPage() {
                 </svg>
               </a>
             </div>
-            <p className="text-[10px] text-white/25 text-center leading-relaxed max-w-lg mx-auto">
+            <p className="text-[10px] text-[#8A928C] text-center leading-relaxed max-w-lg mx-auto">
               This analysis is educational content based on peer-reviewed research, not medical advice. Consult your healthcare provider before making any health decisions. Lipa does not diagnose or treat medical conditions.
             </p>
           </div>
