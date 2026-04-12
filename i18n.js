@@ -1,10 +1,10 @@
 const translations = {
   en: {
-    heroEyebrow: "Launching across Europe",
-    heroTitle: "Know exactly what<br>your body needs.",
-    heroSub: "Upload a blood test or book one at 500+ labs across Europe. Get a personalized, research-backed protocol — supplements, peptides, and lifestyle changes — with direct links to vetted vendors. Retest and watch your numbers improve. No more guessing.",
-    ctaButton: "Get Early Access",
-    ctaFine: "Join the waitlist for early access and founding member pricing.",
+    heroEyebrow: "",
+    heroTitle: "Finally understand<br>what your blood test means<br>and what to do about it.",
+    heroSub: "It's like having the world's smartest specialists read your blood test, walk you through every marker in plain English, and hand you the next steps. Built on the latest peer-reviewed research, updated every day.",
+    ctaButton: "Join the waitlist",
+    ctaFine: "Early members keep their launch pricing",
     stat1Num: "100+", stat1Label: "Biomarkers analyzed",
     stat2Num: "500+", stat2Label: "Partner labs across Europe",
     stat3Num: "48h", stat3Label: "From blood draw to protocol",

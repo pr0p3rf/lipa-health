@@ -1244,6 +1244,7 @@
       .newsletter-form { flex-direction: column; }
       .newsletter-form button { width: 100%; }
       .report-head { padding: 16px 24px; }
+      .preview .container > div[style*="grid-template-columns"] { grid-template-columns: 1fr !important; gap: 32px !important; }
       .report-zone { padding: 28px 24px 22px; }
       .report-zone + .report-zone { padding-top: 24px; }
       .report-marker-name { font-size: 26px; }
@@ -1314,8 +1315,8 @@
           <polyline points="12 5 19 12 12 19"/>
         </svg>
       </a>
-      <a href="/methodology.html" class="btn btn-secondary-lg">
-        Read the methodology
+      <a href="#how" class="btn btn-secondary-lg">
+        See how it works
       </a>
     </div>
     <p class="hero-alt-cta">Early access opening soon. <a href="#join">Get on the list →</a></p>
@@ -1348,97 +1349,25 @@
   </div>
 </div>
 
-<!-- ================== PREVIEW / LIPA REPORT (CREAM) ================== -->
-<section class="preview">
-  <div class="container">
-    <div class="section-eyebrow">What you actually get</div>
-    <h2 class="display">A blood test analysis<br>that doesn't sit still.</h2>
-    <p class="lede">Plain-English insights for every marker on your test. A personalized action plan across six life domains. A research engine that keeps reading the literature for you. Every line cited to a real, named, peer-reviewed study — no hallucinated sources, no proprietary scores, no black box.</p>
-
-    <div class="report-card">
-      <div class="report-head">
-        <span class="report-head-pill">Your Lipa Report</span>
-        <span class="report-head-meta">based on your last test · March 2026</span>
-      </div>
-
-      <!-- Zone 1: Marker analysis -->
-      <div class="report-zone">
-        <div class="report-zone-label">Marker analysis</div>
-        <div class="report-marker-row">
-          <div>
-            <div class="report-marker-name">hs-CRP</div>
-            <div class="report-marker-cat">Inflammatory · cardiovascular</div>
-          </div>
-          <div class="report-marker-value">
-            <div>
-              <span class="report-value-num mono">2.8</span><span class="report-value-unit">mg/L</span>
-            </div>
-            <div class="report-value-status">Borderline</div>
-          </div>
-        </div>
-        <p class="report-insight-text">Your hs-CRP sits at the upper end of the borderline range. In peer-reviewed research, this range is associated with moderately elevated cardiovascular risk independent of your LDL — which means it adds information your standard lipid panel doesn't capture.</p>
-        <div class="report-cite-row">
-          <span class="report-cite-pill">ERFC · Lancet 2010 · <span class="cite-grade-mini">A+</span> · <span class="cite-fund-dot"></span>Indep</span>
-          <span class="report-cite-pill">Kaptoge · NEJM 2012 · <span class="cite-grade-mini">A</span> · <span class="cite-fund-dot"></span>Indep</span>
-          <span class="report-cite-pill">Ridker · Circulation 2016 · <span class="cite-grade-mini">A</span> · <span class="cite-fund-dot"></span>Indep</span>
-          <span class="report-cite-pill">+11 more</span>
-        </div>
-      </div>
-
-      <!-- Zone 2: Action plan -->
-      <div class="report-zone">
-        <div class="report-zone-label">Your next steps</div>
-        <div class="report-action-list">
-          <div class="report-action-item">
-            <div class="report-action-domain">Nutrition</div>
-            <div class="report-action-text">Reduce refined carbohydrate intake — research links to lower hs-CRP and improved insulin sensitivity.</div>
-            <div class="report-action-cites">8 studies</div>
-          </div>
-          <div class="report-action-item">
-            <div class="report-action-domain">Supplementation research</div>
-            <div class="report-action-text">EPA+DHA omega-3 at 1–2g/day — clinical trials show 0.5–1.2 mg/L hs-CRP reduction at 12 weeks.</div>
-            <div class="report-action-cites">14 studies</div>
-          </div>
-          <div class="report-action-item">
-            <div class="report-action-domain">Sleep</div>
-            <div class="report-action-text">Target 7+ hours — short sleep elevates inflammation in your specific marker pattern.</div>
-            <div class="report-action-cites">6 studies</div>
-          </div>
-          <div class="report-action-item">
-            <div class="report-action-domain">Movement</div>
-            <div class="report-action-text">Zone 2 cardio 3× per week — research shows measurable inflammation reduction at your level.</div>
-            <div class="report-action-cites">11 studies</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="report-foot">
-        <span class="report-foot-pulse">Updated with new research, every day</span>
-        <span class="report-foot-action">Open your full report →</span>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- ================== HOW IT WORKS ================== -->
 <section class="how" id="how">
   <div class="container">
     <div class="section-eyebrow">How Lipa works</div>
     <h2 class="display">A blood test goes in.<br>Full understanding<br>comes out.</h2>
-    <p class="lede">Lipa reads every marker on your test, cross-references the latest peer-reviewed research, grades the evidence, tracks who funded what, and delivers a plain-English analysis with a personalized action plan across six life domains — in under a minute. Use a blood test you already have, or book a premium panel from our European network when it launches.</p>
+    <p class="lede">Use a blood test you already have. Lipa handles the rest in under a minute.</p>
 
     <div class="how-steps">
       <div class="how-card">
         <div class="how-num mono">01</div>
         <h3>Drop any test in.</h3>
         <p>PDF, photo, scan, or phone screenshot — from any lab, in any of five languages. Lipa reads European, UK, and international lab reports automatically. Upload your newest test, or years of old ones sitting in your email.</p>
-        <div class="how-meta mono">Works with 1,300+ lab formats</div>
+        <div class="how-meta mono">Reads labs across Europe automatically</div>
       </div>
       <div class="how-card">
         <div class="how-num mono">02</div>
         <h3>The research meets your biology.</h3>
-        <p>Every marker — hs-CRP, ApoB, free T3, ferritin, all of them — is matched against peer-reviewed studies, weighted by evidence grade, funding independence, and recency. Peer-reviewed risk calculations compute in the background. Cross-marker patterns surface.</p>
-        <div class="how-meta mono">16+ peer-reviewed risk calculations</div>
+        <p>Every marker — hs-CRP, ApoB, free T3, ferritin, all of them — is matched against published research, weighted by evidence grade, funding independence, and recency. Risk calculations compute in the background. Cross-marker patterns surface.</p>
+        <div class="how-meta mono">16+ clinical health calculations</div>
       </div>
       <div class="how-card">
         <div class="how-num mono">03</div>
@@ -1466,7 +1395,7 @@
 
       <div class="aud-card">
         <div class="aud-title">Peptide research</div>
-        <div class="aud-body">The research on compounds like BPC-157 and TB-500 exists, but separating signal from noise is hard. Lipa cross-references your markers against what the peer-reviewed studies actually show.</div>
+        <div class="aud-body">The research on compounds like BPC-157 and TB-500 exists, but separating signal from noise is hard. Lipa cross-references your markers against what the published studies actually show.</div>
         <div class="aud-tag">BPC-157 · TB-500 · GHK-Cu</div>
       </div>
 
@@ -1478,7 +1407,7 @@
 
       <div class="aud-card">
         <div class="aud-title">Longevity optimization</div>
-        <div class="aud-body">Biological age. Cardiovascular risk. Insulin resistance. Inflammation patterns. Peer-reviewed calculations applied to your actual biology, so you can see whether your protocol is moving anything.</div>
+        <div class="aud-body">Biological age. Cardiovascular risk. Insulin resistance. Inflammation patterns. Real published calculations applied to your actual biology, so you can see whether your protocol is moving anything.</div>
         <div class="aud-tag">Bio-age · SCORE2 · HOMA-IR</div>
       </div>
 
@@ -1568,30 +1497,8 @@
       <div class="lipa-answer-label">Lipa</div>
       <h3>A new kind of blood test analysis.</h3>
       <p class="lipa-answer-body">
-        Lipa does what no single physician has time to do: read every relevant peer-reviewed study on your specific markers, grade the evidence, track the funding sources, and translate what it actually means for your biology. Not AI slop. Not medical jargon.
-        <br><br>
-        You get a plain-English explanation of every marker. Peer-reviewed risk calculations for your cardiovascular, metabolic, liver, and kidney health. A personalized action plan across nutrition, supplementation, sleep, movement, environment, and lifestyle. A permanent vault of your biology over time. And personalized alerts when new relevant research is published.
-        <br><br>
-        The depth of a specialist consultation, the patience of a research library, refreshed every single day.
+        Lipa reads the research on your specific markers, grades the evidence, tracks who funded it, and translates what it means for your biology. You get a plain-English explanation of every marker, a personalized action plan, a permanent vault of your biology, and alerts when new research is published. Not AI slop. Not medical jargon. The depth of a specialist consultation, refreshed every day.
       </p>
-      <div class="lipa-answer-stats">
-        <div>
-          <div class="lipa-stat-key">Biomarkers</div>
-          <div class="lipa-stat-val mono">100+</div>
-        </div>
-        <div>
-          <div class="lipa-stat-key">Risk calculations</div>
-          <div class="lipa-stat-val mono">16+</div>
-        </div>
-        <div>
-          <div class="lipa-stat-key">Research refreshed</div>
-          <div class="lipa-stat-val mono">Daily</div>
-        </div>
-        <div>
-          <div class="lipa-stat-key">Starts at</div>
-          <div class="lipa-stat-val mono">€0</div>
-        </div>
-      </div>
     </div>
   </div>
 </section>
@@ -1599,50 +1506,103 @@
 <!-- ================== METHODOLOGY TEASER (INK) ================== -->
 <section class="meth-teaser on-ink">
   <div class="container">
-    <div class="meth-content">
+    <div style="max-width: 680px;">
+      <div class="section-eyebrow">Our methodology</div>
+      <h2 class="display">Nothing hidden.</h2>
+      <p class="lede">No proprietary scores. No black-box AI. Every explanation, every calculation, every recommendation — traceable to real, named research you can verify yourself.</p>
+      <a href="/methodology.html" class="meth-cta">
+        See our sources, grading, and calculations
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ================== WHAT YOU GET + PRICING (CREAM) ================== -->
+<section class="preview">
+  <div class="container">
+    <div class="section-eyebrow">What you get</div>
+    <h2 class="display">Upload any blood test.<br>We do the rest.</h2>
+    <p class="lede">We don't sell blood tests. We don't mark them up. We don't partner with labs to take a commission. You get tested wherever is cheapest and most convenient — then Lipa does the analysis better than anyone else.</p>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 64px; align-items: start;">
+
+      <!-- Left: what's included -->
       <div>
-        <div class="section-eyebrow">Our methodology</div>
-        <h2 class="display">Nothing hidden.</h2>
-        <p class="lede">No proprietary "Lipa score." No black-box AI. Every explanation we give, every number we compute, every recommendation in your action plan — traceable to the real, peer-reviewed research behind it. See how we read the research, grade the evidence, track funding, compute risk, and build your analysis.</p>
-        <a href="/methodology.html" class="meth-cta">
-          Our methodology, in full
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-            <line x1="5" y1="12" x2="19" y2="12"/>
-            <polyline points="12 5 19 12 12 19"/>
-          </svg>
-        </a>
+        <div style="font-family: 'Fraunces', Georgia, serif; font-size: 28px; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 32px;">Everything in one subscription.</div>
+        <div style="border-top: 1px solid var(--border); padding-top: 20px;">
+          <div style="padding: 18px 0; border-bottom: 1px solid var(--border);">
+            <div style="font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px;">Plain-English analysis of every marker</div>
+            <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.55;">What each value means, what the research shows, what to watch — written for humans, not clinicians.</div>
+          </div>
+          <div style="padding: 18px 0; border-bottom: 1px solid var(--border);">
+            <div style="font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px;">Personalized action plan across 6 life domains</div>
+            <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.55;">Nutrition, supplementation, sleep, movement, environment, lifestyle. Every recommendation includes dosage, timing, food sources, and interactions — all cited.</div>
+          </div>
+          <div style="padding: 18px 0; border-bottom: 1px solid var(--border);">
+            <div style="font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px;">16+ clinical health calculations</div>
+            <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.55;">SCORE2 cardiovascular risk, HOMA-IR insulin resistance, KDM bio-age, FIB-4 liver fibrosis, eGFR kidney function, and more.</div>
+          </div>
+          <div style="padding: 18px 0; border-bottom: 1px solid var(--border);">
+            <div style="font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px;">Cross-marker pattern detection</div>
+            <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.55;">Early metabolic syndrome, subclinical thyroid, residual cardiovascular risk — flagged automatically with citations.</div>
+          </div>
+          <div style="padding: 18px 0; border-bottom: 1px solid var(--border);">
+            <div style="font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px;">A permanent vault of your biology</div>
+            <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.55;">Every test stored forever. Year-over-year trending. See what's improving and what's drifting.</div>
+          </div>
+          <div style="padding: 18px 0;">
+            <div style="font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px;">Alerts when new research lands on your markers</div>
+            <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.55;">The corpus refreshes every day. When a new study is relevant to your biology, you hear about it.</div>
+          </div>
+        </div>
       </div>
 
-      <div class="meth-live">
-        <div class="live-head">
-          <span><span class="pulse"></span>Live research engine</span>
-          <span id="live-updated">updated 4h ago</span>
+      <!-- Right: pricing cards -->
+      <div>
+        <div style="font-family: 'Fraunces', Georgia, serif; font-size: 28px; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 32px;">Simple pricing.</div>
+
+        <div style="background: var(--white); border: 1px solid var(--border); border-radius: 18px; padding: 28px; margin-bottom: 16px;">
+          <div style="font-family: 'Fraunces', Georgia, serif; font-size: 22px; font-weight: 500; margin-bottom: 4px;">Lipa Taste</div>
+          <div style="font-size: 12px; color: var(--text-tertiary); margin-bottom: 12px;">See the product before committing</div>
+          <div style="font-family: 'Fraunces', Georgia, serif; font-size: 32px; font-weight: 500; margin-bottom: 4px;">Free</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-tertiary); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 16px;">no credit card</div>
+          <ul style="list-style: none; padding: 0; font-size: 13px; color: var(--text-secondary); line-height: 2;">
+            <li>1 blood test upload</li>
+            <li>Preview of 10 key markers</li>
+            <li>3 citations per marker</li>
+            <li>1 risk calculation</li>
+            <li>30-day result access</li>
+          </ul>
+          <a href="#join" style="display: block; text-align: center; font-size: 13px; font-weight: 600; padding: 12px; border-radius: 980px; border: 1px solid var(--border-strong); color: var(--text); margin-top: 16px;">Start free</a>
         </div>
-        <div class="live-row">
-          <span class="live-key">Studies in library</span>
-          <span class="live-val mono">45M+</span>
+
+        <div style="background: var(--white); border: 1px solid var(--accent); border-radius: 18px; padding: 28px; margin-bottom: 16px; position: relative; box-shadow: 0 8px 32px rgba(27,107,74,0.08);">
+          <div style="position: absolute; top: -11px; left: 50%; transform: translateX(-50%); background: var(--accent); color: white; font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; padding: 5px 14px; border-radius: 999px;">Recommended</div>
+          <div style="font-family: 'Fraunces', Georgia, serif; font-size: 22px; font-weight: 500; margin-bottom: 4px;">Lipa Insight</div>
+          <div style="font-size: 12px; color: var(--text-tertiary); margin-bottom: 12px;">The full product. 30-day money-back guarantee.</div>
+          <div style="font-family: 'Fraunces', Georgia, serif; font-size: 32px; font-weight: 500; color: var(--accent); margin-bottom: 4px;">€79<span style="font-size: 16px; font-weight: 400; color: var(--text-tertiary);">/year</span></div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-tertiary); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 16px;">unlimited uploads + everything above</div>
+          <ul style="list-style: none; padding: 0; font-size: 13px; color: var(--text-secondary); line-height: 2;">
+            <li>All 100+ biomarkers analyzed</li>
+            <li>Full citations on every insight</li>
+            <li>Personalized action plan (6 domains)</li>
+            <li>16+ clinical health calculations</li>
+            <li>Cross-marker pattern detection</li>
+            <li>Permanent vault + trending</li>
+            <li>Alerts on new relevant research</li>
+          </ul>
+          <a href="#join" style="display: block; text-align: center; font-size: 13px; font-weight: 600; padding: 12px; border-radius: 980px; background: var(--accent); color: white; margin-top: 16px;">Join the waitlist</a>
         </div>
-        <div class="live-row">
-          <span class="live-key">Journals indexed</span>
-          <span class="live-val mono">5,300+</span>
-        </div>
-        <div class="live-row">
-          <span class="live-key">Research sources</span>
-          <span class="live-val mono">20+</span>
-        </div>
-        <div class="live-row">
-          <span class="live-key">Biomarkers supported</span>
-          <span class="live-val mono">100+</span>
-        </div>
-        <div class="live-row">
-          <span class="live-key">Risk calculations</span>
-          <span class="live-val mono">16+</span>
-        </div>
-        <div class="live-row">
-          <span class="live-key">Corpus refresh</span>
-          <span class="live-val serif">Daily</span>
-        </div>
+
+        <p style="font-size: 11px; color: var(--text-tertiary); text-align: center; margin-top: 16px; line-height: 1.6;">
+          No test markup. No lab commission. You get tested wherever you want. We analyze it. That's the deal.
+        </p>
       </div>
+
     </div>
   </div>
 </section>
@@ -1693,7 +1653,7 @@
           </svg>
         </div>
         <div class="trust-title">Cited and traceable</div>
-        <div class="trust-body">Every insight links to a real peer-reviewed study you can read yourself. Every calculation names its published methodology. No black boxes.</div>
+        <div class="trust-body">Every insight links to a real, named study you can read yourself. Every calculation uses a published methodology. No black boxes.</div>
       </div>
 
       <div class="trust-cell">
