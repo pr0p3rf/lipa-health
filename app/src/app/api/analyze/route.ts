@@ -237,12 +237,13 @@ export async function POST(request: NextRequest) {
     const response = NextResponse.json({
       success: true,
       count: validBiomarkers.length,
+      testDate: date,
       analyses_count: 0,
       risk_calculations_count: 0,
       has_action_plan: false,
       extraction_time_ms: totalExtractTimeMs,
       total_time_ms: Date.now() - overallStart,
-      message: `${validBiomarkers.length} biomarkers extracted. Analysis running in background — refresh your dashboard in a few minutes.`,
+      message: `${validBiomarkers.length} biomarkers extracted. Analysis will proceed step by step.`,
     });
 
     // Background analysis triggered by client (upload page) via /api/analyze-bg

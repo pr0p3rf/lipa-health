@@ -5,7 +5,15 @@ import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 
-type UploadState = "idle" | "uploading" | "analyzing" | "done" | "error";
+type UploadState = "idle" | "uploading" | "extracting" | "analyzing" | "done" | "error";
+
+interface AnalysisProgress {
+  currentStep: "extracting" | "batch" | "summary" | "done";
+  batchIndex: number;
+  totalBatches: number;
+  markersAnalyzed: number;
+  totalMarkers: number;
+}
 
 export default function UploadPage() {
   const router = useRouter();
@@ -17,6 +25,13 @@ export default function UploadPage() {
   const [riskCalcCount, setRiskCalcCount] = useState(0);
   const [hasActionPlan, setHasActionPlan] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [progress, setProgress] = useState<AnalysisProgress>({
+    currentStep: "extracting",
+    batchIndex: 0,
+    totalBatches: 0,
+    markersAnalyzed: 0,
+    totalMarkers: 0,
+  });
   // Test date is now auto-extracted from the PDF by the analysis API
 
   useEffect(() => {
@@ -51,9 +66,16 @@ export default function UploadPage() {
       });
     }
 
-    setState("analyzing");
+    setState("extracting");
+    setProgress({
+      currentStep: "extracting",
+      batchIndex: 0,
+      totalBatches: 0,
+      markersAnalyzed: 0,
+      totalMarkers: 0,
+    });
 
-    // Send all files to analysis API
+    // Send all files to extraction API
     const formData = new FormData();
     if (files.length === 1) {
       formData.append("file", files[0]);
@@ -61,7 +83,6 @@ export default function UploadPage() {
       files.forEach((f) => formData.append("files", f));
     }
     formData.append("userId", user.id);
-    // testDate omitted — API extracts it from the PDF automatically
 
     try {
       const res = await fetch("/api/analyze", {
@@ -69,34 +90,91 @@ export default function UploadPage() {
         body: formData,
       });
       const data = await res.json();
-      if (data.success) {
-        setAnalysisCount(data.count);
-        // Trigger background analysis from client side (server-to-server fetch was being killed on Vercel)
-        fetch("/api/analyze-bg", {
+      if (!data.success) {
+        setErrorMsg(data.error || "Extraction failed");
+        setState("error");
+        return;
+      }
+
+      const totalMarkers = data.count || 0;
+      const testDate = data.testDate || new Date().toISOString().split("T")[0];
+      setAnalysisCount(totalMarkers);
+
+      // Now orchestrate analysis in sequential steps
+      setState("analyzing");
+
+      const BATCH_SIZE = 25;
+      const numBatches = Math.ceil(totalMarkers / BATCH_SIZE);
+
+      setProgress({
+        currentStep: "batch",
+        batchIndex: 0,
+        totalBatches: numBatches,
+        markersAnalyzed: 0,
+        totalMarkers: totalMarkers,
+      });
+
+      // Step 1-N: Batch analysis (25 markers each)
+      for (let i = 0; i < numBatches; i++) {
+        setProgress((prev) => ({
+          ...prev,
+          currentStep: "batch",
+          batchIndex: i,
+        }));
+
+        const batchRes = await fetch("/api/analyze-step", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId: user.id, testDate: new Date().toISOString().split("T")[0] }),
-        }).catch(() => {}); // fire and forget — polling handles status
+          body: JSON.stringify({
+            userId: user.id,
+            testDate,
+            step: "batch",
+            batchIndex: i,
+          }),
+        });
 
-        setState("analyzing");
-        const pollUserId = user.id;
-        const pollInterval = setInterval(async () => {
-          try {
-            const statusRes = await fetch(`/api/analyze-status?userId=${pollUserId}&testDate=${new Date().toISOString().split("T")[0]}`);
-            const status = await statusRes.json();
-            setAnalysisCount(status.biomarkers || data.count);
-            setRiskCalcCount(status.analyses || 0);
-            setHasActionPlan(status.hasActionPlan || false);
-            if (status.isComplete) {
-              clearInterval(pollInterval);
-              setState("done");
-            }
-          } catch {}
-        }, 8000); // Poll every 8 seconds
-      } else {
-        setErrorMsg(data.error || "Analysis failed");
-        setState("error");
+        const batchData = await batchRes.json();
+        if (!batchRes.ok) {
+          throw new Error(batchData.error || `Batch ${i} failed`);
+        }
+
+        setRiskCalcCount(batchData.totalSoFar || 0);
+        setProgress((prev) => ({
+          ...prev,
+          markersAnalyzed: batchData.totalSoFar || (i + 1) * BATCH_SIZE,
+        }));
       }
+
+      // Final step: Summary + action plan + risk calculations
+      setProgress((prev) => ({
+        ...prev,
+        currentStep: "summary",
+      }));
+
+      const summaryRes = await fetch("/api/analyze-step", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: user.id,
+          testDate,
+          step: "summary",
+        }),
+      });
+
+      const summaryData = await summaryRes.json();
+      if (!summaryRes.ok) {
+        throw new Error(summaryData.error || "Summary generation failed");
+      }
+
+      setRiskCalcCount(summaryData.riskCalcs || 0);
+      setHasActionPlan(true);
+      setProgress((prev) => ({
+        ...prev,
+        currentStep: "done",
+        markersAnalyzed: totalMarkers,
+      }));
+
+      setState("done");
     } catch (err: any) {
       setErrorMsg(err.message || "Network error");
       setState("error");
@@ -223,12 +301,13 @@ export default function UploadPage() {
               Try again
             </button>
           </div>
-        ) : state === "uploading" || state === "analyzing" ? (
+        ) : state === "uploading" || state === "extracting" || state === "analyzing" ? (
           /* ---- Progress state ---- */
           <>
             <AnalyzingProgress
               state={state}
               fileNames={fileNames}
+              progress={progress}
             />
             <div className="mt-4 text-center">
               <button
@@ -287,25 +366,24 @@ export default function UploadPage() {
   );
 }
 
-// Rich analyzing progress with timed steps that build trust
-function AnalyzingProgress({ state, fileNames }: { state: UploadState; fileNames: string[] }) {
-  const [currentStep, setCurrentStep] = useState(0);
+// Real progress display driven by actual API step completion
+function AnalyzingProgress({
+  state,
+  fileNames,
+  progress,
+}: {
+  state: UploadState;
+  fileNames: string[];
+  progress: AnalysisProgress;
+}) {
   const [elapsedSec, setElapsedSec] = useState(0);
 
-  // Timed progression through steps to simulate real pipeline activity
   useEffect(() => {
-    if (state !== "analyzing") return;
+    if (state !== "extracting" && state !== "analyzing") return;
+    setElapsedSec(0);
     const timer = setInterval(() => setElapsedSec((s) => s + 1), 1000);
     return () => clearInterval(timer);
   }, [state]);
-
-  useEffect(() => {
-    if (state !== "analyzing") return;
-    // Step progression: each step advances after a delay
-    const timings = [0, 8, 20, 45, 70, 95, 120, 150, 175, 200, 225];
-    const step = timings.filter((t) => elapsedSec >= t).length - 1;
-    setCurrentStep(Math.min(step, ANALYSIS_STEPS.length - 1));
-  }, [elapsedSec, state]);
 
   if (state === "uploading") {
     return (
@@ -324,7 +402,55 @@ function AnalyzingProgress({ state, fileNames }: { state: UploadState; fileNames
     );
   }
 
-  const progressPct = Math.min(95, Math.round((currentStep / (ANALYSIS_STEPS.length - 1)) * 100));
+  // Build real step list based on progress
+  const BATCH_SIZE = 25;
+  const { totalBatches, totalMarkers, batchIndex, currentStep } = progress;
+
+  type StepItem = { label: string; detail: string; isDone: boolean; isActive: boolean };
+  const steps: StepItem[] = [];
+
+  // Step 0: Extraction
+  steps.push({
+    label: "Reading your lab report",
+    detail: "Extracting every biomarker, value, unit, and reference range — in any language, from any lab.",
+    isDone: currentStep !== "extracting",
+    isActive: currentStep === "extracting",
+  });
+
+  // Steps 1-N: Batch analysis
+  for (let i = 0; i < Math.max(totalBatches, 1); i++) {
+    const rangeStart = i * BATCH_SIZE + 1;
+    const rangeEnd = Math.min((i + 1) * BATCH_SIZE, totalMarkers || BATCH_SIZE);
+    const batchDone =
+      currentStep === "summary" || currentStep === "done" ||
+      (currentStep === "batch" && batchIndex > i);
+    const batchActive = currentStep === "batch" && batchIndex === i;
+
+    steps.push({
+      label: totalMarkers
+        ? `Analyzing markers ${rangeStart}-${rangeEnd}`
+        : `Analyzing batch ${i + 1}`,
+      detail: "Matching to peer-reviewed research, scoring evidence, and generating personalized analysis for each marker.",
+      isDone: batchDone,
+      isActive: batchActive,
+    });
+  }
+
+  // Final step: Summary + action plan
+  steps.push({
+    label: "Generating your action plan",
+    detail: "Detecting cross-marker patterns, running clinical health calculations, and building your personalized protocol.",
+    isDone: currentStep === "done",
+    isActive: currentStep === "summary",
+  });
+
+  // Calculate progress percentage
+  const totalSteps = steps.length;
+  const doneCount = steps.filter((s) => s.isDone).length;
+  const progressPct = Math.min(
+    95,
+    Math.round(((doneCount + (steps.some((s) => s.isActive) ? 0.5 : 0)) / totalSteps) * 100)
+  );
 
   return (
     <div className="bg-white border border-[#E5E5E5] rounded-2xl overflow-hidden">
@@ -346,61 +472,57 @@ function AnalyzingProgress({ state, fileNames }: { state: UploadState; fileNames
             Analyzing your biology
           </h2>
           <p className="text-[13px] text-[#6B6B6B]">
-            Sit tight — we're analyzing each marker against your biology, published research, and clinical guidelines.
+            {totalMarkers > 0
+              ? `${totalMarkers} biomarkers found — analyzing each against published research and clinical guidelines.`
+              : "Reading your lab results and preparing analysis..."}
           </p>
         </div>
 
         {/* Steps */}
         <div className="space-y-1">
-          {ANALYSIS_STEPS.map((step, i) => {
-            const isDone = i < currentStep;
-            const isActive = i === currentStep;
-            const isFuture = i > currentStep;
-
-            return (
-              <div
-                key={i}
-                className={`flex items-start gap-3 py-2.5 px-3 rounded-xl transition-all duration-500 ${
-                  isActive ? "bg-[#E8F5EE]/50" : ""
-                }`}
-              >
-                {/* Icon */}
-                <div className="mt-0.5 flex-shrink-0">
-                  {isDone ? (
-                    <div className="w-5 h-5 bg-[#1B6B4A] rounded-full flex items-center justify-center">
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round">
-                        <path d="M20 6L9 17l-5-5" />
-                      </svg>
-                    </div>
-                  ) : isActive ? (
-                    <div className="w-5 h-5 rounded-full border-2 border-[#1B6B4A] flex items-center justify-center">
-                      <div className="w-2 h-2 bg-[#1B6B4A] rounded-full animate-pulse" />
-                    </div>
-                  ) : (
-                    <div className="w-5 h-5 rounded-full border-2 border-[#E5E5E5]" />
-                  )}
-                </div>
-
-                {/* Content */}
-                <div className="flex-1 min-w-0">
-                  <div className={`text-[13px] leading-snug ${
-                    isDone ? "text-[#1B6B4A] font-medium" :
-                    isActive ? "text-[#0F1A15] font-medium" :
-                    "text-[#B5B5B5]"
-                  }`}>
-                    {step.label}
+          {steps.map((step, i) => (
+            <div
+              key={i}
+              className={`flex items-start gap-3 py-2.5 px-3 rounded-xl transition-all duration-500 ${
+                step.isActive ? "bg-[#E8F5EE]/50" : ""
+              }`}
+            >
+              {/* Icon */}
+              <div className="mt-0.5 flex-shrink-0">
+                {step.isDone ? (
+                  <div className="w-5 h-5 bg-[#1B6B4A] rounded-full flex items-center justify-center">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round">
+                      <path d="M20 6L9 17l-5-5" />
+                    </svg>
                   </div>
-                  {(isDone || isActive) && step.detail && (
-                    <div className={`text-[11px] mt-1 leading-relaxed ${
-                      isDone ? "text-[#8A928C]" : "text-[#6B6B6B]"
-                    }`}>
-                      {step.detail}
-                    </div>
-                  )}
-                </div>
+                ) : step.isActive ? (
+                  <div className="w-5 h-5 rounded-full border-2 border-[#1B6B4A] flex items-center justify-center">
+                    <div className="w-2 h-2 bg-[#1B6B4A] rounded-full animate-pulse" />
+                  </div>
+                ) : (
+                  <div className="w-5 h-5 rounded-full border-2 border-[#E5E5E5]" />
+                )}
               </div>
-            );
-          })}
+
+              {/* Content */}
+              <div className="flex-1 min-w-0">
+                <div className={`text-[13px] leading-snug ${
+                  step.isDone ? "text-[#1B6B4A] font-medium" :
+                  step.isActive ? "text-[#0F1A15] font-medium" :
+                  "text-[#B5B5B5]"
+                }`}>
+                  {step.label}
+                </div>
+                {(step.isDone || step.isActive) && step.detail && (
+                  <div className={`text-[11px] mt-1 leading-relaxed ${
+                    step.isDone ? "text-[#8A928C]" : "text-[#6B6B6B]"
+                  }`}>
+                    {step.detail}
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* File chips + timer */}
@@ -427,46 +549,3 @@ function AnalyzingProgress({ state, fileNames }: { state: UploadState; fileNames
     </div>
   );
 }
-
-const ANALYSIS_STEPS = [
-  {
-    label: "Reading your lab report",
-    detail: "Extracting every biomarker, value, unit, and reference range — in any language, from any lab.",
-  },
-  {
-    label: "Normalizing across standards",
-    detail: "Converting lab-specific names and units to standardized medical identifiers.",
-  },
-  {
-    label: "Matching to peer-reviewed research",
-    detail: "Searching published studies relevant to each of your specific marker values.",
-  },
-  {
-    label: "Scoring evidence quality and independence",
-    detail: "Weighting each study by evidence grade, sample size, funding source, and publication date.",
-  },
-  {
-    label: "Analyzing each marker in context",
-    detail: "Combining your value, reference ranges, research findings, and clinical guidelines into a personalized analysis.",
-  },
-  {
-    label: "Detecting cross-marker patterns",
-    detail: "Looking for clinical patterns across your full panel that individual markers can't reveal.",
-  },
-  {
-    label: "Running clinical health calculations",
-    detail: "Computing cardiovascular risk, insulin resistance, biological age, and 10+ more peer-reviewed algorithms.",
-  },
-  {
-    label: "Benchmarking against your demographic",
-    detail: "Comparing your results to optimal ranges adjusted for your age and sex.",
-  },
-  {
-    label: "Building your personalized protocol",
-    detail: "Creating an action plan across nutrition, supplementation, sleep, movement, and lifestyle — specific to your results.",
-  },
-  {
-    label: "Finalizing your report",
-    detail: "Assembling your complete analysis with full citations and actionable next steps.",
-  },
-];
