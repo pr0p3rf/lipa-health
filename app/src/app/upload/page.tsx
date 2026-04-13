@@ -413,7 +413,7 @@ function AnalyzingProgress({ state, fileNames }: { state: UploadState; fileNames
 
         {/* Trust footer */}
         <div className="mt-4 text-center">
-          <p className="text-[10px] text-[#B5B5B5] leading-relaxed">
+          <p className="text-[10px] text-[#8A928C] leading-relaxed">
             Your data is encrypted and never shared with third parties.
           </p>
         </div>

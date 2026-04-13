@@ -246,10 +246,11 @@ export async function POST(request: NextRequest) {
     });
 
     // Trigger background analysis via fire-and-forget fetch
-    const origin = request.headers.get("origin") || request.headers.get("host") || "";
-    const protocol = origin.includes("localhost") ? "http" : "https";
-    const baseUrl = origin.startsWith("http") ? origin : `${protocol}://${origin}`;
-    fetch(`${baseUrl}/api/analyze-bg`, {
+    const host = request.headers.get("host") || "my.lipa.health";
+    const protocol = host.includes("localhost") ? "http" : "https";
+    const bgUrl = `${protocol}://${host}/api/analyze-bg`;
+    console.log(`[analyze] Triggering background analysis at: ${bgUrl}`);
+    fetch(bgUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userId, testDate: date }),
