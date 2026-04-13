@@ -306,14 +306,42 @@ async function storeBatchAnalyses(
 
     const ref = referenceMap.get(matchedResult.biomarker);
 
-    // Find studies relevant to this specific marker
-    const markerStudies = studies.filter(
-      (s) =>
-        s.title.toLowerCase().includes((m.name || "").toLowerCase()) ||
-        s.abstract.toLowerCase().includes((m.name || "").toLowerCase()) ||
-        (ref?.canonical_name &&
-          s.abstract.toLowerCase().includes(ref.canonical_name.toLowerCase()))
-    );
+    // Find studies relevant to this specific marker — use name + aliases
+    const MARKER_ALIASES: Record<string, string[]> = {
+      "ast": ["aspartate aminotransferase", "ast", "got", "sgot"],
+      "alt": ["alanine aminotransferase", "alt", "gpt", "sgpt"],
+      "ggt": ["gamma-glutamyl transferase", "gamma-glutamyltransferase", "ggt"],
+      "egfr": ["glomerular filtration rate", "egfr", "gfr", "ckd-epi"],
+      "bun": ["blood urea nitrogen", "bun", "urea"],
+      "urea": ["blood urea nitrogen", "bun", "urea"],
+      "platelets": ["platelet count", "platelets", "thrombocytes", "plt"],
+      "testosterone": ["testosterone", "total testosterone", "free testosterone"],
+      "cortisol": ["cortisol", "hydrocortisone", "serum cortisol"],
+      "crp": ["c-reactive protein", "crp", "hs-crp", "high-sensitivity crp"],
+      "hba1c": ["glycated hemoglobin", "hba1c", "hemoglobin a1c", "a1c"],
+      "ldl": ["low-density lipoprotein", "ldl cholesterol", "ldl-c"],
+      "hdl": ["high-density lipoprotein", "hdl cholesterol", "hdl-c"],
+      "tsh": ["thyroid stimulating hormone", "tsh", "thyrotropin"],
+      "ferritin": ["ferritin", "serum ferritin", "iron storage"],
+      "vitamin d": ["vitamin d", "25-hydroxyvitamin d", "25(oh)d", "calcidiol"],
+      "vitamin b12": ["vitamin b12", "cobalamin", "cyanocobalamin"],
+      "folate": ["folate", "folic acid", "vitamin b9"],
+      "iron": ["serum iron", "iron", "fe"],
+      "transferrin": ["transferrin", "transferrin saturation", "tsat"],
+      "fibrinogen": ["fibrinogen", "factor i"],
+      "homocysteine": ["homocysteine", "hcy"],
+      "apob": ["apolipoprotein b", "apob", "apo b"],
+    };
+    const markerLower = (m.name || "").toLowerCase();
+    const aliases = MARKER_ALIASES[markerLower] ||
+      Object.entries(MARKER_ALIASES).find(([_, v]) => v.some(a => markerLower.includes(a)))?.[1] ||
+      [markerLower];
+    const searchTerms = [...new Set([markerLower, ...(ref?.canonical_name ? [ref.canonical_name.toLowerCase()] : []), ...aliases])];
+
+    const markerStudies = studies.filter((s) => {
+      const text = (s.title + " " + s.abstract).toLowerCase();
+      return searchTerms.some(term => text.includes(term));
+    });
 
     const citations = markerStudies.slice(0, 10).map((s, i) => ({
       study_id: s.id,
@@ -357,7 +385,7 @@ async function storeBatchAnalyses(
       generation_time_ms: generationTimeMs,
     };
 
-    if (m.what_to_do) insertData.what_to_do = m.what_to_do;
+    insertData.what_to_do = m.what_to_do || null;
 
     // Delete any existing analysis for this marker (dedup)
     await supabase
@@ -515,7 +543,7 @@ ${batchMarkerList}
 
 For each marker, provide: name, status, flag, summary, what_it_means, what_research_shows, what_to_do, related_patterns, suggested_exploration.
 
-IMPORTANT — 'what_to_do' field: For each marker that is borderline or out of range, give 1-2 specific, actionable recommendations. Be specific: 'Eat 2-3 servings of fatty fish per week' not 'increase omega-3.' For optimal/normal markers, set what_to_do to null.
+IMPORTANT — 'what_to_do' field: For borderline/out-of-range markers: 3-5 specific interventions with evidence, doses, forms, timing, and expected improvement timeline. For optimal/normal markers: 1-2 sentences on what's keeping this healthy and what to maintain. NEVER set what_to_do to null.
 
 Return ONLY valid JSON with a "markers" array containing exactly ${batchBiomarkers.length} entries.`;
 
