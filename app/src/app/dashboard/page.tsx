@@ -650,7 +650,7 @@ export default function DashboardPage() {
     <>
       <AppNav />
       <main className="min-h-screen" style={{ background: "#F8F5EF" }} suppressHydrationWarning>
-        <div className="max-w-6xl mx-auto px-6 py-10 relative z-10" suppressHydrationWarning>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10 relative z-10" suppressHydrationWarning>
 
           {/* ============================================================ */}
           {/* LAYER 1: HOME / EXECUTIVE SUMMARY                           */}
