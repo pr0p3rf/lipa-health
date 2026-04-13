@@ -1305,47 +1305,65 @@ export default function DashboardPage() {
             })}
           </div>
 
-          {/* Full upgrade CTA for free users */}
+          {/* Full upgrade CTA for free users — pricing cards */}
           {isFree && (
-            <div className="mb-10 p-8 text-center" style={GLASS_CARD}>
-              <h3
-                className="text-[24px] mb-3 text-[#0F1A15]"
-                style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
-              >
-                You&apos;re seeing 5 of {latestResults.length} markers.
-              </h3>
-              <p className="text-[14px] text-[#5A635D] mb-2 max-w-lg mx-auto leading-relaxed">
-                Your full analysis is ready — every marker explained in plain English, cross-referenced against peer-reviewed research, with a personalized action plan.
-              </p>
-
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl mx-auto my-6">
-                <div className="bg-[#F8F5EF] rounded-xl p-3 text-center">
-                  <div className="text-[20px] text-[#1B6B4A]" style={{ fontFamily: FRAUNCES, fontWeight: 600 }}>{latestResults.length}</div>
-                  <div className="text-[10px] text-[#8A928C] uppercase tracking-wider">Markers</div>
-                </div>
-                <div className="bg-[#F8F5EF] rounded-xl p-3 text-center">
-                  <div className="text-[20px] text-[#1B6B4A]" style={{ fontFamily: FRAUNCES, fontWeight: 600 }}>{computedCalculations.length}</div>
-                  <div className="text-[10px] text-[#8A928C] uppercase tracking-wider">Risk calcs</div>
-                </div>
-                <div className="bg-[#F8F5EF] rounded-xl p-3 text-center">
-                  <div className="text-[20px] text-[#1B6B4A]" style={{ fontFamily: FRAUNCES, fontWeight: 600 }}>6</div>
-                  <div className="text-[10px] text-[#8A928C] uppercase tracking-wider">Action domains</div>
-                </div>
-                <div className="bg-[#F8F5EF] rounded-xl p-3 text-center">
-                  <div className="text-[20px] text-[#1B6B4A]" style={{ fontFamily: FRAUNCES, fontWeight: 600 }}>7 days</div>
-                  <div className="text-[10px] text-[#8A928C] uppercase tracking-wider">Ask Lipa</div>
-                </div>
+            <div className="mb-10">
+              <div className="text-center mb-8">
+                <h3
+                  className="text-[26px] mb-2 text-[#0F1A15]"
+                  style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
+                >
+                  You&apos;re seeing 5 of {latestResults.length} markers.
+                </h3>
+                <p className="text-[14px] text-[#5A635D] max-w-lg mx-auto">
+                  Your full analysis is ready. Choose how you want to unlock it.
+                </p>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
-                <a
-                  href="/pricing"
-                  className="inline-flex items-center gap-2 text-[14px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-8 py-3.5 rounded-full transition-all duration-300 hover:-translate-y-0.5"
-                  style={{ boxShadow: "0 4px 16px rgba(27,107,74,0.25)" }}
-                >
-                  Unlock full analysis — €29
-                </a>
-                <span className="text-[12px] text-[#8A928C]">or €89/year for vault + trends + unlimited chat</span>
+              <div className="grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
+                {/* Lipa Life — featured */}
+                <div className="p-6 relative" style={{ ...GLASS_CARD, border: "2px solid #1B6B4A" }}>
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#1B6B4A] text-white text-[9px] uppercase tracking-wider font-semibold px-3 py-1 rounded-full">Best value</div>
+                  <div className="text-[22px] font-semibold text-[#0F1A15] mb-1" style={{ fontFamily: FRAUNCES }}>Lipa Life</div>
+                  <div className="text-[28px] text-[#1B6B4A] mb-1" style={{ fontFamily: FRAUNCES, fontWeight: 600 }}>€89<span className="text-[14px] text-[#8A928C] font-normal">/year</span></div>
+                  <ul className="text-[12px] text-[#5A635D] space-y-1.5 mb-5 mt-4">
+                    <li className="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" className="flex-shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>All {latestResults.length} markers analyzed</li>
+                    <li className="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" className="flex-shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>Personalized action plan</li>
+                    <li className="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" className="flex-shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>Ask Lipa — unlimited, for life</li>
+                    <li className="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" className="flex-shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>Vault + trends + bio-age trajectory</li>
+                    <li className="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" className="flex-shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>Up to 12 uploads per year</li>
+                    <li className="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" className="flex-shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>Research alerts for your markers</li>
+                  </ul>
+                  <a
+                    href="/pricing"
+                    onClick={(e) => { e.preventDefault(); window.location.href = "/pricing?tier=insight"; }}
+                    className="block w-full text-center text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] py-3 rounded-full transition-all duration-300"
+                    style={{ boxShadow: "0 4px 16px rgba(27,107,74,0.2)" }}
+                  >
+                    Get Lipa Life — €89/year
+                  </a>
+                </div>
+
+                {/* Lipa One */}
+                <div className="p-6" style={GLASS_CARD}>
+                  <div className="text-[22px] font-semibold text-[#0F1A15] mb-1" style={{ fontFamily: FRAUNCES }}>Lipa One</div>
+                  <div className="text-[28px] text-[#0F1A15] mb-1" style={{ fontFamily: FRAUNCES, fontWeight: 600 }}>€29<span className="text-[14px] text-[#8A928C] font-normal"> one-time</span></div>
+                  <ul className="text-[12px] text-[#5A635D] space-y-1.5 mb-5 mt-4">
+                    <li className="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" className="flex-shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>All {latestResults.length} markers analyzed</li>
+                    <li className="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" className="flex-shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>Personalized action plan</li>
+                    <li className="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" className="flex-shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>Ask Lipa for 7 days</li>
+                    <li className="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" className="flex-shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>Risk calculations + biological age</li>
+                    <li className="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" className="flex-shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>PDF report for your doctor</li>
+                  </ul>
+                  <a
+                    href="/pricing"
+                    onClick={(e) => { e.preventDefault(); window.location.href = "/pricing?tier=one"; }}
+                    className="block w-full text-center text-[13px] font-semibold text-[#0F1A15] bg-[#F4F4F5] hover:bg-[#E5E5E5] py-3 rounded-full transition-all duration-300"
+                  >
+                    Get Single Analysis — €29
+                  </a>
+                  <p className="text-[10px] text-[#8A928C] text-center mt-2">€29 credited if you upgrade to Life within 30 days</p>
+                </div>
               </div>
             </div>
           )}
