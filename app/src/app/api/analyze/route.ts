@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+import { after } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { createClient } from "@supabase/supabase-js";
 import { analyzeBiomarker, generateActionPlan } from "@/lib/living-research";
 import { runAllCalculations, type BiomarkerValue, type UserProfile } from "@/lib/risk-calculations";
+
+export const maxDuration = 300; // Vercel Pro max
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
@@ -230,10 +233,25 @@ export async function POST(request: NextRequest) {
       insertedResults = inserted || [];
     }
 
+    // Return success immediately — analyses run in background
+    const response = NextResponse.json({
+      success: true,
+      count: validBiomarkers.length,
+      analyses_count: 0,
+      risk_calculations_count: 0,
+      has_action_plan: false,
+      extraction_time_ms: totalExtractTimeMs,
+      total_time_ms: Date.now() - overallStart,
+      message: `${validBiomarkers.length} biomarkers extracted. Analysis running in background — refresh your dashboard in a few minutes.`,
+    });
+
+    // Run the heavy analysis in the background (after response is sent)
+    after(async () => {
+      console.log(`[analyze-bg] Starting background analysis for ${insertedResults.length} markers`);
+
     // ================================================================
     // STEP 3: Living Research™ analysis for each biomarker
     // ================================================================
-    // Run analyses in parallel (with concurrency limit)
     const CONCURRENCY = 5;
     const analyses = [];
 
@@ -387,19 +405,11 @@ export async function POST(request: NextRequest) {
       `[analyze] Complete. ${analyses.length}/${insertedResults.length} analyses + action plan generated in ${totalTimeMs}ms`
     );
 
-    return NextResponse.json({
-      success: true,
-      count: biomarkers.length,
-      analyses_count: analyses.length,
-      risk_calculations_count: riskCalcs.length,
-      has_action_plan: !!actionPlan,
-      extraction_time_ms: totalExtractTimeMs,
-      total_time_ms: totalTimeMs,
-      biomarkers,
-      analyses,
-      risk_calculations: riskCalcs,
-      action_plan: actionPlan,
-    });
+    console.log(`[analyze-bg] Complete. ${analyses.length}/${insertedResults.length} analyses done.`);
+    }); // end after()
+
+    return response;
+
   } catch (error: any) {
     console.error("Analysis error:", error);
     return NextResponse.json(
