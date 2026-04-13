@@ -276,11 +276,6 @@ export default function UploadPage() {
           </>
         )}
 
-        <div className="mt-8 p-4 bg-[#F2F1EE] rounded-xl">
-          <p className="text-[12px] text-[#6B6B6B] leading-relaxed">
-            <strong className="text-[#1A1A1A]">Privacy:</strong> Your health data is encrypted and never shared with third parties. You can delete everything at any time.
-          </p>
-        </div>
       </main>
     </>
   );
