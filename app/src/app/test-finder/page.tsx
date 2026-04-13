@@ -450,32 +450,43 @@ function easeBadge(ease: string) {
 /* ------------------------------------------------------------------ */
 
 export default function TestFinderPage() {
-  const [selectedGoal, setSelectedGoal] = useState<GoalKey | null>(null);
+  const [selectedGoals, setSelectedGoals] = useState<GoalKey[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<string>("");
+  const [email, setEmail] = useState("");
+  const [emailSubmitted, setEmailSubmitted] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  // Restore goal from localStorage on mount
+  // Restore goals from localStorage on mount
   useEffect(() => {
     try {
-      const saved = localStorage.getItem("lipa_test_finder_goal");
-      if (saved && MARKERS[saved as GoalKey]) {
-        setSelectedGoal(saved as GoalKey);
-      }
+      const saved = localStorage.getItem("lipa_test_finder_goals");
+      if (saved) setSelectedGoals(JSON.parse(saved));
     } catch {}
   }, []);
 
-  // Save goal to localStorage
+  // Save goals to localStorage
   useEffect(() => {
-    if (selectedGoal) {
-      try {
-        localStorage.setItem("lipa_test_finder_goal", selectedGoal);
-      } catch {}
+    if (selectedGoals.length > 0) {
+      try { localStorage.setItem("lipa_test_finder_goals", JSON.stringify(selectedGoals)); } catch {}
     }
-  }, [selectedGoal]);
+  }, [selectedGoals]);
 
-  const markers = selectedGoal ? MARKERS[selectedGoal] : [];
+  function toggleGoal(key: GoalKey) {
+    setSelectedGoals((prev) =>
+      prev.includes(key) ? prev.filter((g) => g !== key) : [...prev, key]
+    );
+  }
+
+  // Merge + deduplicate markers from all selected goals
+  const markers = useMemo(() => {
+    if (selectedGoals.length === 0) return [];
+    const all = selectedGoals.flatMap((g) => MARKERS[g] || []);
+    return Array.from(new Set(all));
+  }, [selectedGoals]);
+
   const countryInfo = selectedCountry ? COUNTRIES[selectedCountry] : null;
-  const showResult = selectedGoal && selectedCountry;
+  // Show results immediately — email capture is optional (shown inline)
+  const showResult = selectedGoals.length > 0 && selectedCountry;
 
   const markerListText = useMemo(() => markers.join(", "), [markers]);
 
@@ -484,6 +495,27 @@ export default function TestFinderPage() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
+  }
+
+  async function handleEmailSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!email.trim()) return;
+    // Save to Supabase newsletter_subscribers with source + goals
+    try {
+      await fetch("https://ovprbhjtwtthuldcdlgq.supabase.co/rest/v1/newsletter_subscribers", {
+        method: "POST",
+        headers: {
+          apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im92cHJiaGp0d3R0aHVsZGNkbGdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0OTEzMTgsImV4cCI6MjA5MTA2NzMxOH0.n3clDryaCjEfGebFzk2ZiEacKd5xpVAXNUUGWPjklOA",
+          "Content-Type": "application/json",
+          Prefer: "return=minimal",
+        },
+        body: JSON.stringify({
+          email: email.trim(),
+          source: `test-finder:${selectedGoals.join(",")}:${selectedCountry}`,
+        }),
+      });
+    } catch {}
+    setEmailSubmitted(true);
   }
 
   return (
@@ -525,11 +557,11 @@ export default function TestFinderPage() {
 
             <div className="grid grid-cols-2 gap-3 sm:gap-4">
               {GOALS.map((g) => {
-                const isSelected = selectedGoal === g.key;
+                const isSelected = selectedGoals.includes(g.key);
                 return (
                   <button
                     key={g.key}
-                    onClick={() => setSelectedGoal(g.key)}
+                    onClick={() => toggleGoal(g.key)}
                     className={`text-left bg-white rounded-[20px] p-4 sm:p-5 transition-all duration-200 ${
                       isSelected
                         ? "ring-2 ring-[#1B6B4A] shadow-md"
@@ -593,6 +625,19 @@ export default function TestFinderPage() {
             </select>
           </div>
 
+          {/* ---- EMPOWERMENT NOTE ---- */}
+          {selectedGoals.length > 0 && selectedCountry && (
+            <div className="bg-[#E8F5EE] rounded-[20px] p-5 flex items-start gap-3">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2" strokeLinecap="round" className="flex-shrink-0 mt-0.5">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+              <div>
+                <p className="text-[13px] text-[#0F1A15] font-medium mb-1">You don't need anyone to book a blood test for you.</p>
+                <p className="text-[12px] text-[#5A635D] leading-relaxed">Walk into any lab on the list, ask for these markers, and you're done. Other platforms charge €300-500 and book the same tests at the same labs. Save your money — we'll analyze the results.</p>
+              </div>
+            </div>
+          )}
+
           {/* ---- RESULT PANEL ---- */}
           {showResult && (
             <div className="space-y-6 animate-in fade-in">
@@ -609,7 +654,7 @@ export default function TestFinderPage() {
                 </h3>
                 <p className="text-[13px] text-[#6B6B6B] mb-5">
                   {markers.length} markers for{" "}
-                  {GOALS.find((g) => g.key === selectedGoal)?.title}
+                  {selectedGoals.map(g => GOALS.find(x => x.key === g)?.title).join(' + ')}
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1.5 mb-6">
@@ -654,6 +699,33 @@ export default function TestFinderPage() {
                   )}
                 </button>
               </div>
+
+              {/* Email capture — inline, non-blocking */}
+              {!emailSubmitted ? (
+                <div className="bg-[#E8F5EE] rounded-[20px] p-5 sm:p-6">
+                  <p className="text-[13px] text-[#0F1A15] font-medium mb-2">
+                    Want this sent to your email with preparation tips and a reminder to upload?
+                  </p>
+                  <form onSubmit={handleEmailSubmit} className="flex gap-2">
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="your@email.com"
+                      required
+                      className="flex-1 text-[13px] border border-[#1B6B4A]/20 rounded-full px-4 py-2.5 focus:outline-none focus:border-[#1B6B4A] bg-white"
+                    />
+                    <button type="submit" className="text-[12px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-5 py-2.5 rounded-full transition-colors flex-shrink-0">
+                      Send me the guide
+                    </button>
+                  </form>
+                  <p className="text-[10px] text-[#5A635D] mt-2">We'll email you: marker list, how to prepare, and a reminder to upload. No spam.</p>
+                </div>
+              ) : (
+                <div className="bg-[#E8F5EE] rounded-[20px] p-4 text-center">
+                  <p className="text-[13px] text-[#1B6B4A] font-medium">Sent to {email}. Check your inbox for preparation tips.</p>
+                </div>
+              )}
 
               {/* Where to test */}
               {countryInfo && (
@@ -712,7 +784,7 @@ export default function TestFinderPage() {
                 </h3>
                 <p className="text-[14px] text-[#3A3A3A] leading-relaxed">
                   Ask for{" "}
-                  <strong>{PANEL_NAMES[selectedGoal]}</strong>. If they
+                  <strong>{selectedGoals.map(g => PANEL_NAMES[g]).join(" + ")}</strong>. If they
                   don't have a bundle, request these individual tests:{" "}
                   <span className="text-[#1B6B4A] font-medium">
                     {markerListText}
