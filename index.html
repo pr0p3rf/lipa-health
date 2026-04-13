@@ -138,14 +138,17 @@
     .nav-links { display: flex; gap: 28px; font-size: 13px; font-weight: 500; }
     .nav-links a { color: var(--text-secondary); transition: color 0.2s; }
     .nav-links a:hover { color: var(--text); }
-    .lang-switch { display: flex; gap: 4px; }
-    .lang-btn {
-      background: none; border: none; cursor: pointer;
+    .lang-dropdown {
+      background: none; border: 1px solid var(--border);
+      border-radius: 8px; cursor: pointer;
       font-family: 'Inter', sans-serif; font-size: 11px;
-      color: var(--text); opacity: 0.4;
-      padding: 2px 4px;
+      color: var(--text); padding: 4px 8px;
+      appearance: none; -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%238A928C' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 6px center;
+      padding-right: 22px;
     }
-    .lang-btn.active { opacity: 1; font-weight: 600; }
     .nav-cta {
       font-size: 13px; font-weight: 600;
       color: var(--white); background: var(--accent);
@@ -683,7 +686,7 @@
     }
     .how-steps {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 40px;
       margin-top: 72px;
     }
@@ -1502,12 +1505,12 @@
       <a href="/research.html">Research Library</a>
       <a href="/where-to-test.html">Where to test</a>
     </div>
-    <div class="lang-switch">
-      <button class="lang-btn active" data-lang="en" onclick="setLang && setLang('en')">EN</button>
-      <button class="lang-btn" data-lang="nl" onclick="setLang && setLang('nl')">NL</button>
-      <button class="lang-btn" data-lang="pl" onclick="setLang && setLang('pl')">PL</button>
-      <button class="lang-btn" data-lang="es" onclick="setLang && setLang('es')">ES</button>
-    </div>
+    <select class="lang-dropdown" onchange="setLang && setLang(this.value)">
+      <option value="en" selected>EN</option>
+      <option value="nl">NL</option>
+      <option value="pl">PL</option>
+      <option value="es">ES</option>
+    </select>
     <a href="https://my.lipa.health/upload" class="nav-cta">Get started free</a>
   </div>
 </nav>
@@ -1585,7 +1588,7 @@
     <h2 class="display">A blood test goes in.<br>Full understanding<br>comes out.</h2>
     <p class="lede">Already have a recent blood test? Upload it now. Don't have one yet? We'll show you exactly what to order — no middleman, no markup. You book the test, we analyze the results.</p>
 
-    <div class="how-steps" style="grid-template-columns: repeat(2, 1fr);">
+    <div class="how-steps">
       <div class="how-card">
         <div class="how-num mono">01</div>
         <h3>Get your blood test.</h3>
