@@ -219,10 +219,20 @@ export default function UploadPage() {
           </div>
         ) : state === "uploading" || state === "analyzing" ? (
           /* ---- Progress state ---- */
-          <AnalyzingProgress
-            state={state}
-            fileNames={fileNames}
-          />
+          <>
+            <AnalyzingProgress
+              state={state}
+              fileNames={fileNames}
+            />
+            <div className="mt-4 text-center">
+              <button
+                onClick={() => { setState("idle"); setFileNames([]); }}
+                className="text-[12px] text-[#8A928C] hover:text-[#5A635D] transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </>
         ) : (
           /* ---- Upload zone ---- */
           <>
@@ -268,7 +278,7 @@ export default function UploadPage() {
 
         <div className="mt-8 p-4 bg-[#F2F1EE] rounded-xl">
           <p className="text-[12px] text-[#6B6B6B] leading-relaxed">
-            <strong className="text-[#1A1A1A]">Privacy:</strong> Your health data is encrypted and stored in the EU. We never share your data with third parties. You can delete everything at any time from your account settings.
+            <strong className="text-[#1A1A1A]">Privacy:</strong> Your health data is encrypted and never shared with third parties. You can delete everything at any time.
           </p>
         </div>
       </main>
@@ -409,7 +419,7 @@ function AnalyzingProgress({ state, fileNames }: { state: UploadState; fileNames
         {/* Trust footer */}
         <div className="mt-4 text-center">
           <p className="text-[10px] text-[#B5B5B5] leading-relaxed">
-            Your data is encrypted and processed in the EU. Nothing is shared with third parties.
+            Your data is encrypted and never shared with third parties.
           </p>
         </div>
       </div>
