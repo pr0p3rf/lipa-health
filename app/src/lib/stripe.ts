@@ -54,8 +54,8 @@ export const TIER_INFO = {
   },
   one: {
     name: "Lipa One",
-    price: 29,
-    priceDisplay: "€29",
+    price: 39,
+    priceDisplay: "€39",
     interval: null, // one-time
     features: [
       "Full analysis of every marker",

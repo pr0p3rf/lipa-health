@@ -954,7 +954,7 @@ export default function DashboardPage() {
                                     className="inline-flex text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-6 py-2.5 rounded-full transition-all duration-300 disabled:opacity-50"
                                     style={{ boxShadow: "0 4px 16px rgba(27,107,74,0.2)" }}
                                   >
-                                    {checkoutLoading ? "Loading..." : "See full analysis — €29"}
+                                    {checkoutLoading ? "Loading..." : "See full analysis — €39"}
                                   </button>
                                 </div>
                               ) : (
@@ -1252,17 +1252,19 @@ export default function DashboardPage() {
               <div className="grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
                 {/* Lipa Life */}
                 <div className="p-6 relative" style={{ ...CARD, border: "2px solid #1B6B4A" }}>
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#1B6B4A] text-white text-[9px] uppercase tracking-wider font-semibold px-3 py-1 rounded-full">Recommended</div>
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#1B6B4A] text-white text-[9px] uppercase tracking-wider font-semibold px-3 py-1 rounded-full">Best value</div>
                   <div className="text-[20px] font-semibold text-[#0F1A15] mb-1" style={{ fontFamily: FRAUNCES }}>Lipa Life</div>
+                  <p className="text-[12px] text-[#5A635D] mb-3">For people who test regularly and want to track their health over time.</p>
                   <div className="text-[28px] text-[#1B6B4A] mb-1" style={{ fontFamily: FRAUNCES, fontWeight: 600 }}>&euro;89<span className="text-[14px] text-[#8A928C] font-normal">/year</span></div>
-                  <ul className="text-[12px] text-[#5A635D] space-y-1.5 mb-5 mt-4">
+                  <p className="text-[11px] text-[#1B6B4A] font-medium mb-4">Everything in Lipa One, plus:</p>
+                  <ul className="text-[12px] text-[#5A635D] space-y-2 mb-5">
                     {[
-                      `Full analysis of all ${latestResults.length} markers — what each means, what to do, cited research`,
-                      "Personalized action plan — nutrition, supplements, sleep, movement with dosages",
-                      "Ask Lipa — unlimited questions about your results, grounded in your data",
-                      "Vault — store every test, track trends, see your bio-age trajectory over time",
-                      "Up to 12 blood test analyses per year",
-                      "Research alerts — get notified when new studies are published on your markers",
+                      "Up to 12 blood test analyses per year — test quarterly, see what changes",
+                      "Vault — your complete biological history, stored and searchable",
+                      "Trend tracking — see how every marker moves over months and years",
+                      "Bio-age trajectory — watch your biological age improve over time",
+                      "Ask Lipa — unlimited, forever. Your personal health research assistant",
+                      "Research alerts — notified when new studies are published on your markers",
                     ].map((item) => (
                       <li key={item} className="flex items-start gap-2">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" className="flex-shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>
@@ -1282,13 +1284,15 @@ export default function DashboardPage() {
                 {/* Lipa One */}
                 <div className="p-6" style={CARD}>
                   <div className="text-[20px] font-semibold text-[#0F1A15] mb-1" style={{ fontFamily: FRAUNCES }}>Lipa One</div>
-                  <div className="text-[28px] text-[#0F1A15] mb-1" style={{ fontFamily: FRAUNCES, fontWeight: 600 }}>&euro;29<span className="text-[14px] text-[#8A928C] font-normal"> one-time</span></div>
-                  <ul className="text-[12px] text-[#5A635D] space-y-1.5 mb-5 mt-4">
+                  <p className="text-[12px] text-[#5A635D] mb-3">A single deep-dive into this blood test.</p>
+                  <div className="text-[28px] text-[#0F1A15] mb-4" style={{ fontFamily: FRAUNCES, fontWeight: 600 }}>&euro;39<span className="text-[14px] text-[#8A928C] font-normal"> one-time</span></div>
+                  <ul className="text-[12px] text-[#5A635D] space-y-2 mb-5">
                     {[
                       `Full analysis of all ${latestResults.length} markers — what each means, what to do, cited research`,
-                      "Personalized action plan — nutrition, supplements, sleep, movement with dosages",
-                      "Ask Lipa for 7 days — ask anything about your results",
+                      "Personalized action plan — nutrition, supplements, sleep, movement with specific dosages",
+                      "Cross-marker pattern detection — connections your doctor might miss",
                       "16+ risk calculations + biological age estimate",
+                      "Ask Lipa for 7 days — ask anything about your results",
                       "PDF report you can share with your doctor",
                     ].map((item) => (
                       <li key={item} className="flex items-start gap-2">
@@ -1302,9 +1306,9 @@ export default function DashboardPage() {
                     disabled={!!checkoutLoading}
                     className="block w-full text-center text-[13px] font-semibold text-[#0F1A15] bg-[#F4F4F5] hover:bg-[#E5E5E5] py-3 rounded-full transition-all duration-300 disabled:opacity-50"
                   >
-                    {checkoutLoading === "one" ? "Loading..." : "Get Single Analysis — €29"}
+                    {checkoutLoading === "one" ? "Loading..." : "Get Single Analysis — €39"}
                   </button>
-                  <p className="text-[10px] text-[#8A928C] text-center mt-2">&euro;29 credited if you upgrade to Life within 30 days</p>
+                  <p className="text-[10px] text-[#8A928C] text-center mt-2">&euro;39 credited if you upgrade to Life within 30 days</p>
                 </div>
               </div>
               {checkoutError && (
