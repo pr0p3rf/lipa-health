@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# App at my.lipa.health — allow indexing of public pages
+# Auth-gated pages are not visible to crawlers by default
