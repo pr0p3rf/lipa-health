@@ -486,6 +486,13 @@ RULES:
 7. Include 2-4 recommendations per domain. For environment and lifestyle, always include at least 1 recommendation if any markers are borderline or out of range — even general ones like reducing toxin exposure or managing stress. Only skip a domain if truly nothing applies.
 8. Short sentences. No jargon. If you must use a technical term, explain it in parentheses.
 9. IMPORTANT: If a marker is low or out of range, ALWAYS include a supplement recommendation in the supplementation domain — not just dietary advice. For example: low omega-3 → recommend fish oil supplement AND dietary fish. Low vitamin D → recommend D3 supplement AND sun exposure. Low iron → recommend iron bisglycinate AND iron-rich foods. People expect to see supplement recommendations when their markers are low.
+10. Include NATURAL and HOLISTIC interventions where research supports them. This means:
+    - Adaptogens and herbs: ashwagandha for cortisol, berberine for glucose/lipids, curcumin for inflammation, milk thistle for liver support — but only cite research-backed options
+    - Mind-body: meditation/breathwork for cortisol and HRV, cold exposure for inflammation, sauna for cardiovascular markers
+    - Specific functional foods: bone broth for gut, fermented foods for inflammation, cruciferous vegetables for liver detox pathways, Brazil nuts for selenium
+    - Environmental: reducing plastics/BPA exposure for hormones, water filtration, air quality for inflammatory markers
+    - Don't be generic — be as specific as "10 minutes of box breathing before bed lowers morning cortisol by 15% in published studies"
+    - Always ground in research. The holistic recommendations should be just as cited as the conventional ones.
 
 FOR EACH RECOMMENDATION, provide a "details" object with:
 - "dosage_range": What dose ranges have clinical trials explored? Be specific with numbers from the research. Say "null" if not applicable (e.g., for lifestyle changes).
