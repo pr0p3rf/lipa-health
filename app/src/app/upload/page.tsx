@@ -71,9 +71,22 @@ export default function UploadPage() {
       const data = await res.json();
       if (data.success) {
         setAnalysisCount(data.count);
-        setRiskCalcCount(data.risk_calculations_count || 0);
-        setHasActionPlan(data.has_action_plan || false);
-        setState("done");
+        // Don't go to "done" — start polling for background analysis completion
+        setState("analyzing");
+        const pollUserId = user.id;
+        const pollInterval = setInterval(async () => {
+          try {
+            const statusRes = await fetch(`/api/analyze-status?userId=${pollUserId}&testDate=${new Date().toISOString().split("T")[0]}`);
+            const status = await statusRes.json();
+            setAnalysisCount(status.biomarkers || data.count);
+            setRiskCalcCount(status.analyses || 0);
+            setHasActionPlan(status.hasActionPlan || false);
+            if (status.isComplete) {
+              clearInterval(pollInterval);
+              setState("done");
+            }
+          } catch {}
+        }, 8000); // Poll every 8 seconds
       } else {
         setErrorMsg(data.error || "Analysis failed");
         setState("error");
@@ -129,7 +142,7 @@ export default function UploadPage() {
                 className="text-[22px] tracking-tight mb-1"
                 style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}
               >
-                Biomarkers extracted
+                Analysis complete
               </h2>
               <p className="text-[14px] text-[#6B6B6B]">
                 {fileNames.length > 1 ? `${fileNames.length} files processed` : fileNames[0]}
@@ -165,11 +178,6 @@ export default function UploadPage() {
                 </div>
                 <div className="text-[11px] text-[#6B6B6B] font-medium">Action plan</div>
               </div>
-            </div>
-
-            <div className="bg-[#E8F5EE] rounded-xl p-4 mb-4 text-center">
-              <p className="text-[13px] text-[#1B6B4A] font-medium mb-1">Your full analysis is running now</p>
-              <p className="text-[12px] text-[#5A635D]">Risk calculations, action plan, and per-marker research are being generated. Refresh your dashboard in 2-3 minutes to see everything.</p>
             </div>
 
             <div className="flex flex-col items-center gap-3">
