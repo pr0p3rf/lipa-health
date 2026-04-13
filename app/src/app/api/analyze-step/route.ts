@@ -17,7 +17,7 @@ import {
   type UserProfile,
 } from "@/lib/risk-calculations";
 
-export const maxDuration = 120;
+export const maxDuration = 300;
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });
 const supabase = createClient(
@@ -527,7 +527,7 @@ Return ONLY valid JSON with a "markers" array containing exactly ${batchBiomarke
       try {
         const message = await anthropic.messages.create({
           model,
-          max_tokens: 8192,
+          max_tokens: 16384,
           system: BATCH_SYSTEM_PROMPT,
           messages: [{ role: "user", content: batchPrompt }],
         });
@@ -541,7 +541,7 @@ Return ONLY valid JSON with a "markers" array containing exactly ${batchBiomarke
         model = "claude-sonnet-4-20250514";
         const message = await anthropic.messages.create({
           model,
-          max_tokens: 8192,
+          max_tokens: 16384,
           system: BATCH_SYSTEM_PROMPT,
           messages: [{ role: "user", content: batchPrompt }],
         });
@@ -696,7 +696,7 @@ Return ONLY valid JSON.`;
       try {
         const message = await anthropic.messages.create({
           model,
-          max_tokens: 8192,
+          max_tokens: 16384,
           system: SUMMARY_SYSTEM_PROMPT,
           messages: [{ role: "user", content: summaryPrompt }],
         });
@@ -710,7 +710,7 @@ Return ONLY valid JSON.`;
         model = "claude-sonnet-4-20250514";
         const message = await anthropic.messages.create({
           model,
-          max_tokens: 8192,
+          max_tokens: 16384,
           system: SUMMARY_SYSTEM_PROMPT,
           messages: [{ role: "user", content: summaryPrompt }],
         });
