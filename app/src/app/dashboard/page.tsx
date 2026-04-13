@@ -644,7 +644,7 @@ export default function DashboardPage() {
                 Welcome to Lipa
               </h1>
               <p className="text-[#5A635D] text-[16px] max-w-md mx-auto mb-8 leading-relaxed">
-                Upload your blood test to get your first Living Research&trade; analysis. Every insight grounded in peer-reviewed research, cited and traceable.
+                Upload your blood test to get the most comprehensive research-backed analysis available. Every marker analyzed, cross-referenced, and explained in plain English.
               </p>
               <a
                 href="/upload"
