@@ -221,13 +221,6 @@ export async function POST(request: NextRequest) {
 
     let insertedResults: any[] = [];
     if (records.length > 0) {
-      // Delete any existing results for this user + date (re-upload scenario)
-      await supabase
-        .from("biomarker_results")
-        .delete()
-        .eq("user_id", userId)
-        .eq("test_date", date);
-
       const { data: inserted, error: insertError } = await supabase
         .from("biomarker_results")
         .insert(records)
