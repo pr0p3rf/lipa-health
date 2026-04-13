@@ -252,6 +252,9 @@ export default function DashboardPage() {
   const [expandedInsight, setExpandedInsight] = useState<string | null>(null);
   const [expandedDomain, setExpandedDomain] = useState<string | null>(null);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
 
   // Auth check + tier check
   useEffect(() => {
@@ -260,6 +263,7 @@ export default function DashboardPage() {
         router.push("/login");
       } else {
         setUserId(data.user.id);
+        setUserEmail(data.user.email || null);
         const { data: sub } = await supabase
           .from("user_subscriptions")
           .select("tier")
@@ -389,6 +393,29 @@ export default function DashboardPage() {
   useEffect(() => {
     if (userId) fetchData();
   }, [userId, fetchData]);
+
+  // Direct checkout from dashboard — skips pricing page
+  async function handleCheckout(tier: "one" | "insight") {
+    if (!userId || !userEmail || checkoutLoading) return;
+    setCheckoutLoading(tier);
+    setCheckoutError(null);
+    try {
+      const res = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tier, userId, email: userEmail }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        setCheckoutError(data.details || data.error || "Checkout failed");
+      }
+    } catch {
+      setCheckoutError("Something went wrong. Please try again.");
+    }
+    setCheckoutLoading(null);
+  }
 
   // ---------------------------------------------------------------------------
   // Derived data
@@ -921,9 +948,14 @@ export default function DashboardPage() {
                                   <p className="text-[13px] text-[#5A635D] mb-4 max-w-md mx-auto">
                                     What it means, what to do, {analysis.citation_count > 0 ? `${analysis.citation_count} cited studies` : "research insights"}, and how it connects to your other markers.
                                   </p>
-                                  <a href="/pricing" className="inline-flex text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-6 py-2.5 rounded-full transition-all duration-300" style={{ boxShadow: "0 4px 16px rgba(27,107,74,0.2)" }}>
-                                    See full analysis
-                                  </a>
+                                  <button
+                                    onClick={() => handleCheckout("one")}
+                                    disabled={!!checkoutLoading}
+                                    className="inline-flex text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-6 py-2.5 rounded-full transition-all duration-300 disabled:opacity-50"
+                                    style={{ boxShadow: "0 4px 16px rgba(27,107,74,0.2)" }}
+                                  >
+                                    {checkoutLoading ? "Loading..." : "See full analysis — €29"}
+                                  </button>
                                 </div>
                               ) : (
                               <MarkerDetail
@@ -1231,13 +1263,14 @@ export default function DashboardPage() {
                       </li>
                     ))}
                   </ul>
-                  <a
-                    href="/pricing?tier=insight"
-                    className="block w-full text-center text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] py-3 rounded-full transition-all duration-300"
+                  <button
+                    onClick={() => handleCheckout("insight")}
+                    disabled={!!checkoutLoading}
+                    className="block w-full text-center text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] py-3 rounded-full transition-all duration-300 disabled:opacity-50"
                     style={{ boxShadow: "0 4px 16px rgba(27,107,74,0.2)" }}
                   >
-                    Get Lipa Life &mdash; &euro;89/year
-                  </a>
+                    {checkoutLoading === "insight" ? "Loading..." : "Get Lipa Life — €89/year"}
+                  </button>
                 </div>
                 {/* Lipa One */}
                 <div className="p-6" style={CARD}>
@@ -1251,12 +1284,19 @@ export default function DashboardPage() {
                       </li>
                     ))}
                   </ul>
-                  <a href="/pricing?tier=one" className="block w-full text-center text-[13px] font-semibold text-[#0F1A15] bg-[#F4F4F5] hover:bg-[#E5E5E5] py-3 rounded-full transition-all duration-300">
-                    Get Single Analysis &mdash; &euro;29
-                  </a>
+                  <button
+                    onClick={() => handleCheckout("one")}
+                    disabled={!!checkoutLoading}
+                    className="block w-full text-center text-[13px] font-semibold text-[#0F1A15] bg-[#F4F4F5] hover:bg-[#E5E5E5] py-3 rounded-full transition-all duration-300 disabled:opacity-50"
+                  >
+                    {checkoutLoading === "one" ? "Loading..." : "Get Single Analysis — €29"}
+                  </button>
                   <p className="text-[10px] text-[#8A928C] text-center mt-2">&euro;29 credited if you upgrade to Life within 30 days</p>
                 </div>
               </div>
+              {checkoutError && (
+                <p className="text-[12px] text-[#B91C1C] text-center mt-4">{checkoutError}</p>
+              )}
             </div>
           )}
 
