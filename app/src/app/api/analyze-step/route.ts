@@ -504,7 +504,7 @@ Return ONLY valid JSON with a "markers" array containing exactly ${batchBiomarke
 
       // Call Opus (with Sonnet fallback)
       let responseText = "";
-      let model = "claude-opus-4-20250514";
+      let model = "claude-sonnet-4-20250514";
       const opusStart = Date.now();
 
       try {
@@ -670,7 +670,7 @@ Return ONLY valid JSON.`;
 
       // Call Opus for summary (with Sonnet fallback)
       let responseText = "";
-      let model = "claude-opus-4-20250514";
+      let model = "claude-sonnet-4-20250514";
 
       try {
         const message = await anthropic.messages.create({
