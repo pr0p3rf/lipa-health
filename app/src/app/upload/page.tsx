@@ -57,13 +57,14 @@ export default function UploadPage() {
     // Upload all files to Supabase Storage
     for (const file of files) {
       const filePath = `${user.id}/${Date.now()}-${file.name}`;
-      await supabase.storage.from("lab-results").upload(filePath, file);
+      await supabase.storage.from("lab-results").upload(filePath, file).catch(() => {});
+      // Track upload (table may not exist yet — non-fatal)
       await supabase.from("uploads").insert({
         user_id: user.id,
         file_path: filePath,
         file_name: file.name,
         status: "analyzing",
-      });
+      }).then(() => {}).catch(() => {});
     }
 
     setState("extracting");
