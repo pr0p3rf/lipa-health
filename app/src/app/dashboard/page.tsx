@@ -210,13 +210,13 @@ function getBodySystemForCategory(category: string): BodySystemKey {
 // Domain labels
 // ---------------------------------------------------------------------
 
-const DOMAIN_LABELS: Record<string, { label: string; emoji: string }> = {
-  nutrition: { label: "Nutrition", emoji: "N" },
-  supplementation: { label: "Supplementation", emoji: "S" },
-  sleep: { label: "Sleep", emoji: "Z" },
-  movement: { label: "Movement", emoji: "M" },
-  environment: { label: "Environment", emoji: "E" },
-  lifestyle: { label: "Lifestyle", emoji: "L" },
+const DOMAIN_LABELS: Record<string, { label: string; icon: string }> = {
+  nutrition: { label: "Nutrition", icon: "🥗" },
+  supplementation: { label: "Supplementation", icon: "💊" },
+  sleep: { label: "Sleep", icon: "😴" },
+  movement: { label: "Movement", icon: "🏃" },
+  environment: { label: "Environment", icon: "🌿" },
+  lifestyle: { label: "Lifestyle", icon: "🧘" },
 };
 
 const INSIGHT_COLORS: Record<RiskCalculation["interpretation"], { bg: string; text: string; dot: string }> = {
@@ -673,10 +673,13 @@ export default function DashboardPage() {
 
             {/* Summary */}
             <div className="p-5 flex flex-col" style={CARD}>
-              <div className="text-[10px] uppercase tracking-[0.1em] text-[#1B6B4A] font-semibold mb-2">Summary</div>
+              <div className="text-[10px] uppercase tracking-[0.1em] text-[#1B6B4A] font-semibold mb-2">Your Summary</div>
               {actionPlan?.overall_summary ? (
                 isFree ? (
-                  <p className="text-[14px] text-[#0F1A15] leading-relaxed line-clamp-3 flex-1">{actionPlan.overall_summary}</p>
+                  <>
+                    <p className="text-[14px] text-[#0F1A15] leading-relaxed line-clamp-3 flex-1">{actionPlan.overall_summary}</p>
+                    <p className="text-[12px] text-[#8A928C] mt-2">Full summary with detailed recommendations available with your analysis.</p>
+                  </>
                 ) : (
                   <p className="text-[14px] text-[#0F1A15] leading-relaxed flex-1">{actionPlan.overall_summary}</p>
                 )
@@ -962,14 +965,17 @@ export default function DashboardPage() {
                 {detectedPatterns.map((pattern) =>
                   isFree ? (
                     <div key={pattern.id} className="p-4" style={{ ...CARD, borderLeft: `3px solid ${(SEVERITY_STYLES[pattern.severity] || SEVERITY_STYLES.watch).border}` }}>
-                      <div className="flex items-center gap-3">
-                        <span className="text-[14px] font-semibold text-[#0F1A15]">{pattern.name}</span>
-                        <span
-                          className="text-[9px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full"
-                          style={{ backgroundColor: (SEVERITY_STYLES[pattern.severity] || SEVERITY_STYLES.watch).bg, color: (SEVERITY_STYLES[pattern.severity] || SEVERITY_STYLES.watch).text }}
-                        >
-                          {(SEVERITY_STYLES[pattern.severity] || SEVERITY_STYLES.watch).label}
-                        </span>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <span className="text-[14px] font-semibold text-[#0F1A15]">{pattern.name}</span>
+                          <span
+                            className="text-[9px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full"
+                            style={{ backgroundColor: (SEVERITY_STYLES[pattern.severity] || SEVERITY_STYLES.watch).bg, color: (SEVERITY_STYLES[pattern.severity] || SEVERITY_STYLES.watch).text }}
+                          >
+                            {(SEVERITY_STYLES[pattern.severity] || SEVERITY_STYLES.watch).label}
+                          </span>
+                        </div>
+                        <span className="text-[11px] text-[#8A928C]">Full analysis available</span>
                       </div>
                       <div className="flex gap-1.5 mt-2 flex-wrap">
                         {pattern.markers_matched.map((m) => (
@@ -998,27 +1004,32 @@ export default function DashboardPage() {
               </div>
 
               {isFree ? (
-                /* Free: show domain names + counts, no blur, no "unlock" */
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  {(actionPlan.domains as any[]).map((d: any) => {
-                    const info = DOMAIN_LABELS[d.domain] || { label: d.domain, emoji: "?" };
-                    const recs = d.recommendations || [];
-                    if (recs.length === 0) return null;
-                    return (
-                      <div key={d.domain} className="p-4" style={CARD}>
-                        <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-xl flex items-center justify-center text-[13px] font-semibold text-[#1B6B4A]" style={{ background: "rgba(232,245,238,0.7)" }}>
-                            {info.emoji}
-                          </div>
-                          <div>
-                            <div className="text-[13px] font-semibold text-[#0F1A15]">{info.label}</div>
-                            <div className="text-[12px] text-[#8A928C]">{recs.length} recommendation{recs.length !== 1 ? "s" : ""}</div>
+                /* Free: show domain names + counts with hint */
+                <>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {(actionPlan.domains as any[]).map((d: any) => {
+                      const info = DOMAIN_LABELS[d.domain] || { label: d.domain, icon: "?" };
+                      const recs = d.recommendations || [];
+                      if (recs.length === 0) return null;
+                      return (
+                        <div key={d.domain} className="p-4" style={CARD}>
+                          <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-xl flex items-center justify-center text-[18px]" style={{ background: "rgba(232,245,238,0.7)" }}>
+                              {info.icon}
+                            </div>
+                            <div>
+                              <div className="text-[13px] font-semibold text-[#0F1A15]">{info.label}</div>
+                              <div className="text-[12px] text-[#8A928C]">{recs.length} recommendation{recs.length !== 1 ? "s" : ""} ready</div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    );
-                  })}
-                </div>
+                      );
+                    })}
+                  </div>
+                  <p className="text-[12px] text-[#8A928C] text-center mt-4">
+                    Your personalized action plan covers nutrition, supplements, sleep, movement, and more — with specific dosages and cited research.
+                  </p>
+                </>
               ) : (
                 /* Paid: domain cards grid → expandable */
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -1039,8 +1050,8 @@ export default function DashboardPage() {
                         >
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                              <div className="w-9 h-9 rounded-xl flex items-center justify-center text-[13px] font-semibold text-[#1B6B4A]" style={{ background: "rgba(232,245,238,0.7)" }}>
-                                {info.emoji}
+                              <div className="w-9 h-9 rounded-xl flex items-center justify-center text-[18px]" style={{ background: "rgba(232,245,238,0.7)" }}>
+                                {info.icon}
                               </div>
                               <div>
                                 <div className="text-[13px] font-semibold text-[#0F1A15]">{info.label}</div>
