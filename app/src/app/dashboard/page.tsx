@@ -687,15 +687,27 @@ export default function DashboardPage() {
             ) : (
               <div className="p-5 text-center flex flex-col justify-center" style={CARD}>
                 <div className="text-[10px] uppercase tracking-[0.1em] text-[#8A928C] font-medium mb-2">Biological Age</div>
-                <div className="text-[14px] text-[#8A928C] leading-relaxed">
-                  Add your age in profile to calculate bio-age
-                </div>
-                <button
-                  onClick={() => setProfileOpen(true)}
-                  className="text-[12px] font-medium text-[#1B6B4A] mt-2 hover:underline"
-                >
-                  Set up profile
-                </button>
+                {profileOpen ? (
+                  <div className="text-left">
+                    <ProfileEditor
+                      profile={profile}
+                      onSave={async (next) => { await saveProfile(next); setProfileOpen(false); }}
+                      onCancel={() => setProfileOpen(false)}
+                    />
+                  </div>
+                ) : (
+                  <>
+                    <div className="text-[14px] text-[#8A928C] leading-relaxed">
+                      Add your age to calculate bio-age
+                    </div>
+                    <button
+                      onClick={() => setProfileOpen(true)}
+                      className="text-[12px] font-medium text-[#1B6B4A] mt-2 hover:underline"
+                    >
+                      Set up profile
+                    </button>
+                  </>
+                )}
               </div>
             )}
 
