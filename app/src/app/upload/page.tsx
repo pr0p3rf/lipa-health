@@ -85,9 +85,18 @@ export default function UploadPage() {
         method: "POST",
         body: formData,
       });
-      const data = await res.json();
+      const text = await res.text();
+      let data: any;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        console.error("[upload] Non-JSON response from /api/analyze:", text.slice(0, 200));
+        setErrorMsg("Analysis service error. Please try again.");
+        setState("error");
+        return;
+      }
       if (!data.success) {
-        setErrorMsg(data.error || "Extraction failed");
+        setErrorMsg(data.error || data.details || "Extraction failed");
         setState("error");
         return;
       }
