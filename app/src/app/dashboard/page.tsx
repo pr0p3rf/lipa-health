@@ -676,12 +676,7 @@ export default function DashboardPage() {
               <div className="text-[10px] uppercase tracking-[0.1em] text-[#1B6B4A] font-semibold mb-2">Summary</div>
               {actionPlan?.overall_summary ? (
                 isFree ? (
-                  <>
-                    <p className="text-[14px] text-[#0F1A15] leading-relaxed line-clamp-2 flex-1">{actionPlan.overall_summary}</p>
-                    <a href="/pricing" className="text-[12px] text-[#1B6B4A] font-medium mt-2 hover:underline">
-                      Unlock full summary
-                    </a>
-                  </>
+                  <p className="text-[14px] text-[#0F1A15] leading-relaxed line-clamp-3 flex-1">{actionPlan.overall_summary}</p>
                 ) : (
                   <p className="text-[14px] text-[#0F1A15] leading-relaxed flex-1">{actionPlan.overall_summary}</p>
                 )
@@ -722,11 +717,6 @@ export default function DashboardPage() {
               </span>
             )}
           </div>
-
-          {/* ============================================================ */}
-          {/* ASK LIPA — Inline section (prominent, per wireframe)          */}
-          {/* ============================================================ */}
-          <InlineAskLipa userId={userId} isFree={isFree} />
 
           {/* ============================================================ */}
           {/* KEY FINDINGS                                                  */}
@@ -793,7 +783,7 @@ export default function DashboardPage() {
                             {f.value} <span className="text-[11px] text-[#8A928C]" style={{ fontFamily: MONO }}>{f.unit}</span>
                           </div>
                           <p className="text-[13px] text-[#5A635D] leading-relaxed line-clamp-2">
-                            {f.what_to_do || f.detail}
+                            {f.detail}
                           </p>
                         </div>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8A928C" strokeWidth="2" className="flex-shrink-0 mt-2 group-hover:stroke-[#0F1A15] transition-colors">
@@ -840,7 +830,6 @@ export default function DashboardPage() {
                         transition: TRANSITION,
                       }}
                       onClick={() => {
-                        if (isFree) return; // free users can't drill into systems
                         setExpandedSystem(isExpanded ? null : sys.key);
                         setExpandedMarker(null);
                       }}
@@ -857,18 +846,8 @@ export default function DashboardPage() {
                 })}
               </div>
 
-              {/* Free tier gate for systems */}
-              {isFree && (
-                <div className="text-center py-4">
-                  <p className="text-[13px] text-[#5A635D] mb-3">Upgrade to explore all body systems and markers in detail.</p>
-                  <a href="/pricing" className="inline-flex text-[12px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-5 py-2.5 rounded-full transition-all duration-300">
-                    Unlock full analysis
-                  </a>
-                </div>
-              )}
-
               {/* Expanded system — marker list */}
-              {!isFree && expandedSystem && (() => {
+              {expandedSystem && (() => {
                 const sys = systemData.find((s) => s.key === expandedSystem);
                 if (!sys) return null;
                 const statusColor =
@@ -929,8 +908,21 @@ export default function DashboardPage() {
                               </div>
                             </button>
 
-                            {/* Expanded marker detail */}
+                            {/* Expanded marker detail — free users see upgrade prompt */}
                             {isMarkerExpanded && analysis && (
+                              isFree ? (
+                                <div className="px-5 py-6 text-center" style={{ borderTop: "1px solid rgba(15,26,21,0.06)", background: "#FAFAF8" }}>
+                                  <p className="text-[14px] text-[#0F1A15] mb-1" style={{ fontFamily: FRAUNCES, fontWeight: 500 }}>
+                                    Your full {result.biomarker} analysis is ready
+                                  </p>
+                                  <p className="text-[13px] text-[#5A635D] mb-4 max-w-md mx-auto">
+                                    What it means, what to do, {analysis.citation_count > 0 ? `${analysis.citation_count} cited studies` : "research insights"}, and how it connects to your other markers.
+                                  </p>
+                                  <a href="/pricing" className="inline-flex text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-6 py-2.5 rounded-full transition-all duration-300" style={{ boxShadow: "0 4px 16px rgba(27,107,74,0.2)" }}>
+                                    See full analysis
+                                  </a>
+                                </div>
+                              ) : (
                               <MarkerDetail
                                 result={result}
                                 analysis={analysis}
@@ -943,6 +935,7 @@ export default function DashboardPage() {
                                 detectedPatterns={detectedPatterns}
                                 profile={profile}
                               />
+                              )
                             )}
                           </div>
                         );
@@ -969,19 +962,20 @@ export default function DashboardPage() {
                 {detectedPatterns.map((pattern) =>
                   isFree ? (
                     <div key={pattern.id} className="p-4" style={{ ...CARD, borderLeft: `3px solid ${(SEVERITY_STYLES[pattern.severity] || SEVERITY_STYLES.watch).border}` }}>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <span className="text-[14px] font-semibold text-[#0F1A15]">{pattern.name}</span>
-                          <span
-                            className="text-[9px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full"
-                            style={{ backgroundColor: (SEVERITY_STYLES[pattern.severity] || SEVERITY_STYLES.watch).bg, color: (SEVERITY_STYLES[pattern.severity] || SEVERITY_STYLES.watch).text }}
-                          >
-                            {(SEVERITY_STYLES[pattern.severity] || SEVERITY_STYLES.watch).label}
-                          </span>
-                        </div>
-                        <a href="/pricing" className="text-[11px] font-medium text-[#1B6B4A] hover:underline">Unlock details</a>
+                      <div className="flex items-center gap-3">
+                        <span className="text-[14px] font-semibold text-[#0F1A15]">{pattern.name}</span>
+                        <span
+                          className="text-[9px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full"
+                          style={{ backgroundColor: (SEVERITY_STYLES[pattern.severity] || SEVERITY_STYLES.watch).bg, color: (SEVERITY_STYLES[pattern.severity] || SEVERITY_STYLES.watch).text }}
+                        >
+                          {(SEVERITY_STYLES[pattern.severity] || SEVERITY_STYLES.watch).label}
+                        </span>
                       </div>
-                      <p className="text-[12px] text-[#8A928C] mt-1">{pattern.markers_matched.length} markers involved</p>
+                      <div className="flex gap-1.5 mt-2 flex-wrap">
+                        {pattern.markers_matched.map((m) => (
+                          <span key={m} className="text-[10px] text-[#8A928C] px-2 py-0.5 rounded-full bg-[#F4F4F5]">{m}</span>
+                        ))}
+                      </div>
                     </div>
                   ) : (
                     <PatternCard key={pattern.id} pattern={pattern} />
@@ -1004,28 +998,26 @@ export default function DashboardPage() {
               </div>
 
               {isFree ? (
-                /* Free: blurred preview */
-                <div className="relative overflow-hidden" style={{ ...CARD, padding: 0 }}>
-                  <div className="p-6 select-none" style={{ filter: "blur(5px)", opacity: 0.6, pointerEvents: "none" }}>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                      {(actionPlan.domains as any[]).slice(0, 6).map((d: any) => (
-                        <div key={d.domain} className="bg-[#F8F5EF] rounded-xl p-4 flex items-center justify-between">
-                          <span className="text-[13px] font-medium text-[#0F1A15]">{(DOMAIN_LABELS[d.domain] || { label: d.domain }).label}</span>
-                          <span className="text-[12px] text-[#8A928C]">{d.recommendations?.length || 0}</span>
+                /* Free: show domain names + counts, no blur, no "unlock" */
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {(actionPlan.domains as any[]).map((d: any) => {
+                    const info = DOMAIN_LABELS[d.domain] || { label: d.domain, emoji: "?" };
+                    const recs = d.recommendations || [];
+                    if (recs.length === 0) return null;
+                    return (
+                      <div key={d.domain} className="p-4" style={CARD}>
+                        <div className="flex items-center gap-3">
+                          <div className="w-9 h-9 rounded-xl flex items-center justify-center text-[13px] font-semibold text-[#1B6B4A]" style={{ background: "rgba(232,245,238,0.7)" }}>
+                            {info.emoji}
+                          </div>
+                          <div>
+                            <div className="text-[13px] font-semibold text-[#0F1A15]">{info.label}</div>
+                            <div className="text-[12px] text-[#8A928C]">{recs.length} recommendation{recs.length !== 1 ? "s" : ""}</div>
+                          </div>
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-transparent via-white/40 to-white/70">
-                    <div className="text-center px-6">
-                      <p className="text-[13px] text-[#5A635D] mb-3">
-                        Your personalized action plan is ready — nutrition, supplements, sleep, movement, and more.
-                      </p>
-                      <a href="/pricing" className="inline-flex text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-6 py-3 rounded-full transition-all duration-300 hover:-translate-y-0.5" style={{ boxShadow: "0 4px 16px rgba(27,107,74,0.2)" }}>
-                        See your action plan
-                      </a>
-                    </div>
-                  </div>
+                      </div>
+                    );
+                  })}
                 </div>
               ) : (
                 /* Paid: domain cards grid → expandable */
@@ -1208,10 +1200,10 @@ export default function DashboardPage() {
             <div className="mb-10">
               <div className="text-center mb-8">
                 <h3 className="text-[24px] mb-2 text-[#0F1A15]" style={{ fontFamily: FRAUNCES, fontWeight: 500 }}>
-                  You&apos;re seeing {FREE_TIER_MARKER_LIMIT} of {latestResults.length} markers.
+                  Your full analysis is ready
                 </h3>
                 <p className="text-[14px] text-[#5A635D] max-w-lg mx-auto">
-                  Your full analysis is ready. Choose how you want to unlock it.
+                  {latestResults.length} markers analyzed. Detailed insights, personalized action plan, and {analyses.reduce((sum, a) => sum + (a.citation_count || 0), 0)}+ cited studies — all waiting for you.
                 </p>
               </div>
               <div className="grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
