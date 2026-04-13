@@ -699,27 +699,15 @@ export default function DashboardPage() {
             ) : (
               <div className="p-5 text-center flex flex-col justify-center" style={CARD}>
                 <div className="text-[10px] uppercase tracking-[0.1em] text-[#8A928C] font-medium mb-2">Biological Age</div>
-                {profileOpen ? (
-                  <div className="text-left">
-                    <ProfileEditor
-                      profile={profile}
-                      onSave={async (next) => { await saveProfile(next); setProfileOpen(false); }}
-                      onCancel={() => setProfileOpen(false)}
-                    />
-                  </div>
-                ) : (
-                  <>
-                    <div className="text-[14px] text-[#8A928C] leading-relaxed">
-                      Add your age to calculate bio-age
-                    </div>
-                    <button
-                      onClick={() => setProfileOpen(true)}
-                      className="text-[12px] font-medium text-[#1B6B4A] mt-2 hover:underline"
-                    >
-                      Set up profile
-                    </button>
-                  </>
-                )}
+                <div className="text-[14px] text-[#8A928C] leading-relaxed">
+                  Add your age to calculate bio-age
+                </div>
+                <button
+                  onClick={() => setProfileOpen(true)}
+                  className="text-[12px] font-medium text-[#1B6B4A] mt-2 hover:underline"
+                >
+                  Set up profile
+                </button>
               </div>
             )}
 
@@ -1214,14 +1202,6 @@ export default function DashboardPage() {
                 </button>
               </div>
 
-              {profileOpen && (
-                <ProfileEditor
-                  profile={profile}
-                  onSave={async (next) => { await saveProfile(next); setProfileOpen(false); }}
-                  onCancel={() => setProfileOpen(false)}
-                />
-              )}
-
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {computedCalculations.map((calc) => (
                   <InsightCard
@@ -1336,6 +1316,20 @@ export default function DashboardPage() {
           </div>
         </div>
       </main>
+
+      {/* Profile modal overlay */}
+      {profileOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center" onClick={() => setProfileOpen(false)}>
+          <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
+          <div className="relative w-full max-w-md mx-4" onClick={(e) => e.stopPropagation()}>
+            <ProfileEditor
+              profile={profile}
+              onSave={async (next) => { await saveProfile(next); setProfileOpen(false); }}
+              onCancel={() => setProfileOpen(false)}
+            />
+          </div>
+        </div>
+      )}
 
       {/* Floating Ask Lipa for when scrolled past inline section */}
       {userId && <AskLipa userId={userId} />}
