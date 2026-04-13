@@ -33,7 +33,6 @@ const TIERS: Tier[] = [
       "Vault — your complete biological history",
       "Trend tracking with bio-age trajectory",
       "Ask Lipa — your personal health assistant, unlimited",
-      "Wearable integration (Apple Health, Oura, Whoop)",
       "Personalized research alerts for your markers",
       "PDF export + doctor sharing",
     ],
@@ -94,7 +93,13 @@ function PricingContent() {
     if (searchParams.get("subscription") === "cancel") {
       setMessage("Subscription canceled. No charges were made.");
     }
-  }, [searchParams]);
+
+    // Auto-trigger checkout if redirected from login with tier param
+    const tierParam = searchParams.get("tier");
+    if (tierParam && user && (tierParam === "one" || tierParam === "insight")) {
+      handleSubscribe(tierParam as Tier["id"]);
+    }
+  }, [searchParams, user]);
 
   async function handleSubscribe(tierId: Tier["id"]) {
     if (tierId === "free") {
