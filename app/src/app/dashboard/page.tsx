@@ -1323,7 +1323,7 @@ export default function DashboardPage() {
               <div className="grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
                 {/* Lipa Life — featured */}
                 <div className="p-6 relative" style={{ ...GLASS_CARD, border: "2px solid #1B6B4A" }}>
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#1B6B4A] text-white text-[9px] uppercase tracking-wider font-semibold px-3 py-1 rounded-full">Best value</div>
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#1B6B4A] text-white text-[9px] uppercase tracking-wider font-semibold px-3 py-1 rounded-full">Recommended</div>
                   <div className="text-[22px] font-semibold text-[#0F1A15] mb-1" style={{ fontFamily: FRAUNCES }}>Lipa Life</div>
                   <div className="text-[28px] text-[#1B6B4A] mb-1" style={{ fontFamily: FRAUNCES, fontWeight: 600 }}>€89<span className="text-[14px] text-[#8A928C] font-normal">/year</span></div>
                   <ul className="text-[12px] text-[#5A635D] space-y-1.5 mb-5 mt-4">
