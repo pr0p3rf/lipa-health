@@ -590,6 +590,18 @@ export default function DashboardPage() {
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 py-6 sm:py-10" suppressHydrationWarning>
 
           {/* ============================================================ */}
+          {/* HEADING + METHODOLOGY                                        */}
+          {/* ============================================================ */}
+          <div className="mb-6">
+            <h1 className="text-[28px] sm:text-[32px] tracking-tight text-[#0F1A15] mb-2" style={{ fontFamily: FRAUNCES, fontWeight: 500 }}>
+              Your Lipa Analysis
+            </h1>
+            <p className="text-[13px] text-[#5A635D] leading-relaxed max-w-2xl">
+              Every marker cross-referenced against {analyses.reduce((sum, a) => sum + (a.citation_count || 0), 0).toLocaleString()}+ peer-reviewed studies. Personalized to your biology, not generic ranges. Cited, transparent, and updated as new research is published.
+            </p>
+          </div>
+
+          {/* ============================================================ */}
           {/* HEADER: date + marker count + actions                        */}
           {/* ============================================================ */}
           <div className="flex items-center justify-between mb-8 flex-wrap gap-3">
