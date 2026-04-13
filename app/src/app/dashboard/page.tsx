@@ -1256,7 +1256,14 @@ export default function DashboardPage() {
                   <div className="text-[20px] font-semibold text-[#0F1A15] mb-1" style={{ fontFamily: FRAUNCES }}>Lipa Life</div>
                   <div className="text-[28px] text-[#1B6B4A] mb-1" style={{ fontFamily: FRAUNCES, fontWeight: 600 }}>&euro;89<span className="text-[14px] text-[#8A928C] font-normal">/year</span></div>
                   <ul className="text-[12px] text-[#5A635D] space-y-1.5 mb-5 mt-4">
-                    {["All markers analyzed", "Personalized action plan", "Ask Lipa — unlimited", "Vault + trends + bio-age trajectory", "Up to 12 uploads/year", "Research alerts"].map((item) => (
+                    {[
+                      `Full analysis of all ${latestResults.length} markers — what each means, what to do, cited research`,
+                      "Personalized action plan — nutrition, supplements, sleep, movement with dosages",
+                      "Ask Lipa — unlimited questions about your results, grounded in your data",
+                      "Vault — store every test, track trends, see your bio-age trajectory over time",
+                      "Up to 12 blood test analyses per year",
+                      "Research alerts — get notified when new studies are published on your markers",
+                    ].map((item) => (
                       <li key={item} className="flex items-start gap-2">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" className="flex-shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>
                         {item}
@@ -1277,7 +1284,13 @@ export default function DashboardPage() {
                   <div className="text-[20px] font-semibold text-[#0F1A15] mb-1" style={{ fontFamily: FRAUNCES }}>Lipa One</div>
                   <div className="text-[28px] text-[#0F1A15] mb-1" style={{ fontFamily: FRAUNCES, fontWeight: 600 }}>&euro;29<span className="text-[14px] text-[#8A928C] font-normal"> one-time</span></div>
                   <ul className="text-[12px] text-[#5A635D] space-y-1.5 mb-5 mt-4">
-                    {["All markers analyzed", "Personalized action plan", "Ask Lipa for 7 days", "Risk calculations + bio-age", "PDF report for your doctor"].map((item) => (
+                    {[
+                      `Full analysis of all ${latestResults.length} markers — what each means, what to do, cited research`,
+                      "Personalized action plan — nutrition, supplements, sleep, movement with dosages",
+                      "Ask Lipa for 7 days — ask anything about your results",
+                      "16+ risk calculations + biological age estimate",
+                      "PDF report you can share with your doctor",
+                    ].map((item) => (
                       <li key={item} className="flex items-start gap-2">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" className="flex-shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>
                         {item}
