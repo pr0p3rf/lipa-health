@@ -5,7 +5,7 @@ import { AppNav } from "@/components/app-nav";
 import { AskLipa } from "@/components/ask-lipa";
 import { SupportButton } from "@/components/support-button";
 import { ReportCardSection } from "@/components/report-card";
-import { useEffect, useState, useCallback, useMemo, type ReactNode } from "react";
+import { useEffect, useState, useCallback, useMemo, useRef, type ReactNode } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import {
@@ -67,22 +67,8 @@ interface Citation {
 }
 
 // ---------------------------------------------------------------------
-// Category colors
+// Design tokens
 // ---------------------------------------------------------------------
-
-const CATEGORY_COLORS: Record<string, string> = {
-  inflammatory: "#F97316",
-  lipid: "#F59E0B",
-  cardiovascular: "#EF4444",
-  metabolic: "#8B5CF6",
-  liver: "#A3A3A3",
-  kidney: "#0EA5E9",
-  hormonal: "#EC4899",
-  thyroid: "#14B8A6",
-  nutritional: "#1B6B4A",
-  hematology: "#DC2626",
-  other: "#6B7280",
-};
 
 const STATUS_STYLES: Record<string, { bg: string; border: string; text: string; label: string; dot: string }> = {
   optimal: { bg: "#E8F5EE", border: "#1B6B4A", text: "#1B6B4A", label: "Optimal", dot: "#1B6B4A" },
@@ -91,36 +77,11 @@ const STATUS_STYLES: Record<string, { bg: string; border: string; text: string; 
   out_of_range: { bg: "#FEE2E2", border: "#EF4444", text: "#B91C1C", label: "Out of range", dot: "#EF4444" },
 };
 
-// ---------------------------------------------------------------------
-// Confidence scoring
-// ---------------------------------------------------------------------
-
-type ConfidenceLevel = "high" | "moderate" | "low" | "emerging";
-
-function computeConfidence(analysis: Analysis | undefined): { level: ConfidenceLevel; label: string; color: string } {
-  if (!analysis) return { level: "emerging", label: "No data", color: "#A1A1AA" };
-
-  const citations = analysis.citation_count || 0;
-  const grade = analysis.highest_evidence_grade || "";
-  const isHighGrade = grade === "HIGH" || grade === "A+" || grade === "A";
-  const isModGrade = isHighGrade || grade === "MODERATE" || grade === "B";
-
-  if (citations >= 8 && isHighGrade) return { level: "high", label: "High confidence", color: "#1B6B4A" };
-  if (citations >= 4 && isModGrade) return { level: "moderate", label: "Moderate confidence", color: "#B45309" };
-  if (citations >= 1) return { level: "low", label: "Cited research", color: "#8A928C" };
-  return { level: "emerging", label: "Clinical knowledge", color: "#71717A" };
-}
-
-const CONFIDENCE_DESCRIPTIONS: Record<ConfidenceLevel, string> = {
-  high: "Supported by multiple high-grade peer-reviewed studies with strong evidence.",
-  moderate: "Supported by published research of moderate quality. More evidence may refine this.",
-  low: "Supported by peer-reviewed research from our corpus.",
-  emerging: "Based on established medical literature and clinical guidelines.",
+const SEVERITY_STYLES: Record<string, { bg: string; text: string; border: string; label: string }> = {
+  watch: { bg: "#F4F4F5", text: "#52525B", border: "#A1A1AA", label: "Watch" },
+  attention: { bg: "#FEF3C7", text: "#B45309", border: "#F59E0B", label: "Needs attention" },
+  urgent: { bg: "#FEE2E2", text: "#B91C1C", border: "#EF4444", label: "Urgent" },
 };
-
-// ---------------------------------------------------------------------
-// Optimal range types
-// ---------------------------------------------------------------------
 
 interface OptimalRange {
   optimal_low: number | null;
@@ -128,26 +89,14 @@ interface OptimalRange {
   canonical_name: string;
 }
 
-// ---------------------------------------------------------------------
-// Free tier limits
-// ---------------------------------------------------------------------
-
-const FREE_TIER_MARKER_LIMIT = 5;
-const FREE_TIER_CITATION_LIMIT = 2;
-const FREE_TIER_RISK_CALC_LIMIT = 0; // No risk calcs on free — teaser only
-
-// ---------------------------------------------------------------------
-// Shared glass card styles
-// ---------------------------------------------------------------------
-
-const GLASS_CARD = {
+const CARD = {
   background: "#FFFFFF",
   border: "1px solid rgba(15,26,21,0.06)",
   borderRadius: "20px",
   boxShadow: "0 1px 3px rgba(15,26,21,0.04), 0 4px 16px rgba(15,26,21,0.03)",
 } as const;
 
-const GLASS_CARD_INNER = {
+const CARD_INNER = {
   background: "#F8F5EF",
   border: "1px solid rgba(15,26,21,0.05)",
   borderRadius: "16px",
@@ -155,8 +104,27 @@ const GLASS_CARD_INNER = {
 
 const FRAUNCES = "'Fraunces', Georgia, serif";
 const MONO = "'JetBrains Mono', monospace";
-
 const TRANSITION = "all 0.35s cubic-bezier(0.22,1,0.36,1)";
+
+const FREE_TIER_MARKER_LIMIT = 5;
+
+// ---------------------------------------------------------------------
+// Confidence
+// ---------------------------------------------------------------------
+
+type ConfidenceLevel = "high" | "moderate" | "low" | "emerging";
+
+function computeConfidence(analysis: Analysis | undefined): { level: ConfidenceLevel; label: string; color: string } {
+  if (!analysis) return { level: "emerging", label: "No data", color: "#A1A1AA" };
+  const citations = analysis.citation_count || 0;
+  const grade = analysis.highest_evidence_grade || "";
+  const isHighGrade = grade === "HIGH" || grade === "A+" || grade === "A";
+  const isModGrade = isHighGrade || grade === "MODERATE" || grade === "B";
+  if (citations >= 8 && isHighGrade) return { level: "high", label: "High confidence", color: "#1B6B4A" };
+  if (citations >= 4 && isModGrade) return { level: "moderate", label: "Moderate confidence", color: "#B45309" };
+  if (citations >= 1) return { level: "low", label: "Cited research", color: "#8A928C" };
+  return { level: "emerging", label: "Clinical knowledge", color: "#71717A" };
+}
 
 // ---------------------------------------------------------------------
 // Body system definitions
@@ -177,7 +145,7 @@ const BODY_SYSTEMS: BodySystem[] = [
     name: "Cardiovascular",
     categories: ["lipid", "cardiac", "cardiovascular"],
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
       </svg>
     ),
@@ -187,7 +155,7 @@ const BODY_SYSTEMS: BodySystem[] = [
     name: "Metabolic",
     categories: ["metabolic"],
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
       </svg>
     ),
@@ -197,7 +165,7 @@ const BODY_SYSTEMS: BodySystem[] = [
     name: "Hormonal",
     categories: ["hormonal", "thyroid"],
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="12" r="3" />
         <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
       </svg>
@@ -208,7 +176,7 @@ const BODY_SYSTEMS: BodySystem[] = [
     name: "Inflammatory",
     categories: ["inflammatory", "hematology"],
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
       </svg>
     ),
@@ -218,7 +186,7 @@ const BODY_SYSTEMS: BodySystem[] = [
     name: "Nutritional",
     categories: ["nutrient", "nutritional", "liver", "kidney", "other"],
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5" />
         <path d="M8.5 8.5v.01" />
         <path d="M16 15.5v.01" />
@@ -235,42 +203,34 @@ function getBodySystemForCategory(category: string): BodySystemKey {
   for (const sys of BODY_SYSTEMS) {
     if (sys.categories.includes(cat)) return sys.key;
   }
-  return "nutritional"; // default fallback
+  return "nutritional";
 }
 
 // ---------------------------------------------------------------------
-// Paywall overlay component
+// Domain labels
 // ---------------------------------------------------------------------
 
-function PaywallOverlay({ featureName }: { featureName: string }) {
-  return (
-    <div className="relative">
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#F8F5EF]/80 to-[#F8F5EF] z-10 flex items-end justify-center pb-8">
-        <div style={GLASS_CARD} className="p-6 max-w-md text-center">
-          <div className="text-[11px] uppercase tracking-wider text-[#1B6B4A] font-semibold mb-3">
-            Lipa Life
-          </div>
-          <h3 className="text-[18px] font-semibold mb-2" style={{ fontFamily: FRAUNCES, fontWeight: 500 }}>
-            Unlock {featureName}
-          </h3>
-          <p className="text-[13px] text-[#5A635D] mb-4 leading-relaxed">
-            Upgrade to Lipa Life for the full analysis: all 100+ biomarkers, full citations, 16+ risk calculations, personalized action plan, vault, and research alerts. &euro;79/year. 30-day money-back guarantee.
-          </p>
-          <a
-            href="/pricing"
-            className="inline-flex items-center gap-2 text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-6 py-3 rounded-full transition-all duration-300"
-          >
-            Upgrade to Insight &mdash; &euro;79/year
-          </a>
-        </div>
-      </div>
-    </div>
-  );
-}
+const DOMAIN_LABELS: Record<string, { label: string; emoji: string }> = {
+  nutrition: { label: "Nutrition", emoji: "N" },
+  supplementation: { label: "Supplementation", emoji: "S" },
+  sleep: { label: "Sleep", emoji: "Z" },
+  movement: { label: "Movement", emoji: "M" },
+  environment: { label: "Environment", emoji: "E" },
+  lifestyle: { label: "Lifestyle", emoji: "L" },
+};
 
-// ---------------------------------------------------------------------
-// Main component
-// ---------------------------------------------------------------------
+const INSIGHT_COLORS: Record<RiskCalculation["interpretation"], { bg: string; text: string; dot: string }> = {
+  optimal: { bg: "#E8F5EE", text: "#1B6B4A", dot: "#1B6B4A" },
+  favorable: { bg: "#E8F5EE", text: "#1B6B4A", dot: "#1B6B4A" },
+  moderate: { bg: "#FEF3C7", text: "#B45309", dot: "#F59E0B" },
+  elevated: { bg: "#FEF3C7", text: "#B45309", dot: "#F59E0B" },
+  high: { bg: "#FEE2E2", text: "#B91C1C", dot: "#EF4444" },
+  unknown: { bg: "#F4F4F5", text: "#71717A", dot: "#A1A1AA" },
+};
+
+// =====================================================================
+// MAIN COMPONENT
+// =====================================================================
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -285,9 +245,12 @@ export default function DashboardPage() {
   const [actionPlan, setActionPlan] = useState<any>(null);
   const [optimalRanges, setOptimalRanges] = useState<Record<string, OptimalRange>>({});
   const [userTier, setUserTier] = useState<"free" | "one" | "insight" | "access" | "essential" | "complete">("free");
-  const [expandedBiomarker, setExpandedBiomarker] = useState<number | null>(null);
+
+  // UI state
+  const [expandedSystem, setExpandedSystem] = useState<BodySystemKey | null>(null);
+  const [expandedMarker, setExpandedMarker] = useState<number | null>(null);
   const [expandedInsight, setExpandedInsight] = useState<string | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [expandedDomain, setExpandedDomain] = useState<string | null>(null);
   const [profileOpen, setProfileOpen] = useState(false);
 
   // Auth check + tier check
@@ -297,13 +260,11 @@ export default function DashboardPage() {
         router.push("/login");
       } else {
         setUserId(data.user.id);
-
         const { data: sub } = await supabase
           .from("user_subscriptions")
           .select("tier")
           .eq("user_id", data.user.id)
           .maybeSingle();
-
         setUserTier((sub?.tier as any) || "free");
         setLoading(false);
       }
@@ -332,7 +293,6 @@ export default function DashboardPage() {
 
     setAnalyses(analysesData || []);
 
-    // Try joined query first, fall back to plain citations if FK doesn't exist
     let citationsData: any[] | null = null;
     try {
       const { data, error } = await supabase
@@ -355,7 +315,6 @@ export default function DashboardPage() {
       if (!error) {
         citationsData = data;
       } else {
-        // FK join failed — fetch citations without study details
         const { data: plainCitations } = await supabase
           .from("analysis_citations")
           .select("study_id, biomarker_result_id, relevance_rank, biomarker_name")
@@ -431,12 +390,14 @@ export default function DashboardPage() {
     if (userId) fetchData();
   }, [userId, fetchData]);
 
-  // Group results by test_date
+  // ---------------------------------------------------------------------------
+  // Derived data
+  // ---------------------------------------------------------------------------
+
   const testDates = Array.from(new Set(results.map((r) => r.test_date))).sort((a, b) => b.localeCompare(a));
   const latestTestDate = testDates[0];
   const latestResults = results.filter((r) => r.test_date === latestTestDate);
 
-  // Risk calculations
   const calculations = useMemo<RiskCalculation[]>(() => {
     if (latestResults.length === 0) return [];
     const bv: BiomarkerValue[] = latestResults.map((r) => ({
@@ -447,7 +408,6 @@ export default function DashboardPage() {
     return runAllCalculations(bv, profile);
   }, [latestResults, profile]);
 
-  // Biological age (ensemble: KDM + PhenoAge)
   const bioAge = useMemo<BioAgeResult | null>(() => {
     if (latestResults.length === 0 || !profile.age) return null;
     const bv = latestResults.map((r) => ({
@@ -458,7 +418,6 @@ export default function DashboardPage() {
     return calculateBiologicalAge(bv, profile.age, profile.sex);
   }, [latestResults, profile]);
 
-  // Cross-marker patterns
   const detectedPatterns = useMemo<DetectedPattern[]>(() => {
     if (latestResults.length === 0) return [];
     const patternInput = latestResults.map((r) => {
@@ -473,50 +432,18 @@ export default function DashboardPage() {
     return detectPatterns(patternInput);
   }, [latestResults, analyses]);
 
-  // Loading state
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-[#F8F5EF] via-[#F0EDE5] to-[#E8F5EE]/30 flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 rounded-full border-2 border-[#1B6B4A]/20 border-t-[#1B6B4A] animate-spin" />
-          <div className="text-[#8A928C] text-sm">Loading your analysis...</div>
-        </div>
-      </div>
-    );
-  }
-
-  // Category filter
-  const filteredResults = selectedCategory
-    ? latestResults.filter((r) => r.category === selectedCategory)
-    : latestResults;
-
-  const categories = Array.from(new Set(latestResults.map((r) => r.category)));
-  const categoryCounts = Object.fromEntries(
-    categories.map((c) => [c, latestResults.filter((r) => r.category === c).length])
-  );
-
   // Status counts
-  const statusCounts = {
-    optimal: 0,
-    normal: 0,
-    borderline: 0,
-    out_of_range: 0,
-  };
+  const statusCounts = { optimal: 0, normal: 0, borderline: 0, out_of_range: 0 };
   latestResults.forEach((r) => {
     const analysis = analyses.find((a) => a.biomarker_result_id === r.id);
-    if (analysis) {
-      statusCounts[analysis.status]++;
-    }
+    if (analysis) statusCounts[analysis.status]++;
   });
 
-  // Summary findings for the hero — smarter priority system
-  // Hematology differentials (neutrophils, lymphocytes, etc.) are noisy; skip them unless truly out_of_range
+  // Key findings — smart priority
   const HEMATOLOGY_DIFF_NAMES = ["neutrophils", "lymphocytes", "monocytes", "eosinophils", "basophils"];
   const IMPORTANT_CATEGORIES = ["lipid", "cardiovascular", "metabolic", "inflammatory", "hormonal", "thyroid", "nutrient", "nutritional"];
-
   const isHematologyDifferential = (name: string) =>
     HEMATOLOGY_DIFF_NAMES.some((h) => name.toLowerCase().includes(h));
-
   const isMidRange = (r: BiomarkerResult) => {
     if (r.ref_low === null || r.ref_high === null) return false;
     const range = r.ref_high - r.ref_low;
@@ -525,67 +452,31 @@ export default function DashboardPage() {
     return pct >= 30 && pct <= 70;
   };
 
-  // Pass 1: out_of_range markers (always important)
   const outOfRangeFindings = latestResults
     .map((r) => {
       const analysis = analyses.find((a) => a.biomarker_result_id === r.id);
       if (!analysis || analysis.status !== "out_of_range") return null;
-      return {
-        biomarker: r.biomarker,
-        value: r.value,
-        unit: r.unit,
-        status: analysis.status as "out_of_range" | "borderline",
-        flag: analysis.flag,
-        category: r.category,
-        message: analysis.flag === "low"
-          ? `Your ${r.biomarker.toLowerCase()} is low`
-          : analysis.flag === "high"
-          ? `Your ${r.biomarker.toLowerCase()} is elevated`
-          : `${r.biomarker} needs attention`,
-        detail: analysis.summary,
-      };
+      return { biomarker: r.biomarker, value: r.value, unit: r.unit, status: "out_of_range" as const, flag: analysis.flag, category: r.category, detail: analysis.summary, what_to_do: analysis.what_to_do, id: r.id };
     })
     .filter(Boolean);
 
-  // Pass 2: borderline markers — only from important categories, not hematology differentials, not mid-range
   const borderlineFindings = latestResults
     .map((r) => {
       const analysis = analyses.find((a) => a.biomarker_result_id === r.id);
       if (!analysis || analysis.status !== "borderline") return null;
-      // Skip hematology differentials
       if (isHematologyDifferential(r.biomarker)) return null;
-      // Skip if not in an important category
       if (!IMPORTANT_CATEGORIES.includes(r.category.toLowerCase())) return null;
-      // Skip if value is clearly mid-range (not actually borderline in practice)
       if (isMidRange(r)) return null;
-      return {
-        biomarker: r.biomarker,
-        value: r.value,
-        unit: r.unit,
-        status: analysis.status as "out_of_range" | "borderline",
-        flag: analysis.flag,
-        category: r.category,
-        message: `${r.biomarker} could use attention`,
-        detail: analysis.summary,
-      };
+      return { biomarker: r.biomarker, value: r.value, unit: r.unit, status: "borderline" as const, flag: analysis.flag, category: r.category, detail: analysis.summary, what_to_do: analysis.what_to_do, id: r.id };
     })
     .filter(Boolean);
 
   const keyFindings = [...outOfRangeFindings, ...borderlineFindings].slice(0, 5);
-
-  // Add a positive finding if there are optimal markers
   const allGood = keyFindings.length === 0 && statusCounts.optimal > 0;
 
-  // "One Big Thing" — only show hero for genuinely out_of_range markers
-  const oneBigThing = keyFindings.length > 0 && (keyFindings[0] as any).status === "out_of_range"
-    ? keyFindings[0]
-    : null;
-
-  // Body systems data
+  // Body systems
   const systemData = BODY_SYSTEMS.map((sys) => {
-    const sysResults = latestResults.filter(
-      (r) => getBodySystemForCategory(r.category) === sys.key
-    );
+    const sysResults = latestResults.filter((r) => getBodySystemForCategory(r.category) === sys.key);
     const sysStatuses = sysResults.map((r) => {
       const a = analyses.find((x) => x.biomarker_result_id === r.id);
       return a?.status || "normal";
@@ -593,133 +484,96 @@ export default function DashboardPage() {
     const optimalCount = sysStatuses.filter((s) => s === "optimal" || s === "normal").length;
     const hasOutOfRange = sysStatuses.some((s) => s === "out_of_range");
     const hasBorderline = sysStatuses.some((s) => s === "borderline");
-    const systemStatus: "green" | "amber" | "red" = hasOutOfRange
-      ? "red"
-      : hasBorderline
-      ? "amber"
-      : "green";
-
-    return {
-      ...sys,
-      results: sysResults,
-      total: sysResults.length,
-      optimalCount,
-      systemStatus,
-    };
+    const systemStatus: "green" | "amber" | "red" = hasOutOfRange ? "red" : hasBorderline ? "amber" : "green";
+    return { ...sys, results: sysResults, total: sysResults.length, optimalCount, systemStatus };
   }).filter((s) => s.total > 0);
 
-  // Group markers by body system for Layer 6
-  const markersBySystem = BODY_SYSTEMS.map((sys) => {
-    const sysResults = (selectedCategory
-      ? latestResults.filter((r) => r.category === selectedCategory && getBodySystemForCategory(r.category) === sys.key)
-      : latestResults.filter((r) => getBodySystemForCategory(r.category) === sys.key)
-    );
-    return { system: sys, results: sysResults };
-  }).filter((s) => s.results.length > 0);
+  const isFree = userTier === "free";
+  const computedCalculations = calculations.filter((c) => c.interpretation !== "unknown");
+  const allMarkerNames = latestResults.map((r) => r.biomarker);
 
+  // ---------------------------------------------------------------------------
+  // Loading state
+  // ---------------------------------------------------------------------------
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#F8F5EF] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-10 h-10 rounded-full border-2 border-[#1B6B4A]/20 border-t-[#1B6B4A] animate-spin" />
+          <div className="text-[#8A928C] text-sm">Loading your analysis...</div>
+        </div>
+      </div>
+    );
+  }
+
+  // ---------------------------------------------------------------------------
   // Empty state
+  // ---------------------------------------------------------------------------
+
   if (!loadingData && results.length === 0) {
     return (
       <>
         <AppNav />
-        <main className="min-h-screen bg-gradient-to-br from-[#F8F5EF] via-[#F0EDE5] to-[#E8F5EE]/30">
-          <div className="max-w-5xl mx-auto px-6 py-12">
-            <div className="text-center py-24">
-              <div
-                className="w-20 h-20 flex items-center justify-center mx-auto mb-6"
-                style={{
-                  ...GLASS_CARD,
-                  background: "rgba(232,245,238,0.6)",
-                }}
-              >
-                <svg width="32" height="32" viewBox="0 0 28 28" fill="none">
-                  <circle cx="14" cy="14" r="13" stroke="#1B6B4A" strokeWidth="1.5" />
-                  <path d="M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z" fill="#1B6B4A" opacity="0.15" stroke="#1B6B4A" strokeWidth="1.2" />
-                  <line x1="14" y1="11" x2="14" y2="21" stroke="#1B6B4A" strokeWidth="0.8" />
-                </svg>
-              </div>
-              <h1
-                className="text-3xl mb-3"
-                style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
-              >
-                Welcome to Lipa
-              </h1>
-              <p className="text-[#5A635D] text-[16px] max-w-md mx-auto mb-8 leading-relaxed">
-                Upload your blood test to get the most comprehensive research-backed analysis available. Every marker analyzed, cross-referenced, and explained in plain English.
-              </p>
-              <a
-                href="/upload"
-                className="inline-flex items-center gap-2 text-[14px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-8 py-3.5 rounded-full transition-all duration-300 hover:-translate-y-0.5"
-                style={{ boxShadow: "0 4px 16px rgba(27,107,74,0.25)" }}
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="17 8 12 3 7 8" />
-                  <line x1="12" y1="3" x2="12" y2="15" />
-                </svg>
-                Upload Blood Test
-              </a>
+        <main className="min-h-screen bg-[#F8F5EF]">
+          <div className="max-w-3xl mx-auto px-6 py-16 text-center">
+            <div
+              className="w-20 h-20 flex items-center justify-center mx-auto mb-6 rounded-[20px]"
+              style={{ ...CARD, background: "rgba(232,245,238,0.6)" }}
+            >
+              <svg width="32" height="32" viewBox="0 0 28 28" fill="none">
+                <circle cx="14" cy="14" r="13" stroke="#1B6B4A" strokeWidth="1.5" />
+                <path d="M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z" fill="#1B6B4A" opacity="0.15" stroke="#1B6B4A" strokeWidth="1.2" />
+                <line x1="14" y1="11" x2="14" y2="21" stroke="#1B6B4A" strokeWidth="0.8" />
+              </svg>
             </div>
+            <h1 className="text-3xl mb-3" style={{ fontFamily: FRAUNCES, fontWeight: 500 }}>
+              Welcome to Lipa
+            </h1>
+            <p className="text-[#5A635D] text-[16px] max-w-md mx-auto mb-8 leading-relaxed">
+              Upload your blood test to get the most comprehensive research-backed analysis available.
+            </p>
+            <a
+              href="/upload"
+              className="inline-flex items-center gap-2 text-[14px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-8 py-3.5 rounded-full transition-all duration-300 hover:-translate-y-0.5"
+              style={{ boxShadow: "0 4px 16px rgba(27,107,74,0.25)" }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" y1="3" x2="12" y2="15" />
+              </svg>
+              Upload Blood Test
+            </a>
           </div>
         </main>
       </>
     );
   }
 
-  const isFree = userTier === "free";
-  // Only show risk calcs that actually computed (not "unknown" / insufficient data)
-  const computedCalculations = calculations.filter((c) => c.interpretation !== "unknown");
-  const visibleCalculations = isFree ? computedCalculations.slice(0, FREE_TIER_RISK_CALC_LIMIT) : computedCalculations;
-  const lockedCalcCount = isFree ? Math.max(0, computedCalculations.length - FREE_TIER_RISK_CALC_LIMIT) : 0;
-
-  // For paywall: determine total visible/locked markers
-  const allMarkerNames = latestResults.map((r) => r.biomarker);
-  const totalMarkers = latestResults.length;
+  // =========================================================================
+  // MAIN DASHBOARD RENDER — Apple Health Hybrid Layout
+  // =========================================================================
 
   return (
     <>
       <AppNav />
       <main className="min-h-screen" style={{ background: "#F8F5EF" }} suppressHydrationWarning>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10 relative z-10" suppressHydrationWarning>
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 py-6 sm:py-10" suppressHydrationWarning>
 
           {/* ============================================================ */}
-          {/* HEADER: date, marker count, export/delete                    */}
+          {/* HEADER: date + marker count + actions                        */}
           {/* ============================================================ */}
-          <div className="mb-10">
-            {/* Top row: heading + actions */}
-            <div className="flex items-start justify-between mb-6 gap-4 flex-wrap">
-              <div>
-                <div className="flex items-center gap-3 mb-1">
-                  <div className="text-[13px] text-[#8A928C] font-mono" style={{ fontFamily: MONO }}>
-                    {latestTestDate ? new Date(latestTestDate).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }) : ""}
-                  </div>
-                  <div className="text-[13px] text-[#8A928C]">
-                    &middot; {latestResults.length} markers analyzed
-                  </div>
-                </div>
-                <h1
-                  className="text-[32px] tracking-tight text-[#0F1A15] leading-tight"
-                  style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
-                >
-                  Your Results
-                </h1>
-              </div>
-              <div className="flex items-center gap-2 flex-shrink-0">
-                {testDates.length > 1 && (
-                  <select
-                    className="text-[12px] text-[#5A635D] bg-white/60 border border-white/30 rounded-lg px-3 py-1.5 backdrop-blur-sm"
-                    value={latestTestDate}
-                    onChange={(e) => {
-                      // TODO: implement test date switching
-                    }}
-                  >
-                    {testDates.map((d) => (
-                      <option key={d} value={d}>
-                        {new Date(d).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
-                      </option>
-                    ))}
-                  </select>
-                )}
+          <div className="flex items-center justify-between mb-8 flex-wrap gap-3">
+            <div className="flex items-center gap-3 text-[13px] text-[#8A928C]">
+              <span style={{ fontFamily: MONO }}>
+                {latestTestDate ? new Date(latestTestDate).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }) : ""}
+              </span>
+              <span>&middot;</span>
+              <span>{latestResults.length} markers analyzed</span>
+            </div>
+            <div className="flex items-center gap-2">
+              {!isFree && (
                 <button
                   onClick={async () => {
                     if (!userId) return;
@@ -739,49 +593,46 @@ export default function DashboardPage() {
                       a.download = `lipa-report-${latestTestDate}.pdf`;
                       a.click();
                       URL.revokeObjectURL(url);
-                    } catch (err) {
+                    } catch {
                       alert("Export failed. Please try again.");
                     }
                     if (btn) btn.textContent = "Export PDF";
                   }}
-                  className="text-[11px] font-medium text-[#5A635D] hover:text-[#1B6B4A] bg-white/60 border border-white/30 rounded-lg px-3 py-1.5 backdrop-blur-sm flex items-center gap-1.5"
-                  style={{ transition: TRANSITION }}
+                  className="text-[11px] font-medium text-[#5A635D] hover:text-[#1B6B4A] bg-white/60 border border-white/30 rounded-lg px-3 py-1.5 backdrop-blur-sm flex items-center gap-1.5 transition-colors"
                 >
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" />
                   </svg>
                   Export PDF
                 </button>
-                <button
-                  onClick={async () => {
-                    if (!confirm("Delete this test and all its analyses? This cannot be undone.")) return;
-                    if (!userId) return;
-                    await fetch("/api/delete-data", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ userId }) });
-                    window.location.reload();
-                  }}
-                  className="text-[11px] font-medium text-[#8A928C] hover:text-[#B91C1C] bg-white/60 border border-white/30 rounded-lg px-3 py-1.5 backdrop-blur-sm flex items-center gap-1.5"
-                  style={{ transition: TRANSITION }}
-                >
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                    <path d="M3 6h18" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" /><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                  </svg>
-                  Delete
-                </button>
-              </div>
+              )}
+              <button
+                onClick={async () => {
+                  if (!confirm("Delete this test and all its analyses? This cannot be undone.")) return;
+                  if (!userId) return;
+                  await fetch("/api/delete-data", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ userId }) });
+                  window.location.reload();
+                }}
+                className="text-[11px] font-medium text-[#8A928C] hover:text-[#B91C1C] bg-white/60 border border-white/30 rounded-lg px-3 py-1.5 backdrop-blur-sm flex items-center gap-1.5 transition-colors"
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M3 6h18" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" /><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                </svg>
+                Delete
+              </button>
             </div>
-
           </div>
 
           {/* ============================================================ */}
-          {/* BIO-AGE CARD + SUMMARY — side by side */}
+          {/* BIO-AGE + SUMMARY — side by side                             */}
           {/* ============================================================ */}
-          <div className="mb-8 grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-4">
-            {/* Bio-age card — compact square */}
-            {bioAge && bioAge.ensemble_age !== null && (
-              <div className="p-5 text-center sm:w-[180px]" style={GLASS_CARD}>
-                <div className="text-[10px] uppercase tracking-wider text-[#8A928C] font-medium mb-2">Biological Age</div>
+          <div className="grid grid-cols-1 sm:grid-cols-[200px_1fr] gap-4 mb-4">
+            {/* Bio-age card */}
+            {bioAge && bioAge.ensemble_age !== null ? (
+              <div className="p-5 text-center flex flex-col justify-center" style={CARD}>
+                <div className="text-[10px] uppercase tracking-[0.1em] text-[#8A928C] font-medium mb-2">Biological Age</div>
                 <div
-                  className="text-[42px] leading-none tracking-tight"
+                  className="text-[48px] leading-none tracking-tight"
                   style={{
                     fontFamily: FRAUNCES,
                     fontWeight: 600,
@@ -792,79 +643,96 @@ export default function DashboardPage() {
                 </div>
                 {bioAge.gap !== null && (
                   <div
-                    className="inline-flex text-[13px] font-semibold px-3 py-1 rounded-full mt-2"
+                    className="inline-flex self-center text-[13px] font-semibold px-3 py-1 rounded-full mt-2"
                     style={{
                       backgroundColor: bioAge.gap < 0 ? "#E8F5EE" : bioAge.gap > 2 ? "#FEE2E2" : "#F4F4F5",
                       color: bioAge.gap < 0 ? "#1B6B4A" : bioAge.gap > 2 ? "#B91C1C" : "#5A635D",
                     }}
                   >
-                    {bioAge.gap < 0 ? "" : "+"}{Math.round(bioAge.gap * 10) / 10} years
+                    {bioAge.gap < 0 ? "" : "+"}{Math.round(bioAge.gap * 10) / 10} yrs
                   </div>
                 )}
                 <div className="text-[11px] text-[#8A928C] mt-2">
-                  vs age {bioAge.chronological_age} · {bioAge.contributing_biomarkers.length} markers
+                  vs age {bioAge.chronological_age} &middot; {bioAge.contributing_biomarkers.length} markers
                 </div>
+              </div>
+            ) : (
+              <div className="p-5 text-center flex flex-col justify-center" style={CARD}>
+                <div className="text-[10px] uppercase tracking-[0.1em] text-[#8A928C] font-medium mb-2">Biological Age</div>
+                <div className="text-[14px] text-[#8A928C] leading-relaxed">
+                  Add your age in profile to calculate bio-age
+                </div>
+                <button
+                  onClick={() => setProfileOpen(true)}
+                  className="text-[12px] font-medium text-[#1B6B4A] mt-2 hover:underline"
+                >
+                  Set up profile
+                </button>
               </div>
             )}
 
-            {/* Summary + status strip */}
-            <div className="flex flex-col gap-3">
-              {actionPlan?.overall_summary && (
-                <div className="p-5 flex-1" style={GLASS_CARD}>
-                  <div className="text-[10px] uppercase tracking-wider text-[#1B6B4A] font-semibold mb-2">Summary</div>
-                  {isFree ? (
-                    <>
-                      <p className="text-[13px] text-[#0F1A15] leading-relaxed line-clamp-2">{actionPlan.overall_summary}</p>
-                      <p className="text-[11px] text-[#8A928C] mt-2">Full summary available with Lipa One or Life.</p>
-                    </>
-                  ) : (
-                    <p className="text-[13px] text-[#0F1A15] leading-relaxed">{actionPlan.overall_summary}</p>
-                  )}
-                </div>
+            {/* Summary */}
+            <div className="p-5 flex flex-col" style={CARD}>
+              <div className="text-[10px] uppercase tracking-[0.1em] text-[#1B6B4A] font-semibold mb-2">Summary</div>
+              {actionPlan?.overall_summary ? (
+                isFree ? (
+                  <>
+                    <p className="text-[14px] text-[#0F1A15] leading-relaxed line-clamp-2 flex-1">{actionPlan.overall_summary}</p>
+                    <a href="/pricing" className="text-[12px] text-[#1B6B4A] font-medium mt-2 hover:underline">
+                      Unlock full summary
+                    </a>
+                  </>
+                ) : (
+                  <p className="text-[14px] text-[#0F1A15] leading-relaxed flex-1">{actionPlan.overall_summary}</p>
+                )
+              ) : (
+                <p className="text-[14px] text-[#8A928C] leading-relaxed flex-1">
+                  Your executive summary will appear here once analysis is complete.
+                </p>
               )}
-
-              {/* Status strip */}
-              <div className="flex items-center gap-4 flex-wrap text-[12px] px-1">
-                {statusCounts.optimal > 0 && (
-                  <span className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-[#1B6B4A]" />
-                    <span className="text-[#5A635D]">{statusCounts.optimal} optimal</span>
-                  </span>
-                )}
-                {statusCounts.normal > 0 && (
-                  <span className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-[#71717A]" />
-                    <span className="text-[#5A635D]">{statusCounts.normal} in range</span>
-                  </span>
-                )}
-                {statusCounts.borderline > 0 && (
-                  <span className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-[#F59E0B]" />
-                    <span className="text-[#5A635D]">{statusCounts.borderline} borderline</span>
-                  </span>
-                )}
-                {statusCounts.out_of_range > 0 && (
-                  <span className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-[#EF4444]" />
-                    <span className="text-[#5A635D]">{statusCounts.out_of_range} need attention</span>
-                  </span>
-                )}
-              </div>
             </div>
           </div>
 
           {/* ============================================================ */}
-          {/* KEY FINDINGS — hero + grid (only if real problems)           */}
+          {/* STATUS STRIP                                                  */}
+          {/* ============================================================ */}
+          <div className="flex items-center gap-4 sm:gap-6 flex-wrap text-[12px] mb-10 px-1">
+            {statusCounts.optimal > 0 && (
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[#1B6B4A]" />
+                <span className="text-[#5A635D]">{statusCounts.optimal} optimal</span>
+              </span>
+            )}
+            {statusCounts.normal > 0 && (
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[#71717A]" />
+                <span className="text-[#5A635D]">{statusCounts.normal} in range</span>
+              </span>
+            )}
+            {statusCounts.borderline > 0 && (
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[#F59E0B]" />
+                <span className="text-[#5A635D]">{statusCounts.borderline} borderline</span>
+              </span>
+            )}
+            {statusCounts.out_of_range > 0 && (
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[#EF4444]" />
+                <span className="text-[#5A635D]">{statusCounts.out_of_range} need attention</span>
+              </span>
+            )}
+          </div>
+
+          {/* ============================================================ */}
+          {/* ASK LIPA — Inline section (prominent, per wireframe)          */}
+          {/* ============================================================ */}
+          <InlineAskLipa userId={userId} isFree={isFree} />
+
+          {/* ============================================================ */}
+          {/* KEY FINDINGS                                                  */}
           {/* ============================================================ */}
           {allGood ? (
-            <div
-              className="p-6 mb-8"
-              style={{
-                ...GLASS_CARD,
-                background: "rgba(232,245,238,0.5)",
-                border: "1px solid rgba(27,107,74,0.15)",
-              }}
-            >
+            <div className="p-6 mb-10" style={{ ...CARD, background: "rgba(232,245,238,0.5)", border: "1px solid rgba(27,107,74,0.15)" }}>
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-full bg-[#1B6B4A]/10 flex items-center justify-center flex-shrink-0">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -872,114 +740,89 @@ export default function DashboardPage() {
                   </svg>
                 </div>
                 <div>
-                  <div
-                    className="text-[18px] text-[#1B6B4A] mb-1"
-                    style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
-                  >
+                  <div className="text-[18px] text-[#1B6B4A] mb-1" style={{ fontFamily: FRAUNCES, fontWeight: 500 }}>
                     Everything looks great
                   </div>
                   <p className="text-[14px] text-[#5A635D] leading-relaxed">
-                    All {latestResults.length} markers came back in a healthy range. {statusCounts.optimal} are in the optimal zone. Keep doing what you&apos;re doing.
+                    All {latestResults.length} markers came back in a healthy range. {statusCounts.optimal} are in the optimal zone.
                   </p>
                 </div>
               </div>
             </div>
-          ) : (
-            <>
-              {/* "One Big Thing" hero — only for genuinely out_of_range markers */}
-              {oneBigThing && (
-                <div
-                  className="p-6 mb-4"
-                  style={{
-                    ...GLASS_CARD,
-                    background: "rgba(254,226,226,0.4)",
-                    border: "1px solid rgba(185,28,28,0.12)",
-                  }}
-                >
-                  <div className="text-[11px] uppercase tracking-wider text-[#8A928C] font-medium mb-2">
-                    Most important finding
-                  </div>
-                  <div
-                    className="text-[20px] text-[#0F1A15] mb-2 leading-snug"
-                    style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
-                  >
-                    {(oneBigThing as any).message}
-                  </div>
-                  <p className="text-[14px] text-[#5A635D] leading-relaxed">
-                    {(oneBigThing as any).detail}
-                  </p>
-                </div>
-              )}
-
-              {/* Key findings grid — show remaining findings (skip first if hero shown) */}
-              {(() => {
-                const gridFindings = oneBigThing ? keyFindings.slice(1) : keyFindings;
-                if (gridFindings.length === 0) return null;
-                return (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-8">
-                    {gridFindings.map((f: any) => (
-                      <button
-                        key={f.biomarker}
-                        className="text-left p-4"
-                        style={{
-                          ...GLASS_CARD,
-                          background: f.status === "out_of_range"
-                            ? "rgba(254,226,226,0.4)"
-                            : "rgba(254,243,199,0.4)",
-                          border: f.status === "out_of_range"
-                            ? "1px solid rgba(185,28,28,0.12)"
-                            : "1px solid rgba(180,83,9,0.12)",
-                          boxShadow: "0 4px 20px rgba(15,26,21,0.04)",
-                          transition: TRANSITION,
-                        }}
-                        onClick={() => {
-                          const r = latestResults.find((lr) => lr.biomarker === f.biomarker);
-                          if (r) setExpandedBiomarker(r.id);
-                          document.getElementById("biomarkers-section")?.scrollIntoView({ behavior: "smooth" });
-                        }}
-                        onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; }}
-                        onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; }}
-                      >
-                        <div className="flex items-start gap-3">
-                          <div
-                            className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0"
-                            style={{
-                              backgroundColor: f.status === "out_of_range" ? "#B91C1C" : "#B45309",
-                            }}
-                          />
-                          <div className="min-w-0">
-                            <div className="flex items-baseline gap-2 mb-1">
-                              <span className="text-[14px] font-semibold text-[#0F1A15]">{f.biomarker}</span>
-                              <span className="text-[13px] text-[#5A635D]" style={{ fontFamily: FRAUNCES }}>{f.value}</span>
-                              <span className="text-[10px] text-[#8A928C]" style={{ fontFamily: MONO }}>{f.unit}</span>
-                            </div>
-                            <p className="text-[13px] text-[#5A635D] line-clamp-2">{f.detail}</p>
+          ) : keyFindings.length > 0 && (
+            <div className="mb-10">
+              <div className="flex items-baseline justify-between mb-4">
+                <h2 className="text-[20px] tracking-tight text-[#0F1A15]" style={{ fontFamily: FRAUNCES, fontWeight: 500 }}>
+                  Key Findings
+                </h2>
+                <span className="text-[12px] text-[#8A928C]">What needs your attention</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {keyFindings.map((f: any) => {
+                  const isOut = f.status === "out_of_range";
+                  return (
+                    <button
+                      key={f.biomarker}
+                      className="text-left p-5 group"
+                      style={{
+                        ...CARD,
+                        background: isOut ? "rgba(254,226,226,0.35)" : "rgba(254,243,199,0.35)",
+                        border: isOut ? "1px solid rgba(185,28,28,0.1)" : "1px solid rgba(180,83,9,0.1)",
+                        transition: TRANSITION,
+                      }}
+                      onClick={() => {
+                        // Find the body system this marker belongs to
+                        const result = latestResults.find((r) => r.id === f.id);
+                        if (result) {
+                          const sysKey = getBodySystemForCategory(result.category);
+                          setExpandedSystem(sysKey);
+                          setExpandedMarker(f.id);
+                          document.getElementById("body-systems")?.scrollIntoView({ behavior: "smooth" });
+                        }
+                      }}
+                      onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; }}
+                      onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; }}
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: isOut ? "#B91C1C" : "#B45309" }} />
+                            <span className="text-[15px] font-semibold text-[#0F1A15]">{f.biomarker}</span>
                           </div>
+                          <div className="text-[22px] tracking-tight text-[#0F1A15] mb-2" style={{ fontFamily: FRAUNCES, fontWeight: 500 }}>
+                            {f.value} <span className="text-[11px] text-[#8A928C]" style={{ fontFamily: MONO }}>{f.unit}</span>
+                          </div>
+                          <p className="text-[13px] text-[#5A635D] leading-relaxed line-clamp-2">
+                            {f.what_to_do || f.detail}
+                          </p>
                         </div>
-                      </button>
-                    ))}
-                  </div>
-                );
-              })()}
-            </>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8A928C" strokeWidth="2" className="flex-shrink-0 mt-2 group-hover:stroke-[#0F1A15] transition-colors">
+                          <path d="M9 18l6-6-6-6" />
+                        </svg>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           )}
 
           {/* ============================================================ */}
-          {/* BODY SYSTEMS VIEW                                            */}
+          {/* BODY SYSTEMS — expandable grid                                */}
           {/* ============================================================ */}
           {systemData.length > 0 && (
-            <div className="mb-10">
-              <h2
-                className="text-[22px] tracking-tight text-[#0F1A15] mb-1"
-                style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
-              >
-                Body Systems
-              </h2>
-              <p className="text-[13px] text-[#8A928C] mb-4">
-                How your markers group across major systems.
-              </p>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+            <div id="body-systems" className="mb-10">
+              <div className="flex items-baseline justify-between mb-4">
+                <h2 className="text-[20px] tracking-tight text-[#0F1A15]" style={{ fontFamily: FRAUNCES, fontWeight: 500 }}>
+                  Body Systems
+                </h2>
+                <span className="text-[12px] text-[#8A928C]">Tap any system to explore</span>
+              </div>
+
+              {/* System cards grid */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-4">
                 {systemData.map((sys) => {
+                  const isExpanded = expandedSystem === sys.key;
                   const statusColor =
                     sys.systemStatus === "red"
                       ? { bg: "rgba(254,226,226,0.4)", border: "rgba(185,28,28,0.15)", icon: "#B91C1C", text: "#B91C1C" }
@@ -991,57 +834,141 @@ export default function DashboardPage() {
                       key={sys.key}
                       className="text-left p-4"
                       style={{
-                        ...GLASS_CARD,
+                        ...CARD,
                         background: statusColor.bg,
-                        border: `1px solid ${statusColor.border}`,
+                        border: isExpanded ? `2px solid ${statusColor.icon}` : `1px solid ${statusColor.border}`,
                         transition: TRANSITION,
                       }}
                       onClick={() => {
-                        document.getElementById(`system-${sys.key}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+                        if (isFree) return; // free users can't drill into systems
+                        setExpandedSystem(isExpanded ? null : sys.key);
+                        setExpandedMarker(null);
                       }}
-                      onMouseEnter={(e) => {
-                        (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
-                        (e.currentTarget as HTMLElement).style.boxShadow = "0 12px 40px rgba(15,26,21,0.1)";
-                      }}
-                      onMouseLeave={(e) => {
-                        (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-                        (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 32px rgba(15,26,21,0.06)";
-                      }}
+                      onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; }}
+                      onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; }}
                     >
-                      <div className="mb-3" style={{ color: statusColor.icon }}>
-                        {sys.icon}
-                      </div>
-                      <div className="text-[14px] font-semibold text-[#0F1A15] mb-1">
-                        {sys.name}
-                      </div>
+                      <div className="mb-3" style={{ color: statusColor.icon }}>{sys.icon}</div>
+                      <div className="text-[14px] font-semibold text-[#0F1A15] mb-1">{sys.name}</div>
                       <div className="text-[12px]" style={{ color: statusColor.text }}>
-                        {sys.optimalCount}/{sys.total} markers optimal
+                        {sys.optimalCount}/{sys.total} optimal
                       </div>
                     </button>
                   );
                 })}
               </div>
+
+              {/* Free tier gate for systems */}
+              {isFree && (
+                <div className="text-center py-4">
+                  <p className="text-[13px] text-[#5A635D] mb-3">Upgrade to explore all body systems and markers in detail.</p>
+                  <a href="/pricing" className="inline-flex text-[12px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-5 py-2.5 rounded-full transition-all duration-300">
+                    Unlock full analysis
+                  </a>
+                </div>
+              )}
+
+              {/* Expanded system — marker list */}
+              {!isFree && expandedSystem && (() => {
+                const sys = systemData.find((s) => s.key === expandedSystem);
+                if (!sys) return null;
+                const statusColor =
+                  sys.systemStatus === "red" ? "#B91C1C" : sys.systemStatus === "amber" ? "#B45309" : "#1B6B4A";
+
+                return (
+                  <div className="overflow-hidden" style={{ ...CARD, borderTop: `3px solid ${statusColor}` }}>
+                    <div className="px-5 py-4 flex items-center justify-between" style={{ borderBottom: "1px solid rgba(15,26,21,0.06)" }}>
+                      <div className="flex items-center gap-2.5">
+                        <div style={{ color: statusColor }}>{sys.icon}</div>
+                        <h3 className="text-[17px] font-semibold text-[#0F1A15]" style={{ fontFamily: FRAUNCES, fontWeight: 500 }}>
+                          {sys.name}
+                        </h3>
+                        <span className="text-[12px] text-[#8A928C]">{sys.total} markers</span>
+                      </div>
+                      <button onClick={() => { setExpandedSystem(null); setExpandedMarker(null); }} className="text-[#8A928C] hover:text-[#0F1A15] transition-colors p-1">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+                      </button>
+                    </div>
+
+                    {/* Marker rows */}
+                    <div className="divide-y divide-[rgba(15,26,21,0.06)]">
+                      {sys.results.map((result) => {
+                        const analysis = analyses.find((a) => a.biomarker_result_id === result.id);
+                        const biomarkerCitations = citations.filter((c) => c.biomarker_result_id === result.id);
+                        const status = analysis?.status || "normal";
+                        const ss = STATUS_STYLES[status];
+                        const isMarkerExpanded = expandedMarker === result.id;
+
+                        return (
+                          <div key={result.id}>
+                            {/* Marker row — compact */}
+                            <button
+                              onClick={() => setExpandedMarker(isMarkerExpanded ? null : result.id)}
+                              className="w-full text-left px-5 py-3.5 flex items-center gap-4 hover:bg-white/40 transition-colors"
+                            >
+                              <div className="flex-1 min-w-0 flex items-center gap-3">
+                                <span className="text-[14px] font-medium text-[#0F1A15] truncate">{result.biomarker}</span>
+                              </div>
+                              <div className="flex items-center gap-3 flex-shrink-0">
+                                <span className="text-[15px] text-[#0F1A15]" style={{ fontFamily: FRAUNCES, fontWeight: 500 }}>
+                                  {result.value}
+                                </span>
+                                <span className="text-[10px] text-[#8A928C]" style={{ fontFamily: MONO }}>{result.unit}</span>
+                                <div
+                                  className="text-[9px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full flex items-center gap-1"
+                                  style={{ backgroundColor: ss.bg, color: ss.text }}
+                                >
+                                  <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: ss.dot }} />
+                                  {ss.label}
+                                </div>
+                                <svg
+                                  width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8A928C" strokeWidth="2"
+                                  style={{ transition: TRANSITION, transform: isMarkerExpanded ? "rotate(180deg)" : "rotate(0)" }}
+                                >
+                                  <polyline points="6 9 12 15 18 9" />
+                                </svg>
+                              </div>
+                            </button>
+
+                            {/* Expanded marker detail */}
+                            {isMarkerExpanded && analysis && (
+                              <MarkerDetail
+                                result={result}
+                                analysis={analysis}
+                                citations={biomarkerCitations}
+                                optimalRange={(() => {
+                                  const demoRange = getDemographicOptimalRange(result.biomarker, profile.age, profile.sex);
+                                  if (demoRange) return { optimal_low: demoRange.optimal_low, optimal_high: demoRange.optimal_high, canonical_name: result.biomarker };
+                                  return optimalRanges[result.biomarker.toLowerCase()] || optimalRanges[(analysis?.biomarker_name || "").toLowerCase()];
+                                })()}
+                                detectedPatterns={detectedPatterns}
+                                profile={profile}
+                              />
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
           )}
 
           {/* ============================================================ */}
-          {/* LAYER 3: CROSS-MARKER PATTERNS (visible to all users)       */}
+          {/* PATTERNS DETECTED                                             */}
           {/* ============================================================ */}
           {detectedPatterns.length > 0 && (
             <div className="mb-10">
-              <h2
-                className="text-[22px] tracking-tight text-[#0F1A15] mb-1"
-                style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
-              >
-                Patterns detected
-              </h2>
-              <p className="text-[13px] text-[#5A635D] mb-4">
-                Cross-marker patterns your individual results don't show in isolation.
-              </p>
+              <div className="flex items-baseline justify-between mb-4">
+                <h2 className="text-[20px] tracking-tight text-[#0F1A15]" style={{ fontFamily: FRAUNCES, fontWeight: 500 }}>
+                  Patterns Detected
+                </h2>
+                <span className="text-[12px] text-[#8A928C]">{detectedPatterns.length} patterns</span>
+              </div>
               <div className="space-y-3">
-                {detectedPatterns.map((pattern) => (
+                {detectedPatterns.map((pattern) =>
                   isFree ? (
-                    <div key={pattern.id} className="p-4" style={{ ...GLASS_CARD, borderLeft: `3px solid ${(SEVERITY_STYLES[pattern.severity] || SEVERITY_STYLES.watch).border}` }}>
+                    <div key={pattern.id} className="p-4" style={{ ...CARD, borderLeft: `3px solid ${(SEVERITY_STYLES[pattern.severity] || SEVERITY_STYLES.watch).border}` }}>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <span className="text-[14px] font-semibold text-[#0F1A15]">{pattern.name}</span>
@@ -1059,107 +986,165 @@ export default function DashboardPage() {
                   ) : (
                     <PatternCard key={pattern.id} pattern={pattern} />
                   )
-                ))}
+                )}
               </div>
             </div>
           )}
 
           {/* ============================================================ */}
-          {/* LAYER 4: ACTION PLAN                                        */}
+          {/* YOUR ACTION PLAN                                              */}
           {/* ============================================================ */}
-          {!isFree && actionPlan && actionPlan.domains && actionPlan.domains.length > 0 && (
+          {actionPlan && actionPlan.domains && actionPlan.domains.length > 0 && (
             <div className="mb-10">
-              <h2
-                className="text-[22px] tracking-tight text-[#0F1A15] mb-1"
-                style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
-              >
-                Your Action Plan
-              </h2>
-              <p className="text-[13px] text-[#5A635D] mb-4">
-                Personalized recommendations across six life domains, based on your markers.
-              </p>
-
-              {actionPlan.overall_summary && (
-                <div
-                  className="p-5 mb-4"
-                  style={{
-                    ...GLASS_CARD,
-                    background: "rgba(232,245,238,0.5)",
-                    border: "1px solid rgba(27,107,74,0.15)",
-                  }}
-                >
-                  <div className="text-[11px] uppercase tracking-wider text-[#1B6B4A] font-medium mb-2">
-                    Summary
-                  </div>
-                  <p className="text-[14px] text-[#0F1A15] leading-relaxed">
-                    {actionPlan.overall_summary}
-                  </p>
-                </div>
-              )}
-
-              <div className="space-y-3">
-                {(actionPlan.domains as any[]).map((domain: any) => (
-                  <ActionPlanDomainCard key={domain.domain} domain={domain} />
-                ))}
-              </div>
-
-              {actionPlan.disclaimer && (
-                <p className="text-[10px] text-[#8A928C] mt-4 leading-relaxed text-center">
-                  {actionPlan.disclaimer}
-                </p>
-              )}
-            </div>
-          )}
-
-          {/* Free tier action plan teaser — blurred preview */}
-          {isFree && actionPlan && actionPlan.domains && (
-            <div className="mb-10 relative overflow-hidden" style={{ ...GLASS_CARD, padding: 0 }}>
-              <div className="p-6 select-none" style={{ filter: "blur(5px)", opacity: 0.6, pointerEvents: "none" }}>
-                <h2 className="text-[20px] tracking-tight text-[#0F1A15] mb-3" style={{ fontFamily: FRAUNCES, fontWeight: 500 }}>
+              <div className="flex items-baseline justify-between mb-4">
+                <h2 className="text-[20px] tracking-tight text-[#0F1A15]" style={{ fontFamily: FRAUNCES, fontWeight: 500 }}>
                   Your Action Plan
                 </h2>
-                <div className="space-y-2">
-                  {(actionPlan.domains as any[]).slice(0, 4).map((d: any) => (
-                    <div key={d.domain} className="bg-[#F8F5EF] rounded-xl p-4 flex items-center justify-between">
-                      <div className="text-[13px] font-medium text-[#0F1A15]">{DOMAIN_LABELS[d.domain] || d.domain}</div>
-                      <div className="text-[12px] text-[#8A928C]">{d.recommendations?.length || 0} items</div>
+                <span className="text-[12px] text-[#8A928C]">Personalized to your results</span>
+              </div>
+
+              {isFree ? (
+                /* Free: blurred preview */
+                <div className="relative overflow-hidden" style={{ ...CARD, padding: 0 }}>
+                  <div className="p-6 select-none" style={{ filter: "blur(5px)", opacity: 0.6, pointerEvents: "none" }}>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                      {(actionPlan.domains as any[]).slice(0, 6).map((d: any) => (
+                        <div key={d.domain} className="bg-[#F8F5EF] rounded-xl p-4 flex items-center justify-between">
+                          <span className="text-[13px] font-medium text-[#0F1A15]">{(DOMAIN_LABELS[d.domain] || { label: d.domain }).label}</span>
+                          <span className="text-[12px] text-[#8A928C]">{d.recommendations?.length || 0}</span>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              </div>
-              <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-transparent via-white/40 to-white/70">
-                <div className="text-center px-6">
-                  <div className="text-[13px] text-[#5A635D] mb-3">
-                    Your personalized action plan is ready — nutrition, supplements, sleep, movement, and more.
                   </div>
-                  <a
-                    href="/pricing"
-                    className="inline-flex text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-6 py-3 rounded-full transition-all duration-300 hover:-translate-y-0.5"
-                    style={{ boxShadow: "0 4px 16px rgba(27,107,74,0.2)" }}
-                  >
-                    See your action plan
-                  </a>
+                  <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-transparent via-white/40 to-white/70">
+                    <div className="text-center px-6">
+                      <p className="text-[13px] text-[#5A635D] mb-3">
+                        Your personalized action plan is ready — nutrition, supplements, sleep, movement, and more.
+                      </p>
+                      <a href="/pricing" className="inline-flex text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-6 py-3 rounded-full transition-all duration-300 hover:-translate-y-0.5" style={{ boxShadow: "0 4px 16px rgba(27,107,74,0.2)" }}>
+                        See your action plan
+                      </a>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                /* Paid: domain cards grid → expandable */
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {(actionPlan.domains as any[]).map((domain: any) => {
+                    const info = DOMAIN_LABELS[domain.domain] || { label: domain.domain, emoji: "?" };
+                    const recs = domain.recommendations || [];
+                    if (recs.length === 0) return null;
+                    const isExpDomain = expandedDomain === domain.domain;
+
+                    return (
+                      <div key={domain.domain} className={isExpDomain ? "col-span-2 sm:col-span-3" : ""}>
+                        <button
+                          onClick={() => setExpandedDomain(isExpDomain ? null : domain.domain)}
+                          className="w-full text-left p-4"
+                          style={{ ...CARD, transition: TRANSITION, border: isExpDomain ? "2px solid #1B6B4A" : CARD.border }}
+                          onMouseEnter={(e) => { if (!isExpDomain) (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; }}
+                          onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; }}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <div className="w-9 h-9 rounded-xl flex items-center justify-center text-[13px] font-semibold text-[#1B6B4A]" style={{ background: "rgba(232,245,238,0.7)" }}>
+                                {info.emoji}
+                              </div>
+                              <div>
+                                <div className="text-[13px] font-semibold text-[#0F1A15]">{info.label}</div>
+                                <div className="text-[12px] text-[#8A928C]">{recs.length} recommendation{recs.length !== 1 ? "s" : ""}</div>
+                              </div>
+                            </div>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8A928C" strokeWidth="2" style={{ transition: TRANSITION, transform: isExpDomain ? "rotate(180deg)" : "rotate(0)" }}>
+                              <polyline points="6 9 12 15 18 9" />
+                            </svg>
+                          </div>
+                        </button>
+
+                        {isExpDomain && (
+                          <div className="mt-2 p-5 space-y-5" style={{ ...CARD, borderTop: "3px solid #1B6B4A" }}>
+                            {recs.map((rec: any, i: number) => (
+                              <div key={i} className="pb-4 last:pb-0" style={{ borderBottom: i < recs.length - 1 ? "1px solid rgba(15,26,21,0.06)" : "none" }}>
+                                <p className="text-[14px] font-medium text-[#0F1A15] leading-relaxed mb-1">{rec.text}</p>
+                                <p className="text-[12px] text-[#5A635D] leading-relaxed mb-2">{rec.research_basis}</p>
+                                {rec.details && (
+                                  <div className="p-4 mt-3 space-y-3" style={CARD_INNER}>
+                                    {rec.details.dosage_range && (
+                                      <div>
+                                        <div className="text-[10px] uppercase tracking-wider text-[#8A928C] font-medium mb-1">Dosage range</div>
+                                        <p className="text-[12px] text-[#0F1A15]">{rec.details.dosage_range}</p>
+                                      </div>
+                                    )}
+                                    {rec.details.best_form && (
+                                      <div>
+                                        <div className="text-[10px] uppercase tracking-wider text-[#8A928C] font-medium mb-1">Best-studied form</div>
+                                        <p className="text-[12px] text-[#0F1A15]">{rec.details.best_form}</p>
+                                      </div>
+                                    )}
+                                    {rec.details.timing && (
+                                      <div>
+                                        <div className="text-[10px] uppercase tracking-wider text-[#8A928C] font-medium mb-1">When to take</div>
+                                        <p className="text-[12px] text-[#0F1A15]">{rec.details.timing}</p>
+                                      </div>
+                                    )}
+                                    {rec.details.food_sources && (
+                                      <div>
+                                        <div className="text-[10px] uppercase tracking-wider text-[#8A928C] font-medium mb-1">Food sources</div>
+                                        <p className="text-[12px] text-[#0F1A15]">{rec.details.food_sources}</p>
+                                      </div>
+                                    )}
+                                    {rec.details.interactions && (
+                                      <div>
+                                        <div className="text-[10px] uppercase tracking-wider text-[#B45309] font-medium mb-1">Interactions &amp; cautions</div>
+                                        <p className="text-[12px] text-[#0F1A15]">{rec.details.interactions}</p>
+                                      </div>
+                                    )}
+                                    {rec.details.important_notes && (
+                                      <div>
+                                        <div className="text-[10px] uppercase tracking-wider text-[#8A928C] font-medium mb-1">Good to know</div>
+                                        <p className="text-[12px] text-[#0F1A15]">{rec.details.important_notes}</p>
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+                                {rec.markers_addressed && rec.markers_addressed.length > 0 && (
+                                  <div className="flex gap-1.5 mt-3 flex-wrap">
+                                    {rec.markers_addressed.map((m: string) => (
+                                      <span key={m} className="text-[10px] font-medium text-[#1B6B4A] px-2 py-0.5 rounded-full" style={{ background: "rgba(232,245,238,0.7)" }}>
+                                        {m}
+                                      </span>
+                                    ))}
+                                    {rec.cited_studies && <span className="text-[10px] text-[#8A928C] px-2 py-0.5">{rec.cited_studies} studies</span>}
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                            {actionPlan.disclaimer && (
+                              <p className="text-[10px] text-[#8A928C] leading-relaxed text-center pt-3" style={{ borderTop: "1px solid rgba(15,26,21,0.06)" }}>
+                                {actionPlan.disclaimer}
+                              </p>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           )}
 
           {/* ============================================================ */}
-          {/* LAYER 5: RISK INSIGHTS                                      */}
+          {/* RISK INSIGHTS — paid only                                     */}
           {/* ============================================================ */}
-          {visibleCalculations.length > 0 && (
+          {!isFree && computedCalculations.length > 0 && (
             <div className="mb-10">
               <div className="flex items-baseline justify-between mb-4">
                 <div>
-                  <h2
-                    className="text-[22px] tracking-tight text-[#0F1A15]"
-                    style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
-                  >
+                  <h2 className="text-[20px] tracking-tight text-[#0F1A15]" style={{ fontFamily: FRAUNCES, fontWeight: 500 }}>
                     Risk Insights
                   </h2>
-                  <p className="text-[13px] text-[#8A928C]">
-                    Peer-reviewed calculations applied to your biomarkers.
-                  </p>
+                  <p className="text-[12px] text-[#8A928C]">{computedCalculations.length} calculations</p>
                 </div>
                 <button
                   onClick={() => setProfileOpen((v) => !v)}
@@ -1172,297 +1157,126 @@ export default function DashboardPage() {
               {profileOpen && (
                 <ProfileEditor
                   profile={profile}
-                  onSave={async (next) => {
-                    await saveProfile(next);
-                    setProfileOpen(false);
-                  }}
+                  onSave={async (next) => { await saveProfile(next); setProfileOpen(false); }}
                   onCancel={() => setProfileOpen(false)}
                 />
               )}
 
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                {visibleCalculations.map((calc) => (
+                {computedCalculations.map((calc) => (
                   <InsightCard
                     key={calc.id}
                     calc={calc}
                     expanded={expandedInsight === calc.id}
-                    onToggle={() =>
-                      setExpandedInsight(expandedInsight === calc.id ? null : calc.id)
-                    }
+                    onToggle={() => setExpandedInsight(expandedInsight === calc.id ? null : calc.id)}
                   />
                 ))}
               </div>
-
-              {isFree && lockedCalcCount > 0 && (
-                <div className="mt-4 relative overflow-hidden" style={{ ...GLASS_CARD, padding: 0 }}>
-                  <div className="p-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-3 select-none" style={{ filter: "blur(4px)", opacity: 0.5, pointerEvents: "none" }}>
-                    {["Bio-Age (KDM)", "HOMA-IR", "FIB-4 Liver"].map((name) => (
-                      <div key={name} className="bg-white/50 rounded-2xl p-4">
-                        <div className="text-[12px] text-[#5A635D]">{name}</div>
-                        <div className="text-[22px] mt-1" style={{ fontFamily: FRAUNCES }}>&mdash;</div>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="absolute inset-0 flex items-center justify-center bg-white/50">
-                    <div className="text-center">
-                      <p className="text-[13px] text-[#5A635D] mb-3">
-                        {lockedCalcCount} more calculations — bio-age, insulin resistance, liver health, and more.
-                      </p>
-                      <a
-                        href="/pricing"
-                        className="inline-flex text-[12px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-5 py-2.5 rounded-full transition-all duration-300"
-                      >
-                        See all insights
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
           )}
 
           {/* ============================================================ */}
-          {/* LAYER 6: BIOMARKERS (grouped by body system)                */}
-          {/* ============================================================ */}
-          <div id="biomarkers-section" className="mb-10">
-            <h2
-              className="text-[22px] tracking-tight text-[#0F1A15] mb-4"
-              style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
-            >
-              Your Biomarkers
-            </h2>
-
-            {/* Category filter chips */}
-            <div className="mb-6 flex flex-wrap gap-2">
-              <FilterChip
-                label="All"
-                count={latestResults.length}
-                active={selectedCategory === null}
-                onClick={() => setSelectedCategory(null)}
-              />
-              {categories.map((cat) => (
-                <FilterChip
-                  key={cat}
-                  label={cat.charAt(0).toUpperCase() + cat.slice(1)}
-                  count={categoryCounts[cat]}
-                  color={CATEGORY_COLORS[cat] || "#6B7280"}
-                  active={selectedCategory === cat}
-                  onClick={() => setSelectedCategory(cat)}
-                />
-              ))}
-            </div>
-
-            {/* Grouped by body system */}
-            {markersBySystem.map(({ system, results: sysResults }) => {
-              // Apply free tier limit across all systems
-              const visibleInSystem = (() => {
-                if (!isFree) return sysResults;
-                // Count how many markers were shown before this system
-                let countBefore = 0;
-                for (const grp of markersBySystem) {
-                  if (grp.system.key === system.key) break;
-                  countBefore += grp.results.length;
-                }
-                const remainingSlots = Math.max(0, FREE_TIER_MARKER_LIMIT - countBefore);
-                return sysResults.slice(0, remainingSlots);
-              })();
-
-              const lockedInSystem = isFree ? sysResults.length - visibleInSystem.length : 0;
-
-              if (visibleInSystem.length === 0 && lockedInSystem === 0) return null;
-
-              return (
-                <div key={system.key} id={`system-${system.key}`} className="mb-8">
-                  {/* System heading */}
-                  <div className="flex items-center gap-2.5 mb-4">
-                    <div className="text-[#1B6B4A]">{system.icon}</div>
-                    <h3
-                      className="text-[17px] font-semibold text-[#0F1A15]"
-                      style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
-                    >
-                      {system.name}
-                    </h3>
-                    <span className="text-[12px] text-[#8A928C]">
-                      {sysResults.length} marker{sysResults.length !== 1 ? "s" : ""}
-                    </span>
-                  </div>
-
-                  {/* Grid of compact marker cards */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {visibleInSystem.map((result) => {
-                      const analysis = analyses.find((a) => a.biomarker_result_id === result.id);
-                      const biomarkerCitations = citations.filter((c) => c.biomarker_result_id === result.id);
-                      const isExpanded = expandedBiomarker === result.id;
-
-                      return (
-                        <BiomarkerCard
-                          key={result.id}
-                          result={result}
-                          analysis={analysis}
-                          citations={biomarkerCitations}
-                          expanded={isExpanded}
-                          onToggle={() =>
-                            setExpandedBiomarker(isExpanded ? null : result.id)
-                          }
-                          optimalRange={(() => {
-                            const demoRange = getDemographicOptimalRange(result.biomarker, profile.age, profile.sex);
-                            if (demoRange) return { optimal_low: demoRange.optimal_low, optimal_high: demoRange.optimal_high, canonical_name: result.biomarker };
-                            return optimalRanges[result.biomarker.toLowerCase()] || optimalRanges[(analysis?.biomarker_name || "").toLowerCase()];
-                          })()}
-                          isFree={isFree}
-                          allMarkerNames={allMarkerNames}
-                          detectedPatterns={detectedPatterns}
-                        />
-                      );
-                    })}
-                  </div>
-
-                  {/* Locked markers in this system */}
-                  {isFree && lockedInSystem > 0 && (
-                    <div className="mt-3 relative overflow-hidden" style={{ ...GLASS_CARD, padding: 0 }}>
-                      <div className="p-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-3 select-none" style={{ filter: "blur(5px)", opacity: 0.5, pointerEvents: "none" }}>
-                        {sysResults.slice(visibleInSystem.length, visibleInSystem.length + 3).map((r) => {
-                          const a = analyses.find((x) => x.biomarker_result_id === r.id);
-                          return (
-                            <div key={r.id} className="bg-white/50 rounded-2xl p-4">
-                              <div className="text-[13px] font-semibold">{r.biomarker}</div>
-                              <div className="text-[24px] mt-1" style={{ fontFamily: FRAUNCES }}>{r.value} <span className="text-[11px] text-[#8A928C]" style={{ fontFamily: MONO }}>{r.unit}</span></div>
-                              <div className="text-[11px] text-[#5A635D] mt-1 line-clamp-1">{a?.summary || ""}</div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-transparent via-white/30 to-white/60">
-                        <div className="text-center px-6">
-                          <p className="text-[13px] text-[#5A635D] mb-3">
-                            {lockedInSystem} more {system.name.toLowerCase()} markers analyzed
-                          </p>
-                          <a
-                            href="/pricing"
-                            className="inline-flex text-[12px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-5 py-2.5 rounded-full transition-all duration-300"
-                          >
-                            See all {totalMarkers} markers
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-
-          {/* ============================================================ */}
-          {/* REPORT CARD — paid users only, after biomarkers              */}
+          {/* SHARE YOUR RESULTS — paid only                                */}
           {/* ============================================================ */}
           {!isFree && (
-            <ReportCardSection
-              statusCounts={statusCounts}
-              bioAge={
-                bioAge && bioAge.ensemble_age !== null
-                  ? {
-                      ensembleAge: bioAge.ensemble_age,
-                      chronologicalAge: bioAge.chronological_age,
-                      gap: bioAge.gap ?? 0,
-                    }
-                  : null
-              }
-              keyFinding={
-                oneBigThing
-                  ? (oneBigThing as any).message + ". " + (oneBigThing as any).detail
-                  : allGood
-                  ? `All ${latestResults.length} markers in a healthy range. ${statusCounts.optimal} are optimal.`
-                  : null
-              }
-              markerCount={latestResults.length}
-              studiesCount={analyses.reduce((sum, a) => sum + (a.citation_count || 0), 0)}
-              testDate={latestTestDate}
-            />
+            <div className="mb-10">
+              <ReportCardSection
+                statusCounts={statusCounts}
+                bioAge={
+                  bioAge && bioAge.ensemble_age !== null
+                    ? { ensembleAge: bioAge.ensemble_age, chronologicalAge: bioAge.chronological_age, gap: bioAge.gap ?? 0 }
+                    : null
+                }
+                keyFinding={
+                  keyFindings.length > 0
+                    ? (keyFindings[0] as any).detail
+                    : allGood
+                    ? `All ${latestResults.length} markers in a healthy range. ${statusCounts.optimal} are optimal.`
+                    : null
+                }
+                markerCount={latestResults.length}
+                studiesCount={analyses.reduce((sum, a) => sum + (a.citation_count || 0), 0)}
+                testDate={latestTestDate}
+              />
+            </div>
           )}
 
-          {/* Full upgrade CTA for free users — pricing cards */}
+          {/* ============================================================ */}
+          {/* UPGRADE CTA — free users only                                 */}
+          {/* ============================================================ */}
           {isFree && (
             <div className="mb-10">
               <div className="text-center mb-8">
-                <h3
-                  className="text-[26px] mb-2 text-[#0F1A15]"
-                  style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
-                >
-                  You&apos;re seeing 5 of {latestResults.length} markers.
+                <h3 className="text-[24px] mb-2 text-[#0F1A15]" style={{ fontFamily: FRAUNCES, fontWeight: 500 }}>
+                  You&apos;re seeing {FREE_TIER_MARKER_LIMIT} of {latestResults.length} markers.
                 </h3>
                 <p className="text-[14px] text-[#5A635D] max-w-lg mx-auto">
                   Your full analysis is ready. Choose how you want to unlock it.
                 </p>
               </div>
-
               <div className="grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
-                {/* Lipa Life — featured */}
-                <div className="p-6 relative" style={{ ...GLASS_CARD, border: "2px solid #1B6B4A" }}>
+                {/* Lipa Life */}
+                <div className="p-6 relative" style={{ ...CARD, border: "2px solid #1B6B4A" }}>
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#1B6B4A] text-white text-[9px] uppercase tracking-wider font-semibold px-3 py-1 rounded-full">Recommended</div>
-                  <div className="text-[22px] font-semibold text-[#0F1A15] mb-1" style={{ fontFamily: FRAUNCES }}>Lipa Life</div>
-                  <div className="text-[28px] text-[#1B6B4A] mb-1" style={{ fontFamily: FRAUNCES, fontWeight: 600 }}>€89<span className="text-[14px] text-[#8A928C] font-normal">/year</span></div>
+                  <div className="text-[20px] font-semibold text-[#0F1A15] mb-1" style={{ fontFamily: FRAUNCES }}>Lipa Life</div>
+                  <div className="text-[28px] text-[#1B6B4A] mb-1" style={{ fontFamily: FRAUNCES, fontWeight: 600 }}>&euro;89<span className="text-[14px] text-[#8A928C] font-normal">/year</span></div>
                   <ul className="text-[12px] text-[#5A635D] space-y-1.5 mb-5 mt-4">
-                    <li className="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" className="flex-shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>All {latestResults.length} markers analyzed</li>
-                    <li className="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" className="flex-shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>Personalized action plan</li>
-                    <li className="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" className="flex-shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>Ask Lipa — unlimited, for life</li>
-                    <li className="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" className="flex-shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>Vault + trends + bio-age trajectory</li>
-                    <li className="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" className="flex-shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>Up to 12 uploads per year</li>
-                    <li className="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" className="flex-shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>Research alerts for your markers</li>
+                    {["All markers analyzed", "Personalized action plan", "Ask Lipa — unlimited", "Vault + trends + bio-age trajectory", "Up to 12 uploads/year", "Research alerts"].map((item) => (
+                      <li key={item} className="flex items-start gap-2">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" className="flex-shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>
+                        {item}
+                      </li>
+                    ))}
                   </ul>
                   <a
-                    href="/pricing"
-                    onClick={(e) => { e.preventDefault(); window.location.href = "/pricing?tier=insight"; }}
+                    href="/pricing?tier=insight"
                     className="block w-full text-center text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] py-3 rounded-full transition-all duration-300"
                     style={{ boxShadow: "0 4px 16px rgba(27,107,74,0.2)" }}
                   >
-                    Get Lipa Life — €89/year
+                    Get Lipa Life &mdash; &euro;89/year
                   </a>
                 </div>
-
                 {/* Lipa One */}
-                <div className="p-6" style={GLASS_CARD}>
-                  <div className="text-[22px] font-semibold text-[#0F1A15] mb-1" style={{ fontFamily: FRAUNCES }}>Lipa One</div>
-                  <div className="text-[28px] text-[#0F1A15] mb-1" style={{ fontFamily: FRAUNCES, fontWeight: 600 }}>€29<span className="text-[14px] text-[#8A928C] font-normal"> one-time</span></div>
+                <div className="p-6" style={CARD}>
+                  <div className="text-[20px] font-semibold text-[#0F1A15] mb-1" style={{ fontFamily: FRAUNCES }}>Lipa One</div>
+                  <div className="text-[28px] text-[#0F1A15] mb-1" style={{ fontFamily: FRAUNCES, fontWeight: 600 }}>&euro;29<span className="text-[14px] text-[#8A928C] font-normal"> one-time</span></div>
                   <ul className="text-[12px] text-[#5A635D] space-y-1.5 mb-5 mt-4">
-                    <li className="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" className="flex-shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>All {latestResults.length} markers analyzed</li>
-                    <li className="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" className="flex-shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>Personalized action plan</li>
-                    <li className="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" className="flex-shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>Ask Lipa for 7 days</li>
-                    <li className="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" className="flex-shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>Risk calculations + biological age</li>
-                    <li className="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" className="flex-shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>PDF report for your doctor</li>
+                    {["All markers analyzed", "Personalized action plan", "Ask Lipa for 7 days", "Risk calculations + bio-age", "PDF report for your doctor"].map((item) => (
+                      <li key={item} className="flex items-start gap-2">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" className="flex-shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12" /></svg>
+                        {item}
+                      </li>
+                    ))}
                   </ul>
-                  <a
-                    href="/pricing"
-                    onClick={(e) => { e.preventDefault(); window.location.href = "/pricing?tier=one"; }}
-                    className="block w-full text-center text-[13px] font-semibold text-[#0F1A15] bg-[#F4F4F5] hover:bg-[#E5E5E5] py-3 rounded-full transition-all duration-300"
-                  >
-                    Get Single Analysis — €29
+                  <a href="/pricing?tier=one" className="block w-full text-center text-[13px] font-semibold text-[#0F1A15] bg-[#F4F4F5] hover:bg-[#E5E5E5] py-3 rounded-full transition-all duration-300">
+                    Get Single Analysis &mdash; &euro;29
                   </a>
-                  <p className="text-[10px] text-[#8A928C] text-center mt-2">€29 credited if you upgrade to Life within 30 days</p>
+                  <p className="text-[10px] text-[#8A928C] text-center mt-2">&euro;29 credited if you upgrade to Life within 30 days</p>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Footer — extra pb on mobile for bottom nav */}
-          <div className="mt-12 pb-8 sm:pb-8 pb-24">
+          {/* ============================================================ */}
+          {/* FOOTER                                                        */}
+          {/* ============================================================ */}
+          <div className="mt-12 pb-24 sm:pb-8">
             <div className="flex justify-center mb-6">
-              <a
-                href="/upload"
-                className="inline-flex items-center gap-2 text-[13px] font-semibold text-[#1B6B4A] hover:text-[#155A3D] transition-colors"
-              >
+              <a href="/upload" className="inline-flex items-center gap-2 text-[13px] font-semibold text-[#1B6B4A] hover:text-[#155A3D] transition-colors">
                 Upload another blood test
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  <path d="M5 12h14" />
-                  <path d="M12 5l7 7-7 7" />
+                  <path d="M5 12h14" /><path d="M12 5l7 7-7 7" />
                 </svg>
               </a>
             </div>
             <p className="text-[10px] text-[#8A928C] text-center leading-relaxed max-w-lg mx-auto">
-              This analysis is educational content based on peer-reviewed research, not medical advice. Consult your healthcare provider before making any health decisions. Lipa does not diagnose or treat medical conditions.
+              This analysis is educational content based on peer-reviewed research, not medical advice. Consult your healthcare provider before making any health decisions.
             </p>
           </div>
         </div>
       </main>
+
+      {/* Floating Ask Lipa for when scrolled past inline section */}
       {userId && <AskLipa userId={userId} />}
       {userId && <SupportButton userId={userId} email={undefined} />}
     </>
@@ -1470,115 +1284,436 @@ export default function DashboardPage() {
 }
 
 // =====================================================================
-// SUB-COMPONENTS
+// INLINE ASK LIPA — prominent section per wireframe
 // =====================================================================
 
-// ---------------------------------------------------------------------
-// Filter chip
-// ---------------------------------------------------------------------
+function InlineAskLipa({ userId, isFree }: { userId: string | null; isFree: boolean }) {
+  const [input, setInput] = useState("");
+  const [messages, setMessages] = useState<{ role: "user" | "assistant"; content: string }[]>([]);
+  const [streaming, setStreaming] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-function FilterChip({
-  label,
-  count,
-  color,
-  active,
-  onClick,
-}: {
-  label: string;
-  count: number;
-  color?: string;
-  active: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={`flex items-center gap-2 px-3.5 py-1.5 text-[12px] font-medium ${
-        active
-          ? "text-white shadow-sm"
-          : "text-[#5A635D] hover:text-[#0F1A15]"
-      }`}
-      style={
-        active
-          ? {
-              background: "#1B6B4A",
-              borderRadius: "20px",
-              boxShadow: "0 4px 12px rgba(27,107,74,0.25)",
-              transition: TRANSITION,
-            }
-          : {
-              ...GLASS_CARD,
-              borderRadius: "20px",
-              boxShadow: "0 2px 8px rgba(15,26,21,0.03)",
-              transition: TRANSITION,
-            }
+  const SUGGESTED = [
+    "Why is my cholesterol high?",
+    "What supplements should I take?",
+    "Should I retest in 3 months?",
+  ];
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  async function sendMessage(text?: string) {
+    const msg = text || input.trim();
+    if (!msg || streaming || !userId) return;
+
+    if (isFree) {
+      // Gate — show upgrade prompt
+      return;
+    }
+
+    setMessages((prev) => [...prev, { role: "user", content: msg }]);
+    setInput("");
+    setStreaming(true);
+    setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
+
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: msg, userId, history: messages.slice(-10) }),
+      });
+      if (!res.ok) throw new Error("Chat failed");
+
+      const reader = res.body?.getReader();
+      const decoder = new TextDecoder();
+      let fullText = "";
+
+      if (reader) {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          const chunk = decoder.decode(value);
+          const lines = chunk.split("\n").filter((l) => l.startsWith("data: "));
+          for (const line of lines) {
+            const data = line.slice(6);
+            if (data === "[DONE]") continue;
+            try {
+              const parsed = JSON.parse(data);
+              if (parsed.text) {
+                fullText += parsed.text;
+                setMessages((prev) => {
+                  const updated = [...prev];
+                  updated[updated.length - 1] = { role: "assistant", content: fullText };
+                  return updated;
+                });
+              }
+            } catch {}
+          }
+        }
       }
-    >
-      {color && !active && (
-        <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: color }} />
+    } catch {
+      setMessages((prev) => {
+        const updated = [...prev];
+        updated[updated.length - 1] = { role: "assistant", content: "Sorry, something went wrong. Please try again." };
+        return updated;
+      });
+    }
+    setStreaming(false);
+  }
+
+  // Simple markdown
+  function fmt(text: string): string {
+    let html = text;
+    html = html.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+    html = html.replace(/\*(.+?)\*/g, "<em>$1</em>");
+    html = html.replace(/^- (.+)$/gm, '<li style="margin-left:16px;list-style:disc">$1</li>');
+    html = html.replace(/\n\n/g, '<div style="height:8px"></div>');
+    html = html.replace(/\n/g, "<br>");
+    return html;
+  }
+
+  return (
+    <div className="mb-10 p-5 sm:p-6" style={{ ...CARD, background: "rgba(232,245,238,0.25)", border: "1px solid rgba(27,107,74,0.12)" }}>
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-8 h-8 bg-[#1B6B4A] rounded-full flex items-center justify-center flex-shrink-0">
+          <svg width="14" height="14" viewBox="0 0 28 28" fill="none">
+            <circle cx="14" cy="14" r="13" stroke="white" strokeWidth="1.5" />
+            <path d="M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z" fill="white" opacity="0.3" stroke="white" strokeWidth="1" />
+          </svg>
+        </div>
+        <div>
+          <div className="text-[15px] font-semibold text-[#0F1A15]">Ask Lipa</div>
+          <div className="text-[11px] text-[#8A928C]">Your Personal Health Assistant</div>
+        </div>
+      </div>
+
+      {/* Suggested questions */}
+      {messages.length === 0 && (
+        <div className="flex flex-wrap gap-2 mb-4">
+          {SUGGESTED.map((q) => (
+            <button
+              key={q}
+              onClick={() => isFree ? undefined : sendMessage(q)}
+              className="text-[12px] text-[#0F1A15] px-3.5 py-2 rounded-full transition-all duration-200 hover:-translate-y-0.5"
+              style={{ background: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.5)", boxShadow: "0 1px 4px rgba(15,26,21,0.04)" }}
+            >
+              {q}
+            </button>
+          ))}
+        </div>
       )}
-      {label}
-      <span className={active ? "text-white/70" : "text-[#8A928C]"}>{count}</span>
-    </button>
+
+      {/* Chat messages */}
+      {messages.length > 0 && (
+        <div className="max-h-[300px] overflow-y-auto mb-4 space-y-3">
+          {messages.map((msg, i) => (
+            <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+              <div
+                className={`max-w-[85%] px-4 py-3 rounded-2xl text-[13px] leading-relaxed ${msg.role === "user" ? "bg-[#1B6B4A] text-white" : ""}`}
+                style={msg.role === "assistant" ? { background: "rgba(255,255,255,0.8)", border: "1px solid rgba(255,255,255,0.5)", color: "#0F1A15" } : undefined}
+              >
+                {msg.content ? (
+                  <div dangerouslySetInnerHTML={{ __html: fmt(msg.content) }} />
+                ) : (
+                  <div className="flex items-center gap-2 text-[#8A928C]">
+                    <div className="w-2 h-2 bg-[#1B6B4A] rounded-full animate-pulse" />
+                    Thinking...
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+          <div ref={messagesEndRef} />
+        </div>
+      )}
+
+      {/* Input bar */}
+      {isFree ? (
+        <div className="flex items-center gap-3">
+          <div className="flex-1 text-[13px] bg-white/50 border border-white/30 rounded-full px-4 py-2.5 text-[#8A928C]">
+            Ask anything about your results...
+          </div>
+          <a href="/pricing" className="text-[12px] font-semibold text-[#1B6B4A] hover:underline whitespace-nowrap">
+            Upgrade to ask
+          </a>
+        </div>
+      ) : (
+        <form
+          onSubmit={(e) => { e.preventDefault(); sendMessage(); }}
+          className="flex items-center gap-2"
+        >
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Ask anything about your results..."
+            disabled={streaming}
+            className="flex-1 text-[13px] bg-white/70 border border-white/40 rounded-full px-4 py-2.5 focus:outline-none focus:border-[#1B6B4A]/40 placeholder:text-[#B5B5B5] disabled:opacity-50"
+          />
+          <button
+            type="submit"
+            disabled={streaming || !input.trim()}
+            className="w-10 h-10 rounded-full bg-[#1B6B4A] flex items-center justify-center flex-shrink-0 transition-all duration-200 hover:bg-[#155A3D] disabled:opacity-40"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round">
+              <line x1="22" y1="2" x2="11" y2="13" />
+              <polygon points="22 2 15 22 11 13 2 9 22 2" />
+            </svg>
+          </button>
+        </form>
+      )}
+    </div>
   );
 }
 
-// ---------------------------------------------------------------------
-// Pattern card
-// ---------------------------------------------------------------------
+// =====================================================================
+// MARKER DETAIL — expanded view inside body system
+// =====================================================================
 
-const SEVERITY_STYLES: Record<string, { bg: string; text: string; border: string; label: string }> = {
-  watch: { bg: "#F4F4F5", text: "#52525B", border: "#A1A1AA", label: "Watch" },
-  attention: { bg: "#FEF3C7", text: "#B45309", border: "#F59E0B", label: "Needs attention" },
-  urgent: { bg: "#FEE2E2", text: "#B91C1C", border: "#EF4444", label: "Urgent" },
-};
+function MarkerDetail({
+  result,
+  analysis,
+  citations,
+  optimalRange,
+  detectedPatterns,
+  profile,
+}: {
+  result: BiomarkerResult;
+  analysis: Analysis;
+  citations: Citation[];
+  optimalRange?: OptimalRange;
+  detectedPatterns: DetectedPattern[];
+  profile: UserProfile;
+}) {
+  const [citationsOpen, setCitationsOpen] = useState(false);
+  const status = analysis.status;
+  const ss = STATUS_STYLES[status];
+
+  const isNormalButSuboptimal =
+    optimalRange &&
+    optimalRange.optimal_low !== null &&
+    optimalRange.optimal_high !== null &&
+    status === "normal" &&
+    (result.value < optimalRange.optimal_low || result.value > optimalRange.optimal_high);
+
+  const relatedPatterns = detectedPatterns.filter((p) =>
+    p.markers_matched.some((m) => m.toLowerCase() === result.biomarker.toLowerCase())
+  );
+
+  const pct = getPopulationPercentile(result.biomarker, result.value, undefined, undefined);
+
+  return (
+    <div className="px-5 py-5 bg-[#FAFAF8]" style={{ borderTop: "1px solid rgba(15,26,21,0.06)" }}>
+
+      {/* Header: value + status + percentile */}
+      <div className="flex items-baseline gap-3 mb-4">
+        <span className="text-[28px] tracking-tight text-[#0F1A15]" style={{ fontFamily: FRAUNCES, fontWeight: 500 }}>
+          {result.value}
+        </span>
+        <span className="text-[11px] text-[#8A928C]" style={{ fontFamily: MONO }}>{result.unit}</span>
+        <div className="text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full flex items-center gap-1" style={{ backgroundColor: ss.bg, color: ss.text }}>
+          <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: ss.dot }} />
+          {ss.label}
+        </div>
+        {pct && <span className="text-[12px] text-[#8A928C]">{pct.label}</span>}
+      </div>
+
+      {/* Zone bar */}
+      {result.ref_low !== null && result.ref_high !== null && (
+        <div className="mb-5">
+          <ZoneBar
+            value={result.value}
+            refLow={result.ref_low}
+            refHigh={result.ref_high}
+            optimalRange={optimalRange}
+            unit={result.unit}
+            statusColor={ss.dot}
+          />
+          {isNormalButSuboptimal && (
+            <div className="mt-3 px-3 py-2 rounded-xl" style={{ background: "rgba(254,243,199,0.5)", border: "1px solid rgba(245,158,11,0.15)" }}>
+              <p className="text-[11px] text-[#B45309] leading-snug">
+                <strong>Your lab says &quot;normal&quot;</strong> &mdash; but your value of {result.value} {result.unit} sits outside the research-supported optimal range ({optimalRange!.optimal_low}&ndash;{optimalRange!.optimal_high}).
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* What to do — green box */}
+      {analysis.what_to_do && (
+        <div className="mb-4 p-3 rounded-2xl" style={{ background: "#E8F5EE", border: "1px solid rgba(27,107,74,0.1)" }}>
+          <div className="text-[10px] uppercase tracking-wider text-[#1B6B4A] font-semibold mb-1.5">What to do</div>
+          <p className="text-[13px] text-[#0F1A15] leading-relaxed">{analysis.what_to_do}</p>
+        </div>
+      )}
+
+      {/* What this means */}
+      <div className="mb-4">
+        <div className="text-[10px] uppercase tracking-wider text-[#8A928C] font-medium mb-1.5">What this means</div>
+        <p className="text-[13px] text-[#0F1A15] leading-relaxed">{analysis.what_it_means}</p>
+      </div>
+
+      {/* What the research shows */}
+      <div className="mb-4">
+        <div className="text-[10px] uppercase tracking-wider text-[#8A928C] font-medium mb-1.5">
+          What the research shows
+          {analysis.citation_count > 0 && (
+            <span className="normal-case tracking-normal font-normal text-[#1B6B4A] ml-2">
+              &middot; {analysis.citation_count} studies
+            </span>
+          )}
+        </div>
+        <p className="text-[13px] text-[#0F1A15] leading-relaxed">{analysis.what_research_shows}</p>
+      </div>
+
+      {/* Citations */}
+      {citations.length > 0 && (
+        <div className="mb-4">
+          <button
+            onClick={() => setCitationsOpen(!citationsOpen)}
+            className="text-[12px] font-medium text-[#1B6B4A] hover:underline flex items-center gap-1"
+          >
+            Show {citations.length} cited studies
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ transition: TRANSITION, transform: citationsOpen ? "rotate(180deg)" : "rotate(0)" }}>
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+          {citationsOpen && (
+            <div className="mt-2 space-y-2">
+              {citations.map((c, i) => (
+                <div key={i} className="text-[11px] text-[#5A635D] leading-snug p-2 rounded-lg" style={{ background: "rgba(255,255,255,0.5)" }}>
+                  <span className="font-medium">{c.study.title}</span>
+                  {c.study.journal && <span className="text-[#8A928C]"> &mdash; {c.study.journal}</span>}
+                  {c.study.publication_year && <span className="text-[#8A928C]"> ({c.study.publication_year})</span>}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Related patterns */}
+      {relatedPatterns.length > 0 && (
+        <div className="mb-4">
+          <div className="text-[10px] uppercase tracking-wider text-[#8A928C] font-medium mb-2">Related patterns</div>
+          <div className="space-y-2">
+            {relatedPatterns.map((p) => (
+              <div key={p.id} className="p-3 rounded-xl" style={CARD_INNER}>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[13px] font-medium text-[#0F1A15]">{p.name}</span>
+                  <span className="text-[9px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full"
+                    style={{ backgroundColor: (SEVERITY_STYLES[p.severity] || SEVERITY_STYLES.watch).bg, color: (SEVERITY_STYLES[p.severity] || SEVERITY_STYLES.watch).text }}>
+                    {(SEVERITY_STYLES[p.severity] || SEVERITY_STYLES.watch).label}
+                  </span>
+                </div>
+                <p className="text-[12px] text-[#5A635D] leading-snug">{p.summary}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Population percentile */}
+      {pct && (
+        <div className="p-4 rounded-2xl" style={CARD_INNER}>
+          <div className="flex items-baseline justify-between mb-2">
+            <div className="text-[11px] uppercase tracking-wider text-[#8A928C] font-medium">Where you stand</div>
+            <div className="text-[14px] font-semibold" style={{ fontFamily: FRAUNCES }}>{pct.label}</div>
+          </div>
+          <div className="relative h-2.5 rounded-full mb-2" style={{ background: "rgba(15,26,21,0.05)" }}>
+            <div className="absolute top-0 h-2.5 rounded-full bg-[#1B6B4A]" style={{ width: `${pct.percentile}%`, opacity: 0.2 }} />
+            <div className="absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-[#1B6B4A] border-2 border-white" style={{ left: `calc(${pct.percentile}% - 7px)`, boxShadow: "0 2px 8px rgba(27,107,74,0.3)" }} />
+          </div>
+          <div className="text-[11px] text-[#5A635D] leading-snug">{pct.interpretation} Compared to 300,000+ {pct.context}.</div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// =====================================================================
+// ZONE BAR
+// =====================================================================
+
+function ZoneBar({
+  value, refLow, refHigh, optimalRange, unit, statusColor,
+}: {
+  value: number; refLow: number; refHigh: number; optimalRange?: OptimalRange; unit: string | null; statusColor: string;
+}) {
+  const rangePadding = (refHigh - refLow) * 0.15;
+  const visualMin = refLow - rangePadding;
+  const visualMax = refHigh + rangePadding;
+  const visualRange = visualMax - visualMin;
+  const toPercent = (v: number) => Math.max(0, Math.min(100, ((v - visualMin) / visualRange) * 100));
+
+  const refLowPct = toPercent(refLow);
+  const refHighPct = toPercent(refHigh);
+  const valuePct = toPercent(value);
+
+  const hasOptimal = optimalRange && optimalRange.optimal_low !== null && optimalRange.optimal_high !== null;
+  const optLowPct = hasOptimal ? toPercent(optimalRange!.optimal_low!) : 0;
+  const optHighPct = hasOptimal ? toPercent(optimalRange!.optimal_high!) : 0;
+
+  return (
+    <div className="w-full">
+      <div className="relative h-2 rounded-full overflow-hidden" style={{ background: "rgba(15,26,21,0.04)" }}>
+        <div className="absolute top-0 h-full rounded-l-full" style={{ left: 0, width: `${refLowPct}%`, background: "rgba(239,68,68,0.12)" }} />
+        <div className="absolute top-0 h-full rounded-r-full" style={{ left: `${refHighPct}%`, width: `${100 - refHighPct}%`, background: "rgba(239,68,68,0.12)" }} />
+        {hasOptimal && (
+          <>
+            <div className="absolute top-0 h-full" style={{ left: `${refLowPct}%`, width: `${Math.max(0, optLowPct - refLowPct)}%`, background: "rgba(245,158,11,0.15)" }} />
+            <div className="absolute top-0 h-full" style={{ left: `${optHighPct}%`, width: `${Math.max(0, refHighPct - optHighPct)}%`, background: "rgba(245,158,11,0.15)" }} />
+          </>
+        )}
+        {hasOptimal ? (
+          <div className="absolute top-0 h-full" style={{ left: `${optLowPct}%`, width: `${optHighPct - optLowPct}%`, background: "rgba(27,107,74,0.18)" }} />
+        ) : (
+          <div className="absolute top-0 h-full" style={{ left: `${refLowPct}%`, width: `${refHighPct - refLowPct}%`, background: "rgba(27,107,74,0.12)" }} />
+        )}
+        <div className="absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full border-2 border-white" style={{ left: `calc(${valuePct}% - 7px)`, backgroundColor: statusColor, boxShadow: `0 2px 8px ${statusColor}40` }} />
+      </div>
+      <div className="flex justify-between items-center mt-1.5">
+        <span className="text-[10px] text-[#8A928C]" style={{ fontFamily: MONO }}>{refLow}{unit ? ` ${unit}` : ""}</span>
+        {hasOptimal && (
+          <span className="text-[10px] text-[#1B6B4A] font-medium" style={{ fontFamily: MONO }}>
+            optimal: {optimalRange!.optimal_low}&ndash;{optimalRange!.optimal_high}
+          </span>
+        )}
+        <span className="text-[10px] text-[#8A928C]" style={{ fontFamily: MONO }}>{refHigh}{unit ? ` ${unit}` : ""}</span>
+      </div>
+    </div>
+  );
+}
+
+// =====================================================================
+// PATTERN CARD
+// =====================================================================
 
 function PatternCard({ pattern }: { pattern: DetectedPattern }) {
   const [expanded, setExpanded] = useState(false);
   const sev = SEVERITY_STYLES[pattern.severity] || SEVERITY_STYLES.watch;
 
   return (
-    <div
-      className="overflow-hidden"
-      style={{
-        ...GLASS_CARD,
-        borderLeft: `3px solid ${sev.border}`,
-        transition: TRANSITION,
-      }}
-    >
-      <button
-        onClick={() => setExpanded(!expanded)}
-        className="w-full text-left px-6 py-5 transition-colors"
-      >
+    <div className="overflow-hidden" style={{ ...CARD, borderLeft: `3px solid ${sev.border}`, transition: TRANSITION }}>
+      <button onClick={() => setExpanded(!expanded)} className="w-full text-left px-5 py-4">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-2">
               <h3 className="text-[15px] font-semibold text-[#0F1A15]">{pattern.name}</h3>
-              <div
-                className="text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full"
-                style={{ backgroundColor: sev.bg, color: sev.text }}
-              >
+              <div className="text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: sev.bg, color: sev.text }}>
                 {sev.label}
               </div>
             </div>
             <p className="text-[13px] text-[#5A635D] leading-relaxed line-clamp-2">{pattern.summary}</p>
           </div>
-          <svg
-            width="16" height="16" viewBox="0 0 24 24" fill="none"
-            stroke="#8A928C" strokeWidth="2"
-            className={`flex-shrink-0 mt-1`}
-            style={{ transition: TRANSITION, transform: expanded ? "rotate(180deg)" : "rotate(0)" }}
-          >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8A928C" strokeWidth="2" className="flex-shrink-0 mt-1" style={{ transition: TRANSITION, transform: expanded ? "rotate(180deg)" : "rotate(0)" }}>
             <polyline points="6 9 12 15 18 9" />
           </svg>
         </div>
         <div className="flex gap-1.5 mt-3 flex-wrap">
           {pattern.markers_matched.map((m) => (
-            <span
-              key={m}
-              className="text-[10px] font-medium text-[#1B6B4A] px-2 py-0.5 rounded-full"
-              style={{ background: "rgba(232,245,238,0.7)" }}
-            >
+            <span key={m} className="text-[10px] font-medium text-[#1B6B4A] px-2 py-0.5 rounded-full" style={{ background: "rgba(232,245,238,0.7)" }}>
               {m}
             </span>
           ))}
@@ -1586,7 +1721,7 @@ function PatternCard({ pattern }: { pattern: DetectedPattern }) {
       </button>
 
       {expanded && (
-        <div className="px-6 py-5" style={{ borderTop: "1px solid rgba(255,255,255,0.3)", background: "rgba(255,255,255,0.3)" }}>
+        <div className="px-5 py-4" style={{ borderTop: "1px solid rgba(255,255,255,0.3)", background: "rgba(255,255,255,0.3)" }}>
           <div className="mb-4">
             <div className="text-[11px] uppercase tracking-wider text-[#8A928C] font-medium mb-2">What the research shows</div>
             <p className="text-[14px] text-[#0F1A15] leading-relaxed">{pattern.detail}</p>
@@ -1605,222 +1740,36 @@ function PatternCard({ pattern }: { pattern: DetectedPattern }) {
   );
 }
 
-// ---------------------------------------------------------------------
-// Action plan domain card
-// ---------------------------------------------------------------------
+// =====================================================================
+// INSIGHT CARD
+// =====================================================================
 
-const DOMAIN_LABELS: Record<string, string> = {
-  nutrition: "Nutrition",
-  supplementation: "Supplementation research",
-  sleep: "Sleep",
-  movement: "Movement",
-  environment: "Environment",
-  lifestyle: "Lifestyle",
-};
-
-const DOMAIN_ICONS: Record<string, string> = {
-  nutrition: "N",
-  supplementation: "S",
-  sleep: "Z",
-  movement: "M",
-  environment: "E",
-  lifestyle: "L",
-};
-
-function ActionPlanDomainCard({ domain }: { domain: any }) {
-  const label = DOMAIN_LABELS[domain.domain] || domain.domain;
-  const icon = DOMAIN_ICONS[domain.domain] || "?";
-  const [expanded, setExpanded] = useState(false);
-  const recs = domain.recommendations || [];
-
-  if (recs.length === 0) return null;
-
-  return (
-    <div
-      className="overflow-hidden"
-      style={{ ...GLASS_CARD, transition: TRANSITION }}
-    >
-      <button
-        onClick={() => setExpanded(!expanded)}
-        className="w-full text-left px-5 py-4 transition-colors"
-      >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div
-              className="w-9 h-9 rounded-xl flex items-center justify-center text-[13px] font-semibold text-[#1B6B4A]"
-              style={{ background: "rgba(232,245,238,0.7)" }}
-            >
-              {icon}
-            </div>
-            <div>
-              <div className="text-[13px] font-semibold text-[#0F1A15]">
-                {label}
-              </div>
-              <div className="text-[12px] text-[#8A928C]">
-                {recs.length} recommendation{recs.length !== 1 ? "s" : ""}
-              </div>
-            </div>
-          </div>
-          <svg
-            width="16" height="16" viewBox="0 0 24 24" fill="none"
-            stroke="#8A928C" strokeWidth="2"
-            style={{ transition: TRANSITION, transform: expanded ? "rotate(180deg)" : "rotate(0)" }}
-          >
-            <polyline points="6 9 12 15 18 9" />
-          </svg>
-        </div>
-      </button>
-
-      {expanded && (
-        <div className="px-5 py-4 bg-[#FAFAF8]" style={{ borderTop: "1px solid rgba(15,26,21,0.06)" }}>
-          <div className="space-y-5">
-            {recs.map((rec: any, i: number) => (
-              <div key={i} className="pb-4 last:pb-0" style={{ borderBottom: i < recs.length - 1 ? "1px solid rgba(15,26,21,0.06)" : "none" }}>
-                <p className="text-[14px] font-medium text-[#0F1A15] leading-relaxed mb-1">
-                  {rec.text}
-                </p>
-                <p className="text-[12px] text-[#5A635D] leading-relaxed mb-2">
-                  {rec.research_basis}
-                </p>
-
-                {rec.details && (
-                  <div className="p-4 mt-3 space-y-3" style={GLASS_CARD_INNER}>
-                    {rec.details.dosage_range && (
-                      <div>
-                        <div className="text-[10px] uppercase tracking-wider text-[#8A928C] font-medium mb-1">Dosage range (from research)</div>
-                        <p className="text-[12px] text-[#0F1A15] leading-relaxed">{rec.details.dosage_range}</p>
-                      </div>
-                    )}
-                    {rec.details.best_form && (
-                      <div>
-                        <div className="text-[10px] uppercase tracking-wider text-[#8A928C] font-medium mb-1">Best-studied form</div>
-                        <p className="text-[12px] text-[#0F1A15] leading-relaxed">{rec.details.best_form}</p>
-                      </div>
-                    )}
-                    {rec.details.timing && (
-                      <div>
-                        <div className="text-[10px] uppercase tracking-wider text-[#8A928C] font-medium mb-1">When to take</div>
-                        <p className="text-[12px] text-[#0F1A15] leading-relaxed">{rec.details.timing}</p>
-                      </div>
-                    )}
-                    {rec.details.food_sources && (
-                      <div>
-                        <div className="text-[10px] uppercase tracking-wider text-[#8A928C] font-medium mb-1">Food sources</div>
-                        <p className="text-[12px] text-[#0F1A15] leading-relaxed">{rec.details.food_sources}</p>
-                      </div>
-                    )}
-                    {rec.details.interactions && (
-                      <div>
-                        <div className="text-[10px] uppercase tracking-wider text-[#B45309] font-medium mb-1">Interactions &amp; cautions</div>
-                        <p className="text-[12px] text-[#0F1A15] leading-relaxed">{rec.details.interactions}</p>
-                      </div>
-                    )}
-                    {rec.details.important_notes && (
-                      <div>
-                        <div className="text-[10px] uppercase tracking-wider text-[#8A928C] font-medium mb-1">Good to know</div>
-                        <p className="text-[12px] text-[#0F1A15] leading-relaxed">{rec.details.important_notes}</p>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {rec.markers_addressed && rec.markers_addressed.length > 0 && (
-                  <div className="flex gap-1.5 mt-3 flex-wrap">
-                    {rec.markers_addressed.map((m: string) => (
-                      <span
-                        key={m}
-                        className="text-[10px] font-medium text-[#1B6B4A] px-2 py-0.5 rounded-full"
-                        style={{ background: "rgba(232,245,238,0.7)" }}
-                      >
-                        {m}
-                      </span>
-                    ))}
-                    {rec.cited_studies && (
-                      <span className="text-[10px] text-[#8A928C] px-2 py-0.5">
-                        {rec.cited_studies} studies
-                      </span>
-                    )}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------
-// Insight card (risk calculations)
-// ---------------------------------------------------------------------
-
-const INSIGHT_COLORS: Record<RiskCalculation["interpretation"], { bg: string; text: string; dot: string }> = {
-  optimal: { bg: "#E8F5EE", text: "#1B6B4A", dot: "#1B6B4A" },
-  favorable: { bg: "#E8F5EE", text: "#1B6B4A", dot: "#1B6B4A" },
-  moderate: { bg: "#FEF3C7", text: "#B45309", dot: "#F59E0B" },
-  elevated: { bg: "#FEF3C7", text: "#B45309", dot: "#F59E0B" },
-  high: { bg: "#FEE2E2", text: "#B91C1C", dot: "#EF4444" },
-  unknown: { bg: "#F4F4F5", text: "#71717A", dot: "#A1A1AA" },
-};
-
-function InsightCard({
-  calc,
-  expanded,
-  onToggle,
-}: {
-  calc: RiskCalculation;
-  expanded: boolean;
-  onToggle: () => void;
-}) {
+function InsightCard({ calc, expanded, onToggle }: { calc: RiskCalculation; expanded: boolean; onToggle: () => void }) {
   const c = INSIGHT_COLORS[calc.interpretation];
   const hasValue = calc.interpretation !== "unknown";
 
   return (
-    <div
-      className="overflow-hidden"
-      style={{
-        ...GLASS_CARD,
-        transition: TRANSITION,
-      }}
-      onMouseEnter={(e) => {
-        if (!expanded) {
-          (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
-          (e.currentTarget as HTMLElement).style.boxShadow = "0 12px 40px rgba(15,26,21,0.1)";
-        }
-      }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-        (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 32px rgba(15,26,21,0.06)";
-      }}
+    <div className="overflow-hidden" style={{ ...CARD, transition: TRANSITION }}
+      onMouseEnter={(e) => { if (!expanded) { (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; } }}
+      onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; }}
     >
-      <button
-        onClick={onToggle}
-        className="w-full text-left px-5 py-4 transition-colors"
-      >
+      <button onClick={onToggle} className="w-full text-left px-5 py-4">
         <div className="flex items-start justify-between gap-3 mb-3">
           <div className="text-[13px] font-medium text-[#5A635D] leading-snug">{calc.name}</div>
-          <div
-            className="text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full flex items-center gap-1.5 flex-shrink-0"
-            style={{ backgroundColor: c.bg, color: c.text }}
-          >
+          <div className="text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full flex items-center gap-1.5 flex-shrink-0" style={{ backgroundColor: c.bg, color: c.text }}>
             <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: c.dot }} />
             {calc.interpretation_label}
           </div>
         </div>
         <div className="flex items-baseline gap-1.5">
-          <div
-            className="text-[30px] tracking-tight"
-            style={{ fontFamily: FRAUNCES, fontWeight: 500, color: hasValue ? "#0F1A15" : "#A1A1AA" }}
-          >
+          <div className="text-[30px] tracking-tight" style={{ fontFamily: FRAUNCES, fontWeight: 500, color: hasValue ? "#0F1A15" : "#A1A1AA" }}>
             {calc.value}
           </div>
           {calc.unit && hasValue && (
-            <div className="text-[11px] text-[#8A928C] font-mono" style={{ fontFamily: MONO }}>{calc.unit}</div>
+            <div className="text-[11px] text-[#8A928C]" style={{ fontFamily: MONO }}>{calc.unit}</div>
           )}
         </div>
       </button>
-
       {expanded && (
         <div className="px-5 py-4" style={{ borderTop: "1px solid rgba(255,255,255,0.3)", background: "rgba(255,255,255,0.3)" }}>
           <p className="text-[13px] text-[#0F1A15] leading-relaxed mb-3">{calc.summary}</p>
@@ -1844,47 +1793,27 @@ function InsightCard({
   );
 }
 
-// ---------------------------------------------------------------------
-// Profile editor
-// ---------------------------------------------------------------------
+// =====================================================================
+// PROFILE EDITOR
+// =====================================================================
 
-function ProfileEditor({
-  profile,
-  onSave,
-  onCancel,
-}: {
-  profile: UserProfile;
-  onSave: (p: UserProfile) => void;
-  onCancel: () => void;
-}) {
+function ProfileEditor({ profile, onSave, onCancel }: { profile: UserProfile; onSave: (p: UserProfile) => void; onCancel: () => void }) {
   const [age, setAge] = useState<string>(profile.age ? String(profile.age) : "");
   const [sex, setSex] = useState<"" | "male" | "female">(profile.sex || "");
   const [smoker, setSmoker] = useState<boolean>(profile.isSmoker || false);
   const [sbp, setSbp] = useState<string>(profile.systolicBP ? String(profile.systolicBP) : "");
 
   return (
-    <div className="p-5 mb-4" style={GLASS_CARD}>
-      <div className="text-[11px] uppercase tracking-wider text-[#8A928C] font-medium mb-3">
-        Your profile
-      </div>
+    <div className="p-5 mb-4" style={CARD}>
+      <div className="text-[11px] uppercase tracking-wider text-[#8A928C] font-medium mb-3">Your profile</div>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
         <div>
           <label className="text-[11px] text-[#5A635D] block mb-1">Age</label>
-          <input
-            type="number"
-            value={age}
-            onChange={(e) => setAge(e.target.value)}
-            className="w-full text-[13px] bg-white/50 border border-white/30 rounded-xl px-3 py-2 focus:outline-none focus:border-[#1B6B4A]/50 focus:ring-1 focus:ring-[#1B6B4A]/20 transition-all"
-            placeholder="e.g. 42"
-          />
+          <input type="number" value={age} onChange={(e) => setAge(e.target.value)} className="w-full text-[13px] bg-white/50 border border-white/30 rounded-xl px-3 py-2 focus:outline-none focus:border-[#1B6B4A]/50 focus:ring-1 focus:ring-[#1B6B4A]/20 transition-all" placeholder="e.g. 42" />
         </div>
         <div>
           <label className="text-[11px] text-[#5A635D] block mb-1">Sex</label>
-          <select
-            value={sex}
-            onChange={(e) => setSex(e.target.value as "" | "male" | "female")}
-            className="w-full text-[13px] bg-white/50 border border-white/30 rounded-xl px-3 py-2 focus:outline-none focus:border-[#1B6B4A]/50 focus:ring-1 focus:ring-[#1B6B4A]/20 transition-all"
-          >
+          <select value={sex} onChange={(e) => setSex(e.target.value as "" | "male" | "female")} className="w-full text-[13px] bg-white/50 border border-white/30 rounded-xl px-3 py-2 focus:outline-none focus:border-[#1B6B4A]/50 focus:ring-1 focus:ring-[#1B6B4A]/20 transition-all">
             <option value="">&mdash;</option>
             <option value="male">Male</option>
             <option value="female">Female</option>
@@ -1892,561 +1821,25 @@ function ProfileEditor({
         </div>
         <div>
           <label className="text-[11px] text-[#5A635D] block mb-1">Systolic BP</label>
-          <input
-            type="number"
-            value={sbp}
-            onChange={(e) => setSbp(e.target.value)}
-            className="w-full text-[13px] bg-white/50 border border-white/30 rounded-xl px-3 py-2 focus:outline-none focus:border-[#1B6B4A]/50 focus:ring-1 focus:ring-[#1B6B4A]/20 transition-all"
-            placeholder="e.g. 120"
-          />
+          <input type="number" value={sbp} onChange={(e) => setSbp(e.target.value)} className="w-full text-[13px] bg-white/50 border border-white/30 rounded-xl px-3 py-2 focus:outline-none focus:border-[#1B6B4A]/50 focus:ring-1 focus:ring-[#1B6B4A]/20 transition-all" placeholder="e.g. 120" />
         </div>
         <div className="flex items-end">
           <label className="flex items-center gap-2 text-[13px] text-[#0F1A15] cursor-pointer">
-            <input
-              type="checkbox"
-              checked={smoker}
-              onChange={(e) => setSmoker(e.target.checked)}
-              className="rounded"
-            />
+            <input type="checkbox" checked={smoker} onChange={(e) => setSmoker(e.target.checked)} className="rounded" />
             Smoker
           </label>
         </div>
       </div>
       <div className="flex gap-2 justify-end">
+        <button onClick={onCancel} className="text-[12px] text-[#5A635D] hover:text-[#0F1A15] px-4 py-2 transition-colors">Cancel</button>
         <button
-          onClick={onCancel}
-          className="text-[12px] text-[#5A635D] hover:text-[#0F1A15] px-4 py-2 transition-colors"
-        >
-          Cancel
-        </button>
-        <button
-          onClick={() =>
-            onSave({
-              age: age ? parseInt(age, 10) : undefined,
-              sex: sex || undefined,
-              isSmoker: smoker,
-              systolicBP: sbp ? parseInt(sbp, 10) : undefined,
-            })
-          }
+          onClick={() => onSave({ age: age ? parseInt(age, 10) : undefined, sex: sex || undefined, isSmoker: smoker, systolicBP: sbp ? parseInt(sbp, 10) : undefined })}
           className="text-[12px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] rounded-full px-5 py-2 transition-all duration-300"
         >
           Save
         </button>
       </div>
-      <p className="text-[10px] text-[#8A928C] mt-3 leading-relaxed">
-        Used only for risk calculations (SCORE2, FIB-4, bio-age). Never shared.
-      </p>
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------
-// Zone bar visualization (InsideTracker style)
-// ---------------------------------------------------------------------
-
-function ZoneBar({
-  value,
-  refLow,
-  refHigh,
-  optimalRange,
-  unit,
-  statusColor,
-}: {
-  value: number;
-  refLow: number;
-  refHigh: number;
-  optimalRange?: OptimalRange;
-  unit: string | null;
-  statusColor: string;
-}) {
-  // Define the full visual range with padding beyond ref range
-  const rangePadding = (refHigh - refLow) * 0.15;
-  const visualMin = refLow - rangePadding;
-  const visualMax = refHigh + rangePadding;
-  const visualRange = visualMax - visualMin;
-
-  const toPercent = (v: number) =>
-    Math.max(0, Math.min(100, ((v - visualMin) / visualRange) * 100));
-
-  const refLowPct = toPercent(refLow);
-  const refHighPct = toPercent(refHigh);
-  const valuePct = toPercent(value);
-
-  // Optimal zone
-  const hasOptimal = optimalRange && optimalRange.optimal_low !== null && optimalRange.optimal_high !== null;
-  const optLowPct = hasOptimal ? toPercent(optimalRange!.optimal_low!) : 0;
-  const optHighPct = hasOptimal ? toPercent(optimalRange!.optimal_high!) : 0;
-
-  return (
-    <div className="w-full">
-      {/* The bar */}
-      <div className="relative h-2 rounded-full overflow-hidden" style={{ background: "rgba(15,26,21,0.04)" }}>
-        {/* Out of range red zones (left) */}
-        <div
-          className="absolute top-0 h-full rounded-l-full"
-          style={{ left: 0, width: `${refLowPct}%`, background: "rgba(239,68,68,0.12)" }}
-        />
-        {/* Out of range red zones (right) */}
-        <div
-          className="absolute top-0 h-full rounded-r-full"
-          style={{ left: `${refHighPct}%`, width: `${100 - refHighPct}%`, background: "rgba(239,68,68,0.12)" }}
-        />
-
-        {/* Borderline amber zones */}
-        {hasOptimal && (
-          <>
-            <div
-              className="absolute top-0 h-full"
-              style={{ left: `${refLowPct}%`, width: `${Math.max(0, optLowPct - refLowPct)}%`, background: "rgba(245,158,11,0.15)" }}
-            />
-            <div
-              className="absolute top-0 h-full"
-              style={{ left: `${optHighPct}%`, width: `${Math.max(0, refHighPct - optHighPct)}%`, background: "rgba(245,158,11,0.15)" }}
-            />
-          </>
-        )}
-
-        {/* Optimal green zone */}
-        {hasOptimal ? (
-          <div
-            className="absolute top-0 h-full"
-            style={{ left: `${optLowPct}%`, width: `${optHighPct - optLowPct}%`, background: "rgba(27,107,74,0.18)" }}
-          />
-        ) : (
-          <div
-            className="absolute top-0 h-full"
-            style={{ left: `${refLowPct}%`, width: `${refHighPct - refLowPct}%`, background: "rgba(27,107,74,0.12)" }}
-          />
-        )}
-
-        {/* Value dot */}
-        <div
-          className="absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full border-2 border-white"
-          style={{
-            left: `calc(${valuePct}% - 7px)`,
-            backgroundColor: statusColor,
-            boxShadow: `0 2px 8px ${statusColor}40`,
-          }}
-        />
-      </div>
-
-      {/* Labels */}
-      <div className="flex justify-between items-center mt-1.5">
-        <span className="text-[10px] text-[#8A928C]" style={{ fontFamily: MONO }}>{refLow}{unit ? ` ${unit}` : ""}</span>
-        {hasOptimal && (
-          <span className="text-[10px] text-[#1B6B4A] font-medium" style={{ fontFamily: MONO }}>
-            optimal: {optimalRange!.optimal_low}&ndash;{optimalRange!.optimal_high}
-          </span>
-        )}
-        <span className="text-[10px] text-[#8A928C]" style={{ fontFamily: MONO }}>{refHigh}{unit ? ` ${unit}` : ""}</span>
-      </div>
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------
-// Biomarker card (compact card + expandable detail)
-// ---------------------------------------------------------------------
-
-function BiomarkerCard({
-  result,
-  analysis,
-  citations,
-  expanded,
-  onToggle,
-  optimalRange,
-  isFree,
-  allMarkerNames,
-  detectedPatterns,
-}: {
-  result: BiomarkerResult;
-  analysis: Analysis | undefined;
-  citations: Citation[];
-  expanded: boolean;
-  onToggle: () => void;
-  optimalRange?: OptimalRange;
-  isFree?: boolean;
-  allMarkerNames?: string[];
-  detectedPatterns?: DetectedPattern[];
-}) {
-  const status = analysis?.status || "normal";
-  const statusStyle = STATUS_STYLES[status];
-  const confidence = computeConfidence(analysis);
-
-  const rangePosition =
-    result.ref_low !== null && result.ref_high !== null
-      ? Math.max(
-          0,
-          Math.min(100, ((result.value - result.ref_low) / (result.ref_high - result.ref_low)) * 100)
-        )
-      : 50;
-
-  const isNormalButSuboptimal =
-    optimalRange &&
-    optimalRange.optimal_low !== null &&
-    optimalRange.optimal_high !== null &&
-    status === "normal" &&
-    (result.value < optimalRange.optimal_low || result.value > optimalRange.optimal_high);
-
-  const [citationsOpen, setCitationsOpen] = useState(false);
-
-  // Find related patterns for this marker
-  const relatedPatterns = (detectedPatterns || []).filter((p) =>
-    p.markers_matched.some((m) => m.toLowerCase() === result.biomarker.toLowerCase())
-  );
-
-  return (
-    <div
-      className={`overflow-hidden ${expanded ? "sm:col-span-2 lg:col-span-3" : ""}`}
-      style={{
-        ...GLASS_CARD,
-        boxShadow: expanded ? "0 12px 40px rgba(15,26,21,0.08)" : "0 8px 32px rgba(15,26,21,0.06)",
-        transition: TRANSITION,
-      }}
-      onMouseEnter={(e) => {
-        if (!expanded) {
-          (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
-          (e.currentTarget as HTMLElement).style.boxShadow = "0 12px 40px rgba(15,26,21,0.1)";
-        }
-      }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-        (e.currentTarget as HTMLElement).style.boxShadow = expanded
-          ? "0 12px 40px rgba(15,26,21,0.08)"
-          : "0 8px 32px rgba(15,26,21,0.06)";
-      }}
-    >
-      {/* COMPACT CARD VIEW */}
-      <button
-        onClick={onToggle}
-        className="w-full text-left px-5 py-4"
-      >
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex-1 min-w-0">
-            {/* Name */}
-            <div className="text-[14px] font-semibold text-[#0F1A15] mb-1 truncate">
-              {result.biomarker}
-            </div>
-
-            {/* Big number + unit + status pill on same line */}
-            <div className="flex items-baseline gap-2">
-              <span
-                className="text-[28px] tracking-tight text-[#0F1A15] leading-none"
-                style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
-              >
-                {result.value}
-              </span>
-              <span
-                className="text-[11px] text-[#8A928C]"
-                style={{ fontFamily: MONO }}
-              >
-                {result.unit}
-              </span>
-              <div
-                className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full ml-1"
-                style={{ backgroundColor: statusStyle.bg, color: statusStyle.text }}
-              >
-                <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: statusStyle.dot }} />
-                {statusStyle.label}
-              </div>
-            </div>
-
-            {/* Thin horizontal range bar */}
-            {result.ref_low !== null && result.ref_high !== null && (
-              <div className="mt-2.5 w-full">
-                <div className="relative h-1.5 rounded-full" style={{ background: "rgba(15,26,21,0.05)" }}>
-                  <div
-                    className="absolute top-0 h-1.5 rounded-full"
-                    style={{ left: "5%", right: "5%", backgroundColor: "rgba(27,107,74,0.1)" }}
-                  />
-                  <div
-                    className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full border-[1.5px] border-white"
-                    style={{
-                      left: `calc(${Math.max(2, Math.min(98, rangePosition))}% - 5px)`,
-                      backgroundColor: statusStyle.dot,
-                      boxShadow: `0 1px 4px ${statusStyle.dot}40`,
-                    }}
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* Summary (truncated to 1 line) */}
-            {analysis?.summary && (
-              <p className="text-[12px] text-[#5A635D] mt-2 line-clamp-1 leading-snug">{analysis.summary}</p>
-            )}
-          </div>
-
-          {/* Expand chevron */}
-          <svg
-            width="14" height="14" viewBox="0 0 24 24" fill="none"
-            stroke="#8A928C" strokeWidth="2"
-            className="flex-shrink-0"
-            style={{ transition: TRANSITION, transform: expanded ? "rotate(180deg)" : "rotate(0)" }}
-          >
-            <polyline points="6 9 12 15 18 9" />
-          </svg>
-        </div>
-      </button>
-
-      {/* EXPANDED DETAIL PANEL — slides down below the compact card */}
-      {expanded && analysis && (
-        <div className="px-5 py-4" style={{ borderTop: "1px solid rgba(15,26,21,0.06)", background: "#FAFAF8" }}>
-
-          {/* Zone bar visualization (InsideTracker style) */}
-          {result.ref_low !== null && result.ref_high !== null && (
-            <div className="mb-5">
-              <ZoneBar
-                value={result.value}
-                refLow={result.ref_low}
-                refHigh={result.ref_high}
-                optimalRange={optimalRange}
-                unit={result.unit}
-                statusColor={statusStyle.dot}
-              />
-
-              {isNormalButSuboptimal && (
-                <div
-                  className="mt-3 px-3 py-2 rounded-xl"
-                  style={{ background: "rgba(254,243,199,0.5)", border: "1px solid rgba(245,158,11,0.15)" }}
-                >
-                  <p className="text-[11px] text-[#B45309] leading-snug">
-                    <strong>Your lab says &quot;normal&quot;</strong> &mdash; but your value of {result.value} {result.unit} sits outside the research-supported optimal range ({optimalRange!.optimal_low}&ndash;{optimalRange!.optimal_high}). The research suggests this may be worth attention.
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Population percentile */}
-          {(() => {
-            const pct = getPopulationPercentile(result.biomarker, result.value, undefined, undefined);
-            if (!pct) return null;
-            return (
-              <div className="mb-5 p-4" style={GLASS_CARD_INNER}>
-                <div className="flex items-baseline justify-between mb-2">
-                  <div className="text-[11px] uppercase tracking-wider text-[#8A928C] font-medium">Where you stand</div>
-                  <div
-                    className="text-[14px] font-semibold"
-                    style={{ fontFamily: FRAUNCES }}
-                  >
-                    {pct.label}
-                  </div>
-                </div>
-                <div className="relative h-2.5 rounded-full mb-2" style={{ background: "rgba(15,26,21,0.05)" }}>
-                  <div
-                    className="absolute top-0 h-2.5 rounded-full bg-[#1B6B4A]"
-                    style={{ width: `${pct.percentile}%`, opacity: 0.2 }}
-                  />
-                  <div
-                    className="absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-[#1B6B4A] border-2 border-white"
-                    style={{ left: `calc(${pct.percentile}% - 7px)`, boxShadow: "0 2px 8px rgba(27,107,74,0.3)" }}
-                  />
-                </div>
-                <div className="text-[11px] text-[#5A635D] leading-snug">
-                  {pct.interpretation} Compared to 300,000+ {pct.context}.
-                </div>
-              </div>
-            );
-          })()}
-
-          {/* What this means */}
-          <div className="mb-4">
-            <div className="text-[10px] uppercase tracking-wider text-[#8A928C] font-medium mb-1.5">
-              What this means
-            </div>
-            <p className="text-[13px] text-[#0F1A15] leading-relaxed">{analysis.what_it_means}</p>
-          </div>
-
-          {/* What to do */}
-          {analysis.what_to_do && (
-            <div className="mb-4 p-3" style={{ ...GLASS_CARD_INNER, background: "#E8F5EE", border: "1px solid rgba(27,107,74,0.1)" }}>
-              <div className="text-[10px] uppercase tracking-wider text-[#1B6B4A] font-semibold mb-1.5">
-                What to do
-              </div>
-              <p className="text-[13px] text-[#0F1A15] leading-relaxed">{analysis.what_to_do}</p>
-            </div>
-          )}
-
-          {/* What the research shows */}
-          <div className="mb-4">
-            <div className="text-[10px] uppercase tracking-wider text-[#8A928C] font-medium mb-1.5">
-              What the research shows
-              {analysis.citation_count > 0 && (
-                <span className="normal-case tracking-normal font-normal text-[#1B6B4A] ml-2">
-                  · {analysis.citation_count} studies
-                </span>
-              )}
-            </div>
-            <p className="text-[13px] text-[#0F1A15] leading-relaxed">{analysis.what_research_shows}</p>
-          </div>
-
-          {/* Related patterns */}
-          {relatedPatterns.length > 0 && (
-            <div className="mb-5">
-              <div className="text-[11px] uppercase tracking-wider text-[#8A928C] font-medium mb-2">
-                Related patterns
-              </div>
-              <div className="space-y-2">
-                {relatedPatterns.map((p) => (
-                  <div key={p.id} className="p-3" style={GLASS_CARD_INNER}>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[13px] font-medium text-[#0F1A15]">{p.name}</span>
-                      <span
-                        className="text-[9px] uppercase tracking-wider font-semibold px-1.5 py-0.5 rounded-full"
-                        style={{
-                          backgroundColor: (SEVERITY_STYLES[p.severity] || SEVERITY_STYLES.watch).bg,
-                          color: (SEVERITY_STYLES[p.severity] || SEVERITY_STYLES.watch).text,
-                        }}
-                      >
-                        {(SEVERITY_STYLES[p.severity] || SEVERITY_STYLES.watch).label}
-                      </span>
-                    </div>
-                    <p className="text-[12px] text-[#5A635D] leading-snug">{p.summary}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Fallback to analysis.related_patterns text if no detected patterns match */}
-          {relatedPatterns.length === 0 && analysis.related_patterns && (
-            <div className="mb-5">
-              <div className="text-[11px] uppercase tracking-wider text-[#8A928C] font-medium mb-2">
-                Related patterns
-              </div>
-              <p className="text-[14px] text-[#0F1A15] leading-relaxed">{analysis.related_patterns}</p>
-            </div>
-          )}
-
-          {/* Citations — COLLAPSED by default behind toggle */}
-          {citations.length > 0 && (
-            <div className="mb-5">
-              <button
-                onClick={(e) => { e.stopPropagation(); setCitationsOpen(!citationsOpen); }}
-                className="flex items-center gap-2 text-[12px] font-medium text-[#1B6B4A] hover:text-[#155A3D] mb-3"
-                style={{ transition: TRANSITION }}
-              >
-                Show {citations.length} {citations.length === 1 ? "study" : "studies"}
-                <svg
-                  width="12" height="12" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" strokeWidth="2"
-                  style={{ transition: TRANSITION, transform: citationsOpen ? "rotate(180deg)" : "rotate(0)" }}
-                >
-                  <polyline points="6 9 12 15 18 9" />
-                </svg>
-              </button>
-
-              {citationsOpen && (
-                <div className="space-y-2">
-                  {citations.slice(0, isFree ? FREE_TIER_CITATION_LIMIT : 5).map((c) => (
-                    <a
-                      key={c.study_id}
-                      href={c.study.pmid ? `https://pubmed.ncbi.nlm.nih.gov/${c.study.pmid}/` : "#"}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block p-3"
-                      style={{ ...GLASS_CARD_INNER, transition: TRANSITION }}
-                      onClick={(e) => e.stopPropagation()}
-                      onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)"; }}
-                      onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; }}
-                    >
-                      <div className="flex items-start justify-between gap-3 mb-1">
-                        <div className="text-[12px] font-medium text-[#0F1A15] leading-snug line-clamp-2">
-                          {c.study.title}
-                        </div>
-                        {c.study.grade_score && (
-                          <div className="text-[9px] uppercase font-semibold text-[#1B6B4A] bg-[#E8F5EE]/70 px-1.5 py-0.5 rounded flex-shrink-0">
-                            {c.study.grade_score}
-                          </div>
-                        )}
-                      </div>
-                      <div className="text-[11px] text-[#8A928C] font-mono" style={{ fontFamily: MONO }}>
-                        {c.study.authors && c.study.authors.length > 0 && c.study.authors[0].split(" ").pop()} et al.
-                        {c.study.publication_year && ` \u00b7 ${c.study.publication_year}`}
-                        {c.study.journal && ` \u00b7 ${c.study.journal}`}
-                      </div>
-                    </a>
-                  ))}
-                  {citations.length > 5 && (
-                    <div className="text-[11px] text-[#8A928C] mt-2 text-center">
-                      +{citations.length - 5} more studies cited
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* What to test next — filter out tests already in this panel */}
-          {(() => {
-            const nextTests = getNextTestSuggestions(result.biomarker, status)
-              .filter((t) => {
-                const names = (allMarkerNames || []).map((n: string) => n.toLowerCase());
-                const testLower = t.test_name.toLowerCase();
-                // Direct name match
-                if (names.some((n: string) => n.includes(testLower.split(" ")[0]) || testLower.includes(n.split(" ")[0]))) return false;
-                // Panel name → component markers (if user has the components, skip the panel suggestion)
-                const PANEL_MARKERS: Record<string, string[]> = {
-                  "complete blood count": ["hemoglobin", "hematocrit", "mcv", "mch", "mchc", "rdw", "wbc", "platelet", "rbc"],
-                  "cbc": ["hemoglobin", "hematocrit", "mcv", "mch", "mchc", "rdw", "wbc", "platelet", "rbc"],
-                  "lipid panel": ["cholesterol", "hdl", "ldl", "triglyceride"],
-                  "iron panel": ["iron", "ferritin", "tibc", "transferrin"],
-                  "thyroid panel": ["tsh", "free t3", "free t4", "ft3", "ft4"],
-                  "metabolic panel": ["glucose", "creatinine", "bun", "sodium", "potassium", "calcium"],
-                  "liver panel": ["alt", "ast", "ggt", "bilirubin", "albumin"],
-                };
-                for (const [panel, markers] of Object.entries(PANEL_MARKERS)) {
-                  if (testLower.includes(panel)) {
-                    const matchCount = markers.filter((m) => names.some((n: string) => n.includes(m))).length;
-                    if (matchCount >= 2) return false; // User already has most of this panel
-                  }
-                }
-                return true;
-              });
-            if (nextTests.length === 0) return null;
-            return (
-              <div className="mb-5">
-                <div className="text-[11px] uppercase tracking-wider text-[#1B6B4A] font-medium mb-2">
-                  What to test next
-                </div>
-                <div className="space-y-2">
-                  {nextTests.slice(0, 4).map((t) => (
-                    <div key={t.test_name} className="p-3" style={GLASS_CARD_INNER}>
-                      <div className="text-[13px] font-medium text-[#0F1A15] mb-1">{t.test_name}</div>
-                      <div className="text-[11px] text-[#5A635D] leading-snug">{t.why}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            );
-          })()}
-
-          {/* Confidence + metadata */}
-          <div className="pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.3)" }}>
-            <div className="flex items-center gap-3 mb-2 flex-wrap">
-              <div
-                className="inline-flex items-center gap-1.5 text-[10px] font-semibold px-2.5 py-1 rounded-full"
-                style={{ backgroundColor: `${confidence.color}15`, color: confidence.color, border: `1px solid ${confidence.color}30` }}
-              >
-                <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: confidence.color }} />
-                {confidence.label}
-              </div>
-              <span className="text-[10px] text-[#8A928C] font-mono" style={{ fontFamily: MONO }}>
-                {analysis.citation_count} studies cited
-                {analysis.highest_evidence_grade && ` \u00b7 highest: ${analysis.highest_evidence_grade}`}
-                {analysis.avg_study_year && ` \u00b7 avg year: ${analysis.avg_study_year}`}
-              </span>
-            </div>
-            <p className="text-[10px] text-[#8A928C] leading-relaxed mb-1">
-              {CONFIDENCE_DESCRIPTIONS[confidence.level]}
-            </p>
-            <p className="text-[10px] text-[#8A928C] leading-relaxed">
-              This analysis is educational content, not medical advice. Consult your healthcare provider before making any health decisions.
-            </p>
-          </div>
-        </div>
-      )}
+      <p className="text-[10px] text-[#8A928C] mt-3 leading-relaxed">Used only for risk calculations (SCORE2, FIB-4, bio-age). Never shared.</p>
     </div>
   );
 }
