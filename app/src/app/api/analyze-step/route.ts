@@ -129,14 +129,23 @@ const SUMMARY_SYSTEM_PROMPT = `You are Lipa's health summary engine. You produce
 // Helpers
 // ---------------------------------------------------------------------------
 
-async function fetchBiomarkers(userId: string, testDate: string) {
-  const { data } = await supabase
+async function fetchBiomarkers(userId: string, testDate?: string) {
+  let query = supabase
     .from("biomarker_results")
     .select("*")
     .eq("user_id", userId)
-    .eq("test_date", testDate)
+    .order("test_date", { ascending: false })
     .order("id");
-  return data || [];
+  // If testDate provided and matches, filter. Otherwise get latest.
+  if (testDate) {
+    const { data: exact } = await supabase.from("biomarker_results").select("*").eq("user_id", userId).eq("test_date", testDate).order("id");
+    if (exact && exact.length > 0) return exact;
+  }
+  // Fallback: get latest test date
+  const { data: all } = await query;
+  if (!all || all.length === 0) return [];
+  const latestDate = all[0].test_date;
+  return all.filter((r: any) => r.test_date === latestDate);
 }
 
 function toBiomarkerInput(r: any, userId: string, testDate: string): BiomarkerInput {
