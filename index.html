@@ -149,6 +149,11 @@
       background-position: right 6px center;
       padding-right: 22px;
     }
+    .mobile-menu-btn {
+      display: none; /* hidden on desktop */
+      align-items: center; justify-content: center;
+      background: none; border: none; cursor: pointer; padding: 4px;
+    }
     .nav-cta {
       font-size: 13px; font-weight: 600;
       color: var(--white); background: var(--accent);
@@ -1439,6 +1444,29 @@
     @media (max-width: 900px) {
       nav { padding: 14px 20px; }
       .nav-links { display: none; }
+      .lang-dropdown { display: none; }
+      .mobile-menu-btn { display: flex; }
+      .mobile-menu {
+        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(248,245,239,0.98); backdrop-filter: blur(20px);
+        z-index: 200; padding: 80px 32px 40px;
+        display: flex; flex-direction: column; gap: 8px;
+      }
+      .mobile-menu a {
+        font-size: 18px; font-weight: 500; color: var(--text);
+        padding: 14px 0; border-bottom: 1px solid var(--border);
+        display: block;
+      }
+      .mobile-menu .mobile-menu-cta {
+        margin-top: 24px; text-align: center;
+        font-size: 15px; font-weight: 600;
+        color: var(--white); background: var(--accent);
+        padding: 14px 24px; border-radius: 980px; border-bottom: none;
+      }
+      .mobile-menu-close {
+        position: absolute; top: 20px; right: 20px;
+        background: none; border: none; cursor: pointer; padding: 8px;
+      }
       section { padding: 80px 20px; }
       .hero { padding: 140px 20px 80px; }
       .stats-strip { padding: 0 20px; }
@@ -1512,8 +1540,23 @@
       <option value="es">ES</option>
     </select>
     <a href="https://my.lipa.health/upload" class="nav-cta">Get started free</a>
+    <button class="mobile-menu-btn" onclick="document.getElementById('mobileMenu').style.display='flex'" aria-label="Menu">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
   </div>
 </nav>
+
+<div id="mobileMenu" class="mobile-menu" style="display:none;">
+  <button class="mobile-menu-close" onclick="document.getElementById('mobileMenu').style.display='none'" aria-label="Close">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+  <a href="/methodology.html" onclick="document.getElementById('mobileMenu').style.display='none'">Our methodology</a>
+  <a href="/research.html" onclick="document.getElementById('mobileMenu').style.display='none'">Research Library</a>
+  <a href="/where-to-test.html" onclick="document.getElementById('mobileMenu').style.display='none'">Where to test</a>
+  <a href="https://my.lipa.health/test-finder" onclick="document.getElementById('mobileMenu').style.display='none'">Test Finder</a>
+  <a href="https://my.lipa.health/pricing" onclick="document.getElementById('mobileMenu').style.display='none'">Pricing</a>
+  <a href="https://my.lipa.health/upload" class="mobile-menu-cta" onclick="document.getElementById('mobileMenu').style.display='none'">Get started free</a>
+</div>
 
 <!-- ================== HERO ================== -->
 <div class="hero-wrapper">
@@ -1597,9 +1640,9 @@
       </div>
       <div class="how-card">
         <div class="how-num mono">02</div>
-        <h3>The research meets your biology.</h3>
-        <p>Every marker is matched against peer-reviewed research, weighted by evidence grade, funding independence, and recency. Cross-marker patterns surface. Risk calculations compute. Your biological age updates.</p>
-        <div class="how-meta mono">100+ biomarkers · 16+ risk calculations</div>
+        <h3>The most comprehensive analysis available.</h3>
+        <p>Every marker cross-referenced against 80,000+ peer-reviewed studies from PubMed, Cochrane, and Semantic Scholar. Evidence scored by grade, funding independence, and recency. Cross-marker patterns detected. Biological age computed. Nothing like it exists for consumers.</p>
+        <div class="how-meta mono">80K+ studies · 16+ calculations · <a href="/methodology.html" style="color: var(--accent); text-decoration: underline;">See methodology →</a></div>
       </div>
       <div class="how-card">
         <div class="how-num mono">03</div>
