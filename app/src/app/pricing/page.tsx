@@ -85,22 +85,26 @@ function PricingContent() {
   const [user, setUser] = useState<any>(null);
   const [message, setMessage] = useState<string | null>(null);
 
+  // Load user
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
       setUser(data.user);
     });
-
-    // Show cancel message if redirected from Stripe
     if (searchParams.get("subscription") === "cancel") {
       setMessage("Subscription canceled. No charges were made.");
     }
+  }, [searchParams]);
 
-    // Auto-trigger checkout if redirected from login with tier param
+  // Auto-trigger checkout when user is loaded and tier param is present
+  const [autoTriggered, setAutoTriggered] = useState(false);
+  useEffect(() => {
+    if (autoTriggered || !user) return;
     const tierParam = searchParams.get("tier");
-    if (tierParam && user && (tierParam === "one" || tierParam === "insight")) {
+    if (tierParam && (tierParam === "one" || tierParam === "insight")) {
+      setAutoTriggered(true);
       handleSubscribe(tierParam as Tier["id"]);
     }
-  }, [searchParams, user]);
+  }, [user, searchParams, autoTriggered]);
 
   async function handleSubscribe(tierId: Tier["id"]) {
     if (tierId === "free") {
