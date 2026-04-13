@@ -66,9 +66,7 @@ export async function POST(request: NextRequest) {
         );
         if (!matchedResult) continue;
 
-        const { data: row, error } = await supabase
-          .from("user_analyses")
-          .insert({
+        const insertData: any = {
             user_id: userId,
             biomarker_result_id: matchedResult.id,
             biomarker_name: analysis.biomarker_name,
@@ -79,15 +77,19 @@ export async function POST(request: NextRequest) {
             what_research_shows: analysis.what_research_shows,
             related_patterns: analysis.related_patterns,
             suggested_exploration: analysis.suggested_exploration,
-            what_to_do: analysis.what_to_do || null,
             citation_count: analysis.citation_count,
             avg_study_year: analysis.avg_study_year,
             highest_evidence_grade: analysis.highest_evidence_grade,
             retrieval_time_ms: analysis.retrieval_time_ms,
             generation_time_ms: analysis.generation_time_ms,
-          })
-          .select()
-          .single();
+        };
+        // Try with what_to_do first, fall back without if column doesn't exist
+        if (analysis.what_to_do) insertData.what_to_do = analysis.what_to_do;
+        let { data: row, error } = await supabase.from("user_analyses").insert(insertData).select().single();
+        if (error && error.message?.includes("what_to_do")) {
+          delete insertData.what_to_do;
+          ({ data: row, error } = await supabase.from("user_analyses").insert(insertData).select().single());
+        }
 
         if (error) {
           console.error(`[analyze-bg] Failed: ${analysis.biomarker_name}:`, error.message);
