@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { AppNav } from "@/components/app-nav";
 import { AskLipa } from "@/components/ask-lipa";
 import { SupportButton } from "@/components/support-button";
+import { ReportCardSection } from "@/components/report-card";
 import { useEffect, useState, useCallback, useMemo, type ReactNode } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
@@ -874,6 +875,24 @@ export default function DashboardPage() {
           </div>
 
           {/* ============================================================ */}
+
+          {/* EXECUTIVE SUMMARY */}
+          {actionPlan?.overall_summary && (
+            <div className="mb-10 p-6" style={GLASS_CARD}>
+              <div className="text-[10px] uppercase tracking-wider text-[#1B6B4A] font-semibold mb-3">Summary</div>
+              {isFree ? (
+                <>
+                  <p className="text-[14px] text-[#0F1A15] leading-relaxed line-clamp-2">{actionPlan.overall_summary}</p>
+                  <div className="mt-3 pt-3" style={{ borderTop: "1px solid rgba(15,26,21,0.06)" }}>
+                    <p className="text-[12px] text-[#8A928C]">Full summary with detailed findings, patterns, and your personalized action plan available with Lipa One or Life.</p>
+                  </div>
+                </>
+              ) : (
+                <p className="text-[14px] text-[#0F1A15] leading-relaxed">{actionPlan.overall_summary}</p>
+              )}
+            </div>
+          )}
+
           {/* BIOLOGICAL AGE                                               */}
           {/* ============================================================ */}
           {bioAge && bioAge.ensemble_age !== null && (
@@ -933,6 +952,34 @@ export default function DashboardPage() {
                 )}
               </div>
             </div>
+          )}
+
+          {/* ============================================================ */}
+          {/* REPORT CARD — paid users only                               */}
+          {/* ============================================================ */}
+          {!isFree && (
+            <ReportCardSection
+              statusCounts={statusCounts}
+              bioAge={
+                bioAge && bioAge.ensemble_age !== null
+                  ? {
+                      ensembleAge: bioAge.ensemble_age,
+                      chronologicalAge: bioAge.chronological_age,
+                      gap: bioAge.gap ?? 0,
+                    }
+                  : null
+              }
+              keyFinding={
+                oneBigThing
+                  ? (oneBigThing as any).message + ". " + (oneBigThing as any).detail
+                  : allGood
+                  ? `All ${latestResults.length} markers in a healthy range. ${statusCounts.optimal} are optimal.`
+                  : null
+              }
+              markerCount={latestResults.length}
+              studiesCount={analyses.reduce((sum, a) => sum + (a.citation_count || 0), 0)}
+              testDate={latestTestDate}
+            />
           )}
 
           {/* ============================================================ */}
