@@ -679,13 +679,13 @@ export default function TestFinderPage() {
                   Show my panel
                 </button>
               </form>
-              <p className="text-[10px] text-[#B5B5B5] mt-3">No spam. Your test guide + preparation tips + upload reminder.</p>
+              <p className="text-[11px] text-[#5A635D] mt-3">No spam. Your test guide + preparation tips + upload reminder.</p>
             </div>
           )}
 
           {/* ---- EMPOWERMENT NOTE ---- */}
           {selectedGoals.length > 0 && selectedCountry && (
-            <div className="bg-[#E8F5EE] rounded-[20px] p-5 flex items-start gap-3">
+            <div className="bg-[#E8F5EE] rounded-[20px] p-5 flex items-start gap-3 mt-6">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2" strokeLinecap="round" className="flex-shrink-0 mt-0.5">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
               </svg>
