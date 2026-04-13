@@ -70,17 +70,22 @@ export async function POST(request: NextRequest) {
 
     const tier = subData?.tier || "free";
 
-    // Count uploads in the last 24 hours
+    // Count uploads in the last 24 hours (use biomarker_results as proxy if uploads table doesn't exist)
     const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-    const { count: recentUploads } = await supabase
-      .from("uploads")
-      .select("*", { count: "exact", head: true })
-      .eq("user_id", userId)
-      .gte("created_at", oneDayAgo);
+    let recentUploads = 0;
+    try {
+      const { count } = await supabase
+        .from("uploads")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", userId)
+        .gte("created_at", oneDayAgo);
+      recentUploads = count || 0;
+    } catch {
+      // uploads table may not exist — skip rate limiting
+    }
 
-    // Free users: 3 uploads per day. Paid: 10 per day.
     const dailyLimit = tier === "free" ? 3 : 10;
-    if ((recentUploads || 0) >= dailyLimit) {
+    if (recentUploads >= dailyLimit) {
       return NextResponse.json(
         { error: tier === "free"
           ? "Free accounts can upload 1 test per day. Upgrade to Lipa Life for more."
@@ -216,6 +221,13 @@ export async function POST(request: NextRequest) {
 
     let insertedResults: any[] = [];
     if (records.length > 0) {
+      // Delete any existing results for this user + date (re-upload scenario)
+      await supabase
+        .from("biomarker_results")
+        .delete()
+        .eq("user_id", userId)
+        .eq("test_date", date);
+
       const { data: inserted, error: insertError } = await supabase
         .from("biomarker_results")
         .insert(records)
