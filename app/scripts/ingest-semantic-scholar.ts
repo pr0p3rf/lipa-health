@@ -37,7 +37,7 @@ const CONFIG = {
   // Semantic Scholar API
   S2_BASE_URL: 'https://api.semanticscholar.org/graph/v1',
   S2_SEARCH_LIMIT: 100, // Max results per search query
-  S2_DELAY_MS: 3000, // 100 requests per 5 minutes = ~3s between requests
+  S2_DELAY_MS: 10000, // Conservative 10s delay to avoid rate limiting
   S2_MIN_CITATIONS: 50, // Only keep highly-cited papers
 
   // Batch sizes
@@ -201,7 +201,7 @@ async function fetchWithRetry(url: string, retries = CONFIG.MAX_RETRIES): Promis
 
       // Rate limited — back off and retry
       if (response.status === 429) {
-        const retryAfter = parseInt(response.headers.get('retry-after') || '30', 10);
+        const retryAfter = parseInt(response.headers.get('retry-after') || '60', 10);
         console.log(`   Rate limited. Waiting ${retryAfter}s before retry ${attempt}/${retries}...`);
         await sleep(retryAfter * 1000);
         continue;

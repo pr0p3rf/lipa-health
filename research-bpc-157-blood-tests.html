@@ -619,8 +619,17 @@
       <a href="/research.html" class="active">Research Library</a>
     </div>
     <a href="https://my.lipa.health/upload" class="nav-cta">Get started free</a>
+    <button class="mobile-menu-btn" onclick="document.getElementById('mobileMenu').style.display='flex'" aria-label="Menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
   </div>
 </nav>
+<div id="mobileMenu" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(248,245,239,0.98);backdrop-filter:blur(20px);z-index:200;padding:80px 32px 40px;display:none;flex-direction:column;gap:8px;">
+  <button onclick="document.getElementById('mobileMenu').style.display='none'" style="position:absolute;top:20px;right:20px;background:none;border:none;cursor:pointer;padding:8px;" aria-label="Close"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  <a href="/methodology.html" style="font-size:18px;font-weight:500;padding:14px 0;border-bottom:1px solid rgba(15,26,21,0.08);display:block;">Our methodology</a>
+  <a href="/research.html" style="font-size:18px;font-weight:500;padding:14px 0;border-bottom:1px solid rgba(15,26,21,0.08);display:block;">Research Library</a>
+  <a href="/where-to-test.html" style="font-size:18px;font-weight:500;padding:14px 0;border-bottom:1px solid rgba(15,26,21,0.08);display:block;">Where to test</a>
+  <a href="https://my.lipa.health/test-finder" style="font-size:18px;font-weight:500;padding:14px 0;border-bottom:1px solid rgba(15,26,21,0.08);display:block;">Test Finder</a>
+  <a href="https://my.lipa.health/upload" style="margin-top:24px;text-align:center;font-size:15px;font-weight:600;color:white;background:#1B6B4A;padding:14px 24px;border-radius:980px;display:block;">Get started free</a>
+</div>
 
 <!-- ARTICLE HERO -->
 <section class="article-hero">
