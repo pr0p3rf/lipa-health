@@ -508,47 +508,75 @@ export default function DashboardPage() {
     }
   });
 
-  // Summary findings for the hero
-  const keyFindings = latestResults
+  // Summary findings for the hero — smarter priority system
+  // Hematology differentials (neutrophils, lymphocytes, etc.) are noisy; skip them unless truly out_of_range
+  const HEMATOLOGY_DIFF_NAMES = ["neutrophils", "lymphocytes", "monocytes", "eosinophils", "basophils"];
+  const IMPORTANT_CATEGORIES = ["lipid", "cardiovascular", "metabolic", "inflammatory", "hormonal", "thyroid", "nutrient", "nutritional"];
+
+  const isHematologyDifferential = (name: string) =>
+    HEMATOLOGY_DIFF_NAMES.some((h) => name.toLowerCase().includes(h));
+
+  const isMidRange = (r: BiomarkerResult) => {
+    if (r.ref_low === null || r.ref_high === null) return false;
+    const range = r.ref_high - r.ref_low;
+    if (range <= 0) return false;
+    const pct = ((r.value - r.ref_low) / range) * 100;
+    return pct >= 30 && pct <= 70;
+  };
+
+  // Pass 1: out_of_range markers (always important)
+  const outOfRangeFindings = latestResults
     .map((r) => {
       const analysis = analyses.find((a) => a.biomarker_result_id === r.id);
-      if (!analysis) return null;
-      if (analysis.status === "out_of_range") {
-        return {
-          biomarker: r.biomarker,
-          value: r.value,
-          unit: r.unit,
-          status: analysis.status,
-          flag: analysis.flag,
-          message: analysis.flag === "low"
-            ? `Your ${r.biomarker.toLowerCase()} is low`
-            : analysis.flag === "high"
-            ? `Your ${r.biomarker.toLowerCase()} is elevated`
-            : `${r.biomarker} needs attention`,
-          detail: analysis.summary,
-        };
-      }
-      if (analysis.status === "borderline") {
-        return {
-          biomarker: r.biomarker,
-          value: r.value,
-          unit: r.unit,
-          status: analysis.status,
-          flag: analysis.flag,
-          message: `${r.biomarker} could use attention`,
-          detail: analysis.summary,
-        };
-      }
-      return null;
+      if (!analysis || analysis.status !== "out_of_range") return null;
+      return {
+        biomarker: r.biomarker,
+        value: r.value,
+        unit: r.unit,
+        status: analysis.status as "out_of_range" | "borderline",
+        flag: analysis.flag,
+        category: r.category,
+        message: analysis.flag === "low"
+          ? `Your ${r.biomarker.toLowerCase()} is low`
+          : analysis.flag === "high"
+          ? `Your ${r.biomarker.toLowerCase()} is elevated`
+          : `${r.biomarker} needs attention`,
+        detail: analysis.summary,
+      };
     })
-    .filter(Boolean)
-    .slice(0, 5);
+    .filter(Boolean);
+
+  // Pass 2: borderline markers — only from important categories, not hematology differentials, not mid-range
+  const borderlineFindings = latestResults
+    .map((r) => {
+      const analysis = analyses.find((a) => a.biomarker_result_id === r.id);
+      if (!analysis || analysis.status !== "borderline") return null;
+      // Skip hematology differentials
+      if (isHematologyDifferential(r.biomarker)) return null;
+      // Skip if not in an important category
+      if (!IMPORTANT_CATEGORIES.includes(r.category.toLowerCase())) return null;
+      // Skip if value is clearly mid-range (not actually borderline in practice)
+      if (isMidRange(r)) return null;
+      return {
+        biomarker: r.biomarker,
+        value: r.value,
+        unit: r.unit,
+        status: analysis.status as "out_of_range" | "borderline",
+        flag: analysis.flag,
+        category: r.category,
+        message: `${r.biomarker} could use attention`,
+        detail: analysis.summary,
+      };
+    })
+    .filter(Boolean);
+
+  const keyFindings = [...outOfRangeFindings, ...borderlineFindings].slice(0, 5);
 
   // Add a positive finding if there are optimal markers
   const allGood = keyFindings.length === 0 && statusCounts.optimal > 0;
 
-  // "One Big Thing" — the single most important finding
-  const oneBigThing = keyFindings.length > 0
+  // "One Big Thing" — only show hero for genuinely out_of_range markers
+  const oneBigThing = keyFindings.length > 0 && (keyFindings[0] as any).status === "out_of_range"
     ? keyFindings[0]
     : null;
 
@@ -654,7 +682,7 @@ export default function DashboardPage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10 relative z-10" suppressHydrationWarning>
 
           {/* ============================================================ */}
-          {/* LAYER 1: HOME / EXECUTIVE SUMMARY                           */}
+          {/* HEADER: date, marker count, export/delete                    */}
           {/* ============================================================ */}
           <div className="mb-10">
             {/* Top row: heading + actions */}
@@ -741,144 +769,13 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            {/* "One Big Thing" — warm narrative */}
-            {allGood ? (
-              <div
-                className="p-6 mb-6"
-                style={{
-                  ...GLASS_CARD,
-                  background: "rgba(232,245,238,0.5)",
-                  border: "1px solid rgba(27,107,74,0.15)",
-                }}
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-[#1B6B4A]/10 flex items-center justify-center flex-shrink-0">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                  </div>
-                  <div>
-                    <div
-                      className="text-[18px] text-[#1B6B4A] mb-1"
-                      style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
-                    >
-                      Everything looks great
-                    </div>
-                    <p className="text-[14px] text-[#5A635D] leading-relaxed">
-                      All {latestResults.length} markers came back in a healthy range. {statusCounts.optimal} are in the optimal zone. Keep doing what you're doing.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ) : oneBigThing ? (
-              <div
-                className="p-6 mb-6"
-                style={{
-                  ...GLASS_CARD,
-                  background: (oneBigThing as any).status === "out_of_range"
-                    ? "rgba(254,226,226,0.4)"
-                    : "rgba(254,243,199,0.4)",
-                  border: (oneBigThing as any).status === "out_of_range"
-                    ? "1px solid rgba(185,28,28,0.12)"
-                    : "1px solid rgba(180,83,9,0.12)",
-                }}
-              >
-                <div className="text-[11px] uppercase tracking-wider text-[#8A928C] font-medium mb-2">
-                  Most important finding
-                </div>
-                <div
-                  className="text-[20px] text-[#0F1A15] mb-2 leading-snug"
-                  style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
-                >
-                  {(oneBigThing as any).message}
-                </div>
-                <p className="text-[14px] text-[#5A635D] leading-relaxed">
-                  {(oneBigThing as any).detail}
-                </p>
-              </div>
-            ) : null}
-
-            {/* Key findings grid (remaining findings after the "one big thing") */}
-            {keyFindings.length > 1 && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
-                {keyFindings.slice(1).map((f: any) => (
-                  <button
-                    key={f.biomarker}
-                    className="text-left p-4"
-                    style={{
-                      ...GLASS_CARD,
-                      background: f.status === "out_of_range"
-                        ? "rgba(254,226,226,0.4)"
-                        : "rgba(254,243,199,0.4)",
-                      border: f.status === "out_of_range"
-                        ? "1px solid rgba(185,28,28,0.12)"
-                        : "1px solid rgba(180,83,9,0.12)",
-                      boxShadow: "0 4px 20px rgba(15,26,21,0.04)",
-                      transition: TRANSITION,
-                    }}
-                    onClick={() => {
-                      const r = latestResults.find((lr) => lr.biomarker === f.biomarker);
-                      if (r) setExpandedBiomarker(r.id);
-                      document.getElementById("biomarkers-section")?.scrollIntoView({ behavior: "smooth" });
-                    }}
-                    onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; }}
-                    onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; }}
-                  >
-                    <div className="flex items-start gap-3">
-                      <div
-                        className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0"
-                        style={{
-                          backgroundColor: f.status === "out_of_range" ? "#B91C1C" : "#B45309",
-                        }}
-                      />
-                      <div className="min-w-0">
-                        <div className="flex items-baseline gap-2 mb-1">
-                          <span className="text-[14px] font-semibold text-[#0F1A15]">{f.biomarker}</span>
-                          <span className="text-[13px] text-[#5A635D]" style={{ fontFamily: FRAUNCES }}>{f.value}</span>
-                          <span className="text-[10px] text-[#8A928C]" style={{ fontFamily: MONO }}>{f.unit}</span>
-                        </div>
-                        <p className="text-[13px] text-[#5A635D] line-clamp-2">{f.detail}</p>
-                      </div>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
-
-            {/* Quick status strip */}
-            <div className="flex items-center gap-4 flex-wrap text-[13px]">
-              {statusCounts.optimal > 0 && (
-                <span className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-[#1B6B4A]" />
-                  <span className="text-[#5A635D]">{statusCounts.optimal} optimal</span>
-                </span>
-              )}
-              {statusCounts.normal > 0 && (
-                <span className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-[#71717A]" />
-                  <span className="text-[#5A635D]">{statusCounts.normal} in range</span>
-                </span>
-              )}
-              {statusCounts.borderline > 0 && (
-                <span className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-[#F59E0B]" />
-                  <span className="text-[#5A635D]">{statusCounts.borderline} borderline</span>
-                </span>
-              )}
-              {statusCounts.out_of_range > 0 && (
-                <span className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-[#EF4444]" />
-                  <span className="text-[#5A635D]">{statusCounts.out_of_range} need attention</span>
-                </span>
-              )}
-            </div>
           </div>
 
           {/* ============================================================ */}
-
-          {/* EXECUTIVE SUMMARY */}
+          {/* EXECUTIVE SUMMARY — always first after header                */}
+          {/* ============================================================ */}
           {actionPlan?.overall_summary && (
-            <div className="mb-10 p-6" style={GLASS_CARD}>
+            <div className="mb-8 p-6" style={GLASS_CARD}>
               <div className="text-[10px] uppercase tracking-wider text-[#1B6B4A] font-semibold mb-3">Summary</div>
               {isFree ? (
                 <>
@@ -893,97 +790,178 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* BIOLOGICAL AGE                                               */}
           {/* ============================================================ */}
-          {bioAge && bioAge.ensemble_age !== null && (
-            <div className="mb-10" style={GLASS_CARD}>
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <div className="text-[11px] uppercase tracking-wider text-[#8A928C] font-medium mb-1">Biological Age</div>
-                    <div className="text-[10px] text-[#8A928C]">
-                      Ensemble: KDM + PhenoAge · {bioAge.contributing_biomarkers.length} biomarkers
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-[11px] text-[#8A928C]">Chronological</div>
-                    <div className="text-[20px] text-[#8A928C]" style={{ fontFamily: FRAUNCES }}>{bioAge.chronological_age}</div>
-                  </div>
-                </div>
-
-                <div className="flex items-baseline gap-4 mb-4">
-                  <div
-                    className="text-[48px] tracking-tight"
+          {/* STATUS STRIP + COMPACT BIO-AGE                               */}
+          {/* ============================================================ */}
+          <div className="mb-8 flex items-center gap-4 flex-wrap text-[13px]">
+            {statusCounts.optimal > 0 && (
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[#1B6B4A]" />
+                <span className="text-[#5A635D]">{statusCounts.optimal} optimal</span>
+              </span>
+            )}
+            {statusCounts.normal > 0 && (
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[#71717A]" />
+                <span className="text-[#5A635D]">{statusCounts.normal} in range</span>
+              </span>
+            )}
+            {statusCounts.borderline > 0 && (
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[#F59E0B]" />
+                <span className="text-[#5A635D]">{statusCounts.borderline} borderline</span>
+              </span>
+            )}
+            {statusCounts.out_of_range > 0 && (
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[#EF4444]" />
+                <span className="text-[#5A635D]">{statusCounts.out_of_range} need attention</span>
+              </span>
+            )}
+            {/* Compact bio-age inline */}
+            {bioAge && bioAge.ensemble_age !== null && (
+              <>
+                <span className="text-[#D4D4D8]">|</span>
+                <span className="flex items-center gap-1.5">
+                  <span className="text-[#5A635D]">Bio-age:</span>
+                  <span
+                    className="font-semibold"
                     style={{
                       fontFamily: FRAUNCES,
-                      fontWeight: 500,
                       color: bioAge.gap !== null && bioAge.gap < 0 ? "#1B6B4A" : bioAge.gap !== null && bioAge.gap > 2 ? "#B91C1C" : "#0F1A15",
                     }}
                   >
                     {Math.round(bioAge.ensemble_age * 10) / 10}
-                  </div>
+                  </span>
                   {bioAge.gap !== null && (
-                    <div
-                      className="text-[16px] font-semibold px-3 py-1 rounded-full"
+                    <span
+                      className="text-[11px] font-semibold px-2 py-0.5 rounded-full"
                       style={{
                         backgroundColor: bioAge.gap < 0 ? "#E8F5EE" : bioAge.gap > 2 ? "#FEE2E2" : "#F4F4F5",
                         color: bioAge.gap < 0 ? "#1B6B4A" : bioAge.gap > 2 ? "#B91C1C" : "#5A635D",
                       }}
                     >
-                      {bioAge.gap > 0 ? "+" : ""}{Math.round(bioAge.gap * 10) / 10} years
-                    </div>
+                      {bioAge.gap > 0 ? "+" : ""}{Math.round(bioAge.gap * 10) / 10}y
+                    </span>
                   )}
+                </span>
+              </>
+            )}
+          </div>
+
+          {/* ============================================================ */}
+          {/* KEY FINDINGS — hero + grid (only if real problems)           */}
+          {/* ============================================================ */}
+          {allGood ? (
+            <div
+              className="p-6 mb-8"
+              style={{
+                ...GLASS_CARD,
+                background: "rgba(232,245,238,0.5)",
+                border: "1px solid rgba(27,107,74,0.15)",
+              }}
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-[#1B6B4A]/10 flex items-center justify-center flex-shrink-0">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
                 </div>
-
-                <p className="text-[13px] text-[#5A635D] leading-relaxed">
-                  {bioAge.interpretation}
-                </p>
-
-                {bioAge.method_details && (
-                  <div className="mt-4 pt-3 flex gap-4 text-[10px] text-[#8A928C]" style={{ borderTop: "1px solid rgba(15,26,21,0.06)" }}>
-                    {bioAge.method_details.kdm.age !== null && (
-                      <span>KDM: {Math.round(bioAge.method_details.kdm.age * 10) / 10} ({bioAge.method_details.kdm.biomarkers_used}/{bioAge.method_details.kdm.biomarkers_total} markers)</span>
-                    )}
-                    {bioAge.method_details.pheno.age !== null && (
-                      <span>PhenoAge: {Math.round(bioAge.method_details.pheno.age * 10) / 10} ({bioAge.method_details.pheno.biomarkers_used}/{bioAge.method_details.pheno.biomarkers_total} markers)</span>
-                    )}
-                    <span>±{bioAge.confidence_band} years</span>
+                <div>
+                  <div
+                    className="text-[18px] text-[#1B6B4A] mb-1"
+                    style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
+                  >
+                    Everything looks great
                   </div>
-                )}
+                  <p className="text-[14px] text-[#5A635D] leading-relaxed">
+                    All {latestResults.length} markers came back in a healthy range. {statusCounts.optimal} are in the optimal zone. Keep doing what you&apos;re doing.
+                  </p>
+                </div>
               </div>
             </div>
+          ) : (
+            <>
+              {/* "One Big Thing" hero — only for genuinely out_of_range markers */}
+              {oneBigThing && (
+                <div
+                  className="p-6 mb-4"
+                  style={{
+                    ...GLASS_CARD,
+                    background: "rgba(254,226,226,0.4)",
+                    border: "1px solid rgba(185,28,28,0.12)",
+                  }}
+                >
+                  <div className="text-[11px] uppercase tracking-wider text-[#8A928C] font-medium mb-2">
+                    Most important finding
+                  </div>
+                  <div
+                    className="text-[20px] text-[#0F1A15] mb-2 leading-snug"
+                    style={{ fontFamily: FRAUNCES, fontWeight: 500 }}
+                  >
+                    {(oneBigThing as any).message}
+                  </div>
+                  <p className="text-[14px] text-[#5A635D] leading-relaxed">
+                    {(oneBigThing as any).detail}
+                  </p>
+                </div>
+              )}
+
+              {/* Key findings grid — show remaining findings (skip first if hero shown) */}
+              {(() => {
+                const gridFindings = oneBigThing ? keyFindings.slice(1) : keyFindings;
+                if (gridFindings.length === 0) return null;
+                return (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-8">
+                    {gridFindings.map((f: any) => (
+                      <button
+                        key={f.biomarker}
+                        className="text-left p-4"
+                        style={{
+                          ...GLASS_CARD,
+                          background: f.status === "out_of_range"
+                            ? "rgba(254,226,226,0.4)"
+                            : "rgba(254,243,199,0.4)",
+                          border: f.status === "out_of_range"
+                            ? "1px solid rgba(185,28,28,0.12)"
+                            : "1px solid rgba(180,83,9,0.12)",
+                          boxShadow: "0 4px 20px rgba(15,26,21,0.04)",
+                          transition: TRANSITION,
+                        }}
+                        onClick={() => {
+                          const r = latestResults.find((lr) => lr.biomarker === f.biomarker);
+                          if (r) setExpandedBiomarker(r.id);
+                          document.getElementById("biomarkers-section")?.scrollIntoView({ behavior: "smooth" });
+                        }}
+                        onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; }}
+                        onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; }}
+                      >
+                        <div className="flex items-start gap-3">
+                          <div
+                            className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0"
+                            style={{
+                              backgroundColor: f.status === "out_of_range" ? "#B91C1C" : "#B45309",
+                            }}
+                          />
+                          <div className="min-w-0">
+                            <div className="flex items-baseline gap-2 mb-1">
+                              <span className="text-[14px] font-semibold text-[#0F1A15]">{f.biomarker}</span>
+                              <span className="text-[13px] text-[#5A635D]" style={{ fontFamily: FRAUNCES }}>{f.value}</span>
+                              <span className="text-[10px] text-[#8A928C]" style={{ fontFamily: MONO }}>{f.unit}</span>
+                            </div>
+                            <p className="text-[13px] text-[#5A635D] line-clamp-2">{f.detail}</p>
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                );
+              })()}
+            </>
           )}
 
           {/* ============================================================ */}
-          {/* REPORT CARD — paid users only                               */}
-          {/* ============================================================ */}
-          {!isFree && (
-            <ReportCardSection
-              statusCounts={statusCounts}
-              bioAge={
-                bioAge && bioAge.ensemble_age !== null
-                  ? {
-                      ensembleAge: bioAge.ensemble_age,
-                      chronologicalAge: bioAge.chronological_age,
-                      gap: bioAge.gap ?? 0,
-                    }
-                  : null
-              }
-              keyFinding={
-                oneBigThing
-                  ? (oneBigThing as any).message + ". " + (oneBigThing as any).detail
-                  : allGood
-                  ? `All ${latestResults.length} markers in a healthy range. ${statusCounts.optimal} are optimal.`
-                  : null
-              }
-              markerCount={latestResults.length}
-              studiesCount={analyses.reduce((sum, a) => sum + (a.citation_count || 0), 0)}
-              testDate={latestTestDate}
-            />
-          )}
-
-          {/* ============================================================ */}
-          {/* LAYER 2: BODY SYSTEMS VIEW                                  */}
+          {/* BODY SYSTEMS VIEW                                            */}
           {/* ============================================================ */}
           {systemData.length > 0 && (
             <div className="mb-10">
@@ -1058,7 +1036,25 @@ export default function DashboardPage() {
               </p>
               <div className="space-y-3">
                 {detectedPatterns.map((pattern) => (
-                  <PatternCard key={pattern.id} pattern={pattern} />
+                  isFree ? (
+                    <div key={pattern.id} className="p-4" style={{ ...GLASS_CARD, borderLeft: `3px solid ${(SEVERITY_STYLES[pattern.severity] || SEVERITY_STYLES.watch).border}` }}>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <span className="text-[14px] font-semibold text-[#0F1A15]">{pattern.name}</span>
+                          <span
+                            className="text-[9px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full"
+                            style={{ backgroundColor: (SEVERITY_STYLES[pattern.severity] || SEVERITY_STYLES.watch).bg, color: (SEVERITY_STYLES[pattern.severity] || SEVERITY_STYLES.watch).text }}
+                          >
+                            {(SEVERITY_STYLES[pattern.severity] || SEVERITY_STYLES.watch).label}
+                          </span>
+                        </div>
+                        <a href="/pricing" className="text-[11px] font-medium text-[#1B6B4A] hover:underline">Unlock details</a>
+                      </div>
+                      <p className="text-[12px] text-[#8A928C] mt-1">{pattern.markers_matched.length} markers involved</p>
+                    </div>
+                  ) : (
+                    <PatternCard key={pattern.id} pattern={pattern} />
+                  )
                 ))}
               </div>
             </div>
@@ -1351,6 +1347,34 @@ export default function DashboardPage() {
               );
             })}
           </div>
+
+          {/* ============================================================ */}
+          {/* REPORT CARD — paid users only, after biomarkers              */}
+          {/* ============================================================ */}
+          {!isFree && (
+            <ReportCardSection
+              statusCounts={statusCounts}
+              bioAge={
+                bioAge && bioAge.ensemble_age !== null
+                  ? {
+                      ensembleAge: bioAge.ensemble_age,
+                      chronologicalAge: bioAge.chronological_age,
+                      gap: bioAge.gap ?? 0,
+                    }
+                  : null
+              }
+              keyFinding={
+                oneBigThing
+                  ? (oneBigThing as any).message + ". " + (oneBigThing as any).detail
+                  : allGood
+                  ? `All ${latestResults.length} markers in a healthy range. ${statusCounts.optimal} are optimal.`
+                  : null
+              }
+              markerCount={latestResults.length}
+              studiesCount={analyses.reduce((sum, a) => sum + (a.citation_count || 0), 0)}
+              testDate={latestTestDate}
+            />
+          )}
 
           {/* Full upgrade CTA for free users — pricing cards */}
           {isFree && (
