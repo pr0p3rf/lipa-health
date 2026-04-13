@@ -29,6 +29,25 @@ function LoginContent() {
     setError("");
     setLoading(true);
 
+    // Password validation for signup
+    if (isSignUp) {
+      if (password.length < 8) {
+        setError("Password must be at least 8 characters.");
+        setLoading(false);
+        return;
+      }
+      if (!/[A-Z]/.test(password)) {
+        setError("Password must include at least one uppercase letter.");
+        setLoading(false);
+        return;
+      }
+      if (!/[0-9]/.test(password)) {
+        setError("Password must include at least one number.");
+        setLoading(false);
+        return;
+      }
+    }
+
     try {
       if (isSignUp) {
         const { data, error: authError } = await supabase.auth.signUp({
@@ -105,7 +124,7 @@ function LoginContent() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            minLength={6}
+            minLength={8}
             className="h-12 bg-white border-[#e5e5e5] text-[15px]"
           />
           <Button
