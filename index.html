@@ -209,6 +209,8 @@
       transition: background 0.2s;
     }
     .nav-cta:hover { background: var(--accent-hover); }
+    .nav-login { display: inline; }
+    @media (max-width: 768px) { .nav-login { display: none; } }
 
     /* ---------- DISPLAY TYPOGRAPHY ---------- */
     h1.display {
@@ -1596,7 +1598,7 @@
       <option value="pl">PL</option>
       <option value="es">ES</option>
     </select>
-    <a href="https://my.lipa.health/login" style="font-size: 13px; color: var(--text-secondary); margin-right: 16px;">Log in</a>
+    <a href="https://my.lipa.health/login" class="nav-login" style="font-size: 13px; color: var(--text-secondary); margin-right: 16px;">Log in</a>
     <a href="https://my.lipa.health/upload" class="nav-cta">Get started free</a>
     <button class="mobile-menu-btn" onclick="document.getElementById('mobileMenu').style.display='flex'" aria-label="Menu">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -1613,6 +1615,7 @@
   <a href="/where-to-test.html" onclick="document.getElementById('mobileMenu').style.display='none'">Where to test</a>
   <a href="https://my.lipa.health/test-finder" onclick="document.getElementById('mobileMenu').style.display='none'">Test Finder</a>
   <a href="https://my.lipa.health/pricing" onclick="document.getElementById('mobileMenu').style.display='none'">Pricing</a>
+  <a href="https://my.lipa.health/login" style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;" onclick="document.getElementById('mobileMenu').style.display='none'">Log in</a>
   <a href="https://my.lipa.health/upload" class="mobile-menu-cta" onclick="document.getElementById('mobileMenu').style.display='none'">Get started free</a>
 </div>
 
