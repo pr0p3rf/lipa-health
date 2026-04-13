@@ -46,6 +46,7 @@ interface Analysis {
   what_research_shows: string;
   related_patterns: string | null;
   suggested_exploration: string | null;
+  what_to_do: string | null;
   citation_count: number;
   highest_evidence_grade: string | null;
   avg_study_year: number | null;
@@ -2256,6 +2257,16 @@ function BiomarkerCard({
             </div>
             <p className="text-[13px] text-[#0F1A15] leading-relaxed">{analysis.what_it_means}</p>
           </div>
+
+          {/* What to do */}
+          {analysis.what_to_do && (
+            <div className="mb-4 p-3" style={{ ...GLASS_CARD_INNER, background: "#E8F5EE", border: "1px solid rgba(27,107,74,0.1)" }}>
+              <div className="text-[10px] uppercase tracking-wider text-[#1B6B4A] font-semibold mb-1.5">
+                What to do
+              </div>
+              <p className="text-[13px] text-[#0F1A15] leading-relaxed">{analysis.what_to_do}</p>
+            </div>
+          )}
 
           {/* What the research shows */}
           <div className="mb-4">
