@@ -62,8 +62,9 @@ const TIERS: Tier[] = [
     priceDetail: null,
     features: [
       "Upload 1 blood test",
-      "5 markers analyzed",
-      "Basic status overview",
+      "All markers with status",
+      "Bio-age, key findings, body systems",
+      "Pattern detection",
     ],
     cta: "Try Free",
   },
