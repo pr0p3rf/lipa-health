@@ -439,6 +439,17 @@
       0%, 100% { opacity: 0.4; transform: scale(1); }
       50% { opacity: 1; transform: scale(1.3); }
     }
+    /* How It Works animations */
+    @keyframes floatIn { 0% { opacity: 0; transform: translateY(8px); } 100% { opacity: 1; transform: translateY(0); } }
+    @keyframes scanLine { 0% { top: 10%; } 100% { top: 85%; } }
+    @keyframes barGrow { 0% { transform: scaleY(0.3); } 100% { transform: scaleY(1); } }
+    @keyframes typeDot { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
+    @keyframes trendDraw { 0% { stroke-dashoffset: 200; } 100% { stroke-dashoffset: 0; } }
+    .how-visual-upload { background: linear-gradient(135deg, #F8F5EF 0%, #E8F5EE 100%); }
+    .how-visual-analyze { background: linear-gradient(135deg, #E8F5EE 0%, #F0EDE5 100%); }
+    .how-visual-action { background: linear-gradient(135deg, #F0EDE5 0%, #E8F5EE 100%); }
+    .how-visual-chat { background: linear-gradient(135deg, #F8F5EF 0%, #F0EDE5 100%); }
+    .how-visual-life { background: linear-gradient(135deg, #E8F5EE 0%, #F8F5EF 100%); }
 
     /* ---------- PREVIEW / LIPA REPORT (CREAM) ---------- */
     .preview {
@@ -696,19 +707,30 @@
       margin-top: 72px;
     }
     .how-card {
-      padding: 48px 40px;
-      background: rgba(255,255,255,0.55);
-      backdrop-filter: saturate(160%) blur(24px);
-      -webkit-backdrop-filter: saturate(160%) blur(24px);
+      padding: 0;
+      background: #FFFFFF;
       border-radius: 24px;
-      border: 1px solid rgba(255,255,255,0.35);
-      box-shadow: 0 8px 32px rgba(15,26,21,0.05), inset 0 1px 0 rgba(255,255,255,0.5);
+      border: 1px solid rgba(15,26,21,0.06);
+      box-shadow: 0 2px 8px rgba(15,26,21,0.03), 0 8px 32px rgba(15,26,21,0.04);
       position: relative;
-      transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s cubic-bezier(0.22,1,0.36,1);
+      overflow: hidden;
+      transition: transform 0.5s cubic-bezier(0.22,1,0.36,1), box-shadow 0.5s cubic-bezier(0.22,1,0.36,1);
+      transform: perspective(1200px) rotateX(0) rotateY(0);
     }
     .how-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 16px 48px rgba(15,26,21,0.08), inset 0 1px 0 rgba(255,255,255,0.6);
+      transform: perspective(1200px) rotateX(1deg) translateY(-4px);
+      box-shadow: 0 16px 48px rgba(15,26,21,0.08), 0 4px 16px rgba(15,26,21,0.04);
+    }
+    .how-visual {
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .how-card-body {
+      padding: 32px 36px 36px;
     }
     .how-num {
       font-family: 'Fraunces', Georgia, serif;
@@ -1632,30 +1654,119 @@
     <p class="lede">Already have a recent blood test? Upload it now. Don't have one yet? We'll show you exactly what to order — no middleman, no markup. You book the test, we analyze the results.</p>
 
     <div class="how-steps">
+
+      <!-- Step 1: Upload -->
       <div class="how-card">
-        <div class="how-num mono">01</div>
-        <h3>Get your blood test.</h3>
-        <p>Use a test you already have — PDF, photo, scan, or screenshot from any lab, any country, any language. Or follow our guide to order the right panel at any lab near you. No middleman. No markup.</p>
-        <div class="how-meta mono">Any lab · any country · any format</div>
+        <div class="how-visual how-visual-upload">
+          <svg width="120" height="120" viewBox="0 0 120 120" fill="none" style="animation: floatIn 1s ease-out;">
+            <rect x="25" y="15" width="70" height="90" rx="8" fill="white" stroke="#1B6B4A" stroke-width="1.5" opacity="0.9"/>
+            <rect x="35" y="35" width="40" height="3" rx="1.5" fill="#1B6B4A" opacity="0.15"/>
+            <rect x="35" y="43" width="50" height="3" rx="1.5" fill="#1B6B4A" opacity="0.1"/>
+            <rect x="35" y="51" width="30" height="3" rx="1.5" fill="#1B6B4A" opacity="0.1"/>
+            <rect x="35" y="59" width="45" height="3" rx="1.5" fill="#1B6B4A" opacity="0.1"/>
+            <rect x="35" y="67" width="35" height="3" rx="1.5" fill="#1B6B4A" opacity="0.1"/>
+            <circle cx="85" cy="85" r="18" fill="#1B6B4A" opacity="0.1"/>
+            <path d="M85 78v14M78 85h14" stroke="#1B6B4A" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="how-card-body">
+          <div class="how-num mono">01</div>
+          <h3>Upload any blood test.</h3>
+          <p>PDF, photo, scan — from any lab, any country, any language. Or use our Test Finder to know exactly what to order and where to go.</p>
+          <div class="how-meta mono">Any lab · any country · any format</div>
+        </div>
       </div>
+
+      <!-- Step 2: Analyze -->
       <div class="how-card">
-        <div class="how-num mono">02</div>
-        <h3>The most comprehensive research-backed analysis for consumers.</h3>
-        <p>Every marker cross-referenced against tens of thousands of peer-reviewed studies from PubMed, Cochrane, and Semantic Scholar. Evidence scored by grade, funding independence, and recency. Cross-marker patterns detected. Biological age computed.</p>
-        <div class="how-meta mono">80K+ studies · 16+ calculations · <a href="/methodology.html" style="color: var(--accent); text-decoration: underline;">See methodology →</a></div>
+        <div class="how-visual how-visual-analyze">
+          <svg width="140" height="120" viewBox="0 0 140 120" fill="none">
+            <rect x="10" y="25" width="120" height="14" rx="7" fill="#F4F4F5"/>
+            <rect x="10" y="25" width="85" height="14" rx="7" fill="#1B6B4A" opacity="0.15" style="animation: barGrow 2s ease-out; transform-origin: left;"/>
+            <circle cx="95" cy="32" r="5" fill="#1B6B4A" style="animation: floatIn 1.2s ease-out;"/>
+            <rect x="10" y="50" width="120" height="14" rx="7" fill="#F4F4F5"/>
+            <rect x="10" y="50" width="60" height="14" rx="7" fill="#F59E0B" opacity="0.2" style="animation: barGrow 2.4s ease-out; transform-origin: left;"/>
+            <circle cx="70" cy="57" r="5" fill="#F59E0B" style="animation: floatIn 1.6s ease-out;"/>
+            <rect x="10" y="75" width="120" height="14" rx="7" fill="#F4F4F5"/>
+            <rect x="10" y="75" width="100" height="14" rx="7" fill="#1B6B4A" opacity="0.15" style="animation: barGrow 2.8s ease-out; transform-origin: left;"/>
+            <circle cx="110" cy="82" r="5" fill="#1B6B4A" style="animation: floatIn 2s ease-out;"/>
+          </svg>
+        </div>
+        <div class="how-card-body">
+          <div class="how-num mono">02</div>
+          <h3>Research-backed analysis.</h3>
+          <p>Every marker cross-referenced against tens of thousands of peer-reviewed studies. Evidence scored by grade, independence, and recency. Patterns detected. Biological age computed.</p>
+          <div class="how-meta mono"><a href="/methodology.html" style="color: var(--accent); text-decoration: underline;">See our methodology →</a></div>
+        </div>
       </div>
+
+      <!-- Step 3: Act -->
       <div class="how-card">
-        <div class="how-num mono">03</div>
-        <h3>Understand, act, and track.</h3>
-        <p>Plain-English explanations. A personalized action plan across six life domains. Trend charts that show what's improving and what's not. Your permanent vault stores every test — building a complete picture of your biology over time.</p>
-        <div class="how-meta mono">Your vault · trends · bio-age trajectory</div>
+        <div class="how-visual how-visual-action">
+          <div style="display: flex; gap: 8px; padding: 0 20px;">
+            <div style="background: white; border-radius: 12px; padding: 14px 16px; width: 33%; box-shadow: 0 2px 8px rgba(0,0,0,0.04); animation: floatIn 1s ease-out;">
+              <div style="font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: #1B6B4A; font-weight: 600; margin-bottom: 6px;">Nutrition</div>
+              <div style="width: 100%; height: 4px; background: #F4F4F5; border-radius: 2px;"><div style="width: 70%; height: 4px; background: #1B6B4A; border-radius: 2px; opacity: 0.3;"></div></div>
+            </div>
+            <div style="background: white; border-radius: 12px; padding: 14px 16px; width: 33%; box-shadow: 0 2px 8px rgba(0,0,0,0.04); animation: floatIn 1.3s ease-out;">
+              <div style="font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: #1B6B4A; font-weight: 600; margin-bottom: 6px;">Supplements</div>
+              <div style="width: 100%; height: 4px; background: #F4F4F5; border-radius: 2px;"><div style="width: 50%; height: 4px; background: #1B6B4A; border-radius: 2px; opacity: 0.3;"></div></div>
+            </div>
+            <div style="background: white; border-radius: 12px; padding: 14px 16px; width: 33%; box-shadow: 0 2px 8px rgba(0,0,0,0.04); animation: floatIn 1.6s ease-out;">
+              <div style="font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: #1B6B4A; font-weight: 600; margin-bottom: 6px;">Sleep</div>
+              <div style="width: 100%; height: 4px; background: #F4F4F5; border-radius: 2px;"><div style="width: 85%; height: 4px; background: #1B6B4A; border-radius: 2px; opacity: 0.3;"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="how-card-body">
+          <div class="how-num mono">03</div>
+          <h3>Your personalized protocol.</h3>
+          <p>Specific supplements with dosages, timing, and interactions. Foods that move your markers. Sleep, movement, and lifestyle changes — all grounded in research, specific to your results.</p>
+          <div class="how-meta mono">Nutrition · supplements · sleep · movement · lifestyle</div>
+        </div>
       </div>
+
+      <!-- Step 4: Ask -->
       <div class="how-card">
-        <div class="how-num mono">04</div>
-        <h3>Ask anything. Anytime.</h3>
-        <p>Ask Lipa is your personal health assistant. It knows your test results, your history, and searches thousands of peer-reviewed studies to answer your questions. "Why is my iron low?" "What foods help cholesterol?" "Should I retest in 3 months?"</p>
-        <div class="how-meta mono">Ask Lipa · your personal health assistant</div>
+        <div class="how-visual how-visual-chat">
+          <div style="display: flex; flex-direction: column; gap: 8px; padding: 0 24px; width: 100%;">
+            <div style="align-self: flex-end; background: #1B6B4A; color: white; font-size: 12px; padding: 10px 16px; border-radius: 16px 16px 4px 16px; max-width: 75%; animation: floatIn 0.8s ease-out;">Why is my iron low?</div>
+            <div style="align-self: flex-start; background: white; font-size: 12px; padding: 10px 16px; border-radius: 16px 16px 16px 4px; max-width: 80%; box-shadow: 0 1px 4px rgba(0,0,0,0.06); animation: floatIn 1.4s ease-out; color: #0F1A15;">Your ferritin at 8 ng/mL suggests depleted iron stores. A 2025 study found this level is associated with fatigue and...</div>
+            <div style="align-self: flex-start; display: flex; gap: 4px; animation: floatIn 1.8s ease-out;">
+              <div style="width: 6px; height: 6px; border-radius: 50%; background: #1B6B4A; opacity: 0.4; animation: typeDot 1s ease-in-out infinite;"></div>
+              <div style="width: 6px; height: 6px; border-radius: 50%; background: #1B6B4A; opacity: 0.4; animation: typeDot 1s ease-in-out 0.2s infinite;"></div>
+              <div style="width: 6px; height: 6px; border-radius: 50%; background: #1B6B4A; opacity: 0.4; animation: typeDot 1s ease-in-out 0.4s infinite;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="how-card-body">
+          <div class="how-num mono">04</div>
+          <h3>Ask anything. Anytime.</h3>
+          <p>Ask Lipa knows your results, your history, and searches peer-reviewed studies to answer your questions. Like a health expert who actually knows your numbers.</p>
+          <div class="how-meta mono">Ask Lipa · your personal health assistant</div>
+        </div>
       </div>
+
+      <!-- Step 5: Life (ongoing) -->
+      <div class="how-card" style="grid-column: 1 / -1;">
+        <div class="how-visual how-visual-life" style="height: 140px;">
+          <svg width="90%" height="100" viewBox="0 0 400 100" fill="none" preserveAspectRatio="none" style="padding: 0 20px;">
+            <rect x="0" y="40" width="400" height="30" rx="4" fill="#1B6B4A" opacity="0.06"/>
+            <path d="M 0 80 Q 50 70 100 65 Q 150 60 200 50 Q 250 42 300 38 Q 350 34 400 28" stroke="#1B6B4A" stroke-width="2.5" fill="none" stroke-linecap="round" style="stroke-dasharray: 200; animation: trendDraw 3s ease-out forwards;"/>
+            <circle cx="100" cy="65" r="4" fill="#1B6B4A" opacity="0.5" style="animation: floatIn 1s ease-out;"/>
+            <circle cx="200" cy="50" r="4" fill="#1B6B4A" opacity="0.7" style="animation: floatIn 1.5s ease-out;"/>
+            <circle cx="300" cy="38" r="4" fill="#1B6B4A" opacity="0.9" style="animation: floatIn 2s ease-out;"/>
+            <circle cx="400" cy="28" r="5" fill="#1B6B4A" style="animation: floatIn 2.5s ease-out;"/>
+          </svg>
+        </div>
+        <div class="how-card-body" style="text-align: center; max-width: 640px; margin: 0 auto;">
+          <div class="how-num mono">05</div>
+          <h3>Your biology, tracked over time.</h3>
+          <p>With Lipa Life, every test builds on the last. Track trends, watch your biological age change, get personalized research alerts when new studies matter to your markers, and ask Lipa anything — forever.</p>
+          <div class="how-meta mono">Vault · trends · bio-age trajectory · research alerts · <a href="https://my.lipa.health/pricing" style="color: var(--accent); text-decoration: underline;">See Lipa Life →</a></div>
+        </div>
+      </div>
+
     </div>
 
     <!-- BYOT conversion bridge — captures users who don't have a test yet -->
