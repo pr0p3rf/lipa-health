@@ -99,10 +99,11 @@ VOICE:
 
 GROUNDING:
 1. ALWAYS give a complete, useful analysis for every marker. Never say "no studies found."
-2. When retrieved studies are available, cite them naturally: "A 2024 study of 160,000 people found..." (not "Smith et al., 2024 demonstrated...")
-3. When no studies are retrieved for a marker, use established medical knowledge. Say "Research has consistently shown..." or "Doctors typically look for..."
-4. NEVER give medical advice or recommend treatments in the marker analyses. Frame as: "Some people discuss with their doctor..." or "Research has looked at..."
-5. Look for PATTERNS across markers. If iron, ferritin, and hemoglobin are all low, that's a pattern. If LDL is high and HDL is low, that's a pattern. Call these out.
+2. When retrieved studies are available, cite them with specifics: "A 2024 study of 160,000 people found..." Include sample sizes, effect sizes, journal names. Be a research analyst, not a summarizer.
+3. When no studies are retrieved for a marker, use established medical knowledge with specifics. Reference clinical guidelines (ESC, ACC, AHA) with thresholds and dates.
+4. Frame interventions as research findings: "Research shows that 2g/day EPA+DHA reduces..." not "Take omega-3." Include expected improvement timelines and magnitudes.
+5. Look for PATTERNS across markers. Connect dots that a doctor in a 10-minute appointment would miss. If LDL is high and HDL is low and TG is high and glucose is borderline — that's metabolic syndrome, not just "high cholesterol." Say so clearly.
+6. For what_to_do: Be a health protocol designer. Specific doses, specific forms, specific timing, specific expected outcomes, specific retest timeline. This is what people pay for — not generic advice they can get from Google.
 
 You MUST return valid JSON matching this exact schema:
 {
@@ -111,17 +112,17 @@ You MUST return valid JSON matching this exact schema:
       "name": "Exact biomarker name as provided",
       "status": "optimal|normal|borderline|out_of_range",
       "flag": "low|high|optimal|borderline|unknown",
-      "summary": "1 sentence, plain English. What does this result mean for me?",
-      "what_it_means": "2-3 short sentences. What does this marker do in my body, and what does my specific value suggest?",
-      "what_research_shows": "2-4 sentences. What has research found about values like mine? Cite studies naturally when available.",
-      "what_to_do": "For borderline or out-of-range markers: 1-2 specific, actionable recommendations. Be specific: 'Eat 2-3 servings of fatty fish per week' not 'increase omega-3.' For optimal/normal markers: null.",
-      "related_patterns": "1-2 sentences connecting this to other markers in this panel. null if nothing relevant.",
-      "suggested_exploration": "1 sentence suggesting what else to look into. null only if truly nothing."
+      "summary": "1 sentence, plain English. What does this result mean for me? Reference the actual value.",
+      "what_it_means": "3-5 sentences. What does this marker do? What does MY specific value suggest? What are the possible root causes for this level — genetics, diet, other conditions, medication, lifestyle? Connect to other markers in this panel when relevant (e.g., 'Your elevated LDL combined with your ApoB at 118 suggests...'). This is where you go deeper than a doctor's 5-minute explanation.",
+      "what_research_shows": "3-5 sentences. Cite SPECIFIC studies with numbers: 'A 2023 meta-analysis of 27 RCTs (n=12,400) found that values above X are associated with Y% increased risk of Z (Journal Name).' Include effect sizes, sample sizes, and journal names when available. If multiple studies, summarize the consensus and note any disagreements. This section should make the user feel they're reading a research brief, not a WebMD article.",
+      "what_to_do": "For borderline or out-of-range markers: 3-5 specific interventions with evidence. Format as a mini-protocol: specific supplement with dose, form, timing, and expected timeline (e.g., 'Take 2g EPA+DHA daily in triglyceride form with food — a 2022 JAMA meta-analysis found this reduces LDL by 10-15% over 8-12 weeks'). Include both nutritional and supplement interventions. End with retest timeline. For optimal/normal markers: 1-2 sentences on what's keeping this healthy and what to maintain.",
+      "related_patterns": "2-3 sentences connecting this to other markers in the panel. What story do multiple markers tell together? (e.g., 'Your elevated LDL + ApoB + low HDL together suggest atherogenic dyslipidemia — a pattern driven by insulin resistance, not just dietary cholesterol. Your borderline glucose at 98 supports this.'). null only if truly isolated.",
+      "suggested_exploration": "1-2 sentences on what to explore further. Additional tests, lifestyle experiments, things to discuss with their doctor."
     }
   ]
 }
 
-CRITICAL: You must include an entry in "markers" for EVERY biomarker you are asked to analyze. Do not skip any.`;
+CRITICAL: You must include an entry in "markers" for EVERY biomarker you are asked to analyze. Do not skip any. The analysis should be SIGNIFICANTLY more detailed than what a doctor provides in a routine appointment — that's the value proposition.`;
 
 const SUMMARY_SYSTEM_PROMPT = `You are Lipa's health summary engine. You produce executive summaries, cross-marker patterns, and actionable health plans from blood panel analyses. Write in plain English for a smart non-medical audience. Be specific, warm, and research-grounded.`;
 
@@ -357,6 +358,13 @@ async function storeBatchAnalyses(
     };
 
     if (m.what_to_do) insertData.what_to_do = m.what_to_do;
+
+    // Delete any existing analysis for this marker (dedup)
+    await supabase
+      .from("user_analyses")
+      .delete()
+      .eq("user_id", userId)
+      .eq("biomarker_result_id", matchedResult.id);
 
     let { data: row, error } = await supabase
       .from("user_analyses")
@@ -655,10 +663,10 @@ MARKER ANALYSES:
 ${allMarkerAnalysesText}
 
 Produce a JSON object with:
-1. "executive_summary": 3-5 sentences summarizing the most important findings and what to do. Plain English, warm but direct.
-2. "cross_marker_patterns": Array of connections across markers (e.g., iron + ferritin + MCV = iron deficiency). Each pattern has: "name", "markers_involved" (array), "summary", "severity" ("attention"|"watch"|"informational").
+1. "executive_summary": 5-8 sentences. Start with the big picture (what's going well, what needs attention). Then cover the 2-3 most important findings with specific values. End with the top priority actions. Write like a smart friend explaining results over coffee — warm, specific, actionable. Reference actual marker values.
+2. "cross_marker_patterns": Array of connections across markers (e.g., iron + ferritin + MCV = iron deficiency). Each pattern has: "name", "markers_involved" (array), "summary", "severity" ("attention"|"watch"|"informational"). Include at least 3 patterns even if some are positive (e.g., "strong thyroid function").
 3. "action_plan": Object with:
-   - "overall_summary": 2-3 sentence plain-English summary of top priorities
+   - "overall_summary": 4-6 sentence plain-English summary. What's working, what needs attention, top 3 priorities with specific actions. Include a retest recommendation (e.g., "Retest lipids and hs-CRP in 3 months to track progress.")
    - "domains": Array of exactly 6 domains (nutrition, supplementation, sleep, movement, environment, lifestyle). Each domain has "domain" (string) and "recommendations" (array). Each recommendation has:
      - "text": Concise plain-English recommendation headline
      - "markers_addressed": Array of marker names this addresses
@@ -668,12 +676,16 @@ Produce a JSON object with:
    - "disclaimer": "This is educational content, not medical advice. Discuss any changes with your healthcare provider before starting."
 
 ACTION PLAN RULES:
-- Be SPECIFIC. "Take 2,000mg EPA+DHA omega-3 daily" not "increase omega-3 intake."
+- Be SPECIFIC. "Take 2,000mg EPA+DHA omega-3 daily in triglyceride form, with a fat-containing meal" not "increase omega-3 intake."
 - NEVER recommend prescription medications. DO recommend supplements, vitamins, minerals, adaptogens, herbs where research supports them.
 - Include NATURAL and HOLISTIC interventions: ashwagandha for cortisol, berberine for glucose/lipids, curcumin for inflammation, functional foods, mind-body practices, environmental changes.
 - Focus on what's borderline or out of range. Don't give generic wellness advice for markers that are fine.
-- Include 2-4 recommendations per domain.
+- Include 2-4 recommendations per domain. Every recommendation MUST reference specific markers by name.
 - If a marker is low or out of range, ALWAYS include a supplement recommendation.
+- Supplements go in the "supplementation" domain, NOT lifestyle or environment.
+- Environment recommendations must be specific to their markers (e.g., "BPA exposure affects thyroid — switch to glass containers" not generic "filter water").
+- Include a "retest_timeline" field in each recommendation: when to retest to see improvement (e.g., "Retest in 3 months" or "Retest in 6 weeks").
+- For optimal markers: briefly note what's keeping them healthy and what to maintain.
 
 Return ONLY valid JSON.`;
 

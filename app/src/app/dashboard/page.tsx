@@ -1210,31 +1210,7 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* ============================================================ */}
-          {/* SHARE YOUR RESULTS — paid only                                */}
-          {/* ============================================================ */}
-          {!isFree && (
-            <div className="mb-10">
-              <ReportCardSection
-                statusCounts={statusCounts}
-                bioAge={
-                  bioAge && bioAge.ensemble_age !== null
-                    ? { ensembleAge: bioAge.ensemble_age, chronologicalAge: bioAge.chronological_age, gap: bioAge.gap ?? 0 }
-                    : null
-                }
-                keyFinding={
-                  keyFindings.length > 0
-                    ? (keyFindings[0] as any).detail
-                    : allGood
-                    ? `All ${latestResults.length} markers in a healthy range. ${statusCounts.optimal} are optimal.`
-                    : null
-                }
-                markerCount={latestResults.length}
-                studiesCount={analyses.reduce((sum, a) => sum + (a.citation_count || 0), 0)}
-                testDate={latestTestDate}
-              />
-            </div>
-          )}
+          {/* Report card removed — not adding value */}
 
           {/* ============================================================ */}
           {/* UPGRADE CTA — free users only                                 */}
