@@ -69,13 +69,34 @@ export async function POST(request: NextRequest) {
 // ---------------------------------------------------------------------
 
 async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
-  if (!session.subscription || !session.customer) return;
+  // Handle subscription payments (Lipa Life)
+  if (session.subscription && session.customer) {
+    const subscription = await stripe.subscriptions.retrieve(
+      session.subscription as string
+    );
+    await handleSubscriptionUpsert(subscription);
+    return;
+  }
 
-  const subscription = await stripe.subscriptions.retrieve(
-    session.subscription as string
-  );
+  // Handle one-time payments (Lipa One) — no subscription object
+  if (session.mode === "payment" && session.metadata?.tier && session.metadata?.userId) {
+    const tier = session.metadata.tier;
+    const userId = session.metadata.userId;
+    console.log(`[webhook] One-time payment: tier=${tier} userId=${userId}`);
 
-  await handleSubscriptionUpsert(subscription);
+    await supabase
+      .from("user_subscriptions")
+      .upsert(
+        {
+          user_id: userId,
+          tier,
+          stripe_customer_id: session.customer as string || null,
+          status: "active",
+        },
+        { onConflict: "user_id" }
+      );
+    return;
+  }
 }
 
 async function handleSubscriptionUpsert(subscription: Stripe.Subscription) {
