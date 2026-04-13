@@ -635,7 +635,7 @@ export default function TestFinderPage() {
               <p className="text-[13px] text-[#5A635D] mb-5 max-w-md mx-auto leading-relaxed">
                 Enter your email to see your full marker list, lab directions, and how to prepare. We'll also send a reminder when it's time to upload your results.
               </p>
-              <form onSubmit={handleEmailSubmit} className="flex gap-2 max-w-sm mx-auto">
+              <form onSubmit={handleEmailSubmit} className="flex flex-col sm:flex-row gap-2 max-w-sm mx-auto">
                 <input
                   type="email"
                   value={email}
@@ -646,7 +646,7 @@ export default function TestFinderPage() {
                 />
                 <button
                   type="submit"
-                  className="text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-6 py-3 rounded-full transition-colors flex-shrink-0"
+                  className="text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-6 py-3 rounded-full transition-colors w-full sm:w-auto"
                 >
                   Show my panel
                 </button>
