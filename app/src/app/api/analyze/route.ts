@@ -247,7 +247,7 @@ export async function POST(request: NextRequest) {
 
     // Run the heavy analysis in the background (after response is sent)
     after(async () => {
-      console.log(`[analyze-bg] Starting two-pass analysis for ${insertedResults.length} markers`);
+      console.log(`[analyze-bg] Starting batched two-pass analysis for ${insertedResults.length} markers`);
 
     try {
       // ================================================================
@@ -267,7 +267,7 @@ export async function POST(request: NextRequest) {
       } : {};
 
       // ================================================================
-      // STEP 4: Two-pass panel analysis (batch RAG + single Opus call)
+      // STEP 4: Two-pass panel analysis (batch RAG + batched Opus calls)
       // ================================================================
       const biomarkerInputs = insertedResults.map((result: any) => ({
         id: result.id,
@@ -281,6 +281,63 @@ export async function POST(request: NextRequest) {
         test_date: date,
       }));
 
+      // Progressive storage callback: store each batch's analyses as they complete
+      const storeBatch = async (_batchIndex: number, analyses: any[]) => {
+        console.log(`[analyze-bg] Storing batch ${_batchIndex + 1} (${analyses.length} markers) progressively...`);
+        for (const analysis of analyses) {
+          const matchedResult = insertedResults.find(
+            (r: any) =>
+              r.biomarker === analysis.biomarker_name ||
+              r.biomarker.toLowerCase() === analysis.biomarker_name.toLowerCase()
+          );
+
+          if (!matchedResult) {
+            console.warn(`[analyze-bg] No DB result found for marker: ${analysis.biomarker_name}`);
+            continue;
+          }
+
+          const { data: analysisRow, error: analysisError } = await supabase
+            .from("user_analyses")
+            .insert({
+              user_id: userId,
+              biomarker_result_id: matchedResult.id,
+              biomarker_name: analysis.biomarker_name,
+              status: analysis.status,
+              flag: analysis.flag,
+              summary: analysis.summary,
+              what_it_means: analysis.what_it_means,
+              what_research_shows: analysis.what_research_shows,
+              related_patterns: analysis.related_patterns,
+              suggested_exploration: analysis.suggested_exploration,
+              what_to_do: analysis.what_to_do || null,
+              citation_count: analysis.citation_count,
+              avg_study_year: analysis.avg_study_year,
+              highest_evidence_grade: analysis.highest_evidence_grade,
+              retrieval_time_ms: analysis.retrieval_time_ms,
+              generation_time_ms: analysis.generation_time_ms,
+            })
+            .select()
+            .single();
+
+          if (analysisError) {
+            console.error(`[analyze-bg] Failed to store analysis for ${analysis.biomarker_name}:`, analysisError);
+          } else if (analysisRow && analysis.citations.length > 0) {
+            const citationRecords = analysis.citations.map((c: any) => ({
+              user_id: userId,
+              biomarker_result_id: matchedResult.id,
+              study_id: c.study_id,
+              relevance_score: c.similarity,
+              retrieval_rank: c.relevance_rank,
+              biomarker_name: analysis.biomarker_name,
+              query_used: `two-pass batch analysis`,
+            }));
+
+            await supabase.from("analysis_citations").insert(citationRecords);
+          }
+        }
+        console.log(`[analyze-bg] Batch ${_batchIndex + 1} stored successfully.`);
+      };
+
       const twoPassResult = await analyzePanelTwoPass(
         supabase,
         anthropic,
@@ -289,7 +346,8 @@ export async function POST(request: NextRequest) {
         {
           age: userProfile.age,
           sex: userProfile.sex as "male" | "female" | undefined,
-        }
+        },
+        storeBatch // progressive storage callback
       );
 
       console.log(
@@ -297,63 +355,7 @@ export async function POST(request: NextRequest) {
       );
 
       // ================================================================
-      // STEP 5: Store marker analyses in user_analyses
-      // ================================================================
-      for (const analysis of twoPassResult.markers) {
-        // Find the matching inserted result by name
-        const matchedResult = insertedResults.find(
-          (r: any) =>
-            r.biomarker === analysis.biomarker_name ||
-            r.biomarker.toLowerCase() === analysis.biomarker_name.toLowerCase()
-        );
-
-        if (!matchedResult) {
-          console.warn(`[analyze-bg] No DB result found for marker: ${analysis.biomarker_name}`);
-          continue;
-        }
-
-        const { data: analysisRow, error: analysisError } = await supabase
-          .from("user_analyses")
-          .insert({
-            user_id: userId,
-            biomarker_result_id: matchedResult.id,
-            biomarker_name: analysis.biomarker_name,
-            status: analysis.status,
-            flag: analysis.flag,
-            summary: analysis.summary,
-            what_it_means: analysis.what_it_means,
-            what_research_shows: analysis.what_research_shows,
-            related_patterns: analysis.related_patterns,
-            suggested_exploration: analysis.suggested_exploration,
-            citation_count: analysis.citation_count,
-            avg_study_year: analysis.avg_study_year,
-            highest_evidence_grade: analysis.highest_evidence_grade,
-            retrieval_time_ms: analysis.retrieval_time_ms,
-            generation_time_ms: analysis.generation_time_ms,
-          })
-          .select()
-          .single();
-
-        if (analysisError) {
-          console.error(`[analyze-bg] Failed to store analysis for ${analysis.biomarker_name}:`, analysisError);
-        } else if (analysisRow && analysis.citations.length > 0) {
-          // Store citations
-          const citationRecords = analysis.citations.map((c) => ({
-            user_id: userId,
-            biomarker_result_id: matchedResult.id,
-            study_id: c.study_id,
-            relevance_score: c.similarity,
-            retrieval_rank: c.relevance_rank,
-            biomarker_name: analysis.biomarker_name,
-            query_used: `two-pass panel analysis`,
-          }));
-
-          await supabase.from("analysis_citations").insert(citationRecords);
-        }
-      }
-
-      // ================================================================
-      // STEP 6: Run risk calculations
+      // STEP 5: Run risk calculations
       // ================================================================
       const biomarkerValues: BiomarkerValue[] = insertedResults.map((r: any) => ({
         name: r.biomarker,
@@ -365,7 +367,7 @@ export async function POST(request: NextRequest) {
       console.log(`[analyze-bg] ${riskCalcs.length} risk calculations computed`);
 
       // ================================================================
-      // STEP 7: Store action plan
+      // STEP 6: Store action plan + summary (from the final summary call)
       // ================================================================
       await supabase.from("action_plans").insert({
         user_id: userId,
@@ -423,6 +425,7 @@ export async function POST(request: NextRequest) {
                 what_research_shows: analysis.what_research_shows,
                 related_patterns: analysis.related_patterns,
                 suggested_exploration: analysis.suggested_exploration,
+                what_to_do: (analysis as any).what_to_do || null,
                 citation_count: analysis.citation_count,
                 avg_study_year: analysis.avg_study_year,
                 highest_evidence_grade: analysis.highest_evidence_grade,

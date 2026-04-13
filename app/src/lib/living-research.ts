@@ -73,6 +73,7 @@ export interface LivingResearchAnalysis {
   what_research_shows: string;
   related_patterns: string | null;
   suggested_exploration: string | null;
+  what_to_do: string | null;
   citation_count: number;
   highest_evidence_grade: string | null;
   avg_study_year: number | null;
@@ -430,6 +431,7 @@ export async function analyzeBiomarker(
     what_research_shows: analysis.what_research_shows,
     related_patterns: analysis.related_patterns,
     suggested_exploration: analysis.suggested_exploration,
+    what_to_do: (analysis as any).what_to_do || null,
     citation_count: citations.length,
     highest_evidence_grade: highestGrade,
     avg_study_year: avgYear,
@@ -729,14 +731,19 @@ CRITICAL: You must include an entry in "markers" for EVERY biomarker provided. D
 /**
  * Two-pass panel analysis:
  *   Pass 1 — Batch RAG retrieval (grouped by category)
- *   Pass 2 — Single Claude Opus call for full-panel analysis + action plan
+ *   Pass 2 — Batched Opus calls (~25 markers each) for marker analysis
+ *   Pass 3 — Single Opus call for executive summary, cross-marker patterns, action plan
+ *
+ * @param onBatchComplete — Optional callback invoked after each batch completes,
+ *   allowing progressive storage of analyses to the database.
  */
 export async function analyzePanelTwoPass(
   supabase: SupabaseClient,
   anthropic: Anthropic,
   openai: any,
   biomarkers: BiomarkerInput[],
-  userProfile?: { age?: number; sex?: "male" | "female" }
+  userProfile?: { age?: number; sex?: "male" | "female" },
+  onBatchComplete?: (batchIndex: number, analyses: LivingResearchAnalysis[]) => Promise<void>
 ): Promise<{
   executive_summary: string;
   markers: LivingResearchAnalysis[];
@@ -822,11 +829,11 @@ export async function analyzePanelTwoPass(
   );
 
   // =================================================================
-  // PASS 2: Comprehensive Opus Analysis
+  // PASS 2: Batched Opus Analysis (groups of ~25 markers each)
   // =================================================================
   const pass2Start = Date.now();
 
-  // Build full panel text
+  // Build full panel text (shared across all batch calls for context)
   const panelText = biomarkers
     .map((bm) => {
       const ref = referenceMap.get(bm.name);
@@ -865,7 +872,79 @@ Journal: ${s.journal || "Unknown"}`;
     ? `\nUSER DEMOGRAPHICS: Age ${userProfile.age || "unknown"}, Sex ${userProfile.sex || "unknown"}`
     : "";
 
-  const userPrompt = `COMPLETE BLOOD PANEL (${biomarkers.length} markers):
+  // Split markers into batches of ~25
+  const BATCH_SIZE = 25;
+  const markerBatches: BiomarkerInput[][] = [];
+  for (let i = 0; i < biomarkers.length; i += BATCH_SIZE) {
+    markerBatches.push(biomarkers.slice(i, i + BATCH_SIZE));
+  }
+
+  console.log(
+    `[two-pass] Pass 2: splitting ${biomarkers.length} markers into ${markerBatches.length} batches of ~${BATCH_SIZE}`
+  );
+
+  // System prompt for batch marker analysis (no action plan — that comes in the summary call)
+  const BATCH_SYSTEM_PROMPT = `You are Lipa's comprehensive analysis engine. You have the COMPLETE blood panel in front of you for context, but your task is to analyze only a specific subset of markers.
+
+YOUR AUDIENCE: A 30-year-old who got their blood test back and wants to understand it. They're smart but not medical professionals. They want to know: is this good or bad? Should I worry? What can I do?
+
+VOICE:
+- Plain English. Short sentences. No jargon.
+- Say "your body" not "the organism." Say "fight off infections" not "immune function." Say "how well your kidneys work" not "renal function."
+- Be direct: "This is low" not "This value falls below the optimal threshold."
+- Be specific to THEIR value: "At 12.4, your hemoglobin is at the low end" not "Hemoglobin measures oxygen-carrying capacity."
+- Be warm but honest. Don't sugarcoat, don't alarm.
+
+GROUNDING:
+1. ALWAYS give a complete, useful analysis for every marker. Never say "no studies found."
+2. When retrieved studies are available, cite them naturally: "A 2024 study of 160,000 people found..." (not "Smith et al., 2024 demonstrated...")
+3. When no studies are retrieved for a marker, use established medical knowledge. Say "Research has consistently shown..." or "Doctors typically look for..."
+4. NEVER give medical advice or recommend treatments in the marker analyses. Frame as: "Some people discuss with their doctor..." or "Research has looked at..."
+5. Look for PATTERNS across markers. If iron, ferritin, and hemoglobin are all low, that's a pattern. If LDL is high and HDL is low, that's a pattern. Call these out.
+
+You MUST return valid JSON matching this exact schema:
+{
+  "markers": [
+    {
+      "name": "Exact biomarker name as provided",
+      "status": "optimal|normal|borderline|out_of_range",
+      "flag": "low|high|optimal|borderline|unknown",
+      "summary": "1 sentence, plain English. What does this result mean for me?",
+      "what_it_means": "2-3 short sentences. What does this marker do in my body, and what does my specific value suggest?",
+      "what_research_shows": "2-4 sentences. What has research found about values like mine? Cite studies naturally when available.",
+      "what_to_do": "For borderline or out-of-range markers: 1-2 specific, actionable recommendations. Be specific: 'Eat 2-3 servings of fatty fish per week' not 'increase omega-3.' For optimal/normal markers: null.",
+      "related_patterns": "1-2 sentences connecting this to other markers in this panel. null if nothing relevant.",
+      "suggested_exploration": "1 sentence suggesting what else to look into. null only if truly nothing."
+    }
+  ]
+}
+
+CRITICAL: You must include an entry in "markers" for EVERY biomarker you are asked to analyze. Do not skip any.`;
+
+  // Run batch Opus calls (sequentially to avoid rate limits and stay within timeout)
+  const allMarkerResults: any[] = [];
+  const batchTimings: number[] = [];
+
+  for (let batchIdx = 0; batchIdx < markerBatches.length; batchIdx++) {
+    const batch = markerBatches[batchIdx];
+    const batchMarkerNames = batch.map((bm) => bm.name);
+    const batchMarkerList = batch
+      .map((bm) => {
+        const ref = referenceMap.get(bm.name);
+        const status = statusMap.get(bm.name)!;
+        const statusLabel =
+          status.status === "optimal"
+            ? "OPTIMAL"
+            : status.status === "out_of_range"
+            ? `OUT OF RANGE (${status.flag})`
+            : status.status === "borderline"
+            ? `BORDERLINE (${status.flag})`
+            : "NORMAL";
+        return `- ${bm.name}: ${bm.value} ${bm.unit || ""} | Status: ${statusLabel}`;
+      })
+      .join("\n");
+
+    const batchPrompt = `Here is the patient's FULL blood panel for context (${biomarkers.length} markers):
 ${demographicText}
 
 ${panelText}
@@ -874,106 +953,153 @@ RETRIEVED RESEARCH STUDIES (${sortedStudies.length} studies from Living Research
 
 ${studiesText || "(No studies retrieved — use established medical knowledge for all analyses.)"}
 
-Analyze the COMPLETE panel. Return a marker analysis for EVERY biomarker listed above (${biomarkers.length} total). Include cross-marker patterns and a full action plan. Return ONLY valid JSON.`;
+YOUR TASK: Analyze ONLY these ${batch.length} specific markers in detail:
+${batchMarkerList}
 
-  const message = await anthropic.messages.create({
+For each marker, provide: name, status, flag, summary, what_it_means, what_research_shows, what_to_do, related_patterns, suggested_exploration.
+
+IMPORTANT — 'what_to_do' field: For each marker that is borderline or out of range, give 1-2 specific, actionable recommendations. Be specific: 'Eat 2-3 servings of fatty fish per week' not 'increase omega-3.' For optimal/normal markers, set what_to_do to null.
+
+Return ONLY valid JSON with a "markers" array containing exactly ${batch.length} entries.`;
+
+    const batchStart = Date.now();
+    console.log(
+      `[two-pass] Batch ${batchIdx + 1}/${markerBatches.length}: analyzing ${batchMarkerNames.join(", ").slice(0, 100)}...`
+    );
+
+    const batchMessage = await anthropic.messages.create({
+      model: "claude-opus-4-20250514",
+      max_tokens: 8192,
+      system: BATCH_SYSTEM_PROMPT,
+      messages: [{ role: "user", content: batchPrompt }],
+    });
+
+    const batchResponseText =
+      batchMessage.content[0].type === "text" ? batchMessage.content[0].text : "";
+    const batchTimeMs = Date.now() - batchStart;
+    batchTimings.push(batchTimeMs);
+
+    console.log(
+      `[two-pass] Batch ${batchIdx + 1} complete in ${batchTimeMs}ms (${batchResponseText.length} chars)`
+    );
+
+    // Parse batch JSON
+    const batchJsonMatch = batchResponseText.match(/\{[\s\S]*\}/);
+    if (!batchJsonMatch) {
+      console.error(`[two-pass] Batch ${batchIdx + 1}: no JSON found in response`);
+      continue;
+    }
+
+    try {
+      const batchResult = JSON.parse(batchJsonMatch[0]);
+      const batchMarkers = batchResult.markers || [];
+      allMarkerResults.push(...batchMarkers);
+      console.log(
+        `[two-pass] Batch ${batchIdx + 1}: parsed ${batchMarkers.length} marker analyses`
+      );
+    } catch (parseErr) {
+      console.error(`[two-pass] Batch ${batchIdx + 1}: JSON parse failed:`, parseErr);
+    }
+
+    // Notify progress callback if provided
+    if (onBatchComplete) {
+      const batchAnalyses = mapMarkerResults(
+        allMarkerResults.slice(-batch.length),
+        biomarkers,
+        referenceMap,
+        statusMap,
+        allStudies,
+        pass1TimeMs,
+        batchTimeMs
+      );
+      await onBatchComplete(batchIdx, batchAnalyses);
+    }
+  }
+
+  // =================================================================
+  // PASS 3: Summary call — executive summary, cross-marker patterns, action plan
+  // =================================================================
+  console.log(
+    `[two-pass] All ${markerBatches.length} batches complete (${allMarkerResults.length} markers). Running summary call...`
+  );
+
+  const allMarkerAnalysesText = allMarkerResults
+    .map(
+      (m: any) =>
+        `${m.name} [${m.status}/${m.flag}]: ${m.summary} | What to do: ${m.what_to_do || "N/A"}`
+    )
+    .join("\n");
+
+  const summaryPrompt = `Here are ALL the marker analyses from a patient's blood panel (${allMarkerResults.length} markers):
+${demographicText}
+
+FULL PANEL VALUES:
+${panelText}
+
+MARKER ANALYSES:
+${allMarkerAnalysesText}
+
+Produce a JSON object with:
+1. "executive_summary": 3-5 sentences summarizing the most important findings and what to do. Plain English, warm but direct.
+2. "cross_marker_patterns": Array of connections across markers (e.g., iron + ferritin + MCV = iron deficiency). Each pattern has: "name", "markers_involved" (array), "summary", "severity" ("attention"|"watch"|"informational").
+3. "action_plan": Object with:
+   - "overall_summary": 2-3 sentence plain-English summary of top priorities
+   - "domains": Array of exactly 6 domains (nutrition, supplementation, sleep, movement, environment, lifestyle). Each domain has "domain" (string) and "recommendations" (array). Each recommendation has:
+     - "text": Concise plain-English recommendation headline
+     - "markers_addressed": Array of marker names this addresses
+     - "research_basis": 2-3 sentences grounding this in specific research
+     - "cited_studies": number of studies supporting this
+     - "details": Object with "dosage_range", "best_form", "timing", "food_sources", "interactions", "important_notes" (all string or null)
+   - "disclaimer": "This is educational content, not medical advice. Discuss any changes with your healthcare provider before starting."
+
+ACTION PLAN RULES:
+- Be SPECIFIC. "Take 2,000mg EPA+DHA omega-3 daily" not "increase omega-3 intake."
+- NEVER recommend prescription medications. DO recommend supplements, vitamins, minerals, adaptogens, herbs where research supports them.
+- Include NATURAL and HOLISTIC interventions: ashwagandha for cortisol, berberine for glucose/lipids, curcumin for inflammation, functional foods, mind-body practices, environmental changes.
+- Focus on what's borderline or out of range. Don't give generic wellness advice for markers that are fine.
+- Include 2-4 recommendations per domain.
+- If a marker is low or out of range, ALWAYS include a supplement recommendation.
+
+Return ONLY valid JSON.`;
+
+  const summaryStart = Date.now();
+  const summaryMessage = await anthropic.messages.create({
     model: "claude-opus-4-20250514",
-    max_tokens: 16384,
-    system: TWO_PASS_SYSTEM_PROMPT,
-    messages: [
-      {
-        role: "user",
-        content: userPrompt,
-      },
-    ],
+    max_tokens: 8192,
+    system: `You are Lipa's health summary engine. You produce executive summaries, cross-marker patterns, and actionable health plans from blood panel analyses. Write in plain English for a smart non-medical audience. Be specific, warm, and research-grounded.`,
+    messages: [{ role: "user", content: summaryPrompt }],
   });
 
-  const responseText =
-    message.content[0].type === "text" ? message.content[0].text : "";
+  const summaryResponseText =
+    summaryMessage.content[0].type === "text" ? summaryMessage.content[0].text : "";
+  const summaryTimeMs = Date.now() - summaryStart;
   const pass2TimeMs = Date.now() - pass2Start;
 
   console.log(
-    `[two-pass] Pass 2 complete: Opus response in ${pass2TimeMs}ms (${responseText.length} chars)`
+    `[two-pass] Summary call complete in ${summaryTimeMs}ms (${summaryResponseText.length} chars)`
   );
 
-  // Parse the JSON response
-  const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) {
-    throw new Error("No JSON in two-pass Opus response");
+  // Parse summary JSON
+  const summaryJsonMatch = summaryResponseText.match(/\{[\s\S]*\}/);
+  if (!summaryJsonMatch) {
+    throw new Error("No JSON in two-pass summary Opus response");
   }
 
-  const result = JSON.parse(jsonMatch[0]);
+  const summaryResult = JSON.parse(summaryJsonMatch[0]);
 
-  // Map Opus output to LivingResearchAnalysis format for each marker
-  const markerAnalyses: LivingResearchAnalysis[] = (result.markers || []).map(
-    (m: any) => {
-      const bm = biomarkers.find(
-        (b) => b.name === m.name || b.name.toLowerCase() === m.name?.toLowerCase()
-      );
-      const ref = bm ? referenceMap.get(bm.name) : null;
-      const status = bm ? statusMap.get(bm.name) : null;
-
-      // Find studies that are relevant to this marker by name matching
-      const markerStudies = allStudies.filter(
-        (s) =>
-          s.title.toLowerCase().includes((m.name || "").toLowerCase()) ||
-          s.abstract.toLowerCase().includes((m.name || "").toLowerCase()) ||
-          (ref?.canonical_name &&
-            s.abstract.toLowerCase().includes(ref.canonical_name.toLowerCase()))
-      );
-
-      const citations = markerStudies.slice(0, 10).map((s, i) => ({
-        study_id: s.id,
-        pmid: s.pmid,
-        title: s.title,
-        authors: s.authors || [],
-        journal: s.journal,
-        year: s.publication_year,
-        grade: s.grade_score,
-        similarity: s.similarity,
-        relevance_rank: i + 1,
-      }));
-
-      const years = markerStudies
-        .filter((s) => s.publication_year)
-        .map((s) => s.publication_year!);
-      const avgYear =
-        years.length > 0
-          ? Math.round(years.reduce((a, b) => a + b, 0) / years.length)
-          : null;
-      const grades = markerStudies
-        .map((s) => s.grade_score)
-        .filter(Boolean);
-      const highestGrade = grades.includes("HIGH")
-        ? "HIGH"
-        : grades.includes("MODERATE")
-        ? "MODERATE"
-        : grades.includes("LOW")
-        ? "LOW"
-        : null;
-
-      return {
-        biomarker_name: m.name || bm?.name || "Unknown",
-        canonical_name: ref?.canonical_name || m.name || bm?.name || "Unknown",
-        status: (m.status as LivingResearchAnalysis["status"]) || status?.status || "normal",
-        flag: (m.flag as LivingResearchAnalysis["flag"]) || status?.flag || "unknown",
-        summary: m.summary || "",
-        what_it_means: m.what_it_means || "",
-        what_research_shows: m.what_research_shows || "",
-        related_patterns: m.related_patterns || null,
-        suggested_exploration: m.suggested_exploration || null,
-        citation_count: citations.length,
-        highest_evidence_grade: highestGrade,
-        avg_study_year: avgYear,
-        retrieval_time_ms: pass1TimeMs,
-        generation_time_ms: pass2TimeMs,
-        citations,
-      };
-    }
+  // Map ALL marker results to LivingResearchAnalysis format
+  const markerAnalyses = mapMarkerResults(
+    allMarkerResults,
+    biomarkers,
+    referenceMap,
+    statusMap,
+    allStudies,
+    pass1TimeMs,
+    pass2TimeMs
   );
 
-  // Build action plan from the Opus response
-  const actionPlanData = result.action_plan || {};
+  // Build action plan from the summary response
+  const actionPlanData = summaryResult.action_plan || {};
   const actionPlan: ActionPlan = {
     domains: actionPlanData.domains || [],
     overall_summary: actionPlanData.overall_summary || "",
@@ -983,15 +1109,98 @@ Analyze the COMPLETE panel. Return a marker analysis for EVERY biomarker listed 
     generation_time_ms: pass2TimeMs,
   };
 
+  console.log(
+    `[two-pass] Pass 2 complete: ${markerAnalyses.length} markers in ${markerBatches.length} batches + summary. Total pass2: ${pass2TimeMs}ms (batches: ${batchTimings.map((t) => `${t}ms`).join(", ")}, summary: ${summaryTimeMs}ms)`
+  );
+
   return {
-    executive_summary: result.executive_summary || "",
+    executive_summary: summaryResult.executive_summary || "",
     markers: markerAnalyses,
-    cross_marker_patterns: result.cross_marker_patterns || [],
+    cross_marker_patterns: summaryResult.cross_marker_patterns || [],
     action_plan: actionPlan,
     studies_retrieved: allStudies.length,
     pass1_time_ms: pass1TimeMs,
     pass2_time_ms: pass2TimeMs,
   };
+}
+
+/**
+ * Helper: Map raw Opus marker results to LivingResearchAnalysis format.
+ */
+function mapMarkerResults(
+  markerResults: any[],
+  biomarkers: BiomarkerInput[],
+  referenceMap: Map<string, BiomarkerReference>,
+  statusMap: Map<string, { status: "optimal" | "normal" | "borderline" | "out_of_range"; flag: "low" | "high" | "optimal" | "borderline" | "unknown" }>,
+  allStudies: RetrievedStudy[],
+  pass1TimeMs: number,
+  generationTimeMs: number
+): LivingResearchAnalysis[] {
+  return markerResults.map((m: any) => {
+    const bm = biomarkers.find(
+      (b) => b.name === m.name || b.name.toLowerCase() === m.name?.toLowerCase()
+    );
+    const ref = bm ? referenceMap.get(bm.name) : null;
+    const status = bm ? statusMap.get(bm.name) : null;
+
+    // Find studies that are relevant to this marker by name matching
+    const markerStudies = allStudies.filter(
+      (s) =>
+        s.title.toLowerCase().includes((m.name || "").toLowerCase()) ||
+        s.abstract.toLowerCase().includes((m.name || "").toLowerCase()) ||
+        (ref?.canonical_name &&
+          s.abstract.toLowerCase().includes(ref.canonical_name.toLowerCase()))
+    );
+
+    const citations = markerStudies.slice(0, 10).map((s, i) => ({
+      study_id: s.id,
+      pmid: s.pmid,
+      title: s.title,
+      authors: s.authors || [],
+      journal: s.journal,
+      year: s.publication_year,
+      grade: s.grade_score,
+      similarity: s.similarity,
+      relevance_rank: i + 1,
+    }));
+
+    const years = markerStudies
+      .filter((s) => s.publication_year)
+      .map((s) => s.publication_year!);
+    const avgYear =
+      years.length > 0
+        ? Math.round(years.reduce((a, b) => a + b, 0) / years.length)
+        : null;
+    const grades = markerStudies
+      .map((s) => s.grade_score)
+      .filter(Boolean);
+    const highestGrade = grades.includes("HIGH")
+      ? "HIGH"
+      : grades.includes("MODERATE")
+      ? "MODERATE"
+      : grades.includes("LOW")
+      ? "LOW"
+      : null;
+
+    return {
+      biomarker_name: m.name || bm?.name || "Unknown",
+      canonical_name: ref?.canonical_name || m.name || bm?.name || "Unknown",
+      status: (m.status as LivingResearchAnalysis["status"]) || status?.status || "normal",
+      flag: (m.flag as LivingResearchAnalysis["flag"]) || status?.flag || "unknown",
+      summary: m.summary || "",
+      what_it_means: m.what_it_means || "",
+      what_research_shows: m.what_research_shows || "",
+      related_patterns: m.related_patterns || null,
+      suggested_exploration: m.suggested_exploration || null,
+      what_to_do: m.what_to_do || null,
+      citation_count: citations.length,
+      highest_evidence_grade: highestGrade,
+      avg_study_year: avgYear,
+      retrieval_time_ms: pass1TimeMs,
+      generation_time_ms: generationTimeMs,
+      citations,
+    };
+  });
 }
 
 export async function generateActionPlan(
