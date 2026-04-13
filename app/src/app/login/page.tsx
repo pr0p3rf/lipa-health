@@ -145,6 +145,32 @@ function LoginContent() {
             {isSignUp ? "Sign in" : "Sign up"}
           </button>
         </p>
+
+        {!isSignUp && (
+          <button
+            onClick={async () => {
+              if (!email) {
+                setError("Enter your email first, then click forgot password.");
+                return;
+              }
+              setError("");
+              setLoading(true);
+              const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: `${window.location.origin}/login`,
+              });
+              setLoading(false);
+              if (error) {
+                setError(error.message);
+              } else {
+                setError("");
+                alert("Password reset email sent. Check your inbox.");
+              }
+            }}
+            className="text-[12px] text-[#8A928C] hover:text-[#1B6B4A] mt-2 block mx-auto"
+          >
+            Forgot your password?
+          </button>
+        )}
       </div>
     </div>
   );
