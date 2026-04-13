@@ -150,7 +150,7 @@ function LoginContent() {
           <button
             onClick={async () => {
               if (!email) {
-                setError("Enter your email first, then click forgot password.");
+                alert("Enter your email address first, then click forgot password.");
                 return;
               }
               setError("");
