@@ -2,7 +2,7 @@ const translations = {
   en: {
     heroEyebrow: "",
     heroTitle: "Your biology, understood.",
-    heroSub: "Upload your blood test. Get a research-grade analysis of every marker, a personalized protocol, and a health assistant that knows your numbers — not generic advice. Cited. Transparent. Yours.",
+    heroSub: "Like having a team of specialists read your blood test — except they have access to tens of thousands of studies, see your full panel at once, and deliver a personalized protocol in minutes. Cited. Transparent. Yours.",
     ctaButton: "Upload your blood test",
     ctaFine: "Free analysis available · No credit card required",
     stat1Num: "100+", stat1Label: "Biomarkers analyzed",
