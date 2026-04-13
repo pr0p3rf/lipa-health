@@ -40,7 +40,7 @@ const CONFIG = {
   // Batch sizes
   FETCH_BATCH_SIZE: 50,          // Studies per PubMed fetch request
   EMBED_BATCH_SIZE: 50,          // Texts per OpenAI embedding request
-  INSERT_BATCH_SIZE: 50,         // Studies per Supabase insert
+  INSERT_BATCH_SIZE: 20,         // Studies per Supabase insert
 
   // Rate limiting
   PUBMED_DELAY_MS: 350,
