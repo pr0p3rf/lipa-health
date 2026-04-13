@@ -129,7 +129,7 @@ export default function UploadPage() {
                 className="text-[22px] tracking-tight mb-1"
                 style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}
               >
-                Analysis complete
+                Biomarkers extracted
               </h2>
               <p className="text-[14px] text-[#6B6B6B]">
                 {fileNames.length > 1 ? `${fileNames.length} files processed` : fileNames[0]}
@@ -165,6 +165,11 @@ export default function UploadPage() {
                 </div>
                 <div className="text-[11px] text-[#6B6B6B] font-medium">Action plan</div>
               </div>
+            </div>
+
+            <div className="bg-[#E8F5EE] rounded-xl p-4 mb-4 text-center">
+              <p className="text-[13px] text-[#1B6B4A] font-medium mb-1">Your full analysis is running now</p>
+              <p className="text-[12px] text-[#5A635D]">Risk calculations, action plan, and per-marker research are being generated. Refresh your dashboard in 2-3 minutes to see everything.</p>
             </div>
 
             <div className="flex flex-col items-center gap-3">
