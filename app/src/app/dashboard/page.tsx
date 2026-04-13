@@ -772,81 +772,84 @@ export default function DashboardPage() {
           </div>
 
           {/* ============================================================ */}
-          {/* EXECUTIVE SUMMARY — always first after header                */}
+          {/* BIO-AGE CARD + SUMMARY — side by side */}
           {/* ============================================================ */}
-          {actionPlan?.overall_summary && (
-            <div className="mb-8 p-6" style={GLASS_CARD}>
-              <div className="text-[10px] uppercase tracking-wider text-[#1B6B4A] font-semibold mb-3">Summary</div>
-              {isFree ? (
-                <>
-                  <p className="text-[14px] text-[#0F1A15] leading-relaxed line-clamp-2">{actionPlan.overall_summary}</p>
-                  <div className="mt-3 pt-3" style={{ borderTop: "1px solid rgba(15,26,21,0.06)" }}>
-                    <p className="text-[12px] text-[#8A928C]">Full summary with detailed findings, patterns, and your personalized action plan available with Lipa One or Life.</p>
-                  </div>
-                </>
-              ) : (
-                <p className="text-[14px] text-[#0F1A15] leading-relaxed">{actionPlan.overall_summary}</p>
-              )}
-            </div>
-          )}
-
-          {/* ============================================================ */}
-          {/* STATUS STRIP + COMPACT BIO-AGE                               */}
-          {/* ============================================================ */}
-          <div className="mb-8 flex items-center gap-4 flex-wrap text-[13px]">
-            {statusCounts.optimal > 0 && (
-              <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-[#1B6B4A]" />
-                <span className="text-[#5A635D]">{statusCounts.optimal} optimal</span>
-              </span>
-            )}
-            {statusCounts.normal > 0 && (
-              <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-[#71717A]" />
-                <span className="text-[#5A635D]">{statusCounts.normal} in range</span>
-              </span>
-            )}
-            {statusCounts.borderline > 0 && (
-              <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-[#F59E0B]" />
-                <span className="text-[#5A635D]">{statusCounts.borderline} borderline</span>
-              </span>
-            )}
-            {statusCounts.out_of_range > 0 && (
-              <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-[#EF4444]" />
-                <span className="text-[#5A635D]">{statusCounts.out_of_range} need attention</span>
-              </span>
-            )}
-            {/* Compact bio-age inline */}
+          <div className="mb-8 grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-4">
+            {/* Bio-age card — compact square */}
             {bioAge && bioAge.ensemble_age !== null && (
-              <>
-                <span className="text-[#D4D4D8]">|</span>
-                <span className="flex items-center gap-1.5">
-                  <span className="text-[#5A635D]">Bio-age:</span>
-                  <span
-                    className="font-semibold"
+              <div className="p-5 text-center sm:w-[180px]" style={GLASS_CARD}>
+                <div className="text-[10px] uppercase tracking-wider text-[#8A928C] font-medium mb-2">Biological Age</div>
+                <div
+                  className="text-[42px] leading-none tracking-tight"
+                  style={{
+                    fontFamily: FRAUNCES,
+                    fontWeight: 600,
+                    color: bioAge.gap !== null && bioAge.gap < 0 ? "#1B6B4A" : bioAge.gap !== null && bioAge.gap > 2 ? "#B91C1C" : "#0F1A15",
+                  }}
+                >
+                  {Math.round(bioAge.ensemble_age * 10) / 10}
+                </div>
+                {bioAge.gap !== null && (
+                  <div
+                    className="inline-flex text-[13px] font-semibold px-3 py-1 rounded-full mt-2"
                     style={{
-                      fontFamily: FRAUNCES,
-                      color: bioAge.gap !== null && bioAge.gap < 0 ? "#1B6B4A" : bioAge.gap !== null && bioAge.gap > 2 ? "#B91C1C" : "#0F1A15",
+                      backgroundColor: bioAge.gap < 0 ? "#E8F5EE" : bioAge.gap > 2 ? "#FEE2E2" : "#F4F4F5",
+                      color: bioAge.gap < 0 ? "#1B6B4A" : bioAge.gap > 2 ? "#B91C1C" : "#5A635D",
                     }}
                   >
-                    {Math.round(bioAge.ensemble_age * 10) / 10}
-                  </span>
-                  {bioAge.gap !== null && (
-                    <span
-                      className="text-[11px] font-semibold px-2 py-0.5 rounded-full"
-                      style={{
-                        backgroundColor: bioAge.gap < 0 ? "#E8F5EE" : bioAge.gap > 2 ? "#FEE2E2" : "#F4F4F5",
-                        color: bioAge.gap < 0 ? "#1B6B4A" : bioAge.gap > 2 ? "#B91C1C" : "#5A635D",
-                      }}
-                    >
-                      {bioAge.gap > 0 ? "+" : ""}{Math.round(bioAge.gap * 10) / 10}y
-                    </span>
-                  )}
-                </span>
-              </>
+                    {bioAge.gap < 0 ? "" : "+"}{Math.round(bioAge.gap * 10) / 10} years
+                  </div>
+                )}
+                <div className="text-[11px] text-[#8A928C] mt-2">
+                  vs age {bioAge.chronological_age} · {bioAge.contributing_biomarkers.length} markers
+                </div>
+              </div>
             )}
+
+            {/* Summary + status strip */}
+            <div className="flex flex-col gap-3">
+              {actionPlan?.overall_summary && (
+                <div className="p-5 flex-1" style={GLASS_CARD}>
+                  <div className="text-[10px] uppercase tracking-wider text-[#1B6B4A] font-semibold mb-2">Summary</div>
+                  {isFree ? (
+                    <>
+                      <p className="text-[13px] text-[#0F1A15] leading-relaxed line-clamp-2">{actionPlan.overall_summary}</p>
+                      <p className="text-[11px] text-[#8A928C] mt-2">Full summary available with Lipa One or Life.</p>
+                    </>
+                  ) : (
+                    <p className="text-[13px] text-[#0F1A15] leading-relaxed">{actionPlan.overall_summary}</p>
+                  )}
+                </div>
+              )}
+
+              {/* Status strip */}
+              <div className="flex items-center gap-4 flex-wrap text-[12px] px-1">
+                {statusCounts.optimal > 0 && (
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-[#1B6B4A]" />
+                    <span className="text-[#5A635D]">{statusCounts.optimal} optimal</span>
+                  </span>
+                )}
+                {statusCounts.normal > 0 && (
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-[#71717A]" />
+                    <span className="text-[#5A635D]">{statusCounts.normal} in range</span>
+                  </span>
+                )}
+                {statusCounts.borderline > 0 && (
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-[#F59E0B]" />
+                    <span className="text-[#5A635D]">{statusCounts.borderline} borderline</span>
+                  </span>
+                )}
+                {statusCounts.out_of_range > 0 && (
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-[#EF4444]" />
+                    <span className="text-[#5A635D]">{statusCounts.out_of_range} need attention</span>
+                  </span>
+                )}
+              </div>
+            </div>
           </div>
 
           {/* ============================================================ */}
