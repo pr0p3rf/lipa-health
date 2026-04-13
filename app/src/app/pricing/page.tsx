@@ -43,7 +43,7 @@ const TIERS: Tier[] = [
     id: "one",
     name: "Lipa One",
     tagline: "Full analysis of one blood test. No subscription.",
-    price: "€39",
+    price: "€29",
     priceDetail: "one-time · credited toward Life if you upgrade",
     features: [
       "Every marker analyzed in plain English",
@@ -53,7 +53,7 @@ const TIERS: Tier[] = [
       "PDF report for your doctor",
       "Ask Lipa chat for 7 days",
     ],
-    cta: "Get Single Analysis — €39",
+    cta: "Get Single Analysis — €29",
   },
   {
     id: "free",
@@ -269,7 +269,7 @@ function PricingContent() {
         {/* Coming soon note */}
         <div className="mt-12 text-center">
           <p className="text-[11px] text-[#999] max-w-2xl mx-auto leading-relaxed">
-            Lipa One is a one-time purchase — no subscription required. If you upgrade to Lipa Life within 30 days, your €39 is credited toward the annual price. We don't sell blood tests — bring your own from any lab, any country. See our guide on where to test.
+            Lipa One is a one-time purchase — no subscription required. If you upgrade to Lipa Life within 30 days, your €29 is credited toward the annual price. We don't sell blood tests — bring your own from any lab, any country. See our guide on where to test.
           </p>
         </div>
 

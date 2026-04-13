@@ -1342,7 +1342,7 @@ export default function DashboardPage() {
                   className="inline-flex items-center gap-2 text-[14px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-8 py-3.5 rounded-full transition-all duration-300 hover:-translate-y-0.5"
                   style={{ boxShadow: "0 4px 16px rgba(27,107,74,0.25)" }}
                 >
-                  Unlock full analysis — €39
+                  Unlock full analysis — €29
                 </a>
                 <span className="text-[12px] text-[#8A928C]">or €89/year for vault + trends + unlimited chat</span>
               </div>
