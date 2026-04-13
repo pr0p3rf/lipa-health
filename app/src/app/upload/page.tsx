@@ -402,47 +402,38 @@ function AnalyzingProgress({
     );
   }
 
-  // Build real step list based on progress
-  const BATCH_SIZE = 25;
+  // Map real progress to the 10 granular methodology steps users see
   const { totalBatches, totalMarkers, batchIndex, currentStep } = progress;
 
+  // Calculate an overall progress number (0-10) from the actual batch progress
+  let overallStep = 0;
+  if (currentStep === "extracting") overallStep = 0;
+  else if (currentStep === "batch") {
+    // Map batches 0-N to steps 1-7 (the analysis/research steps)
+    const batchProgress = totalBatches > 0 ? (batchIndex + 0.5) / totalBatches : 0;
+    overallStep = 1 + Math.floor(batchProgress * 7); // steps 1-7
+  } else if (currentStep === "summary") overallStep = 8;
+  else if (currentStep === "done") overallStep = 10;
+
+  const STEPS = [
+    { label: "Reading your lab report", detail: "Extracting every biomarker, value, unit, and reference range — in any language, from any lab." },
+    { label: "Normalizing across standards", detail: "Converting lab-specific names and units to standardized medical identifiers." },
+    { label: "Matching to peer-reviewed research", detail: "Searching published studies relevant to each of your specific marker values." },
+    { label: "Scoring evidence quality and independence", detail: "Weighting each study by evidence grade, sample size, funding source, and publication date." },
+    { label: "Analyzing each marker in context", detail: "Combining your value, reference ranges, research findings, and clinical guidelines into a personalized analysis." },
+    { label: "Detecting cross-marker patterns", detail: "Looking for clinical patterns across your full panel that individual markers can't reveal." },
+    { label: "Running clinical health calculations", detail: "Computing cardiovascular risk, insulin resistance, biological age, and 10+ more peer-reviewed algorithms." },
+    { label: "Benchmarking against your demographic", detail: "Comparing your results to optimal ranges adjusted for your age and sex." },
+    { label: "Building your personalized protocol", detail: "Creating an action plan across nutrition, supplementation, sleep, movement, and lifestyle — specific to your results." },
+    { label: "Finalizing your report", detail: "Assembling your complete analysis with full citations and actionable next steps." },
+  ];
+
   type StepItem = { label: string; detail: string; isDone: boolean; isActive: boolean };
-  const steps: StepItem[] = [];
-
-  // Step 0: Extraction
-  steps.push({
-    label: "Reading your lab report",
-    detail: "Extracting every biomarker, value, unit, and reference range — in any language, from any lab.",
-    isDone: currentStep !== "extracting",
-    isActive: currentStep === "extracting",
-  });
-
-  // Steps 1-N: Batch analysis
-  for (let i = 0; i < Math.max(totalBatches, 1); i++) {
-    const rangeStart = i * BATCH_SIZE + 1;
-    const rangeEnd = Math.min((i + 1) * BATCH_SIZE, totalMarkers || BATCH_SIZE);
-    const batchDone =
-      currentStep === "summary" || currentStep === "done" ||
-      (currentStep === "batch" && batchIndex > i);
-    const batchActive = currentStep === "batch" && batchIndex === i;
-
-    steps.push({
-      label: totalMarkers
-        ? `Analyzing markers ${rangeStart}-${rangeEnd}`
-        : `Analyzing batch ${i + 1}`,
-      detail: "Matching to peer-reviewed research, scoring evidence, and generating personalized analysis for each marker.",
-      isDone: batchDone,
-      isActive: batchActive,
-    });
-  }
-
-  // Final step: Summary + action plan
-  steps.push({
-    label: "Generating your action plan",
-    detail: "Detecting cross-marker patterns, running clinical health calculations, and building your personalized protocol.",
-    isDone: currentStep === "done",
-    isActive: currentStep === "summary",
-  });
+  const steps: StepItem[] = STEPS.map((s, i) => ({
+    ...s,
+    isDone: i < overallStep,
+    isActive: i === overallStep,
+  }));
 
   // Calculate progress percentage
   const totalSteps = steps.length;
