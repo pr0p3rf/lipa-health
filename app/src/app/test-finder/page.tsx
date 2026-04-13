@@ -485,8 +485,8 @@ export default function TestFinderPage() {
   }, [selectedGoals]);
 
   const countryInfo = selectedCountry ? COUNTRIES[selectedCountry] : null;
-  // Show results immediately — email capture is optional (shown inline)
-  const showResult = selectedGoals.length > 0 && selectedCountry;
+  // Gate results behind email capture
+  const showResult = selectedGoals.length > 0 && selectedCountry && emailSubmitted;
 
   const markerListText = useMemo(() => markers.join(", "), [markers]);
 
@@ -625,6 +625,36 @@ export default function TestFinderPage() {
             </select>
           </div>
 
+          {/* ---- EMAIL GATE ---- */}
+          {selectedGoals.length > 0 && selectedCountry && !emailSubmitted && (
+            <div className="bg-white rounded-[20px] p-6 sm:p-8 shadow-sm text-center">
+              <div className="text-[11px] uppercase tracking-wider text-[#1B6B4A] font-semibold mb-2">Your custom panel</div>
+              <h3 className="text-[22px] font-semibold tracking-tight mb-2" style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}>
+                {markers.length} markers selected
+              </h3>
+              <p className="text-[13px] text-[#5A635D] mb-5 max-w-md mx-auto leading-relaxed">
+                Enter your email to see your full marker list, lab directions, and how to prepare. We'll also send a reminder when it's time to upload your results.
+              </p>
+              <form onSubmit={handleEmailSubmit} className="flex gap-2 max-w-sm mx-auto">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="your@email.com"
+                  required
+                  className="flex-1 text-[14px] border border-[#E5E5E5] rounded-full px-4 py-3 focus:outline-none focus:border-[#1B6B4A]"
+                />
+                <button
+                  type="submit"
+                  className="text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-6 py-3 rounded-full transition-colors flex-shrink-0"
+                >
+                  Show my panel
+                </button>
+              </form>
+              <p className="text-[10px] text-[#B5B5B5] mt-3">No spam. Your test guide + preparation tips + upload reminder.</p>
+            </div>
+          )}
+
           {/* ---- EMPOWERMENT NOTE ---- */}
           {selectedGoals.length > 0 && selectedCountry && (
             <div className="bg-[#E8F5EE] rounded-[20px] p-5 flex items-start gap-3">
@@ -699,33 +729,6 @@ export default function TestFinderPage() {
                   )}
                 </button>
               </div>
-
-              {/* Email capture — inline, non-blocking */}
-              {!emailSubmitted ? (
-                <div className="bg-[#E8F5EE] rounded-[20px] p-5 sm:p-6">
-                  <p className="text-[13px] text-[#0F1A15] font-medium mb-2">
-                    Want this sent to your email with preparation tips and a reminder to upload?
-                  </p>
-                  <form onSubmit={handleEmailSubmit} className="flex gap-2">
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="your@email.com"
-                      required
-                      className="flex-1 text-[13px] border border-[#1B6B4A]/20 rounded-full px-4 py-2.5 focus:outline-none focus:border-[#1B6B4A] bg-white"
-                    />
-                    <button type="submit" className="text-[12px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-5 py-2.5 rounded-full transition-colors flex-shrink-0">
-                      Send me the guide
-                    </button>
-                  </form>
-                  <p className="text-[10px] text-[#5A635D] mt-2">We'll email you: marker list, how to prepare, and a reminder to upload. No spam.</p>
-                </div>
-              ) : (
-                <div className="bg-[#E8F5EE] rounded-[20px] p-4 text-center">
-                  <p className="text-[13px] text-[#1B6B4A] font-medium">Sent to {email}. Check your inbox for preparation tips.</p>
-                </div>
-              )}
 
               {/* Where to test */}
               {countryInfo && (
