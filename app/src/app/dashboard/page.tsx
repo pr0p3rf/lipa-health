@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { AppNav } from "@/components/app-nav";
 import { AskLipa } from "@/components/ask-lipa";
+import { SupportButton } from "@/components/support-button";
 import { useEffect, useState, useCallback, useMemo, type ReactNode } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
@@ -1370,6 +1371,7 @@ export default function DashboardPage() {
         </div>
       </main>
       {userId && <AskLipa userId={userId} />}
+      {userId && <SupportButton userId={userId} email={undefined} />}
     </>
   );
 }
