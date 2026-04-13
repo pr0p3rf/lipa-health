@@ -75,8 +75,8 @@ export async function POST(request: NextRequest) {
       .eq("user_id", userId)
       .gte("created_at", oneDayAgo);
 
-    // Free users: 1 upload per day. Paid: 3 per day (12 per year soft limit)
-    const dailyLimit = tier === "free" ? 1 : 3;
+    // Free users: 3 uploads per day. Paid: 10 per day.
+    const dailyLimit = tier === "free" ? 3 : 10;
     if ((recentUploads || 0) >= dailyLimit) {
       return NextResponse.json(
         { error: tier === "free"
