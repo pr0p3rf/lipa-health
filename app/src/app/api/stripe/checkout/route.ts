@@ -30,10 +30,21 @@ export async function POST(request: NextRequest) {
     const priceId = TIER_PRICES[tier as keyof typeof TIER_PRICES];
     if (!priceId) {
       return NextResponse.json(
-        { error: `Price ID not configured for tier: ${tier}` },
+        { error: `Price ID not configured for tier: ${tier}. Check STRIPE_PRICE_${tier.toUpperCase()} env var.` },
         { status: 500 }
       );
     }
+
+    // Verify Stripe key is present
+    if (!process.env.STRIPE_SECRET_KEY) {
+      return NextResponse.json(
+        { error: "Stripe secret key not configured" },
+        { status: 500 }
+      );
+    }
+
+    console.log(`[checkout] tier=${tier} priceId=${priceId} userId=${userId}`);
+
 
     // Get or create Stripe customer
     const customerId = await getOrCreateStripeCustomer(email, userId);
