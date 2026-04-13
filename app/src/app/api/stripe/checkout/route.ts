@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import {
+  getStripe,
   getOrCreateStripeCustomer,
-  createCheckoutSession,
   TIER_PRICES,
-  SubscriptionTier,
 } from "@/lib/stripe";
 
 const supabase = createClient(
@@ -30,12 +29,11 @@ export async function POST(request: NextRequest) {
     const priceId = TIER_PRICES[tier as keyof typeof TIER_PRICES];
     if (!priceId) {
       return NextResponse.json(
-        { error: `Price ID not configured for tier: ${tier}. Check STRIPE_PRICE_${tier.toUpperCase()} env var.` },
+        { error: `Price ID not configured for tier: ${tier}` },
         { status: 500 }
       );
     }
 
-    // Verify Stripe key is present
     if (!process.env.STRIPE_SECRET_KEY) {
       return NextResponse.json(
         { error: "Stripe secret key not configured" },
@@ -43,29 +41,35 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log(`[checkout] tier=${tier} priceId=${priceId} userId=${userId}`);
-
-
     // Get or create Stripe customer
     const customerId = await getOrCreateStripeCustomer(email, userId);
 
-    // Store customer ID in subscription record (if not already)
-    await supabase.from("user_subscriptions").upsert(
-      {
+    // Store customer ID (don't overwrite existing tier)
+    const { data: existingSub } = await supabase
+      .from("user_subscriptions")
+      .select("tier")
+      .eq("user_id", userId)
+      .maybeSingle();
+
+    if (!existingSub) {
+      await supabase.from("user_subscriptions").insert({
         user_id: userId,
         stripe_customer_id: customerId,
-        tier: "free", // Keep as free until webhook confirms subscription
-      },
-      { onConflict: "user_id" }
-    );
+        tier: "free",
+      });
+    } else {
+      await supabase
+        .from("user_subscriptions")
+        .update({ stripe_customer_id: customerId })
+        .eq("user_id", userId);
+    }
 
-    // Create checkout session — Lipa One is one-time, Life is subscription
-    const origin = request.headers.get("origin") || "https://lipa.health";
+    // Create checkout session
+    const origin = request.headers.get("origin") || "https://my.lipa.health";
     const mode = tier === "one" ? "payment" : "subscription";
-    const { getStripe } = await import("@/lib/stripe");
-    const stripeClient = getStripe();
+    const stripe = getStripe();
 
-    const session = await stripeClient.checkout.sessions.create({
+    const session = await stripe.checkout.sessions.create({
       customer: customerId,
       payment_method_types: ["card"],
       line_items: [{ price: priceId, quantity: 1 }],
@@ -76,13 +80,11 @@ export async function POST(request: NextRequest) {
       metadata: { tier, userId },
     });
 
-    const checkoutUrl = session.url!;
-
-    return NextResponse.json({ url: checkoutUrl });
+    return NextResponse.json({ url: session.url });
   } catch (error: any) {
     console.error("Checkout error:", error?.message, error?.type, error?.code);
     return NextResponse.json(
-      { error: "Failed to create checkout session", details: error?.message || "Unknown error", type: error?.type, code: error?.code },
+      { error: "Failed to create checkout session", details: error?.message || "Unknown error" },
       { status: 500 }
     );
   }
