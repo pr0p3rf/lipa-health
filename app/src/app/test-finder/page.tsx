@@ -219,12 +219,40 @@ const MARKERS: Record<GoalKey, string[]> = {
   comprehensive: [], // computed below
 };
 
-// Build comprehensive as deduplicated union of all others
+// Build comprehensive — union of all goals PLUS additional executive panel markers
 const allMarkers = Object.entries(MARKERS)
   .filter(([k]) => k !== "comprehensive")
   .flatMap(([, v]) => v);
+
+// Additional markers for a true 100+ executive panel
+const executiveExtras = [
+  // Hematology extras
+  "RBC (Red Blood Cells)", "MCV", "MCH", "MCHC", "RDW", "Neutrophils", "Lymphocytes", "Monocytes", "Eosinophils", "Basophils", "ESR",
+  // Metabolic extras
+  "Sodium", "Potassium", "Chloride", "Calcium", "Phosphorus", "Magnesium", "Bicarbonate", "C-Peptide",
+  // Lipid extras
+  "VLDL Cholesterol", "Non-HDL Cholesterol", "Lipoprotein(a)",
+  // Liver extras
+  "Alkaline Phosphatase", "Total Bilirubin", "Direct Bilirubin", "Albumin", "Total Protein", "GGT",
+  // Kidney extras
+  "BUN (Blood Urea Nitrogen)", "Cystatin C", "Urine Albumin/Creatinine Ratio",
+  // Thyroid extras
+  "Reverse T3", "Thyroglobulin Antibodies",
+  // Hormone extras
+  "DHEA-S", "Cortisol (AM)", "IGF-1", "Prolactin", "LH", "Growth Hormone", "Progesterone",
+  // Inflammatory extras
+  "Homocysteine", "Fibrinogen", "IL-6", "TNF-alpha", "Transferrin Saturation", "Serum Iron",
+  // Vitamins extras
+  "Vitamin B6", "Vitamin A", "Vitamin E", "Zinc", "Selenium", "Copper", "CoQ10", "Iodine (urine)", "Vitamin K",
+  // Cardiac extras
+  "NT-proBNP", "Troponin I", "D-Dimer", "LDH", "CPK", "Myoglobin",
+  // Autoimmune/other
+  "ANA", "Rheumatoid Factor", "Anti-CCP Antibodies", "PSA", "Ceruloplasmin",
+];
+
+const allWithExtras = [...allMarkers, ...executiveExtras];
 const seen = new Set<string>();
-MARKERS.comprehensive = allMarkers.filter((m) => {
+MARKERS.comprehensive = allWithExtras.filter((m) => {
   const norm = m.toLowerCase().replace(/\s*\/\s*/g, "/").replace(/[()]/g, "");
   if (seen.has(norm)) return false;
   seen.add(norm);
