@@ -71,7 +71,13 @@ export default function UploadPage() {
       const data = await res.json();
       if (data.success) {
         setAnalysisCount(data.count);
-        // Don't go to "done" — start polling for background analysis completion
+        // Trigger background analysis from client side (server-to-server fetch was being killed on Vercel)
+        fetch("/api/analyze-bg", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: user.id, testDate: new Date().toISOString().split("T")[0] }),
+        }).catch(() => {}); // fire and forget — polling handles status
+
         setState("analyzing");
         const pollUserId = user.id;
         const pollInterval = setInterval(async () => {

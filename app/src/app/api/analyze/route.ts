@@ -245,16 +245,7 @@ export async function POST(request: NextRequest) {
       message: `${validBiomarkers.length} biomarkers extracted. Analysis running in background — refresh your dashboard in a few minutes.`,
     });
 
-    // Trigger background analysis via fire-and-forget fetch
-    const host = request.headers.get("host") || "my.lipa.health";
-    const protocol = host.includes("localhost") ? "http" : "https";
-    const bgUrl = `${protocol}://${host}/api/analyze-bg`;
-    console.log(`[analyze] Triggering background analysis at: ${bgUrl}`);
-    fetch(bgUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId, testDate: date }),
-    }).catch(() => {}); // fire and forget
+    // Background analysis triggered by client (upload page) via /api/analyze-bg
 
     return response;
   } catch (error: any) {
