@@ -304,7 +304,7 @@ export default function DashboardPage() {
         .select(`
           study_id,
           biomarker_result_id,
-          relevance_rank,
+          retrieval_rank,
           study:research_studies (
             pmid,
             title,
@@ -315,17 +315,18 @@ export default function DashboardPage() {
           )
         `)
         .eq("user_id", userId)
-        .order("relevance_rank", { ascending: true });
+        .order("retrieval_rank", { ascending: true });
       if (!error) {
-        citationsData = data;
+        citationsData = (data || []).map((c: any) => ({ ...c, relevance_rank: c.retrieval_rank }));
       } else {
         const { data: plainCitations } = await supabase
           .from("analysis_citations")
-          .select("study_id, biomarker_result_id, relevance_rank, biomarker_name")
+          .select("study_id, biomarker_result_id, retrieval_rank, biomarker_name")
           .eq("user_id", userId)
-          .order("relevance_rank", { ascending: true });
+          .order("retrieval_rank", { ascending: true });
         citationsData = (plainCitations || []).map((c: any) => ({
           ...c,
+          relevance_rank: c.retrieval_rank,
           study: { pmid: null, title: `Study #${c.study_id}`, authors: [], journal: null, publication_year: null, grade_score: null },
         }));
       }
