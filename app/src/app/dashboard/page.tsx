@@ -210,13 +210,13 @@ function getBodySystemForCategory(category: string): BodySystemKey {
 // Domain labels
 // ---------------------------------------------------------------------
 
-const DOMAIN_LABELS: Record<string, { label: string; icon: string }> = {
-  nutrition: { label: "Nutrition", icon: "🥗" },
-  supplementation: { label: "Supplementation", icon: "💊" },
-  sleep: { label: "Sleep", icon: "😴" },
-  movement: { label: "Movement", icon: "🏃" },
-  environment: { label: "Environment", icon: "🌿" },
-  lifestyle: { label: "Lifestyle", icon: "🧘" },
+const DOMAIN_LABELS: Record<string, { label: string; icon: ReactNode }> = {
+  nutrition: { label: "Nutrition", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5" /><path d="M8.5 8.5v.01" /><path d="M16 15.5v.01" /><path d="M12 12v.01" /></svg> },
+  supplementation: { label: "Supplementation", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" /><line x1="6" y1="12" x2="18" y2="12" /></svg> },
+  sleep: { label: "Sleep", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" /></svg> },
+  movement: { label: "Movement", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" /></svg> },
+  environment: { label: "Environment", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20c4 0 8.5-3 10-9a3 3 0 0 0 .6-4" /><path d="M12.5 2S9 5 9 8c0 .5.1 1 .3 1.5" /></svg> },
+  lifestyle: { label: "Lifestyle", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 16v-4" /><path d="M12 8h.01" /></svg> },
 };
 
 const INSIGHT_COLORS: Record<RiskCalculation["interpretation"], { bg: string; text: string; dot: string }> = {
@@ -1014,7 +1014,7 @@ export default function DashboardPage() {
                       return (
                         <div key={d.domain} className="p-4" style={CARD}>
                           <div className="flex items-center gap-3">
-                            <div className="w-9 h-9 rounded-xl flex items-center justify-center text-[18px]" style={{ background: "rgba(232,245,238,0.7)" }}>
+                            <div className="w-9 h-9 rounded-xl flex items-center justify-center text-[#1B6B4A]" style={{ background: "rgba(232,245,238,0.7)" }}>
                               {info.icon}
                             </div>
                             <div>
@@ -1050,7 +1050,7 @@ export default function DashboardPage() {
                         >
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                              <div className="w-9 h-9 rounded-xl flex items-center justify-center text-[18px]" style={{ background: "rgba(232,245,238,0.7)" }}>
+                              <div className="w-9 h-9 rounded-xl flex items-center justify-center text-[#1B6B4A]" style={{ background: "rgba(232,245,238,0.7)" }}>
                                 {info.icon}
                               </div>
                               <div>
