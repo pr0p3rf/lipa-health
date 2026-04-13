@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
       // uploads table may not exist — skip rate limiting
     }
 
-    const dailyLimit = tier === "free" ? 3 : 10;
+    const dailyLimit = tier === "free" ? 5 : 20;
     if (recentUploads >= dailyLimit) {
       return NextResponse.json(
         { error: tier === "free"
