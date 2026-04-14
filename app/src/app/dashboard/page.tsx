@@ -245,6 +245,10 @@ export default function DashboardPage() {
       const params = new URLSearchParams(window.location.search);
       if (params.get("subscription") === "success") {
         setShowSuccess(true);
+        // Fire Meta Pixel Purchase event
+        if (typeof (window as any).fbq === "function") {
+          (window as any).fbq("track", "Purchase", { currency: "EUR", value: 39 });
+        }
         // Clean URL
         window.history.replaceState({}, "", "/dashboard");
       }

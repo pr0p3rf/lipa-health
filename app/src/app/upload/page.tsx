@@ -63,6 +63,10 @@ export default function UploadPage() {
     }
 
     setState("extracting");
+    // Fire Meta Pixel Lead event
+    if (typeof (window as any).fbq === "function") {
+      (window as any).fbq("track", "Lead");
+    }
     setProgress({
       currentStep: "extracting",
       batchIndex: 0,
