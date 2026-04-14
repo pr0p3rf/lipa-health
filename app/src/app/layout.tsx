@@ -50,6 +50,14 @@ export default function RootLayout({
       <body className={`${inter.className} min-h-full flex flex-col bg-[#FAFAF8] text-[#0F1A15]`}>
         {children}
         <Analytics />
+        {/* Google Analytics */}
+        <Script src="https://www.googletagmanager.com/gtag/js?id=G-EW83PXEHQ4" strategy="afterInteractive" />
+        <Script id="gtag-init" strategy="afterInteractive">{`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-EW83PXEHQ4');
+        `}</Script>
         {/* Meta Pixel */}
         <Script id="meta-pixel" strategy="afterInteractive">{`
           !function(f,b,e,v,n,t,s)
