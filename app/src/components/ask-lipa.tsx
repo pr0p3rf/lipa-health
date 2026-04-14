@@ -326,7 +326,7 @@ export function AskLipa({ userId }: { userId: string }) {
               </button>
             </form>
             <p className="text-[9px] text-[#B5B5B5] text-center mt-2">
-              Educational only. Not medical advice. Discuss with your healthcare provider.
+              Your conversations are private, encrypted, and never shared. You can delete them anytime in settings. Not medical advice.
             </p>
           </div>
         </div>
