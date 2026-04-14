@@ -13,12 +13,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "userId required" }, { status: 400 });
   }
 
-  // Delete in FK order
+  // Delete in FK order — all user data
   await supabase.from("analysis_citations").delete().eq("user_id", userId);
   await supabase.from("user_analyses").delete().eq("user_id", userId);
   await supabase.from("action_plans").delete().eq("user_id", userId);
   await supabase.from("biomarker_results").delete().eq("user_id", userId);
   await supabase.from("uploads").delete().eq("user_id", userId);
+  try { await supabase.from("chat_messages").delete().eq("user_id", userId); } catch {}
 
   if (scope === "account") {
     await supabase.from("user_profiles").delete().eq("user_id", userId);
