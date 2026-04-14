@@ -43,6 +43,21 @@ export async function POST(request: NextRequest) {
           body: JSON.stringify({ chat_id: chatId, text, parse_mode: "HTML" }),
         }).catch(() => {});
       }
+
+      // Send email via Resend if API key is available
+      const resendKey = process.env.RESEND_API_KEY;
+      if (resendKey) {
+        await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: { "Authorization": `Bearer ${resendKey}`, "Content-Type": "application/json" },
+          body: JSON.stringify({
+            from: "Lipa Support <support@lipa.health>",
+            to: "plipnicki@gmail.com",
+            subject: `[Lipa Support] ${type || "message"} from ${email || "anonymous"}`,
+            text: `From: ${email || "anonymous"}\nType: ${type || "support"}\nPage: ${page || "unknown"}\n\n${message}`,
+          }),
+        }).catch(() => {});
+      }
     } catch {}
 
     return NextResponse.json({ success: true });
