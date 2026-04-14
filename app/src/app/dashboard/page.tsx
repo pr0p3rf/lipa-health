@@ -237,6 +237,19 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [loadingData, setLoadingData] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  // Check for post-payment success
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("subscription") === "success") {
+        setShowSuccess(true);
+        // Clean URL
+        window.history.replaceState({}, "", "/dashboard");
+      }
+    }
+  }, []);
 
   const [results, setResults] = useState<BiomarkerResult[]>([]);
   const [analyses, setAnalyses] = useState<Analysis[]>([]);
@@ -588,6 +601,34 @@ export default function DashboardPage() {
       <AppNav />
       <main className="min-h-screen" style={{ background: "#F8F5EF" }} suppressHydrationWarning>
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 py-6 sm:py-10" suppressHydrationWarning>
+
+          {/* ============================================================ */}
+          {/* SUCCESS BANNER — post-payment                                */}
+          {/* ============================================================ */}
+          {showSuccess && (
+            <div className="mb-6 p-5 rounded-[20px] flex items-start justify-between gap-4" style={{ background: "rgba(232,245,238,0.6)", border: "1px solid rgba(27,107,74,0.15)" }}>
+              <div>
+                <div className="text-[18px] text-[#1B6B4A] mb-1" style={{ fontFamily: FRAUNCES, fontWeight: 500 }}>
+                  {userTier === "insight" ? "Welcome to Lipa Life!" : "Your analysis is unlocked!"}
+                </div>
+                <p className="text-[14px] text-[#5A635D] leading-relaxed">
+                  {userTier === "insight"
+                    ? "Your full analysis is unlocked — every marker, action plans, Ask Lipa, vault, and research alerts. Upload up to 12 tests per year and track your health over time."
+                    : "Your full analysis is unlocked — every marker with detailed insights, your personalized action plan, risk calculations, and Ask Lipa for the next 7 days."
+                  }
+                </p>
+                {!latestResults.length && (
+                  <a href="/upload" className="inline-flex items-center gap-2 text-[13px] font-semibold text-[#1B6B4A] mt-3 hover:underline">
+                    Upload your blood test to get started
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M5 12h14" /><path d="M12 5l7 7-7 7" /></svg>
+                  </a>
+                )}
+              </div>
+              <button onClick={() => setShowSuccess(false)} className="text-[#8A928C] hover:text-[#0F1A15] p-1 flex-shrink-0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+              </button>
+            </div>
+          )}
 
           {/* ============================================================ */}
           {/* HEADING + METHODOLOGY                                        */}
