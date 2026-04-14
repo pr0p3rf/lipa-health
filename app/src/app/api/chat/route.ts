@@ -21,7 +21,7 @@ function getOpenAI() {
   return _openai;
 }
 
-const SYSTEM_PROMPT = `You are Lipa's health assistant. You help people understand their blood test results in plain English.
+const DEFAULT_SYSTEM_PROMPT = `You are Lipa's health assistant. You help people understand their blood test results in plain English.
 
 You have access to:
 1. The user's complete blood test panel with values, ranges, and analysis
@@ -58,8 +58,47 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    // Store the user's message (table may not exist yet)
+    try {
+      await supabase.from("chat_messages").insert({
+        user_id: userId,
+        role: "user",
+        content: message,
+      });
+    } catch {}
+
+    // Load admin instructions (if table exists)
+    let adminInstructions = "";
+    try {
+      const { data: setting } = await supabase
+        .from("admin_settings")
+        .select("value")
+        .eq("key", "chat_system_instructions")
+        .maybeSingle();
+      if (setting?.value) adminInstructions = "\n\nADMIN GUIDELINES:\n" + setting.value;
+    } catch {}
+
+    // Load conversation history from DB (last 20 messages)
+    let dbHistory: { role: string; content: string }[] = [];
+    try {
+      const { data: storedMessages } = await supabase
+        .from("chat_messages")
+        .select("role, content")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false })
+        .limit(20);
+      if (storedMessages) {
+        dbHistory = storedMessages.reverse();
+      }
+    } catch {
+      // Table might not exist yet — fall back to client history
+      if (history && Array.isArray(history)) {
+        dbHistory = history.slice(-10);
+      }
+    }
+
     // Fetch user's latest test data
-    const [resultsRes, analysesRes, plansRes, calcsRes, profileRes] = await Promise.all([
+    const [resultsRes, analysesRes, plansRes, profileRes] = await Promise.all([
       supabase
         .from("biomarker_results")
         .select("biomarker, value, unit, ref_low, ref_high, category, test_date")
@@ -79,12 +118,6 @@ export async function POST(request: NextRequest) {
         .order("created_at", { ascending: false })
         .limit(1)
         .maybeSingle(),
-      supabase
-        .from("biomarker_results")
-        .select("biomarker, value, unit")
-        .eq("user_id", userId)
-        .order("test_date", { ascending: false })
-        .limit(50),
       supabase
         .from("user_profiles")
         .select("age, sex")
@@ -165,33 +198,34 @@ export async function POST(request: NextRequest) {
         }
       }
     } catch (err) {
-      // RAG failure is non-fatal — the LLM can still answer from context
       console.error("[chat] RAG retrieval failed:", err);
     }
 
-    // Build conversation messages
+    // Build conversation messages — use DB history, skip the last user message (we add it with context)
     const messages: any[] = [];
-
-    // Add history (last 10 turns)
-    if (history && Array.isArray(history)) {
-      for (const h of history.slice(-10)) {
-        messages.push({ role: h.role, content: h.content });
-      }
+    const historyToUse = dbHistory.slice(0, -1); // exclude the message we just inserted
+    for (const h of historyToUse) {
+      messages.push({ role: h.role, content: h.content });
     }
 
-    // Add current message with context
-    const augmentedMessage = `${message}\n\n---\n\n${userContext}${studyContext}`;
+    // Add current message with context (only first message gets full context to save tokens)
+    const isFirstMessage = historyToUse.length === 0;
+    const augmentedMessage = isFirstMessage
+      ? `${message}\n\n---\n\n${userContext}${studyContext}`
+      : `${message}${studyContext ? "\n\n---\n\nRELEVANT STUDIES:\n" + studyContext : ""}`;
     messages.push({ role: "user" as const, content: augmentedMessage });
 
     // Stream response
     const stream = await anthropic.messages.stream({
       model: "claude-sonnet-4-20250514",
       max_tokens: 1024,
-      system: SYSTEM_PROMPT,
+      system: DEFAULT_SYSTEM_PROMPT + adminInstructions,
       messages,
     });
 
-    // Return as streaming response
+    // Collect full response for storage
+    let fullResponse = "";
+
     const encoder = new TextEncoder();
     const readable = new ReadableStream({
       async start(controller) {
@@ -201,11 +235,24 @@ export async function POST(request: NextRequest) {
               event.type === "content_block_delta" &&
               event.delta.type === "text_delta"
             ) {
+              fullResponse += event.delta.text;
               controller.enqueue(
                 encoder.encode(`data: ${JSON.stringify({ text: event.delta.text })}\n\n`)
               );
             }
           }
+
+          // Store assistant response
+          if (fullResponse) {
+            try {
+              await supabase.from("chat_messages").insert({
+                user_id: userId,
+                role: "assistant",
+                content: fullResponse,
+              });
+            } catch {}
+          }
+
           controller.enqueue(encoder.encode("data: [DONE]\n\n"));
           controller.close();
         } catch (err) {
@@ -225,6 +272,33 @@ export async function POST(request: NextRequest) {
     console.error("[chat] Error:", error);
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+}
+
+// GET endpoint to load chat history
+export async function GET(request: NextRequest) {
+  const userId = request.nextUrl.searchParams.get("userId");
+  if (!userId) {
+    return new Response(JSON.stringify({ messages: [] }), {
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  try {
+    const { data } = await supabase
+      .from("chat_messages")
+      .select("role, content, created_at")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: true })
+      .limit(50);
+
+    return new Response(JSON.stringify({ messages: data || [] }), {
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch {
+    return new Response(JSON.stringify({ messages: [] }), {
       headers: { "Content-Type": "application/json" },
     });
   }

@@ -40,8 +40,23 @@ export function AskLipa({ userId }: { userId: string }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState(false);
+  const [historyLoaded, setHistoryLoaded] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Load chat history from DB on first open
+  useEffect(() => {
+    if (!open || historyLoaded) return;
+    fetch(`/api/chat?userId=${userId}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.messages && data.messages.length > 0) {
+          setMessages(data.messages.map((m: any) => ({ role: m.role, content: m.content })));
+        }
+        setHistoryLoaded(true);
+      })
+      .catch(() => setHistoryLoaded(true));
+  }, [open, userId, historyLoaded]);
 
   // Show invite bubble after 3 seconds
   useEffect(() => {
