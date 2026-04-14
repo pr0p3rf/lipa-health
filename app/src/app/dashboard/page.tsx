@@ -699,15 +699,34 @@ export default function DashboardPage() {
             ) : (
               <div className="p-5 text-center flex flex-col justify-center" style={CARD}>
                 <div className="text-[10px] uppercase tracking-[0.1em] text-[#8A928C] font-medium mb-2">Biological Age</div>
-                <div className="text-[14px] text-[#8A928C] leading-relaxed">
-                  Add your age to calculate bio-age
-                </div>
-                <button
-                  onClick={() => setProfileOpen(true)}
-                  className="text-[12px] font-medium text-[#1B6B4A] mt-2 hover:underline"
-                >
-                  Set up profile
-                </button>
+                {!profile.age ? (
+                  <>
+                    <div className="text-[14px] text-[#8A928C] leading-relaxed">
+                      Add your age to calculate bio-age
+                    </div>
+                    <button
+                      onClick={() => setProfileOpen(true)}
+                      className="text-[12px] font-medium text-[#1B6B4A] mt-2 hover:underline"
+                    >
+                      Set up profile
+                    </button>
+                  </>
+                ) : bioAge && bioAge.ensemble_age === null ? (
+                  <>
+                    <div className="text-[14px] text-[#8A928C] leading-relaxed mb-2">
+                      Not enough markers for bio-age
+                    </div>
+                    <div className="text-[11px] text-[#8A928C] leading-relaxed">
+                      Needs at least 4 of: albumin, creatinine, glucose, cholesterol, CRP, alkaline phosphatase, BUN. Your next comprehensive panel should include these.
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="text-[14px] text-[#8A928C] leading-relaxed">
+                      Calculating...
+                    </div>
+                  </>
+                )}
               </div>
             )}
 
@@ -1855,13 +1874,14 @@ function InsightCard({ calc, expanded, onToggle }: { calc: RiskCalculation; expa
 function ProfileEditor({ profile, onSave, onCancel }: { profile: UserProfile; onSave: (p: UserProfile) => void; onCancel: () => void }) {
   const [age, setAge] = useState<string>(profile.age ? String(profile.age) : "");
   const [sex, setSex] = useState<"" | "male" | "female">(profile.sex || "");
+  const [showAdvanced, setShowAdvanced] = useState(false);
   const [smoker, setSmoker] = useState<boolean>(profile.isSmoker || false);
   const [sbp, setSbp] = useState<string>(profile.systolicBP ? String(profile.systolicBP) : "");
 
   return (
     <div className="p-5 mb-4" style={CARD}>
       <div className="text-[11px] uppercase tracking-wider text-[#8A928C] font-medium mb-3">Your profile</div>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+      <div className="grid grid-cols-2 gap-3 mb-4">
         <div>
           <label className="text-[11px] text-[#5A635D] block mb-1">Age</label>
           <input type="number" value={age} onChange={(e) => setAge(e.target.value)} className="w-full text-[13px] bg-white/50 border border-white/30 rounded-xl px-3 py-2 focus:outline-none focus:border-[#1B6B4A]/50 focus:ring-1 focus:ring-[#1B6B4A]/20 transition-all" placeholder="e.g. 42" />
@@ -1874,17 +1894,25 @@ function ProfileEditor({ profile, onSave, onCancel }: { profile: UserProfile; on
             <option value="female">Female</option>
           </select>
         </div>
-        <div>
-          <label className="text-[11px] text-[#5A635D] block mb-1">Systolic BP</label>
-          <input type="number" value={sbp} onChange={(e) => setSbp(e.target.value)} className="w-full text-[13px] bg-white/50 border border-white/30 rounded-xl px-3 py-2 focus:outline-none focus:border-[#1B6B4A]/50 focus:ring-1 focus:ring-[#1B6B4A]/20 transition-all" placeholder="e.g. 120" />
-        </div>
-        <div className="flex items-end">
-          <label className="flex items-center gap-2 text-[13px] text-[#0F1A15] cursor-pointer">
-            <input type="checkbox" checked={smoker} onChange={(e) => setSmoker(e.target.checked)} className="rounded" />
-            Smoker
-          </label>
-        </div>
       </div>
+      {!showAdvanced ? (
+        <button onClick={() => setShowAdvanced(true)} className="text-[11px] text-[#8A928C] hover:text-[#5A635D] mb-3">
+          + Add blood pressure &amp; smoking status (optional, for risk calculations)
+        </button>
+      ) : (
+        <div className="grid grid-cols-2 gap-3 mb-4">
+          <div>
+            <label className="text-[11px] text-[#5A635D] block mb-1">Blood pressure (top number)</label>
+            <input type="number" value={sbp} onChange={(e) => setSbp(e.target.value)} className="w-full text-[13px] bg-white/50 border border-white/30 rounded-xl px-3 py-2 focus:outline-none focus:border-[#1B6B4A]/50 focus:ring-1 focus:ring-[#1B6B4A]/20 transition-all" placeholder="e.g. 120" />
+          </div>
+          <div className="flex items-end">
+            <label className="flex items-center gap-2 text-[13px] text-[#0F1A15] cursor-pointer">
+              <input type="checkbox" checked={smoker} onChange={(e) => setSmoker(e.target.checked)} className="rounded" />
+              Smoker
+            </label>
+          </div>
+        </div>
+      )}
       <div className="flex gap-2 justify-end">
         <button onClick={onCancel} className="text-[12px] text-[#5A635D] hover:text-[#0F1A15] px-4 py-2 transition-colors">Cancel</button>
         <button
@@ -1894,7 +1922,7 @@ function ProfileEditor({ profile, onSave, onCancel }: { profile: UserProfile; on
           Save
         </button>
       </div>
-      <p className="text-[10px] text-[#8A928C] mt-3 leading-relaxed">Used only for risk calculations (SCORE2, FIB-4, bio-age). Never shared.</p>
+      <p className="text-[10px] text-[#8A928C] mt-3 leading-relaxed">Used for biological age and risk calculations. Never shared.</p>
     </div>
   );
 }
