@@ -1588,9 +1588,9 @@
   </a>
   <div class="nav-right">
     <div class="nav-links">
-      <a href="/methodology.html">Our methodology</a>
-      <a href="/research.html">Research Library</a>
-      <a href="https://my.lipa.health/test-finder">Get Tested</a>
+      <a href="/methodology.html" data-i18n="navMethodology">Our methodology</a>
+      <a href="/research.html" data-i18n="navResearch">Research Library</a>
+      <a href="https://my.lipa.health/test-finder" data-i18n="navGetTested">Get Tested</a>
     </div>
     <select class="lang-dropdown" onchange="setLang && setLang(this.value)">
       <option value="en" selected>EN</option>
@@ -1598,8 +1598,8 @@
       <option value="pl">PL</option>
       <option value="es">ES</option>
     </select>
-    <a href="https://my.lipa.health/login" class="nav-login" style="font-size: 13px; color: var(--text-secondary); margin-right: 16px;">Log in</a>
-    <a href="https://my.lipa.health/upload" class="nav-cta">Get started free</a>
+    <a href="https://my.lipa.health/login" class="nav-login" style="font-size: 13px; color: var(--text-secondary); margin-right: 16px;" data-i18n="navLogin">Log in</a>
+    <a href="https://my.lipa.health/upload" class="nav-cta" data-i18n="navCta">Get started free</a>
     <button class="mobile-menu-btn" onclick="document.getElementById('mobileMenu').style.display='flex'" aria-label="Menu">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
@@ -1610,13 +1610,13 @@
   <button class="mobile-menu-close" onclick="document.getElementById('mobileMenu').style.display='none'" aria-label="Close">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
   </button>
-  <a href="/methodology.html" onclick="document.getElementById('mobileMenu').style.display='none'">Our methodology</a>
-  <a href="/research.html" onclick="document.getElementById('mobileMenu').style.display='none'">Research Library</a>
-  <a href="/where-to-test.html" onclick="document.getElementById('mobileMenu').style.display='none'">Where to test</a>
-  <a href="https://my.lipa.health/test-finder" onclick="document.getElementById('mobileMenu').style.display='none'">Test Finder</a>
-  <a href="https://my.lipa.health/pricing" onclick="document.getElementById('mobileMenu').style.display='none'">Pricing</a>
-  <a href="https://my.lipa.health/login" style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;" onclick="document.getElementById('mobileMenu').style.display='none'">Log in</a>
-  <a href="https://my.lipa.health/upload" class="mobile-menu-cta" onclick="document.getElementById('mobileMenu').style.display='none'">Get started free</a>
+  <a href="/methodology.html" onclick="document.getElementById('mobileMenu').style.display='none'" data-i18n="navMethodology">Our methodology</a>
+  <a href="/research.html" onclick="document.getElementById('mobileMenu').style.display='none'" data-i18n="navResearch">Research Library</a>
+  <a href="/where-to-test.html" onclick="document.getElementById('mobileMenu').style.display='none'" data-i18n="mobileWhereToTest">Where to test</a>
+  <a href="https://my.lipa.health/test-finder" onclick="document.getElementById('mobileMenu').style.display='none'" data-i18n="mobileTestFinder">Test Finder</a>
+  <a href="https://my.lipa.health/pricing" onclick="document.getElementById('mobileMenu').style.display='none'" data-i18n="mobilePricing">Pricing</a>
+  <a href="https://my.lipa.health/login" style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;" onclick="document.getElementById('mobileMenu').style.display='none'" data-i18n="navLogin">Log in</a>
+  <a href="https://my.lipa.health/upload" class="mobile-menu-cta" onclick="document.getElementById('mobileMenu').style.display='none'" data-i18n="navCta">Get started free</a>
 </div>
 
 <!-- ================== HERO ================== -->
@@ -1642,17 +1642,17 @@
     <p class="lede" data-i18n="heroSub">Upload your blood test. Get a research-grade analysis of every marker, a personalized protocol, and a health assistant that knows your numbers — not generic advice. Cited. Transparent. Yours.</p>
     <div class="hero-ctas">
       <a href="https://my.lipa.health/upload" class="btn btn-primary-lg">
-        Upload your blood test
+        <span data-i18n="ctaButton">Upload your blood test</span>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
           <line x1="5" y1="12" x2="19" y2="12"/>
           <polyline points="12 5 19 12 12 19"/>
         </svg>
       </a>
-      <a href="#how" class="btn btn-secondary-lg">
+      <a href="#how" class="btn btn-secondary-lg" data-i18n="heroSecondary">
         See how it works
       </a>
     </div>
-    <p class="hero-alt-cta">Start free · See all your markers · No credit card required</p>
+    <p class="hero-alt-cta" data-i18n="ctaFine">Start free · See all your markers · No credit card required</p>
   </section>
 </div>
 
@@ -1660,24 +1660,24 @@
 <div class="stats-strip on-ink">
   <div class="stats-grid">
     <div class="stat-cell">
-      <div class="stat-label">Biomarkers</div>
-      <div class="stat-num mono">100+</div>
-      <div class="stat-caption">every major marker, clearly explained</div>
+      <div class="stat-label" data-i18n="stat1Label">Biomarkers</div>
+      <div class="stat-num mono" data-i18n="stat1Num">100+</div>
+      <div class="stat-caption" data-i18n="stat1Caption">every major marker, clearly explained</div>
     </div>
     <div class="stat-cell">
-      <div class="stat-label">Research corpus</div>
-      <div class="stat-num mono">80K+</div>
-      <div class="stat-caption">peer-reviewed studies. Not one opinion.</div>
+      <div class="stat-label" data-i18n="stat2Label">Research corpus</div>
+      <div class="stat-num mono" data-i18n="stat2Num">80K+</div>
+      <div class="stat-caption" data-i18n="stat2Caption">peer-reviewed studies. Not one opinion.</div>
     </div>
     <div class="stat-cell">
-      <div class="stat-label">Health profiles</div>
-      <div class="stat-num mono">300K+</div>
-      <div class="stat-caption">your results benchmarked against real people</div>
+      <div class="stat-label" data-i18n="stat3Label">Health profiles</div>
+      <div class="stat-num mono" data-i18n="stat3Num">300K+</div>
+      <div class="stat-caption" data-i18n="stat3Caption">your results benchmarked against real people</div>
     </div>
     <div class="stat-cell">
-      <div class="stat-label">Ask Lipa</div>
-      <div class="stat-num mono">24/7</div>
-      <div class="stat-caption">your personal health assistant, always available</div>
+      <div class="stat-label" data-i18n="stat4Label">Ask Lipa</div>
+      <div class="stat-num mono" data-i18n="stat4Num">24/7</div>
+      <div class="stat-caption" data-i18n="stat4Caption">your personal health assistant, always available</div>
     </div>
   </div>
 </div>
@@ -1688,50 +1688,50 @@
   <div class="orb orb-warm" style="width: 400px; height: 400px; bottom: -50px; left: -100px;"></div>
   <div class="orb orb-green" style="width: 300px; height: 300px; top: 40%; left: 30%;"></div>
   <div class="container">
-    <div class="section-eyebrow">How Lipa works</div>
-    <h2 class="display">A blood test goes in.<br>Full understanding<br>comes out.</h2>
-    <p class="lede">Four steps from a blood test to a complete understanding of your biology.</p>
+    <div class="section-eyebrow" data-i18n="howEyebrow">How Lipa works</div>
+    <h2 class="display" data-i18n="howTitle">A blood test goes in.<br>Full understanding<br>comes out.</h2>
+    <p class="lede" data-i18n="howSub">Four steps from a blood test to a complete understanding of your biology.</p>
 
     <div class="how-steps">
 
       <!-- Step 1: Upload -->
       <div class="how-card">
         <div class="how-num mono">01</div>
-        <h3>Upload any blood test.</h3>
-        <p>PDF, photo, scan — from any lab, any country, any language. Or use our <a href="https://my.lipa.health/test-finder" style="color: var(--accent); font-weight: 600;">Blood Test Finder</a> to know exactly what to order and where to go. Book directly. No middleman markup.</p>
-        <div class="how-meta mono">Any lab · any country · any format</div>
+        <h3 data-i18n="step1Title">Upload any blood test.</h3>
+        <p data-i18n="step1Desc">PDF, photo, scan — from any lab, any country, any language. Or use our <a href="https://my.lipa.health/test-finder" style="color: var(--accent); font-weight: 600;">Blood Test Finder</a> to know exactly what to order and where to go. Book directly. No middleman markup.</p>
+        <div class="how-meta mono" data-i18n="step1Meta">Any lab · any country · any format</div>
       </div>
 
       <!-- Step 2: Analyze -->
       <div class="how-card">
         <div class="how-num mono">02</div>
-        <h3>The most comprehensive research-backed analysis for consumers.</h3>
-        <p>Every marker cross-referenced against tens of thousands of peer-reviewed studies from PubMed, Cochrane, Semantic Scholar, and other leading medical databases. Evidence scored by grade, sample size, recency, funding independence, and study type. Cross-marker patterns detected. Risk calculations computed. Your biological age estimated.</p>
-        <div class="how-meta mono"><a href="/methodology.html" style="color: var(--accent); text-decoration: underline;">See our methodology →</a></div>
+        <h3 data-i18n="step2Title">The most comprehensive research-backed analysis for consumers.</h3>
+        <p data-i18n="step2Desc">Every marker cross-referenced against tens of thousands of peer-reviewed studies from PubMed, Cochrane, Semantic Scholar, and other leading medical databases. Evidence scored by grade, sample size, recency, funding independence, and study type. Cross-marker patterns detected. Risk calculations computed. Your biological age estimated.</p>
+        <div class="how-meta mono" data-i18n="step2Meta"><a href="/methodology.html" style="color: var(--accent); text-decoration: underline;">See our methodology →</a></div>
       </div>
 
       <!-- Step 3: Act -->
       <div class="how-card">
         <div class="how-num mono">03</div>
-        <h3>Your personalized protocol.</h3>
-        <p>Not generic wellness advice — a protocol built from your specific markers. Which supplements to take, at what dose, in which form, and when. Natural and research-backed — adaptogens, herbs, and functional foods where the science supports them. Which to avoid and why. Drug and nutrient interactions flagged. Food sources, meal timing, sleep optimization, movement recommendations, and environmental changes. Six life domains covered. Every recommendation cited to published research.</p>
-        <div class="how-meta mono">Nutrition · supplements · sleep · movement · lifestyle</div>
+        <h3 data-i18n="step3Title">Your personalized protocol.</h3>
+        <p data-i18n="step3Desc">Not generic wellness advice — a protocol built from your specific markers. Which supplements to take, at what dose, in which form, and when. Natural and research-backed — adaptogens, herbs, and functional foods where the science supports them. Which to avoid and why. Drug and nutrient interactions flagged. Food sources, meal timing, sleep optimization, movement recommendations, and environmental changes. Six life domains covered. Every recommendation cited to published research.</p>
+        <div class="how-meta mono" data-i18n="step3Meta">Nutrition · supplements · sleep · movement · lifestyle</div>
       </div>
 
       <!-- Step 4: Ask -->
       <div class="how-card">
         <div class="how-num mono">04</div>
-        <h3>Ask anything. Anytime.</h3>
-        <p>Ask Lipa is your personal health assistant. It knows your results, your history, and searches peer-reviewed studies to answer your questions. Like a health expert who actually knows your numbers.</p>
-        <div class="how-meta mono">Ask Lipa · your personal health assistant</div>
+        <h3 data-i18n="step4Title">Ask anything. Anytime.</h3>
+        <p data-i18n="step4Desc">Ask Lipa is your personal health assistant. It knows your results, your history, and searches peer-reviewed studies to answer your questions. Like a health expert who actually knows your numbers.</p>
+        <div class="how-meta mono" data-i18n="step4Meta">Ask Lipa · your personal health assistant</div>
       </div>
 
       <!-- Step 5: Life (full width) -->
       <div class="how-card" style="grid-column: 1 / -1; background: linear-gradient(135deg, #FFFFFF 0%, #E8F5EE 100%); border: 1px solid rgba(27,107,74,0.1);">
         <div style="text-align: center; max-width: 640px; margin: 0 auto;">
-          <h3>Your biology, tracked over time.</h3>
-          <p>With Lipa Life, every test builds on the last. Trend charts show what's improving. Your biological age updates. Personalized research alerts surface new studies that matter to your specific markers. And Ask Lipa is there whenever you have a question — for life.</p>
-          <div class="how-meta mono">Vault · trends · bio-age · research alerts · <a href="https://my.lipa.health/pricing" style="color: var(--accent); text-decoration: underline;">See Lipa Life →</a></div>
+          <h3 data-i18n="step5Title">Your biology, tracked over time.</h3>
+          <p data-i18n="step5Desc">With Lipa Life, every test builds on the last. Trend charts show what's improving. Your biological age updates. Personalized research alerts surface new studies that matter to your specific markers. And Ask Lipa is there whenever you have a question — for life.</p>
+          <div class="how-meta mono" data-i18n="step5Meta">Vault · trends · bio-age · research alerts · <a href="https://my.lipa.health/pricing" style="color: var(--accent); text-decoration: underline;">See Lipa Life →</a></div>
         </div>
       </div>
 
@@ -1749,16 +1749,16 @@
           </svg>
         </div>
         <div>
-          <h3 class="byot-title">Don't have a blood test yet?</h3>
-          <p class="byot-desc">We'll tell you exactly which markers to order based on your goals — longevity, hormones, metabolic health, thyroid, or a comprehensive panel. Book at any lab. No middleman, no markup. Your first analysis is free.</p>
+          <h3 class="byot-title" data-i18n="byotTitle">Don't have a blood test yet?</h3>
+          <p class="byot-desc" data-i18n="byotDesc">We'll tell you exactly which markers to order based on your goals — longevity, hormones, metabolic health, thyroid, or a comprehensive panel. Book at any lab. No middleman, no markup. Your first analysis is free.</p>
         </div>
       </div>
       <div class="byot-actions" style="flex-shrink: 0;">
         <a href="https://my.lipa.health/test-finder" class="byot-guide-btn">
-          Schedule your test
+          <span data-i18n="byotSchedule">Schedule your test</span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </a>
-        <a href="#join" class="byot-signup-btn">Sign up free — analyze when ready</a>
+        <a href="#join" class="byot-signup-btn" data-i18n="byotSignup">Sign up free — analyze when ready</a>
       </div>
     </div>
   </div>
@@ -1770,88 +1770,88 @@
   <div class="orb orb-warm" style="width: 450px; height: 450px; top: 30%; right: -120px;"></div>
   <div class="orb orb-sage" style="width: 350px; height: 350px; bottom: -80px; left: 40%;"></div>
   <div class="container">
-    <div class="section-eyebrow">Built for</div>
-    <h2 class="display">People who want to take<br>control of their health.</h2>
-    <p class="lede">Maybe you're on a protocol. Maybe your last test came back "normal" and you knew something was off. Maybe you just want to read your blood test without medical jargon. Whichever it is — Lipa is built for the moment you decided to stop waiting for someone else to interpret your biology.</p>
+    <div class="section-eyebrow" data-i18n="audienceEyebrow">Built for</div>
+    <h2 class="display" data-i18n="audienceTitle">People who want to take<br>control of their health.</h2>
+    <p class="lede" data-i18n="audienceSub">Maybe you're on a protocol. Maybe your last test came back "normal" and you knew something was off. Maybe you just want to read your blood test without medical jargon. Whichever it is — Lipa is built for the moment you decided to stop waiting for someone else to interpret your biology.</p>
 
     <div class="persona-row">
       <div class="persona-card">
         <img src="/img/persona-tracker.jpg" alt="Young woman outdoors by a lake wearing a fitness tracker" loading="lazy">
         <div class="persona-overlay">
-          <div class="persona-label">The Tracker</div>
-          <div class="persona-desc">Uploads every test. Watches the trends. Wants to see what's actually moving.</div>
+          <div class="persona-label" data-i18n="personaTracker">The Tracker</div>
+          <div class="persona-desc" data-i18n="personaTrackerDesc">Uploads every test. Watches the trends. Wants to see what's actually moving.</div>
         </div>
       </div>
       <div class="persona-card">
         <img src="/img/persona-optimizer.jpg" alt="Confident man in European city" loading="lazy">
         <div class="persona-overlay">
-          <div class="persona-label">The Optimizer</div>
-          <div class="persona-desc">Protocols, supplements, bio-age. Reads the research because results matter.</div>
+          <div class="persona-label" data-i18n="personaOptimizer">The Optimizer</div>
+          <div class="persona-desc" data-i18n="personaOptimizerDesc">Protocols, supplements, bio-age. Reads the research because results matter.</div>
         </div>
       </div>
       <div class="persona-card">
         <img src="/img/persona-proactive.jpg" alt="Active woman in her 50s with yoga mat" loading="lazy">
         <div class="persona-overlay">
-          <div class="persona-label">The Proactive</div>
-          <div class="persona-desc">Knows "normal" doesn't mean optimal. Takes control before anything goes wrong.</div>
+          <div class="persona-label" data-i18n="personaProactive">The Proactive</div>
+          <div class="persona-desc" data-i18n="personaProactiveDesc">Knows "normal" doesn't mean optimal. Takes control before anything goes wrong.</div>
         </div>
       </div>
       <div class="persona-card">
         <img src="/img/persona-curious.jpg" alt="Young man in a café with a smartwatch" loading="lazy">
         <div class="persona-overlay">
-          <div class="persona-label">The Curious</div>
-          <div class="persona-desc">Got a blood test back and wants to understand it. Properly. Without the jargon.</div>
+          <div class="persona-label" data-i18n="personaCurious">The Curious</div>
+          <div class="persona-desc" data-i18n="personaCuriousDesc">Got a blood test back and wants to understand it. Properly. Without the jargon.</div>
         </div>
       </div>
     </div>
 
     <div class="audience-grid">
       <div class="aud-card">
-        <div class="aud-title">Hormone optimization</div>
-        <div class="aud-body">Protocols like TRT and HRT affect hematocrit, estradiol, SHBG, lipids, liver enzymes, and more. Lipa tracks every one of them against the research, every time you upload a new test.</div>
-        <div class="aud-tag">TRT · HRT · hormone support</div>
+        <div class="aud-title" data-i18n="audHormoneTitle">Hormone optimization</div>
+        <div class="aud-body" data-i18n="audHormoneBody">Protocols like TRT and HRT affect hematocrit, estradiol, SHBG, lipids, liver enzymes, and more. Lipa tracks every one of them against the research, every time you upload a new test.</div>
+        <div class="aud-tag" data-i18n="audHormoneTag">TRT · HRT · hormone support</div>
       </div>
 
       <div class="aud-card">
-        <div class="aud-title">Peptide research</div>
-        <div class="aud-body">The research on compounds like BPC-157 and TB-500 exists, but separating signal from noise is hard. Lipa cross-references your markers against what the published studies actually show.</div>
-        <div class="aud-tag">BPC-157 · TB-500 · GHK-Cu</div>
+        <div class="aud-title" data-i18n="audPeptideTitle">Peptide research</div>
+        <div class="aud-body" data-i18n="audPeptideBody">The research on compounds like BPC-157 and TB-500 exists, but separating signal from noise is hard. Lipa cross-references your markers against what the published studies actually show.</div>
+        <div class="aud-tag" data-i18n="audPeptideTag">BPC-157 · TB-500 · GHK-Cu</div>
       </div>
 
       <div class="aud-card">
-        <div class="aud-title">GLP-1 &amp; weight loss medications</div>
-        <div class="aud-body">Semaglutide and tirzepatide affect far more than weight — muscle mass, B12, lean body composition, fasting insulin. Lipa tracks the markers that matter for long-term health on these protocols.</div>
-        <div class="aud-tag">Semaglutide · Tirzepatide</div>
+        <div class="aud-title" data-i18n="audGlp1Title">GLP-1 &amp; weight loss medications</div>
+        <div class="aud-body" data-i18n="audGlp1Body">Semaglutide and tirzepatide affect far more than weight — muscle mass, B12, lean body composition, fasting insulin. Lipa tracks the markers that matter for long-term health on these protocols.</div>
+        <div class="aud-tag" data-i18n="audGlp1Tag">Semaglutide · Tirzepatide</div>
       </div>
 
       <div class="aud-card">
-        <div class="aud-title">Longevity optimization</div>
-        <div class="aud-body">Biological age. Cardiovascular risk. Insulin resistance. Inflammation patterns. Real published calculations applied to your actual biology, so you can see whether your protocol is moving anything.</div>
-        <div class="aud-tag">Bio-age · SCORE2 · HOMA-IR</div>
+        <div class="aud-title" data-i18n="audLongevityTitle">Longevity optimization</div>
+        <div class="aud-body" data-i18n="audLongevityBody">Biological age. Cardiovascular risk. Insulin resistance. Inflammation patterns. Real published calculations applied to your actual biology, so you can see whether your protocol is moving anything.</div>
+        <div class="aud-tag" data-i18n="audLongevityTag">Bio-age · SCORE2 · HOMA-IR</div>
       </div>
 
       <div class="aud-card">
-        <div class="aud-title">Perimenopause &amp; menopause</div>
-        <div class="aud-body">Hormonal transitions are well-studied but under-supported in routine care. Lipa reads the research on your specific pattern and cites every source.</div>
-        <div class="aud-tag">FSH · LH · Estradiol · Progesterone</div>
+        <div class="aud-title" data-i18n="audPeriTitle">Perimenopause &amp; menopause</div>
+        <div class="aud-body" data-i18n="audPeriBody">Hormonal transitions are well-studied but under-supported in routine care. Lipa reads the research on your specific pattern and cites every source.</div>
+        <div class="aud-tag" data-i18n="audPeriTag">FSH · LH · Estradiol · Progesterone</div>
       </div>
 
       <div class="aud-card">
-        <div class="aud-title">Chronic conditions</div>
-        <div class="aud-body">Hashimoto's. T2D. PCOS. Autoimmune conditions. Every upload trends against your history and surfaces patterns that only become visible when you look at every test at once.</div>
-        <div class="aud-tag">Thyroid · metabolic · autoimmune</div>
+        <div class="aud-title" data-i18n="audChronicTitle">Chronic conditions</div>
+        <div class="aud-body" data-i18n="audChronicBody">Hashimoto's. T2D. PCOS. Autoimmune conditions. Every upload trends against your history and surfaces patterns that only become visible when you look at every test at once.</div>
+        <div class="aud-tag" data-i18n="audChronicTag">Thyroid · metabolic · autoimmune</div>
       </div>
 
       <div class="aud-card">
-        <div class="aud-title">Natural &amp; integrative health</div>
-        <div class="aud-body">You already pay attention to nutrition, sleep, and supplementation — and you know your doctor isn't tracking the markers that move them. Lipa reads the research on cortisol, vitamin D, omega-3 index, magnesium, full thyroid, homocysteine, and builds your plan across six life domains, not around prescriptions.</div>
-        <div class="aud-tag">Functional · integrative · holistic</div>
+        <div class="aud-title" data-i18n="audNaturalTitle">Natural &amp; integrative health</div>
+        <div class="aud-body" data-i18n="audNaturalBody">You already pay attention to nutrition, sleep, and supplementation — and you know your doctor isn't tracking the markers that move them. Lipa reads the research on cortisol, vitamin D, omega-3 index, magnesium, full thyroid, homocysteine, and builds your plan across six life domains, not around prescriptions.</div>
+        <div class="aud-tag" data-i18n="audNaturalTag">Functional · integrative · holistic</div>
       </div>
 
       <div class="aud-card">
-        <div class="aud-title">Athletes &amp; performance</div>
-        <div class="aud-body">Endurance, recovery, hypertrophy, fatigue. Ferritin, free testosterone, cortisol, vitamin D, lactate response, omega-3 — the markers that actually move with training load. Lipa tracks them against the research that matters for athletic performance.</div>
-        <div class="aud-tag">Endurance · strength · recovery</div>
+        <div class="aud-title" data-i18n="audAthleteTitle">Athletes &amp; performance</div>
+        <div class="aud-body" data-i18n="audAthleteBody">Endurance, recovery, hypertrophy, fatigue. Ferritin, free testosterone, cortisol, vitamin D, lactate response, omega-3 — the markers that actually move with training load. Lipa tracks them against the research that matters for athletic performance.</div>
+        <div class="aud-tag" data-i18n="audAthleteTag">Endurance · strength · recovery</div>
       </div>
     </div>
   </div>
@@ -1865,10 +1865,10 @@
   <div class="container" style="position: relative; z-index: 1;">
     <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 48px; flex-wrap: wrap; gap: 16px;">
       <div>
-        <div class="section-eyebrow">From the research library</div>
-        <h2 class="display" style="margin-bottom: 0;">Read what we read.</h2>
+        <div class="section-eyebrow" data-i18n="researchEyebrow">From the research library</div>
+        <h2 class="display" style="margin-bottom: 0;" data-i18n="researchTitle">Read what we read.</h2>
       </div>
-      <a href="/research.html" style="font-size: 14px; font-weight: 600; color: var(--accent); display: inline-flex; align-items: center; gap: 8px;">
+      <a href="/research.html" style="font-size: 14px; font-weight: 600; color: var(--accent); display: inline-flex; align-items: center; gap: 8px;" data-i18n="researchSeeAll">
         See all 20+ articles
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
       </a>
@@ -1913,81 +1913,81 @@
   <div class="orb orb-green" style="width: 500px; height: 500px; top: -100px; right: -150px;"></div>
   <div class="orb orb-cream" style="width: 400px; height: 400px; bottom: 10%; left: -120px;"></div>
   <div class="container">
-    <div class="section-eyebrow">What you get</div>
-    <h2 class="display">Upload any blood test.<br>We do the rest.</h2>
-    <p class="lede">You bring the blood test. Lipa delivers the most thorough, research-backed analysis available — for a fraction of what others charge.</p>
+    <div class="section-eyebrow" data-i18n="pricingEyebrow">What you get</div>
+    <h2 class="display" data-i18n="pricingTitle">Upload any blood test.<br>We do the rest.</h2>
+    <p class="lede" data-i18n="pricingSub">You bring the blood test. Lipa delivers the most thorough, research-backed analysis available — for a fraction of what others charge.</p>
 
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 64px; align-items: start;">
 
       <!-- Left: what's included -->
       <div>
-        <div style="font-family: 'Fraunces', Georgia, serif; font-size: 28px; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 32px;">Everything in one subscription.</div>
+        <div style="font-family: 'Fraunces', Georgia, serif; font-size: 28px; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 32px;" data-i18n="featuresHeading">Everything in one subscription.</div>
         <div style="border-top: 1px solid var(--border); padding-top: 20px;">
           <div style="padding: 18px 0; border-bottom: 1px solid var(--border);">
-            <div style="font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px;">Plain-English analysis of every marker</div>
-            <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.55;">What each value means, what the research shows, what to watch — written for humans, not clinicians.</div>
+            <div style="font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px;" data-i18n="feat1Title">Plain-English analysis of every marker</div>
+            <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.55;" data-i18n="feat1Desc">What each value means, what the research shows, what to watch — written for humans, not clinicians.</div>
           </div>
           <div style="padding: 18px 0; border-bottom: 1px solid var(--border);">
-            <div style="font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px;">Personalized action plan across 6 life domains</div>
-            <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.55;">Nutrition, supplementation, sleep, movement, environment, lifestyle. Every recommendation includes dosage, timing, food sources, and interactions — all cited.</div>
+            <div style="font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px;" data-i18n="feat2Title">Personalized action plan across 6 life domains</div>
+            <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.55;" data-i18n="feat2Desc">Nutrition, supplementation, sleep, movement, environment, lifestyle. Every recommendation includes dosage, timing, food sources, and interactions — all cited.</div>
           </div>
           <div style="padding: 18px 0; border-bottom: 1px solid var(--border);">
-            <div style="font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px;">Personalized to you — calibrated against 300,000+ health profiles</div>
-            <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.55;">Your optimal ranges adjust by your age and sex. See where you rank compared to 300,000+ people. Plus 16+ health calculations: SCORE2, HOMA-IR, bio-age, FIB-4, eGFR, and more.</div>
+            <div style="font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px;" data-i18n="feat3Title">Personalized to you — calibrated against 300,000+ health profiles</div>
+            <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.55;" data-i18n="feat3Desc">Your optimal ranges adjust by your age and sex. See where you rank compared to 300,000+ people. Plus 16+ health calculations: SCORE2, HOMA-IR, bio-age, FIB-4, eGFR, and more.</div>
           </div>
           <div style="padding: 18px 0; border-bottom: 1px solid var(--border);">
-            <div style="font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px;">Cross-marker pattern detection</div>
-            <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.55;">Early metabolic syndrome, subclinical thyroid, residual cardiovascular risk — flagged automatically with citations.</div>
+            <div style="font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px;" data-i18n="feat4Title">Cross-marker pattern detection</div>
+            <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.55;" data-i18n="feat4Desc">Early metabolic syndrome, subclinical thyroid, residual cardiovascular risk — flagged automatically with citations.</div>
           </div>
           <div style="padding: 18px 0; border-bottom: 1px solid var(--border);">
-            <div style="font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px;">A permanent vault of your biology</div>
-            <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.55;">Every test stored for life. Year-over-year trending. See what's improving and what's drifting.</div>
+            <div style="font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px;" data-i18n="feat5Title">A permanent vault of your biology</div>
+            <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.55;" data-i18n="feat5Desc">Every test stored for life. Year-over-year trending. See what's improving and what's drifting.</div>
           </div>
           <div style="padding: 18px 0;">
-            <div style="font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px;">Alerts when new research lands on your markers</div>
-            <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.55;">The corpus refreshes every day. When a new study is relevant to your biology, you hear about it.</div>
+            <div style="font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px;" data-i18n="feat6Title">Alerts when new research lands on your markers</div>
+            <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.55;" data-i18n="feat6Desc">The corpus refreshes every day. When a new study is relevant to your biology, you hear about it.</div>
           </div>
         </div>
       </div>
 
       <!-- Right: pricing cards -->
       <div>
-        <div style="font-family: 'Fraunces', Georgia, serif; font-size: 28px; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 32px;">One test or the full picture.</div>
+        <div style="font-family: 'Fraunces', Georgia, serif; font-size: 28px; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 32px;" data-i18n="pricingHeading">One test or the full picture.</div>
 
         <div style="background: var(--white); border: 1px solid var(--border); border-radius: 18px; padding: 28px; margin-bottom: 16px;">
           <div style="font-family: 'Fraunces', Georgia, serif; font-size: 22px; font-weight: 500; margin-bottom: 4px;">Lipa One</div>
-          <div style="font-size: 12px; color: var(--text-tertiary); margin-bottom: 12px;">Full analysis of any blood test. One-time.</div>
+          <div style="font-size: 12px; color: var(--text-tertiary); margin-bottom: 12px;" data-i18n="priceOneTag">Full analysis of any blood test. One-time.</div>
           <div style="font-family: 'Fraunces', Georgia, serif; font-size: 32px; font-weight: 500; margin-bottom: 4px;">€39</div>
-          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-tertiary); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 16px;">one-time · no subscription</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-tertiary); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 16px;" data-i18n="priceOnePer">one-time · no subscription</div>
           <ul style="list-style: none; padding: 0; font-size: 13px; color: var(--text-secondary); line-height: 2;">
-            <li>Every marker analyzed in plain English</li>
-            <li>Action plan (nutrition, supplements, sleep, movement)</li>
-            <li>Risk calculations + biological age</li>
-            <li>Cross-marker patterns</li>
-            <li>PDF report for your doctor</li>
-            <li>Ask Lipa chat for 7 days</li>
+            <li data-i18n="priceOneFeat1">Every marker analyzed in plain English</li>
+            <li data-i18n="priceOneFeat2">Action plan (nutrition, supplements, sleep, movement)</li>
+            <li data-i18n="priceOneFeat3">Risk calculations + biological age</li>
+            <li data-i18n="priceOneFeat4">Cross-marker patterns</li>
+            <li data-i18n="priceOneFeat5">PDF report for your doctor</li>
+            <li data-i18n="priceOneFeat6">Ask Lipa chat for 7 days</li>
           </ul>
-          <a href="https://my.lipa.health/upload" style="display: block; text-align: center; font-size: 13px; font-weight: 600; padding: 12px; border-radius: 980px; border: 1px solid var(--border-strong); color: var(--text); margin-top: 16px;">Get full analysis — €39</a>
+          <a href="https://my.lipa.health/upload" style="display: block; text-align: center; font-size: 13px; font-weight: 600; padding: 12px; border-radius: 980px; border: 1px solid var(--border-strong); color: var(--text); margin-top: 16px;" data-i18n="priceOneCta">Get full analysis — €39</a>
         </div>
 
         <div style="background: var(--white); border: 1px solid var(--accent); border-radius: 18px; padding: 28px; margin-bottom: 16px; position: relative; box-shadow: 0 8px 32px rgba(27,107,74,0.08);">
-          <div style="position: absolute; top: -11px; left: 50%; transform: translateX(-50%); background: var(--accent); color: white; font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; padding: 5px 14px; border-radius: 999px;">Best value</div>
+          <div style="position: absolute; top: -11px; left: 50%; transform: translateX(-50%); background: var(--accent); color: white; font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; padding: 5px 14px; border-radius: 999px;" data-i18n="priceLifeBadge">Best value</div>
           <div style="font-family: 'Fraunces', Georgia, serif; font-size: 22px; font-weight: 500; margin-bottom: 4px;">Lipa Life</div>
-          <div style="font-size: 12px; color: var(--text-tertiary); margin-bottom: 12px;">Your ongoing health companion. Track, trend, ask.</div>
+          <div style="font-size: 12px; color: var(--text-tertiary); margin-bottom: 12px;" data-i18n="priceLifeTag">Your ongoing health companion. Track, trend, ask.</div>
           <div style="font-family: 'Fraunces', Georgia, serif; font-size: 32px; font-weight: 500; color: var(--accent); margin-bottom: 4px;">€89<span style="font-size: 16px; font-weight: 400; color: var(--text-tertiary);">/year</span></div>
-          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-tertiary); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 16px;">€39 credited if upgrading within 30 days</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-tertiary); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 16px;" data-i18n="priceLifePer">€39 credited if upgrading within 30 days</div>
           <ul style="list-style: none; padding: 0; font-size: 13px; color: var(--text-secondary); line-height: 2;">
-            <li>Everything in Lipa One</li>
-            <li>Up to 12 test uploads per year</li>
-            <li>Vault — your complete biological history</li>
-            <li>Trend tracking + bio-age trajectory</li>
-            <li>Ask Lipa chat — unlimited, for life</li>
-            <li>Personalized research alerts</li>
+            <li data-i18n="priceLifeFeat1">Everything in Lipa One</li>
+            <li data-i18n="priceLifeFeat2">Up to 12 test uploads per year</li>
+            <li data-i18n="priceLifeFeat3">Vault — your complete biological history</li>
+            <li data-i18n="priceLifeFeat4">Trend tracking + bio-age trajectory</li>
+            <li data-i18n="priceLifeFeat5">Ask Lipa chat — unlimited, for life</li>
+            <li data-i18n="priceLifeFeat6">Personalized research alerts</li>
           </ul>
-          <a href="https://my.lipa.health/upload" style="display: block; text-align: center; font-size: 13px; font-weight: 600; padding: 12px; border-radius: 980px; background: var(--accent); color: white; margin-top: 16px;">Get Life — €89/year</a>
+          <a href="https://my.lipa.health/upload" style="display: block; text-align: center; font-size: 13px; font-weight: 600; padding: 12px; border-radius: 980px; background: var(--accent); color: white; margin-top: 16px;" data-i18n="priceLifeCta">Get Life — €89/year</a>
         </div>
 
-        <p style="font-size: 11px; color: var(--text-tertiary); text-align: center; margin-top: 16px; line-height: 1.6;">
+        <p style="font-size: 11px; color: var(--text-tertiary); text-align: center; margin-top: 16px; line-height: 1.6;" data-i18n="pricingNote">
           We don't sell blood tests. You get tested wherever you want. We analyze it. Free preview available — upload and see every marker's status before buying.
         </p>
       </div>
@@ -1999,9 +1999,9 @@
 <!-- ================== TRUST / GDPR (INK) ================== -->
 <section class="trust on-ink">
   <div class="container">
-    <div class="section-eyebrow">Trust &amp; privacy</div>
-    <h2 class="display">Your data is yours.<br>Encrypted. Private.</h2>
-    <p class="lede">Lipa is built around one principle: your biology data is yours. Encrypted in transit and at rest, privacy-first by design, and never shared, sold, or trained on. Yours to export or delete in one click.</p>
+    <div class="section-eyebrow" data-i18n="trustEyebrow">Trust &amp; privacy</div>
+    <h2 class="display" data-i18n="trustTitle">Your data is yours.<br>Encrypted. Private.</h2>
+    <p class="lede" data-i18n="trustSub">Lipa is built around one principle: your biology data is yours. Encrypted in transit and at rest, privacy-first by design, and never shared, sold, or trained on. Yours to export or delete in one click.</p>
 
     <div class="trust-grid">
       <div class="trust-cell">
@@ -2010,8 +2010,8 @@
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
           </svg>
         </div>
-        <div class="trust-title">EU-hosted, GDPR-native</div>
-        <div class="trust-body">All Lipa data is hosted on secure servers with GDPR-grade privacy from day one. Your health data is never sold, never shared, never used to train models.</div>
+        <div class="trust-title" data-i18n="trust1Title">EU-hosted, GDPR-native</div>
+        <div class="trust-body" data-i18n="trust1Body">All Lipa data is hosted on secure servers with GDPR-grade privacy from day one. Your health data is never sold, never shared, never used to train models.</div>
       </div>
 
       <div class="trust-cell">
@@ -2021,8 +2021,8 @@
             <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
           </svg>
         </div>
-        <div class="trust-title">End-to-end encryption</div>
-        <div class="trust-body">Your uploads and analyses are encrypted in transit and at rest. Our engineers cannot read your test results. You are the only person with a complete view of your data.</div>
+        <div class="trust-title" data-i18n="trust2Title">End-to-end encryption</div>
+        <div class="trust-body" data-i18n="trust2Body">Your uploads and analyses are encrypted in transit and at rest. Our engineers cannot read your test results. You are the only person with a complete view of your data.</div>
       </div>
 
       <div class="trust-cell">
@@ -2031,8 +2031,8 @@
             <path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
           </svg>
         </div>
-        <div class="trust-title">Full GDPR rights</div>
-        <div class="trust-body">Export everything. Delete everything. No dark patterns, no retention tricks. Your data leaves Lipa the moment you ask it to.</div>
+        <div class="trust-title" data-i18n="trust3Title">Full GDPR rights</div>
+        <div class="trust-body" data-i18n="trust3Body">Export everything. Delete everything. No dark patterns, no retention tricks. Your data leaves Lipa the moment you ask it to.</div>
       </div>
 
       <div class="trust-cell">
@@ -2041,8 +2041,8 @@
             <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
           </svg>
         </div>
-        <div class="trust-title">Cited and traceable</div>
-        <div class="trust-body">Every insight links to a real, named study you can read yourself. Every calculation uses a published methodology. No black boxes.</div>
+        <div class="trust-title" data-i18n="trust4Title">Cited and traceable</div>
+        <div class="trust-body" data-i18n="trust4Body">Every insight links to a real, named study you can read yourself. Every calculation uses a published methodology. No black boxes.</div>
       </div>
 
     </div>
@@ -2052,22 +2052,22 @@
 <!-- ================== BOTTOM CTA ================== -->
 <section class="bottom-cta" id="join">
   <div class="narrow">
-    <div class="section-eyebrow">Get started</div>
-    <h2 class="display">Upload your blood test.<br>See what it really means.</h2>
-    <p class="lede">Upload your blood test and see every marker's status — bio-age, key findings, body systems, and detected patterns — free. Get the full analysis with personalized recommendations for €39, or Lipa Life for €89/year.</p>
+    <div class="section-eyebrow" data-i18n="bottomEyebrow">Get started</div>
+    <h2 class="display" data-i18n="bottomTitle">Upload your blood test.<br>See what it really means.</h2>
+    <p class="lede" data-i18n="bottomSub">Upload your blood test and see every marker's status — bio-age, key findings, body systems, and detected patterns — free. Get the full analysis with personalized recommendations for €39, or Lipa Life for €89/year.</p>
     <div style="display: flex; gap: 16px; justify-content: center; margin-top: 40px; flex-wrap: wrap;">
       <a href="https://my.lipa.health/upload" class="btn btn-primary-lg" style="font-size: 15px; padding: 18px 36px;">
-        Upload your blood test
+        <span data-i18n="ctaButton">Upload your blood test</span>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
           <line x1="5" y1="12" x2="19" y2="12"/>
           <polyline points="12 5 19 12 12 19"/>
         </svg>
       </a>
-      <a href="https://my.lipa.health/test-finder" class="btn btn-secondary-lg" style="font-size: 15px; padding: 18px 36px;">
+      <a href="https://my.lipa.health/test-finder" class="btn btn-secondary-lg" style="font-size: 15px; padding: 18px 36px;" data-i18n="bottomNoTest">
         Don't have a test yet?
       </a>
     </div>
-    <p class="hero-fine">Free preview · Full analysis €39 · Lipa Life €89/year</p>
+    <p class="hero-fine" data-i18n="bottomFine">Free preview · Full analysis €39 · Lipa Life €89/year</p>
   </div>
 </section>
 
@@ -2082,7 +2082,7 @@
     <a href="/terms.html">Terms</a>
   </div>
   <div style="margin-top: 16px; opacity: 0.5;">Lipa Health &copy; 2026</div>
-  <div style="margin-top: 12px; opacity: 0.35; font-size: 10px; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6;">Lipa is educational content, not a medical device. Not a substitute for your physician. Cancel anytime, no lock-in.</div>
+  <div style="margin-top: 12px; opacity: 0.35; font-size: 10px; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6;" data-i18n="footerDisclaimer">Lipa is educational content, not a medical device. Not a substitute for your physician. Cancel anytime, no lock-in.</div>
 </footer>
 
 <script src="i18n.js"></script>

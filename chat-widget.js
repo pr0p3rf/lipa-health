@@ -300,19 +300,16 @@
     submitBtn.disabled = true;
 
     try {
-      var res = await fetch(SUPABASE_URL + '/rest/v1/chat_messages', {
+      var res = await fetch('https://my.lipa.health/api/support', {
         method: 'POST',
         headers: {
-          'apikey': SUPABASE_ANON_KEY,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=minimal'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          name: name || 'Anonymous',
           email: email || null,
-          message: msg,
-          page: window.location.pathname,
-          source: 'chat_widget'
+          type: 'support',
+          message: (name ? name + ': ' : '') + msg,
+          page: window.location.pathname
         })
       });
 
