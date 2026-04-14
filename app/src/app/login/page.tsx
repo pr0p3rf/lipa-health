@@ -18,11 +18,12 @@ function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirect") || "/dashboard";
+  const defaultSignUp = searchParams.get("mode") === "signup";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [isSignUp, setIsSignUp] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(defaultSignUp);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -97,10 +98,10 @@ function LoginContent() {
         </div>
 
         <h1 className="text-[22px] font-semibold mb-2 text-center">
-          {isSignUp ? "Create your account" : "Sign in to Lipa"}
+          {isSignUp ? "Create your free account" : "Sign in to Lipa"}
         </h1>
         <p className="text-[#6B6B6B] text-[14px] text-center mb-8">
-          {isSignUp ? "Understand your biology. Keep going." : "Welcome back."}
+          {isSignUp ? "Upload your blood test and see what it really means." : "Welcome back."}
         </p>
 
         {error && (

@@ -36,7 +36,7 @@ export default function UploadPage() {
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
-      if (!data.user) router.push("/login");
+      if (!data.user) router.push("/login?mode=signup&redirect=/upload");
       else setLoading(false);
     });
   }, [router]);
