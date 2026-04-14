@@ -93,8 +93,8 @@ const translations = {
   },
   pl: {
     heroEyebrow: "Startujemy w Europie",
-    heroTitle: "Dowiedz się, czego<br>naprawdę potrzebuje Twoje ciało.",
-    heroSub: "Prześlij wyniki badań krwi lub umów się w jednym z 500+ laboratoriów w Europie. Otrzymaj spersonalizowany protokół oparty na badaniach naukowych — suplementy, peptydy i zmiany stylu życia — z linkami do sprawdzonych dostawców. Powtórz badania i obserwuj poprawę.",
+    heroTitle: "Twoja biologia,<br>zrozumiana.",
+    heroSub: "Prześlij wyniki badań krwi. Otrzymaj naukową analizę każdego markera, spersonalizowany protokół i asystenta zdrowia, który zna Twoje wyniki — nie generyczne porady. Udokumentowane. Przejrzyste. Twoje.",
     ctaButton: "Dołącz do listy",
     ctaFine: "Zapisz się na wczesny dostęp i cenę dla założycieli.",
     stat1Num: "100+", stat1Label: "Analizowanych biomarkerów",
@@ -185,8 +185,8 @@ const translations = {
   },
   nl: {
     heroEyebrow: "Lancering in Europa",
-    heroTitle: "Weet precies wat<br>je lichaam nodig heeft.",
-    heroSub: "Upload een bloedtest of boek er een bij 500+ labs in Europa. Ontvang een gepersonaliseerd, wetenschappelijk onderbouwd protocol — supplementen, peptiden en leefstijlveranderingen — met directe links naar betrouwbare leveranciers. Hertest en zie je waarden verbeteren.",
+    heroTitle: "Jouw biologie,<br>begrepen.",
+    heroSub: "Upload je bloedtest. Krijg een wetenschappelijke analyse van elke marker, een gepersonaliseerd protocol en een gezondheidsassistent die jouw waarden kent — geen generiek advies. Onderbouwd. Transparant. Van jou.",
     ctaButton: "Vroege toegang",
     ctaFine: "Schrijf je in voor vroege toegang en oprichtersprijs.",
     stat1Num: "100+", stat1Label: "Biomarkers geanalyseerd",
@@ -277,8 +277,8 @@ const translations = {
   },
   es: {
     heroEyebrow: "Lanzamiento en Europa",
-    heroTitle: "Sabe exactamente lo que<br>tu cuerpo necesita.",
-    heroSub: "Sube un análisis de sangre o reserva uno en más de 500 laboratorios en Europa. Recibe un protocolo personalizado respaldado por investigación — suplementos, péptidos y cambios de estilo de vida — con enlaces directos a proveedores verificados. Repite y observa cómo mejoran tus valores.",
+    heroTitle: "Tu biología,<br>comprendida.",
+    heroSub: "Sube tu análisis de sangre. Obtén un análisis científico de cada marcador, un protocolo personalizado y un asistente de salud que conoce tus valores — no consejos genéricos. Citado. Transparente. Tuyo.",
     ctaButton: "Acceso anticipado",
     ctaFine: "Únete a la lista de espera para acceso anticipado y precio de fundador.",
     stat1Num: "100+", stat1Label: "Biomarcadores analizados",
