@@ -138,6 +138,11 @@ const translations = {
     priceLifeCta: "Get Life — €89/year",
     pricingNote: "We don't sell blood tests. You get tested wherever you want. We analyze it. Free preview available — upload and see every marker's status before buying.",
 
+    // The Draw newsletter
+    drawTitle: "What your blood test<br>isn't telling you.",
+    drawDesc: "A weekly email with research-backed insights on biomarkers, supplements, and health optimization. What new studies mean for your biology. What to test, what to track, and what actually moves the needle. Free, forever.",
+    drawMicro: "One email per week · No spam · Unsubscribe anytime",
+
     // Trust
     trustEyebrow: "Trust & privacy",
     trustTitle: "Your data is yours.<br>Encrypted. Private.",
