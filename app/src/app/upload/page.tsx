@@ -112,7 +112,7 @@ export default function UploadPage() {
       // Now orchestrate analysis in sequential steps
       setState("analyzing");
 
-      const BATCH_SIZE = 15;
+      const BATCH_SIZE = 10;
       const numBatches = Math.ceil(totalMarkers / BATCH_SIZE);
 
       setProgress({
