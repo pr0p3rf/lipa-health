@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { after } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { createClient } from "@supabase/supabase-js";
-import { analyzeBiomarker, generateActionPlan, analyzePanelTwoPass } from "@/lib/living-research";
-import { runAllCalculations, type BiomarkerValue, type UserProfile } from "@/lib/risk-calculations";
+import { inngest } from "@/inngest/client";
 
 export const maxDuration = 300; // Vercel Pro max
 
@@ -238,8 +236,18 @@ export async function POST(request: NextRequest) {
       insertedResults = inserted || [];
     }
 
-    // Return success immediately — analyses run in background
-    const response = NextResponse.json({
+    // Send Inngest event to trigger background analysis
+    await inngest.send({
+      name: "lipa/panel.uploaded",
+      data: {
+        userId,
+        testDate: date,
+      },
+    });
+
+    console.log(`[analyze] Sent lipa/panel.uploaded event for user ${userId}, date ${date}`);
+
+    return NextResponse.json({
       success: true,
       count: validBiomarkers.length,
       testDate: date,
@@ -248,12 +256,8 @@ export async function POST(request: NextRequest) {
       has_action_plan: false,
       extraction_time_ms: totalExtractTimeMs,
       total_time_ms: Date.now() - overallStart,
-      message: `${validBiomarkers.length} biomarkers extracted. Analysis will proceed step by step.`,
+      message: `${validBiomarkers.length} biomarkers extracted. Analysis running in background.`,
     });
-
-    // Background analysis triggered by client (upload page) via /api/analyze-bg
-
-    return response;
   } catch (error: any) {
     console.error("Analysis error:", error);
     return NextResponse.json(

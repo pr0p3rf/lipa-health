@@ -238,8 +238,9 @@ export default function DashboardPage() {
   const [loadingData, setLoadingData] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [analysisInProgress, setAnalysisInProgress] = useState(false);
 
-  // Check for post-payment success
+  // Check for post-payment success and analyzing state
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
@@ -249,6 +250,11 @@ export default function DashboardPage() {
         if (typeof (window as any).fbq === "function") {
           (window as any).fbq("track", "Purchase", { currency: "EUR", value: 39 });
         }
+        // Clean URL
+        window.history.replaceState({}, "", "/dashboard");
+      }
+      if (params.get("analyzing") === "true") {
+        setAnalysisInProgress(true);
         // Clean URL
         window.history.replaceState({}, "", "/dashboard");
       }
@@ -411,6 +417,30 @@ export default function DashboardPage() {
   useEffect(() => {
     if (userId) fetchData();
   }, [userId, fetchData]);
+
+  // Auto-refresh while analysis is in progress (Inngest background job)
+  useEffect(() => {
+    if (!userId || loadingData) return;
+
+    // Detect incomplete analysis: results exist but analyses count < results count, or no action plan
+    const latestDate = results.length > 0 ? results[0]?.test_date : null;
+    const latestCount = latestDate ? results.filter((r) => r.test_date === latestDate).length : 0;
+    const analysedCount = analyses.length;
+    const isIncomplete = latestCount > 0 && (analysedCount < latestCount || !actionPlan);
+
+    if (isIncomplete || analysisInProgress) {
+      setAnalysisInProgress(true);
+      const interval = setInterval(() => {
+        fetchData().then(() => {
+          // Re-check after fetch — will be evaluated on next render cycle
+        });
+      }, 10000);
+      return () => clearInterval(interval);
+    } else if (analysisInProgress && !isIncomplete) {
+      // Analysis just completed
+      setAnalysisInProgress(false);
+    }
+  }, [userId, loadingData, results, analyses, actionPlan, analysisInProgress, fetchData]);
 
   // Direct checkout from dashboard — skips pricing page
   async function handleCheckout(tier: "one" | "insight") {
@@ -631,6 +661,32 @@ export default function DashboardPage() {
               <button onClick={() => setShowSuccess(false)} className="text-[#8A928C] hover:text-[#0F1A15] p-1 flex-shrink-0">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
               </button>
+            </div>
+          )}
+
+          {/* ============================================================ */}
+          {/* ANALYSIS IN PROGRESS BANNER                                  */}
+          {/* ============================================================ */}
+          {analysisInProgress && (
+            <div className="mb-6 p-5 rounded-[20px] flex items-start gap-4" style={{ background: "rgba(232,245,238,0.6)", border: "1px solid rgba(27,107,74,0.15)" }}>
+              <div className="w-10 h-10 rounded-full border-2 border-[#1B6B4A]/20 border-t-[#1B6B4A] animate-spin flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <div className="text-[16px] text-[#1B6B4A] mb-1" style={{ fontFamily: FRAUNCES, fontWeight: 500 }}>
+                  Analyzing your biology
+                </div>
+                <p className="text-[13px] text-[#5A635D] leading-relaxed">
+                  {analyses.length > 0
+                    ? `${analyses.length} of ${latestResults.length} markers analyzed so far. ${!actionPlan ? "Building your action plan next." : "Finalizing..."}`
+                    : `${latestResults.length} biomarkers extracted — deep analysis running in the background. This page refreshes automatically.`
+                  }
+                </p>
+                <div className="mt-2 h-1.5 bg-[#E5E5E5] rounded-full overflow-hidden" style={{ maxWidth: 280 }}>
+                  <div
+                    className="h-1.5 bg-[#1B6B4A] rounded-full transition-all duration-1000"
+                    style={{ width: `${latestResults.length > 0 ? Math.max(5, Math.round((analyses.length / latestResults.length) * (actionPlan ? 100 : 90))) : 5}%` }}
+                  />
+                </div>
+              </div>
             </div>
           )}
 
