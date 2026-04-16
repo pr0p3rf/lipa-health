@@ -428,19 +428,25 @@ export default function DashboardPage() {
     const analysedCount = analyses.length;
     const isIncomplete = latestCount > 0 && (analysedCount < latestCount || !actionPlan);
 
-    if (isIncomplete || analysisInProgress) {
+    if (isIncomplete) {
       setAnalysisInProgress(true);
-      const interval = setInterval(() => {
-        fetchData().then(() => {
-          // Re-check after fetch — will be evaluated on next render cycle
-        });
-      }, 10000);
-      return () => clearInterval(interval);
     } else if (analysisInProgress && !isIncomplete) {
-      // Analysis just completed
       setAnalysisInProgress(false);
+      // Clean URL
+      if (typeof window !== "undefined" && window.location.search.includes("analyzing")) {
+        window.history.replaceState({}, "", "/dashboard");
+      }
     }
-  }, [userId, loadingData, results, analyses, actionPlan, analysisInProgress, fetchData]);
+  }, [results, analyses, actionPlan, analysisInProgress]);
+
+  // Auto-refresh while analysis is in progress
+  useEffect(() => {
+    if (!analysisInProgress || !userId) return;
+    const interval = setInterval(() => {
+      fetchData();
+    }, 8000);
+    return () => clearInterval(interval);
+  }, [analysisInProgress, userId, fetchData]);
 
   // Direct checkout from dashboard — skips pricing page
   async function handleCheckout(tier: "one" | "insight") {
