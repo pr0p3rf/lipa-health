@@ -838,7 +838,7 @@ export default function DashboardPage() {
                 isFree ? (
                   <>
                     <p className="text-[14px] text-[#0F1A15] leading-relaxed line-clamp-3 flex-1">{actionPlan.overall_summary}</p>
-                    <p className="text-[12px] text-[#8A928C] mt-2">Full summary with detailed recommendations available with your analysis.</p>
+                    <p className="text-[12px] text-[#8A928C] mt-2">Full summary with personalized recommendations available with Lipa One (&euro;39) or Lipa Life (&euro;89/year).</p>
                   </>
                 ) : (
                   <p className="text-[14px] text-[#0F1A15] leading-relaxed flex-1">{actionPlan.overall_summary}</p>
