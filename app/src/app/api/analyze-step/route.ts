@@ -112,17 +112,17 @@ You MUST return valid JSON matching this exact schema:
       "name": "Exact biomarker name as provided",
       "status": "optimal|normal|borderline|out_of_range",
       "flag": "low|high|optimal|borderline|unknown",
-      "summary": "1 sentence, plain English. What does this result mean for me? Reference the actual value.",
-      "what_it_means": "3-5 sentences. What does this marker do? What does MY specific value suggest? What are the possible root causes for this level — genetics, diet, other conditions, medication, lifestyle? Connect to other markers in this panel when relevant (e.g., 'Your elevated LDL combined with your ApoB at 118 suggests...'). This is where you go deeper than a doctor's 5-minute explanation.",
-      "what_research_shows": "3-5 sentences. Cite SPECIFIC studies with numbers: 'A 2023 meta-analysis of 27 RCTs (n=12,400) found that values above X are associated with Y% increased risk of Z (Journal Name).' Include effect sizes, sample sizes, and journal names when available. If multiple studies, summarize the consensus and note any disagreements. This section should make the user feel they're reading a research brief, not a WebMD article.",
-      "what_to_do": "For borderline or out-of-range markers: 3-5 specific interventions with evidence. Format as a mini-protocol: specific supplement with dose, form, timing, and expected timeline (e.g., 'Take 2g EPA+DHA daily in triglyceride form with food — a 2022 JAMA meta-analysis found this reduces LDL by 10-15% over 8-12 weeks'). Include both nutritional and supplement interventions. End with retest timeline. For optimal/normal markers: 1-2 sentences on what's keeping this healthy and what to maintain.",
-      "related_patterns": "2-3 sentences connecting this to other markers in the panel. What story do multiple markers tell together? (e.g., 'Your elevated LDL + ApoB + low HDL together suggest atherogenic dyslipidemia — a pattern driven by insulin resistance, not just dietary cholesterol. Your borderline glucose at 98 supports this.'). null only if truly isolated.",
-      "suggested_exploration": "1-2 sentences on what to explore further. Additional tests, lifestyle experiments, things to discuss with their doctor."
+      "summary": "1 sentence. What does this result mean for me? Use my value.",
+      "what_it_means": "2-3 sentences. What does this marker do, what does MY value suggest, and what are likely root causes? Connect to other markers in this panel when relevant.",
+      "what_research_shows": "2-3 sentences. Cite 1-2 specific studies with numbers when available (year, sample size, finding). Summarize the research consensus.",
+      "what_to_do": "For borderline/out-of-range: 2-3 specific interventions with dose, form, timing, expected improvement, retest timeline. For optimal/normal: 1 sentence on maintaining.",
+      "related_patterns": "1-2 sentences connecting to other markers. null if isolated.",
+      "suggested_exploration": "1 sentence. Additional tests or things to discuss with doctor."
     }
   ]
 }
 
-CRITICAL: You must include an entry in "markers" for EVERY biomarker you are asked to analyze. Do not skip any. The analysis should be SIGNIFICANTLY more detailed than what a doctor provides in a routine appointment — that's the value proposition.`;
+CRITICAL: Include ALL markers. Be specific to their values, not generic. Cite research when available. Keep each field concise but substantive.`;
 
 const SUMMARY_SYSTEM_PROMPT = `You are Lipa's health summary engine. You produce executive summaries, cross-marker patterns, and actionable health plans from blood panel analyses. Write in plain English for a smart non-medical audience. Be specific, warm, and research-grounded.`;
 
@@ -555,7 +555,7 @@ Return ONLY valid JSON with a "markers" array containing exactly ${batchBiomarke
       try {
         const message = await anthropic.messages.create({
           model,
-          max_tokens: 16384,
+          max_tokens: 8192,
           system: BATCH_SYSTEM_PROMPT,
           messages: [{ role: "user", content: batchPrompt }],
         });
@@ -569,7 +569,7 @@ Return ONLY valid JSON with a "markers" array containing exactly ${batchBiomarke
         model = "claude-sonnet-4-20250514";
         const message = await anthropic.messages.create({
           model,
-          max_tokens: 16384,
+          max_tokens: 8192,
           system: BATCH_SYSTEM_PROMPT,
           messages: [{ role: "user", content: batchPrompt }],
         });
@@ -724,7 +724,7 @@ Return ONLY valid JSON.`;
       try {
         const message = await anthropic.messages.create({
           model,
-          max_tokens: 16384,
+          max_tokens: 8192,
           system: SUMMARY_SYSTEM_PROMPT,
           messages: [{ role: "user", content: summaryPrompt }],
         });
@@ -738,7 +738,7 @@ Return ONLY valid JSON.`;
         model = "claude-sonnet-4-20250514";
         const message = await anthropic.messages.create({
           model,
-          max_tokens: 16384,
+          max_tokens: 8192,
           system: SUMMARY_SYSTEM_PROMPT,
           messages: [{ role: "user", content: summaryPrompt }],
         });
