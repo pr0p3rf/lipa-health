@@ -14,7 +14,8 @@ const translations = {
     heroTitle: "Your biology, understood.",
     heroSub: "Upload your blood test. Get a research-grade analysis of every marker, a personalized protocol, and a health assistant that knows your numbers — not generic advice. Cited. Transparent. Yours.",
     ctaButton: "Upload your blood test",
-    heroSecondary: "See how it works",
+    heroSecondary: "Find out what to test",
+    heroHowLink: "See how it works ↓",
     ctaFine: "Start free · See all your markers · No credit card required",
 
     // Stats
@@ -182,7 +183,8 @@ const translations = {
     heroTitle: "Jouw biologie, begrepen.",
     heroSub: "Upload je bloedtest. Krijg een wetenschappelijke analyse van elke marker, een persoonlijk protocol en een gezondheidsassistent die jouw waarden kent — geen generiek advies. Onderbouwd. Transparant. Van jou.",
     ctaButton: "Upload je bloedtest",
-    heroSecondary: "Bekijk hoe het werkt",
+    heroSecondary: "Ontdek wat je moet testen",
+    heroHowLink: "Bekijk hoe het werkt ↓",
     ctaFine: "Begin gratis · Zie al je markers · Geen creditcard nodig",
 
     // Stats
@@ -345,7 +347,8 @@ const translations = {
     heroTitle: "Twoja biologia, zrozumiana.",
     heroSub: "Prześlij wynik badania krwi. Otrzymaj naukową analizę każdego markera, spersonalizowany protokół i asystenta zdrowia, który zna Twoje wyniki — nie ogólne porady. Udokumentowane. Przejrzyste. Twoje.",
     ctaButton: "Prześlij badanie krwi",
-    heroSecondary: "Zobacz jak to działa",
+    heroSecondary: "Dowiedz się, co zbadać",
+    heroHowLink: "Zobacz jak to działa ↓",
     ctaFine: "Zacznij za darmo · Zobacz wszystkie markery · Bez karty kredytowej",
 
     // Stats
@@ -508,7 +511,8 @@ const translations = {
     heroTitle: "Tu biología, comprendida.",
     heroSub: "Sube tu análisis de sangre. Obtén un análisis científico de cada marcador, un protocolo personalizado y un asistente de salud que conoce tus valores — no consejos genéricos. Citado. Transparente. Tuyo.",
     ctaButton: "Sube tu análisis de sangre",
-    heroSecondary: "Mira cómo funciona",
+    heroSecondary: "Descubre qué analizar",
+    heroHowLink: "Mira cómo funciona ↓",
     ctaFine: "Empieza gratis · Ve todos tus marcadores · Sin tarjeta de crédito",
 
     // Stats
@@ -671,7 +675,8 @@ const translations = {
     heroTitle: "Deine Biologie, verstanden.",
     heroSub: "Lade deinen Bluttest hoch. Erhalte eine forschungsbasierte Analyse jedes Markers, ein personalisiertes Protokoll und einen Gesundheitsassistenten, der deine Werte kennt — keine allgemeinen Ratschläge. Quellenbasiert. Transparent. Deins.",
     ctaButton: "Bluttest hochladen",
-    heroSecondary: "So funktioniert's",
+    heroSecondary: "Finde heraus, was du testen solltest",
+    heroHowLink: "So funktioniert's ↓",
     ctaFine: "Kostenlos starten · Alle Marker einsehen · Keine Kreditkarte nötig",
 
     // Stats
@@ -834,7 +839,8 @@ const translations = {
     heroTitle: "Votre biologie, comprise.",
     heroSub: "Importez votre bilan sanguin. Obtenez une analyse scientifique de chaque marqueur, un protocole personnalisé et un assistant santé qui connaît vos valeurs — pas des conseils génériques. Sourcé. Transparent. Le vôtre.",
     ctaButton: "Importer votre bilan sanguin",
-    heroSecondary: "Voir comment ça fonctionne",
+    heroSecondary: "Découvrez quoi analyser",
+    heroHowLink: "Voir comment ça fonctionne ↓",
     ctaFine: "Commencez gratuitement · Voyez tous vos marqueurs · Sans carte bancaire",
 
     // Stats
@@ -997,7 +1003,8 @@ const translations = {
     heroTitle: "Sua biologia, compreendida.",
     heroSub: "Envie seu exame de sangue. Receba uma análise baseada em pesquisa de cada marcador, um protocolo personalizado e um assistente de saúde que conhece seus valores — não conselhos genéricos. Com fontes. Transparente. Seu.",
     ctaButton: "Enviar exame de sangue",
-    heroSecondary: "Veja como funciona",
+    heroSecondary: "Descubra o que testar",
+    heroHowLink: "Veja como funciona ↓",
     ctaFine: "Comece grátis · Veja todos os marcadores · Sem cartão de crédito",
 
     // Stats
