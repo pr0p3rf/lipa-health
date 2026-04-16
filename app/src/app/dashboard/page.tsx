@@ -704,7 +704,7 @@ export default function DashboardPage() {
               Your Lipa Analysis
             </h1>
             <p className="text-[13px] text-[#5A635D] leading-relaxed max-w-2xl">
-              Every marker cross-referenced against {analyses.reduce((sum, a) => sum + (a.citation_count || 0), 0).toLocaleString()}+ peer-reviewed studies from a corpus of 100,000+ graded research papers. Personalized to your biology, not generic ranges. Every insight cited with confidence level.
+              Every marker cross-referenced against {analyses.reduce((sum, a) => sum + (a.citation_count || 0), 0).toLocaleString()}+ peer-reviewed studies from a corpus of 100,000+ research papers. Your values benchmarked against 300,000+ health profiles by age and sex. This is the most comprehensive analysis of your blood work available.
             </p>
           </div>
 
