@@ -219,6 +219,12 @@ export async function POST(request: NextRequest) {
 
     let insertedResults: any[] = [];
     if (records.length > 0) {
+      // Clean up any existing data for this user + date (re-upload / duplicate prevention)
+      await supabase.from("analysis_citations").delete().eq("user_id", userId);
+      await supabase.from("user_analyses").delete().eq("user_id", userId);
+      await supabase.from("action_plans").delete().eq("user_id", userId);
+      await supabase.from("biomarker_results").delete().eq("user_id", userId).eq("test_date", date);
+
       const { data: inserted, error: insertError } = await supabase
         .from("biomarker_results")
         .insert(records)
