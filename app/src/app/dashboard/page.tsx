@@ -698,7 +698,7 @@ export default function DashboardPage() {
               Your Lipa Analysis
             </h1>
             <p className="text-[13px] text-[#5A635D] leading-relaxed max-w-2xl">
-              Every marker cross-referenced against {analyses.reduce((sum, a) => sum + (a.citation_count || 0), 0).toLocaleString()}+ peer-reviewed studies. Personalized to your biology, not generic ranges. Cited, transparent, and updated as new research is published.
+              Every marker cross-referenced against {analyses.reduce((sum, a) => sum + (a.citation_count || 0), 0).toLocaleString()}+ peer-reviewed studies from a corpus of 100,000+ graded research papers. Personalized to your biology, not generic ranges. Every insight cited with confidence level.
             </p>
           </div>
 
