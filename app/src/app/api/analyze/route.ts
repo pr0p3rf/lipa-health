@@ -59,6 +59,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Ensure profile exists (FK constraint requires it)
+    await supabase.from("profiles").upsert({ id: userId, email: userId }, { onConflict: "id" });
+
     // Rate limiting: check user's tier and upload count
     const { data: subData } = await supabase
       .from("user_subscriptions")
