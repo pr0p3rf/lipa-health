@@ -161,7 +161,7 @@ export default function UploadPage() {
               </h2>
               <p className="text-[13px] text-[#6B6B6B] mb-4">
                 {state === "uploading"
-                  ? `Sending ${fileNames.length} file${fileNames.length > 1 ? "s" : ""} securely`
+                  ? `Uploading ${fileNames.length} file${fileNames.length > 1 ? "s" : ""} — encrypted and private`
                   : "Extracting every biomarker, value, unit, and reference range. This usually takes 15-30 seconds."}
               </p>
               <div className="flex flex-wrap justify-center gap-2">
