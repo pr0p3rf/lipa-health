@@ -423,6 +423,9 @@ export default function DashboardPage() {
     if (!userId || loadingData) return;
 
     // Detect incomplete analysis: results exist but analyses count < results count, or no action plan
+    // Skip detection while data is still loading
+    if (loadingData) return;
+
     const latestDate = results.length > 0 ? results[0]?.test_date : null;
     const latestCount = latestDate ? results.filter((r) => r.test_date === latestDate).length : 0;
     const analysedCount = analyses.length;
@@ -430,14 +433,14 @@ export default function DashboardPage() {
 
     if (isIncomplete) {
       setAnalysisInProgress(true);
-    } else if (analysisInProgress && !isIncomplete) {
+    } else if (analysisInProgress && !isIncomplete && latestCount > 0) {
       setAnalysisInProgress(false);
       // Clean URL
       if (typeof window !== "undefined" && window.location.search.includes("analyzing")) {
         window.history.replaceState({}, "", "/dashboard");
       }
     }
-  }, [results, analyses, actionPlan, analysisInProgress]);
+  }, [results, analyses, actionPlan, analysisInProgress, loadingData]);
 
   // Auto-refresh while analysis is in progress
   useEffect(() => {
