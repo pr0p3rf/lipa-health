@@ -219,12 +219,7 @@ export async function POST(request: NextRequest) {
 
     let insertedResults: any[] = [];
     if (records.length > 0) {
-      // Clean up any existing data for this user + date (re-upload / duplicate prevention)
-      await supabase.from("analysis_citations").delete().eq("user_id", userId);
-      await supabase.from("user_analyses").delete().eq("user_id", userId);
-      await supabase.from("action_plans").delete().eq("user_id", userId);
-      await supabase.from("biomarker_results").delete().eq("user_id", userId).eq("test_date", date);
-
+      // Try inserting first — if it succeeds, THEN clean up old data
       const { data: inserted, error: insertError } = await supabase
         .from("biomarker_results")
         .insert(records)
@@ -240,6 +235,22 @@ export async function POST(request: NextRequest) {
         );
       }
       insertedResults = inserted || [];
+
+      // Successfully inserted — now clean up old analyses (not old results, to avoid losing data)
+      await supabase.from("analysis_citations").delete().eq("user_id", userId);
+      await supabase.from("user_analyses").delete().eq("user_id", userId);
+      await supabase.from("action_plans").delete().eq("user_id", userId);
+
+      // Delete old results for this date that aren't in the new batch
+      const newIds = insertedResults.map((r: any) => r.id);
+      if (newIds.length > 0) {
+        await supabase
+          .from("biomarker_results")
+          .delete()
+          .eq("user_id", userId)
+          .eq("test_date", date)
+          .not("id", "in", `(${newIds.join(",")})`);
+      }
     }
 
     // Send Inngest event to trigger background analysis
