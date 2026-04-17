@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -24,6 +24,25 @@ function LoginContent() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isSignUp, setIsSignUp] = useState(defaultSignUp);
+  const [isResettingPassword, setIsResettingPassword] = useState(false);
+  const [resetSuccess, setResetSuccess] = useState(false);
+
+  // Detect password recovery callback
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const hash = window.location.hash;
+      if (hash.includes("type=recovery")) {
+        setIsResettingPassword(true);
+      }
+    }
+    // Also listen for auth state change (recovery event)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "PASSWORD_RECOVERY") {
+        setIsResettingPassword(true);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -97,6 +116,45 @@ function LoginContent() {
           <span className="text-[18px] font-semibold tracking-[2px] uppercase">Lipa</span>
         </div>
 
+        {isResettingPassword ? (
+          /* ---- Password Reset Form ---- */
+          <>
+            <h1 className="text-[22px] font-semibold mb-2 text-center">Set new password</h1>
+            <p className="text-[#6B6B6B] text-[14px] text-center mb-8">Enter your new password below.</p>
+
+            {resetSuccess ? (
+              <div className="bg-green-50 border border-green-200 text-green-700 text-[13px] p-4 rounded-lg text-center">
+                <p className="font-semibold mb-1">Password updated!</p>
+                <p>You can now sign in with your new password.</p>
+                <button onClick={() => { setIsResettingPassword(false); setResetSuccess(false); }} className="mt-3 text-[13px] font-semibold text-[#1B6B4A] hover:underline">
+                  Go to sign in
+                </button>
+              </div>
+            ) : (
+              <>
+                {error && <div className="bg-red-50 border border-red-200 text-red-700 text-[13px] p-3 rounded-lg mb-4">{error}</div>}
+                <form onSubmit={async (e) => {
+                  e.preventDefault();
+                  setError("");
+                  setLoading(true);
+                  if (password.length < 8) { setError("Password must be at least 8 characters."); setLoading(false); return; }
+                  if (!/[A-Z]/.test(password)) { setError("Must include an uppercase letter."); setLoading(false); return; }
+                  if (!/[0-9]/.test(password)) { setError("Must include a number."); setLoading(false); return; }
+                  const { error: updateError } = await supabase.auth.updateUser({ password });
+                  setLoading(false);
+                  if (updateError) { setError(updateError.message); } else { setResetSuccess(true); }
+                }} className="flex flex-col gap-3">
+                  <Input type="password" placeholder="New password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} className="h-12 bg-white border-[#e5e5e5] text-[15px]" />
+                  <Button type="submit" disabled={loading} className="h-12 bg-[#1B6B4A] hover:bg-[#155A3D] text-white font-semibold text-[14px]">
+                    {loading ? "Updating..." : "Update password"}
+                  </Button>
+                </form>
+              </>
+            )}
+          </>
+        ) : (
+        /* ---- Normal Login/Signup ---- */
+        <>
         <h1 className="text-[22px] font-semibold mb-2 text-center">
           {isSignUp ? "Create your free account" : "Sign in to Lipa"}
         </h1>
@@ -171,6 +229,8 @@ function LoginContent() {
           >
             Forgot your password?
           </button>
+        )}
+        </>
         )}
       </div>
     </div>
