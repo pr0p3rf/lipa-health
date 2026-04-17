@@ -697,10 +697,10 @@ MARKER ANALYSES:
 ${allMarkerAnalysesText}
 
 Produce a JSON object with:
-1. "executive_summary": 5-8 sentences. Start with the big picture (what's going well, what needs attention). Then cover the 2-3 most important findings with specific values. End with the top priority actions. Write like a smart friend explaining results over coffee — warm, specific, actionable. Reference actual marker values.
+1. "executive_summary": 10-15 sentences (3-4 paragraphs). This is the centerpiece of the analysis — make it worth reading. Start with what's going well (be specific: "Your kidney function, liver enzymes, and thyroid markers are all optimal"). Then explain the 3-4 most important findings with actual values and what they mean together as a pattern. Then give the top 3 priority actions with specific interventions. End with a retest timeline. Write like a doctor who has 30 minutes instead of 5 — warm, thorough, specific to THEIR values. This summary alone should make the user feel they got their money's worth.
 2. "cross_marker_patterns": Array of connections across markers (e.g., iron + ferritin + MCV = iron deficiency). Each pattern has: "name", "markers_involved" (array), "summary", "severity" ("attention"|"watch"|"informational"). Include at least 3 patterns even if some are positive (e.g., "strong thyroid function").
 3. "action_plan": Object with:
-   - "overall_summary": 4-6 sentence plain-English summary. What's working, what needs attention, top 3 priorities with specific actions. Include a retest recommendation (e.g., "Retest lipids and hs-CRP in 3 months to track progress.")
+   - "overall_summary": 8-12 sentence detailed summary. Cover what's excellent, what needs attention (with values), the top 3 priorities with specific actions, and when to retest. This should feel like a thorough medical briefing, not a quick note.
    - "domains": Array of exactly 6 domains (nutrition, supplementation, sleep, movement, environment, lifestyle). Each domain has "domain" (string) and "recommendations" (array). Each recommendation has:
      - "text": Concise plain-English recommendation headline
      - "markers_addressed": Array of marker names this addresses
