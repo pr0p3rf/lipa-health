@@ -663,7 +663,7 @@ export default function DashboardPage() {
                 </div>
                 <div>
                   <p className="text-[14px] font-semibold text-[#92400E]">Your results are temporary</p>
-                  <p className="text-[13px] text-[#B45309] mt-0.5">Create a free account to save them permanently and access your history.</p>
+                  <p className="text-[13px] text-[#B45309] mt-0.5">Create a free account to save your results and access your history.</p>
                 </div>
               </div>
               <div className="flex flex-col sm:flex-row gap-2 mt-3">
@@ -710,7 +710,7 @@ export default function DashboardPage() {
               <div className="w-8 h-8 rounded-full bg-[#E8F5EE] flex items-center justify-center flex-shrink-0">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
               </div>
-              <p className="text-[14px] text-[#1B6B4A] font-medium">Account created! Your results are saved permanently.</p>
+              <p className="text-[14px] text-[#1B6B4A] font-medium">Account created! Your results are saved.</p>
             </div>
           )}
 
