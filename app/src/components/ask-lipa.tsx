@@ -98,6 +98,19 @@ export function AskLipa({ userId }: { userId: string }) {
         }),
       });
 
+      if (res.status === 403) {
+        const errorData = await res.json();
+        setMessages((prev) => {
+          const updated = [...prev];
+          updated[updated.length - 1] = {
+            role: "assistant",
+            content: errorData.message || "You've reached your free question limit. Upgrade to keep asking.",
+          };
+          return updated;
+        });
+        setStreaming(false);
+        return;
+      }
       if (!res.ok) throw new Error("Chat failed");
 
       const reader = res.body?.getReader();

@@ -58,6 +58,35 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    // Check user tier for message limits
+    const { data: subData } = await supabase
+      .from("user_subscriptions")
+      .select("tier")
+      .eq("user_id", userId)
+      .maybeSingle();
+    const tier = subData?.tier || "free";
+    const isFree = tier === "free";
+
+    // Count existing user messages for free tier limit
+    if (isFree) {
+      try {
+        const { count } = await supabase
+          .from("chat_messages")
+          .select("*", { count: "exact", head: true })
+          .eq("user_id", userId)
+          .eq("role", "user");
+        if ((count || 0) >= 3) {
+          return new Response(JSON.stringify({
+            error: "limit_reached",
+            message: "You've used your 3 free Ask Lipa questions. Upgrade to Lipa One (€39) for 7 days of Ask Lipa, or Lipa Life (€89/year) for unlimited access."
+          }), {
+            status: 403,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+      } catch {}
+    }
+
     // Store the user's message (table may not exist yet)
     try {
       await supabase.from("chat_messages").insert({
@@ -219,7 +248,7 @@ export async function POST(request: NextRequest) {
     const stream = await anthropic.messages.stream({
       model: "claude-sonnet-4-20250514",
       max_tokens: 1024,
-      system: DEFAULT_SYSTEM_PROMPT + adminInstructions,
+      system: DEFAULT_SYSTEM_PROMPT + adminInstructions + (isFree ? "\n\nIMPORTANT — FREE TIER RESTRICTION: This user is on the free plan. You may answer their questions about individual markers, explain what values mean, and give general health context. But do NOT provide their full action plan, complete supplement protocol, all recommendations, or comprehensive analysis. If they ask for their 'full protocol', 'complete plan', 'all recommendations', or similar, respond warmly: 'I can help with individual questions about your markers. Your full personalized protocol — with specific doses, timing, and cited research for each recommendation — is available with your full analysis.' Keep answers helpful but brief for free users — give them enough to see the value, not enough to replace the paid analysis." : ""),
       messages,
     });
 
