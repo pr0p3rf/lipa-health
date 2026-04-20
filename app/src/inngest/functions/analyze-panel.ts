@@ -324,6 +324,34 @@ const MARKER_ALIASES: Record<string, string[]> = {
   fibrinogen: ["fibrinogen", "factor i"],
   homocysteine: ["homocysteine", "hcy"],
   apob: ["apolipoprotein b", "apob", "apo b"],
+  // Hematology differentials — "absolute" variants should match base term
+  basophils: ["basophil", "basophils", "basophil count"],
+  "basophils absolute": ["basophil", "basophils", "basophil count"],
+  "basophils (absolute)": ["basophil", "basophils", "basophil count"],
+  neutrophils: ["neutrophil", "neutrophils", "neutrophil count"],
+  "neutrophils absolute": ["neutrophil", "neutrophils", "neutrophil count"],
+  "neutrophils (absolute)": ["neutrophil", "neutrophils", "neutrophil count"],
+  lymphocytes: ["lymphocyte", "lymphocytes", "lymphocyte count"],
+  "lymphocytes absolute": ["lymphocyte", "lymphocytes", "lymphocyte count"],
+  "lymphocytes (absolute)": ["lymphocyte", "lymphocytes", "lymphocyte count"],
+  monocytes: ["monocyte", "monocytes", "monocyte count"],
+  "monocytes absolute": ["monocyte", "monocytes", "monocyte count"],
+  "monocytes (absolute)": ["monocyte", "monocytes", "monocyte count"],
+  eosinophils: ["eosinophil", "eosinophils", "eosinophil count"],
+  "eosinophils absolute": ["eosinophil", "eosinophils", "eosinophil count"],
+  "eosinophils (absolute)": ["eosinophil", "eosinophils", "eosinophil count"],
+  // Ratios
+  "cholesterol/hdl ratio": ["cholesterol ratio", "total cholesterol", "hdl ratio", "cardiovascular risk ratio"],
+  "total cholesterol/hdl ratio": ["cholesterol ratio", "total cholesterol", "hdl ratio", "cardiovascular risk ratio"],
+  // Other uncited markers
+  "tnf-alpha": ["tumor necrosis factor", "tnf-alpha", "tnf alpha", "tnf-α", "cachectin"],
+  "dhea-s": ["dehydroepiandrosterone sulfate", "dhea-s", "dheas", "dhea sulfate"],
+  "vitamin a": ["vitamin a", "retinol", "retinyl", "beta-carotene"],
+  "coenzyme q10": ["coenzyme q10", "coq10", "ubiquinone", "ubiquinol"],
+  "d-dimer": ["d-dimer", "fibrin degradation", "fibrinolysis"],
+  "direct bilirubin": ["direct bilirubin", "conjugated bilirubin", "bilirubin"],
+  "total protein": ["total protein", "serum protein", "albumin globulin"],
+  "urine albumin/creatinine ratio": ["albumin creatinine ratio", "microalbumin", "uacr", "albuminuria"],
 };
 
 async function storeBatchAnalyses(
