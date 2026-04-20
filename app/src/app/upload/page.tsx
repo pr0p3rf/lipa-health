@@ -16,9 +16,17 @@ export default function UploadPage() {
   const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      if (!data.user) router.push("/login?mode=signup&redirect=/upload");
-      else setLoading(false);
+    supabase.auth.getUser().then(async ({ data }) => {
+      if (!data.user) {
+        // No session — create anonymous session so user can upload without signup
+        const { data: anonData, error } = await supabase.auth.signInAnonymously();
+        if (error || !anonData.user) {
+          // Fallback: send to login if anonymous auth fails (not enabled in Supabase dashboard)
+          router.push("/login?mode=signup&redirect=/upload");
+          return;
+        }
+      }
+      setLoading(false);
     });
   }, [router]);
 

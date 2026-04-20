@@ -278,6 +278,12 @@ export default function DashboardPage() {
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [isAnonymous, setIsAnonymous] = useState(false);
+  const [convertEmail, setConvertEmail] = useState("");
+  const [convertPassword, setConvertPassword] = useState("");
+  const [convertLoading, setConvertLoading] = useState(false);
+  const [convertError, setConvertError] = useState("");
+  const [convertSuccess, setConvertSuccess] = useState(false);
 
   // Auth check + tier check
   useEffect(() => {
@@ -287,6 +293,7 @@ export default function DashboardPage() {
       } else {
         setUserId(data.user.id);
         setUserEmail(data.user.email || null);
+        setIsAnonymous(data.user.is_anonymous === true);
         const { data: sub } = await supabase
           .from("user_subscriptions")
           .select("tier")
@@ -644,6 +651,68 @@ export default function DashboardPage() {
       <AppNav />
       <main className="min-h-screen" style={{ background: "#F8F5EF" }} suppressHydrationWarning>
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 py-6 sm:py-10" suppressHydrationWarning>
+
+          {/* ============================================================ */}
+          {/* ANONYMOUS USER BANNER — save your results                    */}
+          {/* ============================================================ */}
+          {isAnonymous && !convertSuccess && (
+            <div className="mb-6 p-5 rounded-[20px]" style={{ background: "rgba(254,243,199,0.6)", border: "1px solid rgba(245,158,11,0.2)" }}>
+              <div className="flex items-start gap-3 mb-3">
+                <div className="w-8 h-8 rounded-full bg-[#FEF3C7] flex items-center justify-center flex-shrink-0">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B45309" strokeWidth="2" strokeLinecap="round"><path d="M12 9v4m0 4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+                </div>
+                <div>
+                  <p className="text-[14px] font-semibold text-[#92400E]">Your results are temporary</p>
+                  <p className="text-[13px] text-[#B45309] mt-0.5">Create a free account to save them permanently and access your history.</p>
+                </div>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2 mt-3">
+                <input
+                  type="email"
+                  placeholder="Email"
+                  value={convertEmail}
+                  onChange={(e) => setConvertEmail(e.target.value)}
+                  className="flex-1 px-4 py-2.5 rounded-full border border-[#E5E5E5] text-[13px] bg-white focus:outline-none focus:border-[#1B6B4A]"
+                />
+                <input
+                  type="password"
+                  placeholder="Password (min 6 chars)"
+                  value={convertPassword}
+                  onChange={(e) => setConvertPassword(e.target.value)}
+                  className="flex-1 px-4 py-2.5 rounded-full border border-[#E5E5E5] text-[13px] bg-white focus:outline-none focus:border-[#1B6B4A]"
+                />
+                <button
+                  disabled={convertLoading || !convertEmail || convertPassword.length < 6}
+                  onClick={async () => {
+                    setConvertLoading(true);
+                    setConvertError("");
+                    const { error } = await supabase.auth.updateUser({ email: convertEmail, password: convertPassword });
+                    if (error) {
+                      setConvertError(error.message);
+                      setConvertLoading(false);
+                    } else {
+                      setIsAnonymous(false);
+                      setUserEmail(convertEmail);
+                      setConvertSuccess(true);
+                      setConvertLoading(false);
+                    }
+                  }}
+                  className="px-6 py-2.5 rounded-full text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
+                >
+                  {convertLoading ? "Saving..." : "Create Account"}
+                </button>
+              </div>
+              {convertError && <p className="text-[12px] text-[#B91C1C] mt-2">{convertError}</p>}
+            </div>
+          )}
+          {convertSuccess && (
+            <div className="mb-6 p-5 rounded-[20px] flex items-center gap-3" style={{ background: "rgba(232,245,238,0.6)", border: "1px solid rgba(27,107,74,0.15)" }}>
+              <div className="w-8 h-8 rounded-full bg-[#E8F5EE] flex items-center justify-center flex-shrink-0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <p className="text-[14px] text-[#1B6B4A] font-medium">Account created! Your results are saved permanently.</p>
+            </div>
+          )}
 
           {/* ============================================================ */}
           {/* SUCCESS BANNER — post-payment                                */}
