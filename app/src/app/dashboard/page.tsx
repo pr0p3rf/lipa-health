@@ -972,10 +972,10 @@ export default function DashboardPage() {
                 </div>
                 <div>
                   <div className="text-[18px] text-[#1B6B4A] mb-1" style={{ fontFamily: FRAUNCES, fontWeight: 500 }}>
-                    Everything looks great
+                    Your markers look healthy
                   </div>
                   <p className="text-[14px] text-[#5A635D] leading-relaxed">
-                    All {latestResults.length} markers came back in a healthy range. {statusCounts.optimal} are in the optimal zone.
+                    {statusCounts.optimal} of {latestResults.length} markers are in the optimal zone. But &ldquo;normal&rdquo; and &ldquo;optimal&rdquo; aren&apos;t the same thing. Your full analysis shows where you rank against 300,000+ people your age, what&apos;s keeping each marker healthy, and how to stay ahead.
                   </p>
                 </div>
               </div>
@@ -1422,10 +1422,13 @@ export default function DashboardPage() {
             <div className="mb-10">
               <div className="text-center mb-8">
                 <h3 className="text-[24px] mb-2 text-[#0F1A15]" style={{ fontFamily: FRAUNCES, fontWeight: 500 }}>
-                  Your full analysis is ready
+                  {allGood ? "Healthy is good. Optimized is better." : "Your full analysis is ready"}
                 </h3>
                 <p className="text-[14px] text-[#5A635D] max-w-lg mx-auto">
-                  {latestResults.length} markers analyzed. Detailed insights, personalized action plan, and {analyses.reduce((sum, a) => sum + (a.citation_count || 0), 0)}+ cited studies — all waiting for you.
+                  {allGood
+                    ? `Your markers are in range — but are they truly optimal? See where each one ranks against 300,000+ people your age, what's keeping them healthy, and exactly what to do to stay ahead. ${analyses.reduce((sum, a) => sum + (a.citation_count || 0), 0)}+ cited studies analyzed for your biology.`
+                    : `${latestResults.length} markers analyzed. Detailed insights, personalized action plan, and ${analyses.reduce((sum, a) => sum + (a.citation_count || 0), 0)}+ cited studies — all waiting for you.`
+                  }
                 </p>
               </div>
               <div className="grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
