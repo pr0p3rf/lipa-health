@@ -392,6 +392,7 @@ export default function VaultPage() {
   const [results, setResults] = useState<BiomarkerResult[]>([]);
   const [analyses, setAnalyses] = useState<Analysis[]>([]);
   const [activeTab, setActiveTab] = useState<ViewTab>("timeline");
+  const [userTier, setUserTier] = useState<string>("free");
 
   // Trends state
   const [selectedBiomarker, setSelectedBiomarker] = useState<string>("");
@@ -412,6 +413,14 @@ export default function VaultPage() {
         return;
       }
       setUserId(user.id);
+
+      // Check tier
+      const { data: sub } = await supabase
+        .from("user_subscriptions")
+        .select("tier")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      setUserTier(sub?.tier || "free");
 
       const [resResults, resAnalyses] = await Promise.all([
         supabase
@@ -627,6 +636,50 @@ export default function VaultPage() {
       <AppNav />
 
       <main style={{ maxWidth: 900, margin: "0 auto", padding: "32px 20px 120px" }}>
+        {/* ---- Upgrade banner for free/one users ---- */}
+        {(userTier === "free" || userTier === "one") && testGroups.length > 0 && (
+          <div style={{
+            background: "rgba(232,245,238,0.5)",
+            border: "1px solid rgba(27,107,74,0.15)",
+            borderRadius: 16,
+            padding: "20px 24px",
+            marginBottom: 24,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: 16,
+          }}>
+            <div>
+              <p style={{ fontSize: 15, fontWeight: 600, color: "#0F1A15", margin: 0 }}>
+                {testGroups.length > 1
+                  ? `You have ${testGroups.length} blood tests stored. Track how your markers change over time.`
+                  : "Upload more blood tests to track how your markers change over time."
+                }
+              </p>
+              <p style={{ fontSize: 13, color: "#5A635D", margin: "4px 0 0" }}>
+                Lipa Life includes full vault access, trend charts, bio-age trajectory, and unlimited uploads for €89/year.
+              </p>
+            </div>
+            <a
+              href="/pricing?tier=insight"
+              style={{
+                fontSize: 13,
+                fontWeight: 600,
+                color: "#FFFFFF",
+                background: "#1B6B4A",
+                borderRadius: 980,
+                padding: "10px 20px",
+                textDecoration: "none",
+                whiteSpace: "nowrap",
+                flexShrink: 0,
+              }}
+            >
+              Get Lipa Life
+            </a>
+          </div>
+        )}
+
         {/* ---- Header ---- */}
         <div style={{ marginBottom: 32 }}>
           <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", justifyContent: "space-between", gap: 16, marginBottom: 20 }}>
@@ -635,7 +688,7 @@ export default function VaultPage() {
                 Your Vault
               </h1>
               <p style={{ fontSize: 14, color: "#8A928C", margin: "6px 0 0" }}>
-                Your complete biological history
+                {userTier === "insight" ? "Your complete biological history" : "Your blood test history"}
               </p>
             </div>
             <button
@@ -668,7 +721,13 @@ export default function VaultPage() {
             {(["timeline", "trends", "compare"] as ViewTab[]).map((tab) => (
               <button
                 key={tab}
-                onClick={() => setActiveTab(tab)}
+                onClick={() => {
+                  if ((tab === "trends" || tab === "compare") && userTier !== "insight") {
+                    alert("Trend tracking and comparison are available with Lipa Life (€89/year).");
+                    return;
+                  }
+                  setActiveTab(tab);
+                }}
                 style={{
                   fontSize: 13,
                   fontWeight: activeTab === tab ? 600 : 400,
