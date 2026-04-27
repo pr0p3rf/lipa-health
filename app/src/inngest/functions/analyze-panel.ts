@@ -841,10 +841,7 @@ Return ONLY valid JSON with a "markers" array containing exactly ${batchBiomarke
       const summaryPrompt = `Here are ALL the marker analyses from a patient's blood panel (${allAnalyses.length} markers):
 ${fullDemographicText}
 
-FULL PANEL VALUES:
-${panelText}
-
-MARKER ANALYSES:
+MARKER ANALYSES (sorted by clinical priority):
 ${allMarkerAnalysesText}
 
 CROSS-MARKER PATTERN DETECTION RESULTS:
@@ -852,7 +849,7 @@ The following patterns were detected by our rule engine (these are CONFIRMED pat
 ${detectedPatternsText}
 
 ${patternResearchText ? `RETRIEVED RESEARCH FOR PATTERNS AND MARKER COMBINATIONS:
-${patternResearchText}` : ""}
+${patternResearchText.slice(0, 4000)}` : ""}
 
 Produce a JSON object with:
 1. "executive_summary": 10-15 sentences (3-4 paragraphs). This is the centerpiece of the analysis — make it worth reading. Start with what's going well (be specific: "Your kidney function, liver enzymes, and thyroid markers are all optimal"). Then explain the 3-4 most important findings with actual values and what they mean together as a pattern. Then give the top 3 priority actions with specific interventions. End with a retest timeline. Write like a doctor who has 30 minutes instead of 5 — warm, thorough, specific to THEIR values. This summary alone should make the user feel they got their money's worth.
