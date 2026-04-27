@@ -54,7 +54,7 @@ const BIOMARKER_ALIASES: Record<string, string[]> = {
   "Glucose": ["Glucose", "Fasting Glucose", "Fasting Blood Glucose", "FBG", "Blood Glucose"],
   "Total Cholesterol": ["Total Cholesterol", "Cholesterol", "TC"],
   "Systolic BP": ["Systolic BP", "Systolic Blood Pressure", "SBP", "Systolic"],
-  "CRP": ["CRP", "hs-CRP", "C-Reactive Protein", "High-sensitivity C-reactive protein", "hsCRP"],
+  "CRP": ["CRP", "hs-CRP", "C-Reactive Protein", "High-sensitivity C-reactive protein", "hsCRP", "High Sensitivity CRP", "C-Reactive Protein, High Sensitivity", "C-Reactive Protein (High Sensitivity)", "High Sensitivity C-Reactive Protein", "HS CRP", "CRP, High Sensitivity", "Ultra-Sensitive CRP", "Cardio CRP"],
   "Lymphocyte %": ["Lymphocyte %", "Lymphocyte Percentage", "Lymph %", "Lymphocytes %", "Lymphocytes"],
   "MCV": ["MCV", "Mean Corpuscular Volume"],
   "RDW": ["RDW", "Red Cell Distribution Width", "RDW-CV"],

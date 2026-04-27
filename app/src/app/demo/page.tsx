@@ -1260,13 +1260,26 @@ function InsightCard({ calc, expanded, onToggle }: { calc: RiskCalculation; expa
       {expanded && (
         <div className="px-5 py-4" style={{ borderTop: "1px solid rgba(255,255,255,0.3)", background: "rgba(255,255,255,0.3)" }}>
           <p className="text-[13px] text-[#0F1A15] leading-relaxed mb-3">{calc.summary}</p>
+          {calc.warnings && calc.warnings.length > 0 && (
+            <div className="space-y-2 mb-3">
+              {calc.warnings.map((w: string, i: number) => (
+                <div key={i} className="text-[11px] text-[#B91C1C] bg-[#FEE2E2]/60 rounded-xl px-3 py-2 flex items-start gap-2">
+                  <span className="flex-shrink-0 mt-0.5">⚠</span>
+                  <span>{w}</span>
+                </div>
+              ))}
+            </div>
+          )}
           {calc.missing.length > 0 && (
             <div className="text-[11px] text-[#B45309] bg-[#FEF3C7]/60 rounded-xl px-3 py-2 mb-3">
               Missing: {calc.missing.join(", ")}
             </div>
           )}
+          <div className="text-[10px] text-[#8A928C] leading-relaxed mb-1">
+            <span className="font-medium text-[#5A635D]">Inputs:</span> {calc.based_on || calc.research_based_on}
+          </div>
           <div className="text-[10px] text-[#8A928C] leading-relaxed mb-2">
-            <span className="font-medium text-[#5A635D]">Based on:</span> {calc.research_based_on}
+            <span className="font-medium text-[#5A635D]">Method:</span> {calc.research_based_on}
           </div>
           <div className="text-[10px] text-[#8A928C] leading-relaxed mb-2" style={{ fontFamily: MONO }}>
             {calc.citation}

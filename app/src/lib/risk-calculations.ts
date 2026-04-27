@@ -38,7 +38,9 @@ export interface RiskCalculation {
   citation: string;
   requires: string[]; // Required biomarker names
   missing: string[]; // Missing biomarkers (if any)
+  based_on: string; // Human-readable list of inputs used
   disclaimer: string;
+  warnings?: string[]; // Contradiction warnings
 }
 
 // ---------------------------------------------------------------------
@@ -60,7 +62,7 @@ const BIOMARKER_ALIASES: Record<string, string[]> = {
   "Creatinine": ["Creatinine", "Serum Creatinine"],
   "Albumin": ["Albumin", "Serum Albumin"],
   "WBC": ["WBC", "White Blood Cell Count", "Leukocyte Count"],
-  "hs-CRP": ["hs-CRP", "High-sensitivity C-reactive protein", "hsCRP"],
+  "hs-CRP": ["hs-CRP", "High-sensitivity C-reactive protein", "hsCRP", "CRP", "C-Reactive Protein", "High Sensitivity CRP", "C-Reactive Protein, High Sensitivity", "C-Reactive Protein (High Sensitivity)", "High Sensitivity C-Reactive Protein", "HS CRP", "CRP, High Sensitivity", "Ultra-Sensitive CRP", "Cardio CRP"],
   "MCV": ["MCV", "Mean Corpuscular Volume"],
   "RDW": ["RDW", "Red Cell Distribution Width"],
   "Alkaline Phosphatase": ["Alkaline Phosphatase", "ALP"],
@@ -129,7 +131,8 @@ export function calculateSCORE2(
     citation: "SCORE2 working group et al. Eur Heart J. 2021;42(25):2439-2454. PMID: 34120177",
     requires: required,
     missing,
-    disclaimer: "This calculation is based on published research. It is not a medical diagnosis or individualized prediction. Consult your healthcare provider to interpret in your clinical context.",
+    disclaimer: "SCORE2 does not account for hs-CRP, diabetes, kidney disease, family history, or insulin resistance. The ESC guidelines note that individuals with diabetes, chronic kidney disease, or very high levels of individual risk factors may be at higher risk than SCORE2 indicates. See the Reynolds Risk Score for a calculation that includes inflammatory markers. This is not a medical diagnosis — consult your healthcare provider.",
+    based_on: "Total Cholesterol, HDL Cholesterol, Age, Sex, Systolic BP, Smoking status",
   };
 
   if (missing.length > 0) {
@@ -228,6 +231,7 @@ export function calculateHOMAIR(biomarkers: BiomarkerValue[]): RiskCalculation {
     requires: ["Fasting Glucose", "Fasting Insulin"],
     missing,
     disclaimer: "This calculation is based on published research. It is not a medical diagnosis. Consult your healthcare provider.",
+    based_on: "Fasting Glucose, Fasting Insulin",
   };
 
   if (missing.length > 0) {
@@ -282,6 +286,7 @@ export function calculateTyG(biomarkers: BiomarkerValue[]): RiskCalculation {
     requires: ["Triglycerides", "Fasting Glucose"],
     missing,
     disclaimer: "This calculation is based on published research. It is not a medical diagnosis.",
+    based_on: "Fasting Glucose, Triglycerides",
   };
 
   if (missing.length > 0) {
@@ -336,6 +341,7 @@ export function calculateCastelli(biomarkers: BiomarkerValue[]): RiskCalculation
     requires: ["Total Cholesterol", "HDL Cholesterol"],
     missing,
     disclaimer: "This calculation is based on published research. It is not a medical diagnosis.",
+    based_on: "Total Cholesterol (TC), HDL Cholesterol",
   };
 
   if (missing.length > 0) {
@@ -388,6 +394,7 @@ export function calculateAIP(biomarkers: BiomarkerValue[]): RiskCalculation {
     requires: ["Triglycerides", "HDL Cholesterol"],
     missing,
     disclaimer: "This calculation is based on published research. It is not a medical diagnosis.",
+    based_on: "Triglycerides, HDL Cholesterol",
   };
 
   if (missing.length > 0) {
@@ -450,6 +457,7 @@ export function calculateFIB4(
     requires: ["Age", "AST", "ALT", "Platelets"],
     missing,
     disclaimer: "This calculation is based on published research. It is not a medical diagnosis. Consult your healthcare provider.",
+    based_on: "Age, AST, ALT, Platelets",
   };
 
   if (missing.length > 0) {
@@ -529,6 +537,7 @@ export function calculateBioAgeKDM(
     requires: ["Age", "Albumin", "Creatinine", "Fasting Glucose", "hs-CRP", "MCV", "RDW", "Alkaline Phosphatase", "WBC"],
     missing,
     disclaimer: "Biological age estimation is a research calculation based on peer-reviewed methodology. It is not a medical diagnosis. Different methods produce different results.",
+    based_on: "Albumin, Alkaline Phosphatase, BUN, Creatinine, Glucose, Total Cholesterol, Systolic BP, CRP",
   };
 
   // Need age and at least 6 of 8 markers for a reasonable estimate
@@ -602,6 +611,7 @@ export function calculateThyroidRatio(biomarkers: BiomarkerValue[]): RiskCalcula
     requires: ["Free T3", "Free T4"],
     missing,
     disclaimer: "This calculation is based on published research. It is not a medical diagnosis.",
+    based_on: "Free T3, Free T4",
   };
 
   if (missing.length > 0) {
@@ -662,6 +672,7 @@ export function calculateCKDEPI(
     requires: ["Creatinine", "Age", "Sex"],
     missing,
     disclaimer: "This calculation is based on published research. It is not a medical diagnosis. Consult your healthcare provider.",
+    based_on: "Creatinine, Age, Sex",
   };
 
   if (missing.length > 0) {
@@ -722,6 +733,7 @@ export function calculateNLR(biomarkers: BiomarkerValue[]): RiskCalculation {
     requires: ["Neutrophils", "Lymphocytes"],
     missing,
     disclaimer: "This calculation is based on published research. It is not a medical diagnosis.",
+    based_on: "Neutrophils, Lymphocytes",
   };
 
   if (missing.length > 0) {
@@ -773,6 +785,7 @@ export function calculateTGHDL(biomarkers: BiomarkerValue[]): RiskCalculation {
     requires: ["Triglycerides", "HDL Cholesterol"],
     missing,
     disclaimer: "This calculation is based on published research. It is not a medical diagnosis.",
+    based_on: "Triglycerides, HDL Cholesterol",
   };
 
   if (missing.length > 0) {
@@ -823,6 +836,7 @@ export function calculateASTALTRatio(biomarkers: BiomarkerValue[]): RiskCalculat
     requires: ["AST", "ALT"],
     missing,
     disclaimer: "This calculation is based on published research. It is not a medical diagnosis.",
+    based_on: "AST, ALT",
   };
 
   if (missing.length > 0) {
@@ -848,6 +862,136 @@ export function calculateASTALTRatio(biomarkers: BiomarkerValue[]): RiskCalculat
 }
 
 // ---------------------------------------------------------------------
+// Reynolds Risk Score — Cardiovascular risk including hs-CRP
+// Reference (women): Ridker PM, et al. JAMA 2007;297(6):611-619. PMID: 17299196
+// Reference (men): Ridker PM, et al. Circulation 2008;118(22):2243-2251. PMID: 18997194
+// ---------------------------------------------------------------------
+
+export function calculateReynoldsRisk(
+  biomarkers: BiomarkerValue[],
+  profile: UserProfile
+): RiskCalculation {
+  const tc = findBiomarker(biomarkers, "Total Cholesterol");
+  const hdl = findBiomarker(biomarkers, "HDL Cholesterol");
+  const crp = findBiomarker(biomarkers, "hs-CRP");
+  const age = profile.age;
+  const sex = profile.sex;
+  const sbp = profile.systolicBP || 120;
+
+  const required = ["Total Cholesterol", "HDL Cholesterol", "hs-CRP"];
+  const missing: string[] = [];
+  if (tc === null) missing.push("Total Cholesterol");
+  if (hdl === null) missing.push("HDL Cholesterol");
+  if (crp === null) missing.push("hs-CRP");
+  if (!age) missing.push("Age");
+  if (!sex) missing.push("Sex");
+
+  const base: RiskCalculation = {
+    id: "reynolds",
+    name: "Reynolds Risk Score",
+    category: "cardiovascular",
+    value: "—",
+    unit: "% 10-year risk",
+    interpretation: "unknown",
+    interpretation_label: "Insufficient data",
+    summary: "",
+    research_based_on: "Reynolds Risk Score (Ridker et al., JAMA 2007 / Circulation 2008)",
+    citation: "Ridker PM, et al. Development and validation of improved algorithms for the assessment of global cardiovascular risk in women. JAMA 2007;297(6):611-619. PMID: 17299196",
+    requires: required,
+    missing,
+    based_on: "Total Cholesterol, HDL Cholesterol, hs-CRP, Age, Sex, Systolic BP, Smoking status",
+    disclaimer: "The Reynolds Risk Score was specifically designed to incorporate hs-CRP (inflammation) into cardiovascular risk assessment, capturing risk that cholesterol-only models miss. This is a simplified implementation based on the published coefficients. Consult your healthcare provider for clinical interpretation.",
+  };
+
+  if (missing.length > 0) {
+    base.summary = `To calculate Reynolds Risk Score, we need: ${missing.join(", ")}. This score uniquely incorporates hs-CRP (inflammation) in cardiovascular risk assessment.`;
+    return base;
+  }
+
+  const smoker = profile.isSmoker ? 1 : 0;
+  const crpClamped = Math.max(crp!, 0.1);
+
+  let riskPercent: number;
+
+  if (sex === "female") {
+    // Women coefficients: Ridker 2007
+    const b = 0.0799 * age! + 3.137 * Math.log(sbp) + 0.180 * Math.log(crpClamped) +
+              1.382 * Math.log(tc!) - 1.172 * Math.log(hdl!) + 0.818 * smoker;
+    riskPercent = (1 - Math.pow(0.98634, Math.exp(b - 22.325))) * 100;
+  } else {
+    // Men coefficients: Ridker 2008
+    const b = 4.385 * Math.log(age!) + 2.607 * Math.log(tc!) - 0.839 * Math.log(hdl!) +
+              0.914 * Math.log(sbp) + 0.442 * Math.log(crpClamped) + 0.672 * smoker;
+    riskPercent = (1 - Math.pow(0.8990, Math.exp(b - 33.097))) * 100;
+  }
+
+  // Clamp to reasonable range
+  riskPercent = Math.max(0.5, Math.min(riskPercent, 50));
+  riskPercent = Math.round(riskPercent * 10) / 10;
+
+  let interpretation: RiskCalculation["interpretation"] = "moderate";
+  let label = "Moderate";
+
+  if (riskPercent < 5) { interpretation = "optimal"; label = "Low"; }
+  else if (riskPercent < 10) { interpretation = "moderate"; label = "Moderate"; }
+  else if (riskPercent < 20) { interpretation = "elevated"; label = "Elevated"; }
+  else { interpretation = "high"; label = "High"; }
+
+  const warnings: string[] = [];
+  if (crp! > 3) {
+    warnings.push(`Your hs-CRP of ${crp!.toFixed(1)} mg/L indicates significant inflammation — a major independent cardiovascular risk factor beyond cholesterol.`);
+  }
+
+  return {
+    ...base,
+    value: riskPercent,
+    interpretation,
+    interpretation_label: label,
+    warnings: warnings.length > 0 ? warnings : undefined,
+    summary: `Estimated 10-year cardiovascular risk: ${riskPercent}% (${label}). Unlike SCORE2 and Castelli, the Reynolds Risk Score incorporates hs-CRP — capturing inflammatory cardiovascular risk that cholesterol-only models miss. Your hs-CRP of ${crp!.toFixed(1)} mg/L ${crp! > 3 ? "significantly increases" : crp! > 1 ? "moderately contributes to" : "has minimal impact on"} your risk estimate.`,
+  };
+}
+
+// ---------------------------------------------------------------------
+// Add contradiction warnings to cardiovascular calculations
+// ---------------------------------------------------------------------
+
+function addCardiovascularWarnings(
+  calculations: RiskCalculation[],
+  biomarkers: BiomarkerValue[],
+  profile: UserProfile
+): RiskCalculation[] {
+  const crp = findBiomarker(biomarkers, "hs-CRP");
+  const insulin = findBiomarker(biomarkers, "Fasting Insulin");
+  const sbp = profile.systolicBP;
+
+  return calculations.map((calc) => {
+    if (calc.category !== "cardiovascular") return calc;
+    if (calc.id === "reynolds") return calc; // Reynolds already handles CRP
+    if (calc.interpretation === "unknown") return calc;
+
+    const warnings: string[] = [...(calc.warnings || [])];
+
+    // Warn if CRP is high but this calc shows low/favorable risk
+    if (crp !== null && crp > 3 && (calc.interpretation === "optimal" || calc.interpretation === "favorable")) {
+      warnings.push(`Your hs-CRP is ${crp.toFixed(1)} mg/L (elevated). This calculation does not factor in inflammatory markers — your actual cardiovascular risk may be higher than shown.`);
+    }
+
+    // Warn if SBP is high but calc doesn't use it
+    if (sbp && sbp >= 140 && !calc.based_on?.includes("Systolic") && (calc.interpretation === "optimal" || calc.interpretation === "favorable")) {
+      warnings.push(`Your systolic blood pressure is ${sbp} mmHg (elevated). This calculation does not factor in blood pressure.`);
+    }
+
+    // Warn if insulin is very high (insulin resistance = CV risk)
+    if (insulin !== null && insulin > 20 && (calc.interpretation === "optimal" || calc.interpretation === "favorable")) {
+      warnings.push(`Your fasting insulin is ${insulin.toFixed(1)} µIU/mL (elevated). Hyperinsulinemia is an independent cardiovascular risk factor not captured by this calculation.`);
+    }
+
+    return warnings.length > 0 ? { ...calc, warnings } : calc;
+  });
+}
+
+// ---------------------------------------------------------------------
 // Run all calculations
 // ---------------------------------------------------------------------
 
@@ -855,9 +999,10 @@ export function runAllCalculations(
   biomarkers: BiomarkerValue[],
   profile: UserProfile
 ): RiskCalculation[] {
-  return [
+  const results = [
     calculateBioAgeKDM(biomarkers, profile),
     calculateSCORE2(biomarkers, profile),
+    calculateReynoldsRisk(biomarkers, profile),
     calculateCastelli(biomarkers),
     calculateAIP(biomarkers),
     calculateTGHDL(biomarkers),
@@ -868,5 +1013,7 @@ export function runAllCalculations(
     calculateASTALTRatio(biomarkers),
     calculateNLR(biomarkers),
     calculateThyroidRatio(biomarkers),
-  ].filter((calc) => calc.interpretation !== "unknown" || calc.missing.length <= 3); // Only show if likely useful
+  ].filter((calc) => calc.interpretation !== "unknown" || calc.missing.length <= 3);
+
+  return addCardiovascularWarnings(results, biomarkers, profile);
 }
