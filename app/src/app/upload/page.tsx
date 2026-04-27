@@ -52,9 +52,11 @@ export default function UploadPage() {
       return;
     }
 
-    // Track upload (no PDF stored — we only extract biomarker values, never store the original document)
+    // Store PDF securely and track upload
     for (const file of files) {
-      try { await supabase.from("uploads").insert({ user_id: user.id, file_path: "not-stored", file_name: file.name, status: "analyzing" }); } catch {}
+      const filePath = `${user.id}/${Date.now()}-${file.name}`;
+      try { await supabase.storage.from("lab-results").upload(filePath, file); } catch {}
+      try { await supabase.from("uploads").insert({ user_id: user.id, file_path: filePath, file_name: file.name, status: "analyzing" }); } catch {}
     }
 
     setState("extracting");
