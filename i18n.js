@@ -20,10 +20,10 @@ const translations = {
 
     // Stats
     stat1Label: "Biomarkers",
-    stat1Num: "100+",
+    stat1Num: "180+",
     stat1Caption: "every major marker, clearly explained",
     stat2Label: "Research corpus",
-    stat2Num: "80K+",
+    stat2Num: "250K+",
     stat2Caption: "peer-reviewed studies. Not one opinion.",
     stat3Label: "Health profiles",
     stat3Num: "300K+",
@@ -189,10 +189,10 @@ const translations = {
 
     // Stats
     stat1Label: "Biomarkers",
-    stat1Num: "100+",
+    stat1Num: "180+",
     stat1Caption: "elke belangrijke marker, helder uitgelegd",
     stat2Label: "Onderzoekscorpus",
-    stat2Num: "80K+",
+    stat2Num: "250K+",
     stat2Caption: "peer-reviewed studies. Geen meningen.",
     stat3Label: "Gezondheidsprofielen",
     stat3Num: "300K+",
@@ -353,10 +353,10 @@ const translations = {
 
     // Stats
     stat1Label: "Biomarkery",
-    stat1Num: "100+",
+    stat1Num: "180+",
     stat1Caption: "każdy ważny marker, jasno wyjaśniony",
     stat2Label: "Korpus badań",
-    stat2Num: "80 tys.+",
+    stat2Num: "250 tys.+",
     stat2Caption: "recenzowanych badań naukowych. Żadnych opinii.",
     stat3Label: "Profile zdrowotne",
     stat3Num: "300 tys.+",
@@ -517,10 +517,10 @@ const translations = {
 
     // Stats
     stat1Label: "Biomarcadores",
-    stat1Num: "100+",
+    stat1Num: "180+",
     stat1Caption: "cada marcador importante, explicado con claridad",
     stat2Label: "Corpus de investigación",
-    stat2Num: "80K+",
+    stat2Num: "250K+",
     stat2Caption: "estudios revisados por pares. Ni una sola opinión.",
     stat3Label: "Perfiles de salud",
     stat3Num: "300K+",
@@ -681,10 +681,10 @@ const translations = {
 
     // Stats
     stat1Label: "Biomarker",
-    stat1Num: "100+",
+    stat1Num: "180+",
     stat1Caption: "jeder wichtige Marker, verständlich erklärt",
     stat2Label: "Forschungskorpus",
-    stat2Num: "80.000+",
+    stat2Num: "250.000+",
     stat2Caption: "begutachtete Studien. Keine Meinungen.",
     stat3Label: "Gesundheitsprofile",
     stat3Num: "300.000+",
@@ -845,7 +845,7 @@ const translations = {
 
     // Stats
     stat1Label: "Biomarqueurs",
-    stat1Num: "100+",
+    stat1Num: "180+",
     stat1Caption: "chaque marqueur important, clairement expliqué",
     stat2Label: "Corpus scientifique",
     stat2Num: "80 000+",
@@ -1009,7 +1009,7 @@ const translations = {
 
     // Stats
     stat1Label: "Biomarcadores",
-    stat1Num: "100+",
+    stat1Num: "180+",
     stat1Caption: "cada marcador importante, explicado com clareza",
     stat2Label: "Corpus de pesquisas",
     stat2Num: "80 mil+",
