@@ -312,12 +312,20 @@ export default function DemoPage() {
             </svg>
             <span className="text-[16px] font-semibold text-[#0F1A15] tracking-[1.5px] uppercase">Lipa</span>
           </a>
-          <a
-            href="https://my.lipa.health/upload"
-            className="text-[12px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-5 py-2 rounded-full transition-all duration-300"
-          >
-            Get started free
-          </a>
+          <div className="flex items-center gap-2">
+            <a
+              href="https://my.lipa.health/test-finder"
+              className="text-[12px] font-semibold text-[#1B6B4A] hover:text-[#155A3D] px-4 py-2 rounded-full transition-all duration-300 border border-[#1B6B4A]/20 hover:border-[#1B6B4A]/40"
+            >
+              Book a test
+            </a>
+            <a
+              href="https://my.lipa.health/upload"
+              className="text-[12px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-4 py-2 rounded-full transition-all duration-300"
+            >
+              Upload a test
+            </a>
+          </div>
         </div>
       </nav>
 
