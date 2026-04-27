@@ -291,9 +291,9 @@ export default function DemoPage() {
 
   const totalCitations = analyses.reduce((sum, a) => sum + (a.citation_count || 0), 0);
 
-  // Use hardcoded bio-age of 32.9 as specified
-  const demoBioAge = 32.9;
-  const demoBioAgeGap = demoBioAge - 40;
+  // Use computed bio-age from actual demo data (with unit conversion fix)
+  const demoBioAge = bioAge?.ensemble_age ? Number(bioAge.ensemble_age.toFixed(1)) : 36.2;
+  const demoBioAgeGap = bioAge?.gap ?? (demoBioAge - 40);
 
   // =========================================================================
   // RENDER
@@ -372,15 +372,18 @@ export default function DemoPage() {
               <div className="text-[10px] uppercase tracking-[0.1em] text-[#8A928C] font-medium mb-2">Biological Age</div>
               <div
                 className="text-[48px] leading-none tracking-tight"
-                style={{ fontFamily: FRAUNCES, fontWeight: 600, color: "#1B6B4A" }}
+                style={{ fontFamily: FRAUNCES, fontWeight: 600, color: demoBioAgeGap < 0 ? "#1B6B4A" : demoBioAgeGap > 2 ? "#B91C1C" : "#0F1A15" }}
               >
                 {demoBioAge}
               </div>
               <div
                 className="inline-flex self-center text-[13px] font-semibold px-3 py-1 rounded-full mt-2"
-                style={{ backgroundColor: "#E8F5EE", color: "#1B6B4A" }}
+                style={{
+                  backgroundColor: demoBioAgeGap < 0 ? "#E8F5EE" : demoBioAgeGap > 2 ? "#FEE2E2" : "#F4F4F5",
+                  color: demoBioAgeGap < 0 ? "#1B6B4A" : demoBioAgeGap > 2 ? "#B91C1C" : "#5A635D",
+                }}
               >
-                {Number(demoBioAgeGap.toFixed(1))} yrs
+                {demoBioAgeGap < 0 ? "" : "+"}{Number(demoBioAgeGap.toFixed(1))} yrs
               </div>
               <div className="text-[11px] text-[#8A928C] mt-2">
                 vs age 40 &middot; {bioAge?.contributing_biomarkers.length || 10} markers
