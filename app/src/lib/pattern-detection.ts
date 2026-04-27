@@ -86,7 +86,7 @@ const PATTERNS: PatternRule[] = [
       },
       {
         marker: "hs-CRP",
-        aliases: ["High-sensitivity C-reactive protein", "hsCRP"],
+        aliases: ["High-sensitivity C-reactive protein", "hsCRP", "CRP", "C-Reactive Protein", "C-Reactive Protein (hsCRP)", "C-Reactive Protein, Cardiac", "High Sensitivity CRP"],
         check: (value) => value > 1.0,
       },
     ],
@@ -163,7 +163,7 @@ const PATTERNS: PatternRule[] = [
       },
       {
         marker: "hs-CRP",
-        aliases: ["High-sensitivity C-reactive protein", "hsCRP"],
+        aliases: ["High-sensitivity C-reactive protein", "hsCRP", "CRP", "C-Reactive Protein", "C-Reactive Protein (hsCRP)", "C-Reactive Protein, Cardiac", "High Sensitivity CRP"],
         check: (value) => value > 1.5,
       },
     ],
@@ -184,7 +184,7 @@ const PATTERNS: PatternRule[] = [
     conditions: [
       {
         marker: "hs-CRP",
-        aliases: ["High-sensitivity C-reactive protein", "hsCRP"],
+        aliases: ["High-sensitivity C-reactive protein", "hsCRP", "CRP", "C-Reactive Protein", "C-Reactive Protein (hsCRP)", "C-Reactive Protein, Cardiac", "High Sensitivity CRP"],
         check: (value) => value > 2.0,
       },
       {
@@ -266,7 +266,7 @@ const PATTERNS: PatternRule[] = [
     conditions: [
       {
         marker: "ALT",
-        aliases: ["Alanine aminotransferase", "SGPT", "Alanine Transaminase"],
+        aliases: ["Alanine aminotransferase", "SGPT", "Alanine Transaminase", "ALT (GPT)", "ALT (SGPT)"],
         check: (value) => value > 35,
       },
       {
@@ -276,7 +276,7 @@ const PATTERNS: PatternRule[] = [
       },
       {
         marker: "Glucose",
-        aliases: ["Fasting Glucose", "Fasting glucose", "Blood Glucose", "FBG"],
+        aliases: ["Fasting Glucose", "Fasting glucose", "Blood Glucose", "FBG", "Glucose (Fasting)", "Glucose Fasting"],
         check: (value) => value >= 95,
       },
     ],
@@ -323,7 +323,7 @@ const PATTERNS: PatternRule[] = [
     conditions: [
       {
         marker: "Glucose",
-        aliases: ["Fasting Glucose", "Fasting glucose", "Blood Glucose", "FBG"],
+        aliases: ["Fasting Glucose", "Fasting glucose", "Blood Glucose", "FBG", "Glucose (Fasting)", "Glucose Fasting"],
         check: (value) => value >= 100 && value <= 125,
       },
       {
@@ -430,7 +430,7 @@ const PATTERNS: PatternRule[] = [
       },
       {
         marker: "hs-CRP",
-        aliases: ["High-sensitivity C-reactive protein", "hsCRP"],
+        aliases: ["High-sensitivity C-reactive protein", "hsCRP", "CRP", "C-Reactive Protein", "C-Reactive Protein (hsCRP)", "C-Reactive Protein, Cardiac", "High Sensitivity CRP"],
         check: (value) => value > 1.5,
       },
     ],
@@ -487,7 +487,7 @@ const PATTERNS: PatternRule[] = [
       },
       {
         marker: "Glucose",
-        aliases: ["Fasting Glucose", "Fasting glucose", "Blood Glucose", "FBG"],
+        aliases: ["Fasting Glucose", "Fasting glucose", "Blood Glucose", "FBG", "Glucose (Fasting)", "Glucose Fasting"],
         check: (value) => value > 100,
       },
     ],
@@ -594,7 +594,7 @@ const PATTERNS: PatternRule[] = [
       },
       {
         marker: "hs-CRP",
-        aliases: ["High-sensitivity C-reactive protein", "hsCRP"],
+        aliases: ["High-sensitivity C-reactive protein", "hsCRP", "CRP", "C-Reactive Protein", "C-Reactive Protein (hsCRP)", "C-Reactive Protein, Cardiac", "High Sensitivity CRP"],
         check: (value) => value > 1.0,
       },
     ],
@@ -672,7 +672,7 @@ const PATTERNS: PatternRule[] = [
       },
       {
         marker: "ALT",
-        aliases: ["Alanine aminotransferase", "SGPT", "Alanine Transaminase"],
+        aliases: ["Alanine aminotransferase", "SGPT", "Alanine Transaminase", "ALT (GPT)", "ALT (SGPT)"],
         check: (value) => value > 35,
       },
     ],

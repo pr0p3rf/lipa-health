@@ -48,17 +48,17 @@ export interface BioAgeResult {
 
 const BIOMARKER_ALIASES: Record<string, string[]> = {
   "Albumin": ["Albumin", "Serum Albumin", "ALB"],
-  "Alkaline Phosphatase": ["Alkaline Phosphatase", "ALP", "Alk Phos"],
-  "BUN": ["BUN", "Blood Urea Nitrogen", "Urea Nitrogen"],
+  "Alkaline Phosphatase": ["Alkaline Phosphatase", "ALP", "Alk Phos", "Alkaline Phosphatase (ALP)"],
+  "BUN": ["BUN", "Blood Urea Nitrogen", "Urea Nitrogen", "Urea", "Urea (BUN)"],
   "Creatinine": ["Creatinine", "Serum Creatinine", "CREA"],
-  "Glucose": ["Glucose", "Fasting Glucose", "Fasting Blood Glucose", "FBG", "Blood Glucose"],
+  "Glucose": ["Glucose", "Fasting Glucose", "Fasting Blood Glucose", "FBG", "Blood Glucose", "Glucose (Fasting)", "Glucose Fasting"],
   "Total Cholesterol": ["Total Cholesterol", "Cholesterol", "TC"],
   "Systolic BP": ["Systolic BP", "Systolic Blood Pressure", "SBP", "Systolic"],
-  "CRP": ["CRP", "hs-CRP", "C-Reactive Protein", "High-sensitivity C-reactive protein", "hsCRP", "High Sensitivity CRP", "C-Reactive Protein, High Sensitivity", "C-Reactive Protein (High Sensitivity)", "High Sensitivity C-Reactive Protein", "HS CRP", "CRP, High Sensitivity", "Ultra-Sensitive CRP", "Cardio CRP"],
-  "Lymphocyte %": ["Lymphocyte %", "Lymphocyte Percentage", "Lymph %", "Lymphocytes %", "Lymphocytes"],
+  "CRP": ["CRP", "hs-CRP", "C-Reactive Protein", "High-sensitivity C-reactive protein", "hsCRP", "High Sensitivity CRP", "C-Reactive Protein, High Sensitivity", "C-Reactive Protein (High Sensitivity)", "C-Reactive Protein (hsCRP)", "High Sensitivity C-Reactive Protein", "HS CRP", "CRP, High Sensitivity", "Ultra-Sensitive CRP", "Cardio CRP", "C-Reactive Protein, Cardiac"],
+  "Lymphocyte %": ["Lymphocyte %", "Lymphocyte Percentage", "Lymph %", "Lymphocytes %", "Lymphocytes", "Lymphocytes (%)", "Lymphs"],
   "MCV": ["MCV", "Mean Corpuscular Volume"],
-  "RDW": ["RDW", "Red Cell Distribution Width", "RDW-CV"],
-  "WBC": ["WBC", "White Blood Cell Count", "White Blood Cells", "Leukocyte Count", "Leukocytes"],
+  "RDW": ["RDW", "Red Cell Distribution Width", "RDW-CV", "Red Cell Distribution Width"],
+  "WBC": ["WBC", "White Blood Cell Count", "White Blood Cells", "Leukocyte Count", "Leukocytes", "White Blood Cells (WBC)"],
 };
 
 // Unit conversion to standardize international lab results
