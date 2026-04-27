@@ -14,6 +14,11 @@ import {
   type BiomarkerValue,
   type UserProfile,
 } from "@/lib/risk-calculations";
+import { detectPatterns, type DetectedPattern } from "@/lib/pattern-detection";
+import {
+  retrievePatternResearch,
+  formatPatternResearchForPrompt,
+} from "@/lib/pattern-rag";
 
 // ---------------------------------------------------------------------------
 // Clients (lazy-init to avoid cold-start overhead when not needed)
@@ -715,6 +720,57 @@ Return ONLY valid JSON with a "markers" array containing exactly ${batchBiomarke
         )
         .join("\n");
 
+      // ---------------------------------------------------------------
+      // Phase 2: Cross-marker pattern detection + RAG retrieval
+      // ---------------------------------------------------------------
+
+      // 1. Run rule-based pattern detection
+      const patternInput = allBiomarkers.map((bm: BiomarkerInput) => ({
+        name: bm.name,
+        value: bm.value,
+        unit: bm.unit,
+        status: statusMap.get(bm.name)?.status || "normal",
+      }));
+      const detectedPatterns: DetectedPattern[] = detectPatterns(patternInput);
+
+      console.log(
+        `[analyze-panel] Pattern detection: ${detectedPatterns.length} patterns found`
+      );
+
+      // 2. RAG retrieval for pattern combinations
+      let patternResearchText = "";
+      try {
+        const patternRAGResult = await retrievePatternResearch(
+          supabase,
+          allBiomarkers,
+          statusMap,
+          referenceMap,
+          detectedPatterns
+        );
+
+        patternResearchText = formatPatternResearchForPrompt(
+          patternRAGResult,
+          detectedPatterns
+        );
+
+        console.log(
+          `[analyze-panel] Pattern RAG: ${patternRAGResult.total_studies} studies retrieved in ${patternRAGResult.retrieval_time_ms}ms`
+        );
+      } catch (err) {
+        console.error("[analyze-panel] Pattern RAG failed, continuing without:", err);
+      }
+
+      // Build the detected patterns text for the prompt
+      const detectedPatternsText =
+        detectedPatterns.length > 0
+          ? detectedPatterns
+              .map(
+                (p) =>
+                  `- [${p.severity.toUpperCase()}] ${p.name}: ${p.summary} (Markers: ${p.markers_matched.join(", ")})`
+              )
+              .join("\n")
+          : "(No rule-based patterns detected)";
+
       const summaryPrompt = `Here are ALL the marker analyses from a patient's blood panel (${allAnalyses.length} markers):
 ${fullDemographicText}
 
@@ -724,9 +780,23 @@ ${panelText}
 MARKER ANALYSES:
 ${allMarkerAnalysesText}
 
+CROSS-MARKER PATTERN DETECTION RESULTS:
+The following patterns were detected by our rule engine (these are CONFIRMED patterns backed by peer-reviewed literature):
+${detectedPatternsText}
+
+${patternResearchText ? `RETRIEVED RESEARCH FOR PATTERNS AND MARKER COMBINATIONS:
+${patternResearchText}` : ""}
+
 Produce a JSON object with:
 1. "executive_summary": 10-15 sentences (3-4 paragraphs). This is the centerpiece of the analysis — make it worth reading. Start with what's going well (be specific: "Your kidney function, liver enzymes, and thyroid markers are all optimal"). Then explain the 3-4 most important findings with actual values and what they mean together as a pattern. Then give the top 3 priority actions with specific interventions. End with a retest timeline. Write like a doctor who has 30 minutes instead of 5 — warm, thorough, specific to THEIR values. This summary alone should make the user feel they got their money's worth.
-2. "cross_marker_patterns": Array of connections across markers (e.g., iron + ferritin + MCV = iron deficiency). Each pattern has: "name", "markers_involved" (array), "summary", "severity" ("attention"|"watch"|"informational"). Include at least 3 patterns even if some are positive (e.g., "strong thyroid function").
+2. "cross_marker_patterns": Array of connections across markers. Each pattern has: "name", "markers_involved" (array), "summary", "severity" ("attention"|"watch"|"informational"), "research_backing" (array of objects with "study_title", "authors", "year", "journal" — from the retrieved research above), "clinical_significance" (1-2 sentences from the research), "what_to_do" (specific actionable recommendation).
+   CRITICAL RULES FOR PATTERNS:
+   - You MUST include ALL rule-detected patterns listed above. These are confirmed — enhance them with the retrieved research context.
+   - You may ONLY add additional patterns if they are directly supported by the retrieved research studies above. Cite the specific study title and year.
+   - Do NOT hallucinate connections. If no research supports a combination, do not include it as a pattern.
+   - For each pattern, include at least one entry in "research_backing" with real study details from the retrieved research.
+   - Include positive patterns too (e.g., "strong thyroid function") but these do not require research_backing.
+   - Aim for at least 3 patterns total.
 3. "action_plan": Object with:
    - "overall_summary": 8-12 sentence detailed summary. Cover what's excellent, what needs attention (with values), the top 3 priorities with specific actions, and when to retest. This should feel like a thorough medical briefing, not a quick note.
    - "domains": Array of exactly 6 domains (nutrition, supplementation, sleep, movement, environment, lifestyle). Each domain has "domain" (string) and "recommendations" (array). Each recommendation has:
