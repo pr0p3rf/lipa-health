@@ -312,20 +312,12 @@ export default function DemoPage() {
             </svg>
             <span className="text-[16px] font-semibold text-[#0F1A15] tracking-[1.5px] uppercase">Lipa</span>
           </a>
-          <div className="flex items-center gap-2">
-            <a
-              href="https://my.lipa.health/test-finder"
-              className="text-[12px] font-semibold text-[#1B6B4A] hover:text-[#155A3D] px-4 py-2 rounded-full transition-all duration-300 border border-[#1B6B4A]/20 hover:border-[#1B6B4A]/40"
-            >
-              Get tested
-            </a>
-            <a
-              href="https://my.lipa.health/upload"
-              className="text-[12px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-4 py-2 rounded-full transition-all duration-300"
-            >
-              Upload test
-            </a>
-          </div>
+          <a
+            href="https://my.lipa.health/upload"
+            className="text-[12px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-5 py-2 rounded-full transition-all duration-300"
+          >
+            Get started free
+          </a>
         </div>
       </nav>
 
@@ -335,36 +327,16 @@ export default function DemoPage() {
           {/* ============================================================ */}
           {/* DEMO BANNER                                                  */}
           {/* ============================================================ */}
-          <div className="mb-6 p-5 rounded-[20px] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4" style={{ background: "linear-gradient(135deg, rgba(27,107,74,0.08), rgba(27,107,74,0.03))", border: "1px solid rgba(27,107,74,0.15)" }}>
-            <div className="flex items-start gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#1B6B4A]/10 flex items-center justify-center flex-shrink-0">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2" strokeLinecap="round">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                  <circle cx="12" cy="12" r="3" />
-                </svg>
-              </div>
-              <div>
-                <p className="text-[15px] font-semibold text-[#1B6B4A]" style={{ fontFamily: FRAUNCES }}>This is a sample analysis</p>
-                <p className="text-[13px] text-[#5A635D] mt-0.5">Explore a real 98-marker blood test analysis. Upload your own to see your personalized results.</p>
-              </div>
+          <div className="mb-6 p-5 rounded-[20px] flex items-start gap-3" style={{ background: "linear-gradient(135deg, rgba(27,107,74,0.08), rgba(27,107,74,0.03))", border: "1px solid rgba(27,107,74,0.15)" }}>
+            <div className="w-10 h-10 rounded-full bg-[#1B6B4A]/10 flex items-center justify-center flex-shrink-0">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2" strokeLinecap="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
             </div>
-            <div className="flex items-center gap-2 flex-shrink-0">
-              <a
-                href="https://my.lipa.health/upload"
-                className="inline-flex items-center gap-2 text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-5 py-2.5 rounded-full transition-all duration-300 hover:-translate-y-0.5"
-                style={{ boxShadow: "0 4px 16px rgba(27,107,74,0.25)" }}
-              >
-                Upload your test
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  <path d="M5 12h14" /><path d="M12 5l7 7-7 7" />
-                </svg>
-              </a>
-              <a
-                href="https://my.lipa.health/test-finder"
-                className="inline-flex items-center gap-2 text-[13px] font-semibold text-[#1B6B4A] px-5 py-2.5 rounded-full transition-all duration-300 hover:-translate-y-0.5 border border-[#1B6B4A]/20 hover:border-[#1B6B4A]/40"
-              >
-                Get tested
-              </a>
+            <div>
+              <p className="text-[15px] font-semibold text-[#1B6B4A]" style={{ fontFamily: FRAUNCES }}>This is a sample analysis</p>
+              <p className="text-[13px] text-[#5A635D] mt-0.5">Explore a real 98-marker blood test analysis. Yours will be personalized to your biology.</p>
             </div>
           </div>
 
@@ -778,6 +750,11 @@ export default function DemoPage() {
             </div>
           )}
 
+          {/* Inline nudge */}
+          <div className="mb-10 px-5 py-4 rounded-[16px] flex items-center gap-3" style={{ background: "rgba(27,107,74,0.04)", border: "1px solid rgba(27,107,74,0.08)" }}>
+            <span className="text-[13px] text-[#5A635D]">This is a sample plan. <span className="text-[#1B6B4A] font-medium">Yours will be specific to your biology.</span></span>
+          </div>
+
           {/* ============================================================ */}
           {/* RISK INSIGHTS                                                 */}
           {/* ============================================================ */}
@@ -912,14 +889,53 @@ export default function DemoPage() {
           </div>
 
           {/* ============================================================ */}
+          {/* WHAT YOU GET                                                   */}
+          {/* ============================================================ */}
+          <div className="mb-6">
+            <h2 className="text-[20px] tracking-tight text-[#0F1A15] mb-4" style={{ fontFamily: FRAUNCES, fontWeight: 500 }}>
+              What Lipa does with your blood test
+            </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="p-4 rounded-[16px]" style={CARD}>
+                <div className="w-8 h-8 rounded-full bg-[#1B6B4A]/10 flex items-center justify-center mb-3">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2" strokeLinecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                </div>
+                <p className="text-[13px] font-semibold text-[#0F1A15] mb-1">Your markers, not a demo</p>
+                <p className="text-[12px] text-[#5A635D] leading-relaxed">Every value cross-referenced against 250K+ studies, personalized to your age and sex.</p>
+              </div>
+              <div className="p-4 rounded-[16px]" style={CARD}>
+                <div className="w-8 h-8 rounded-full bg-[#1B6B4A]/10 flex items-center justify-center mb-3">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2" strokeLinecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                </div>
+                <p className="text-[13px] font-semibold text-[#0F1A15] mb-1">Ask Lipa</p>
+                <p className="text-[12px] text-[#5A635D] leading-relaxed">Ask anything about your results. Get answers grounded in your actual data.</p>
+              </div>
+              <div className="p-4 rounded-[16px]" style={CARD}>
+                <div className="w-8 h-8 rounded-full bg-[#1B6B4A]/10 flex items-center justify-center mb-3">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                </div>
+                <p className="text-[13px] font-semibold text-[#0F1A15] mb-1">Your biological age</p>
+                <p className="text-[12px] text-[#5A635D] leading-relaxed">Find out how old your body really is, calculated from your actual biomarkers.</p>
+              </div>
+              <div className="p-4 rounded-[16px]" style={CARD}>
+                <div className="w-8 h-8 rounded-full bg-[#1B6B4A]/10 flex items-center justify-center mb-3">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                </div>
+                <p className="text-[13px] font-semibold text-[#0F1A15] mb-1">Patterns hiding in plain sight</p>
+                <p className="text-[12px] text-[#5A635D] leading-relaxed">Connections between markers that standard lab reports miss entirely.</p>
+              </div>
+            </div>
+          </div>
+
+          {/* ============================================================ */}
           {/* BOTTOM CTA                                                    */}
           {/* ============================================================ */}
           <div className="mb-10 p-8 rounded-[24px] text-center" style={{ background: "linear-gradient(135deg, rgba(27,107,74,0.06), rgba(27,107,74,0.02))", border: "1px solid rgba(27,107,74,0.12)" }}>
             <h3 className="text-[24px] mb-2 text-[#0F1A15]" style={{ fontFamily: FRAUNCES, fontWeight: 500 }}>
-              See your own results
+              Now see what your blood says.
             </h3>
             <p className="text-[14px] text-[#5A635D] max-w-lg mx-auto mb-6">
-              Get a research-grade analysis of every marker — just like this one, but personalized to your biology.
+              Upload any blood test — PDF, photo, or scan. From any lab, any country. Analysis takes 2 minutes.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <a
@@ -938,7 +954,7 @@ export default function DemoPage() {
                 href="https://my.lipa.health/test-finder"
                 className="inline-flex items-center gap-2 text-[14px] font-semibold text-[#1B6B4A] px-8 py-3.5 rounded-full transition-all duration-300 hover:-translate-y-0.5 border border-[#1B6B4A]/20 hover:border-[#1B6B4A]/40"
               >
-                Get tested
+                Don&apos;t have a test? Get one
               </a>
             </div>
             <p className="text-[12px] text-[#8A928C] mt-3">Start free. No credit card required.</p>
