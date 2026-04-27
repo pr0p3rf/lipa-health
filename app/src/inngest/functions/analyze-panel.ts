@@ -649,34 +649,7 @@ Return ONLY valid JSON with a "markers" array containing exactly ${batchBiomarke
         // Parse JSON
         const jsonMatch = responseText.match(/\{[\s\S]*\}/);
         if (!jsonMatch) {
-          console.error(`[analyze-panel] batch ${i}: no JSON in response, retrying individually`);
-          // Fallback: analyze each marker individually
-          let fallbackCount = 0;
-          for (const bm of batchBiomarkers) {
-            try {
-              const singleStatus = statusMap.get(bm.name);
-              const singlePrompt = `Analyze this single biomarker:\n- ${bm.name}: ${bm.value} ${bm.unit || ""} | Status: ${singleStatus?.status || "normal"}\n\nReturn JSON with a "markers" array containing exactly 1 entry with: name, status, flag, summary, what_it_means, what_research_shows, what_to_do, related_patterns, suggested_exploration.`;
-              const singleMsg = await anthropic.messages.create({
-                model,
-                max_tokens: 2048,
-                system: BATCH_SYSTEM_PROMPT,
-                messages: [{ role: "user", content: singlePrompt }],
-              });
-              const singleText = singleMsg.content[0].type === "text" ? singleMsg.content[0].text : "";
-              const singleJson = singleText.match(/\{[\s\S]*\}/);
-              if (singleJson) {
-                const singleResult = JSON.parse(singleJson[0]);
-                const singleMarkers = singleResult.markers || [];
-                if (singleMarkers.length > 0) {
-                  await storeBatchAnalyses(userId, singleMarkers, insertedResults, [], referenceMap, 0, 0);
-                  fallbackCount++;
-                }
-              }
-            } catch (e) {
-              console.error(`[analyze-panel] batch ${i}: fallback failed for ${bm.name}:`, e);
-            }
-          }
-          return { analyzed: fallbackCount, batch: i, fallback: true };
+          throw new Error(`Batch ${i}: no JSON in model response`);
         }
 
         const batchResult = JSON.parse(jsonMatch[0]);
@@ -685,37 +658,6 @@ Return ONLY valid JSON with a "markers" array containing exactly ${batchBiomarke
         console.log(
           `[analyze-panel] batch ${i}: parsed ${markerResults.length} marker analyses`
         );
-
-        // If Claude returned fewer markers than expected, analyze missing ones individually
-        if (markerResults.length < batchBiomarkers.length) {
-          const analyzedNames = new Set(markerResults.map((m: any) => (m.name || m.biomarker_name || "").toLowerCase()));
-          const missingBms = batchBiomarkers.filter((bm) => !analyzedNames.has(bm.name.toLowerCase()));
-          console.log(`[analyze-panel] batch ${i}: ${missingBms.length} markers missing from response, analyzing individually`);
-          for (const bm of missingBms) {
-            try {
-              const singleStatus = statusMap.get(bm.name);
-              const singlePrompt = `Analyze this single biomarker:\n- ${bm.name}: ${bm.value} ${bm.unit || ""} | Status: ${singleStatus?.status || "normal"}\n\nReturn JSON with a "markers" array containing exactly 1 entry.`;
-              const singleMsg = await anthropic.messages.create({
-                model,
-                max_tokens: 2048,
-                system: BATCH_SYSTEM_PROMPT,
-                messages: [{ role: "user", content: singlePrompt }],
-              });
-              const singleText = singleMsg.content[0].type === "text" ? singleMsg.content[0].text : "";
-              const singleJson = singleText.match(/\{[\s\S]*\}/);
-              if (singleJson) {
-                const singleResult = JSON.parse(singleJson[0]);
-                const singleMarkers = singleResult.markers || [];
-                if (singleMarkers.length > 0) {
-                  await storeBatchAnalyses(userId, singleMarkers, insertedResults, [], referenceMap, 0, 0);
-                  markerResults.push(...singleMarkers);
-                }
-              }
-            } catch (e) {
-              console.error(`[analyze-panel] batch ${i}: individual fallback failed for ${bm.name}:`, e);
-            }
-          }
-        }
 
         // Store analyses
         await storeBatchAnalyses(
