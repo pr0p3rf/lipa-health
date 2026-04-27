@@ -847,36 +847,69 @@ RULES: Be specific with doses/forms. Never recommend prescription drugs. Focus o
 Return ONLY valid JSON.`;
 
       const model = "claude-sonnet-4-20250514";
-      const message = await anthropic.messages.create({
-        model,
-        max_tokens: 8192,
-        system: SUMMARY_SYSTEM_PROMPT,
-        messages: [{ role: "user", content: summaryPrompt }],
-      });
+      let actionPlanStored = false;
 
-      const responseText =
-        message.content[0].type === "text" ? message.content[0].text : "";
+      try {
+        console.log(`[analyze-panel] Summary: calling Claude with ${summaryPrompt.length} char prompt`);
+        const message = await anthropic.messages.create({
+          model,
+          max_tokens: 6000,
+          system: SUMMARY_SYSTEM_PROMPT,
+          messages: [{ role: "user", content: summaryPrompt }],
+        });
 
-      const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-      if (!jsonMatch) {
-        throw new Error("No JSON in summary response");
+        const responseText =
+          message.content[0].type === "text" ? message.content[0].text : "";
+        console.log(`[analyze-panel] Summary: Claude responded with ${responseText.length} chars`);
+
+        const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+        if (!jsonMatch) {
+          console.error("[analyze-panel] Summary: no JSON found in response");
+          console.error("[analyze-panel] Response preview:", responseText.slice(0, 500));
+        } else {
+          const parsed = JSON.parse(jsonMatch[0]);
+          const actionPlanData = parsed.action_plan || {};
+
+          await supabase.from("action_plans").insert({
+            user_id: userId,
+            test_date: effectiveDate,
+            overall_summary:
+              actionPlanData.overall_summary || parsed.executive_summary || "",
+            disclaimer:
+              actionPlanData.disclaimer ||
+              "This is educational content, not medical advice. Consult your healthcare provider.",
+            domains: actionPlanData.domains || [],
+            generation_time_ms: 0,
+          });
+          actionPlanStored = true;
+          console.log("[analyze-panel] Summary: action plan stored successfully");
+        }
+      } catch (summaryErr: any) {
+        console.error("[analyze-panel] Summary step failed:", summaryErr?.message || summaryErr);
+        console.error("[analyze-panel] Stack:", summaryErr?.stack);
       }
 
-      const parsed = JSON.parse(jsonMatch[0]);
-      const actionPlanData = parsed.action_plan || {};
+      // If Claude summary failed, store a basic fallback action plan
+      if (!actionPlanStored) {
+        console.log("[analyze-panel] Storing fallback action plan");
+        const outOfRange = allAnalyses.filter((a: any) => a.status === "out_of_range");
+        const borderline = allAnalyses.filter((a: any) => a.status === "borderline");
+        const fallbackSummary = `Your panel of ${allAnalyses.length} markers has been analyzed. ${outOfRange.length} markers are out of range (${outOfRange.map((a: any) => a.biomarker_name).join(", ")}) and ${borderline.length} are borderline. Please review the individual marker analyses for detailed findings and recommendations.`;
 
-      // Store action plan
-      await supabase.from("action_plans").insert({
-        user_id: userId,
-        test_date: effectiveDate,
-        overall_summary:
-          actionPlanData.overall_summary || parsed.executive_summary || "",
-        disclaimer:
-          actionPlanData.disclaimer ||
-          "This is educational content, not medical advice. Consult your healthcare provider.",
-        domains: actionPlanData.domains || [],
-        generation_time_ms: 0,
-      });
+        try {
+          await supabase.from("action_plans").insert({
+            user_id: userId,
+            test_date: effectiveDate,
+            overall_summary: fallbackSummary,
+            disclaimer: "This is educational content, not medical advice. Consult your healthcare provider.",
+            domains: [],
+            generation_time_ms: 0,
+          });
+          console.log("[analyze-panel] Fallback action plan stored");
+        } catch (fbErr: any) {
+          console.error("[analyze-panel] Even fallback insert failed:", fbErr?.message);
+        }
+      }
 
       // Run risk calculations
       const biomarkerValues: BiomarkerValue[] = insertedResults.map(
@@ -892,6 +925,7 @@ Return ONLY valid JSON.`;
         complete: true,
         analysesCount: allAnalyses.length,
         riskCalcs: riskCalcs.length,
+        actionPlanStored,
         model,
       };
     });
