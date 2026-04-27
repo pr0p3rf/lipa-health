@@ -40,8 +40,17 @@ export default function UploadPage() {
     setFileNames(files.map((f) => f.name));
     setErrorMsg("");
 
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    let { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      // Try creating anonymous session if expired
+      const { data: anonData } = await supabase.auth.signInAnonymously();
+      user = anonData?.user || null;
+    }
+    if (!user) {
+      setErrorMsg("Session expired. Please refresh the page and try again.");
+      setState("error");
+      return;
+    }
 
     // Track upload (no PDF stored — we only extract biomarker values, never store the original document)
     for (const file of files) {
@@ -89,7 +98,12 @@ export default function UploadPage() {
       setState("done");
       router.push("/dashboard?analyzing=true");
     } catch (err: any) {
-      setErrorMsg(err.message || "Network error");
+      const msg = err.message || "";
+      if (msg.includes("Failed to fetch") || msg.includes("NetworkError") || msg.includes("timeout")) {
+        setErrorMsg("Connection issue. This can happen with large files on mobile. Please try again or use a smaller file.");
+      } else {
+        setErrorMsg(msg || "Something went wrong. Please try again.");
+      }
       setState("error");
     }
   }, [router]);
