@@ -11,8 +11,8 @@ const translations = {
     mobilePricing: "Pricing",
 
     // Hero
-    heroTitle: "Your biology, understood.",
-    heroSub: "Upload your blood test. Get a research-grade analysis of every marker, a personalized protocol, and a health assistant that knows your numbers — not generic advice. Cited. Transparent. Yours.",
+    heroTitle: "Take control of your health.",
+    heroSub: "Upload your blood test or schedule one today. See what your doctor missed — root causes, specific supplement protocols, and a personal plan backed by 100,000+ peer-reviewed studies.",
     ctaButton: "Upload your blood test",
     heroSecondary: "Find out what to test",
     heroHowLink: "See how it works ↓",
@@ -180,8 +180,8 @@ const translations = {
     mobilePricing: "Prijzen",
 
     // Hero
-    heroTitle: "Jouw biologie, begrepen.",
-    heroSub: "Upload je bloedtest. Krijg een wetenschappelijke analyse van elke marker, een persoonlijk protocol en een gezondheidsassistent die jouw waarden kent — geen generiek advies. Onderbouwd. Transparant. Van jou.",
+    heroTitle: "Neem de controle over je gezondheid.",
+    heroSub: "Upload je bloedtest of plan er vandaag een. Zie wat je arts heeft gemist — oorzaken, specifieke supplementprotocollen en een persoonlijk plan onderbouwd door 100.000+ wetenschappelijke studies.",
     ctaButton: "Upload je bloedtest",
     heroSecondary: "Ontdek wat je moet testen",
     heroHowLink: "Bekijk hoe het werkt ↓",
@@ -344,8 +344,8 @@ const translations = {
     mobilePricing: "Cennik",
 
     // Hero
-    heroTitle: "Twoja biologia, zrozumiana.",
-    heroSub: "Prześlij wynik badania krwi. Otrzymaj naukową analizę każdego markera, spersonalizowany protokół i asystenta zdrowia, który zna Twoje wyniki — nie ogólne porady. Udokumentowane. Przejrzyste. Twoje.",
+    heroTitle: "Przejmij kontrol\u0119 nad swoim zdrowiem.",
+    heroSub: "Prze\u015blij wynik badania krwi lub zam\u00f3w je dzi\u015b. Zobacz, co pomin\u0105\u0142 Tw\u00f3j lekarz — przyczyny, konkretne protoko\u0142y suplementacji i osobisty plan poparty 100 000+ recenzowanych bada\u0144 naukowych.",
     ctaButton: "Prześlij badanie krwi",
     heroSecondary: "Dowiedz się, co zbadać",
     heroHowLink: "Zobacz jak to działa ↓",
@@ -508,8 +508,8 @@ const translations = {
     mobilePricing: "Precios",
 
     // Hero
-    heroTitle: "Tu biología, comprendida.",
-    heroSub: "Sube tu análisis de sangre. Obtén un análisis científico de cada marcador, un protocolo personalizado y un asistente de salud que conoce tus valores — no consejos genéricos. Citado. Transparente. Tuyo.",
+    heroTitle: "Toma el control de tu salud.",
+    heroSub: "Sube tu an\u00e1lisis de sangre o programa uno hoy. Descubre lo que tu m\u00e9dico pas\u00f3 por alto — causas ra\u00edz, protocolos espec\u00edficos de suplementaci\u00f3n y un plan personal respaldado por 100.000+ estudios cient\u00edficos.",
     ctaButton: "Sube tu análisis de sangre",
     heroSecondary: "Descubre qué analizar",
     heroHowLink: "Mira cómo funciona ↓",
@@ -672,8 +672,8 @@ const translations = {
     mobilePricing: "Preise",
 
     // Hero
-    heroTitle: "Deine Biologie, verstanden.",
-    heroSub: "Lade deinen Bluttest hoch. Erhalte eine forschungsbasierte Analyse jedes Markers, ein personalisiertes Protokoll und einen Gesundheitsassistenten, der deine Werte kennt — keine allgemeinen Ratschläge. Quellenbasiert. Transparent. Deins.",
+    heroTitle: "\u00dcbernimm die Kontrolle \u00fcber deine Gesundheit.",
+    heroSub: "Lade deinen Bluttest hoch oder vereinbare heute einen. Sieh, was dein Arzt \u00fcbersehen hat — Ursachen, spezifische Supplement-Protokolle und einen pers\u00f6nlichen Plan, gest\u00fctzt auf 100.000+ wissenschaftliche Studien.",
     ctaButton: "Bluttest hochladen",
     heroSecondary: "Finde heraus, was du testen solltest",
     heroHowLink: "So funktioniert's ↓",
@@ -836,8 +836,8 @@ const translations = {
     mobilePricing: "Tarifs",
 
     // Hero
-    heroTitle: "Votre biologie, comprise.",
-    heroSub: "Importez votre bilan sanguin. Obtenez une analyse scientifique de chaque marqueur, un protocole personnalisé et un assistant santé qui connaît vos valeurs — pas des conseils génériques. Sourcé. Transparent. Le vôtre.",
+    heroTitle: "Prenez le contr\u00f4le de votre sant\u00e9.",
+    heroSub: "Importez votre bilan sanguin ou programmez-en un aujourd\u2019hui. D\u00e9couvrez ce que votre m\u00e9decin a manqu\u00e9 — causes profondes, protocoles de suppl\u00e9mentation sp\u00e9cifiques et un plan personnel fond\u00e9 sur 100 000+ \u00e9tudes scientifiques.",
     ctaButton: "Importer votre bilan sanguin",
     heroSecondary: "Découvrez quoi analyser",
     heroHowLink: "Voir comment ça fonctionne ↓",
@@ -1000,8 +1000,8 @@ const translations = {
     mobilePricing: "Preços",
 
     // Hero
-    heroTitle: "Sua biologia, compreendida.",
-    heroSub: "Envie seu exame de sangue. Receba uma análise baseada em pesquisa de cada marcador, um protocolo personalizado e um assistente de saúde que conhece seus valores — não conselhos genéricos. Com fontes. Transparente. Seu.",
+    heroTitle: "Assuma o controle da sua sa\u00fade.",
+    heroSub: "Envie seu exame de sangue ou agende um hoje. Veja o que seu m\u00e9dico deixou passar — causas, protocolos espec\u00edficos de suplementa\u00e7\u00e3o e um plano pessoal baseado em 100.000+ estudos cient\u00edficos revisados.",
     ctaButton: "Enviar exame de sangue",
     heroSecondary: "Descubra o que testar",
     heroHowLink: "Veja como funciona ↓",
