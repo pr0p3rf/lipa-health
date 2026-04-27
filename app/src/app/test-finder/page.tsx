@@ -559,11 +559,10 @@ export default function TestFinderPage() {
             className="text-[28px] sm:text-[36px] tracking-tight mb-2"
             style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}
           >
-            Test Finder
+            What should you test?
           </h1>
-          <p className="text-[#6B6B6B] text-[15px] mb-10 max-w-xl">
-            Tell us your goal and location. We'll tell you exactly what to test
-            and where to go.
+          <p className="text-[#5A635D] text-[15px] mb-10 max-w-xl">
+            Most people test the wrong things — or not enough. Tell us your health goals and we&apos;ll build you a personalized panel with exactly which markers to order.
           </p>
 
           {/* ---- STEP 1: Goal selection ---- */}

@@ -119,14 +119,20 @@ export default function UploadPage() {
       <AppNav />
       <main className="max-w-2xl mx-auto px-6 py-12">
         <h1
-          className="text-[28px] tracking-tight mb-2"
+          className="text-[28px] sm:text-[32px] tracking-tight mb-2"
           style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}
         >
-          Upload Blood Test
+          See what your blood test really means
         </h1>
-        <p className="text-[#6B6B6B] text-[15px] mb-8">
-          Upload your lab results as PDF or photo. We support results from any laboratory worldwide — any language, any format.
+        <p className="text-[#5A635D] text-[15px] mb-6 max-w-xl">
+          Upload your lab results and get a research-grade analysis in minutes. Any lab, any country, any format.
         </p>
+        <div className="flex flex-wrap gap-4 mb-8 text-[12px] text-[#5A635D]">
+          <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-[#1B6B4A]" />100,000+ studies analyzed</span>
+          <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-[#1B6B4A]" />300K+ health profiles</span>
+          <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-[#1B6B4A]" />Biological age estimate</span>
+          <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-[#1B6B4A]" />Private &amp; encrypted</span>
+        </div>
 
         {state === "error" ? (
           /* ---- Error state ---- */
@@ -225,6 +231,11 @@ export default function UploadPage() {
               <p className="text-[12px] text-[#1B6B4A] font-medium">
                 You can upload multiple files at once
               </p>
+            </div>
+            <div className="mt-6 text-center">
+              <a href="/test-finder" className="text-[13px] text-[#1B6B4A] font-medium hover:underline">
+                Don&apos;t have a blood test yet? We&apos;ll tell you what to order →
+              </a>
             </div>
           </>
         )}
