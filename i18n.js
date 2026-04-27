@@ -12,7 +12,7 @@ const translations = {
 
     // Hero
     heroTitle: "Take control of your health.",
-    heroSub: "Upload your blood test or schedule one today. See what your doctor missed — root causes, specific supplement protocols, and a personal plan backed by 250,000+ peer-reviewed studies.",
+    heroSub: "Upload your blood test or book one today. In minutes, know exactly what's going on and what to do about it — root causes, specific protocols, and patterns across your markers. Backed by 250,000+ peer-reviewed studies.",
     ctaButton: "Upload your blood test",
     heroSecondary: "Find out what to test",
     heroHowLink: "See how it works ↓",
@@ -181,7 +181,7 @@ const translations = {
 
     // Hero
     heroTitle: "Neem de controle over je gezondheid.",
-    heroSub: "Upload je bloedtest of plan er vandaag een. Zie wat je arts heeft gemist — oorzaken, specifieke supplementprotocollen en een persoonlijk plan onderbouwd door 250.000+ wetenschappelijke studies.",
+    heroSub: "Upload je bloedtest of boek er vandaag een. Weet binnen minuten wat er aan de hand is en wat je eraan kunt doen \u2014 oorzaken, specifieke protocollen en patronen tussen je markers. Onderbouwd door 250.000+ wetenschappelijke studies.",
     ctaButton: "Upload je bloedtest",
     heroSecondary: "Ontdek wat je moet testen",
     heroHowLink: "Bekijk hoe het werkt ↓",
@@ -345,7 +345,7 @@ const translations = {
 
     // Hero
     heroTitle: "Przejmij kontrol\u0119 nad swoim zdrowiem.",
-    heroSub: "Prze\u015blij wynik badania krwi lub zam\u00f3w je dzi\u015b. Zobacz, co pomin\u0105\u0142 Tw\u00f3j lekarz — przyczyny, konkretne protoko\u0142y suplementacji i osobisty plan poparty 250 000+ recenzowanych bada\u0144 naukowych.",
+    heroSub: "Prze\u015blij wynik badania krwi lub zam\u00f3w je dzi\u015b. W kilka minut dowiedz si\u0119, co si\u0119 dzieje i co z tym zrobi\u0107 \u2014 przyczyny, konkretne protoko\u0142y i powi\u0105zania mi\u0119dzy markerami. Poparte 250 000+ recenzowanych bada\u0144 naukowych.",
     ctaButton: "Prześlij badanie krwi",
     heroSecondary: "Dowiedz się, co zbadać",
     heroHowLink: "Zobacz jak to działa ↓",
@@ -509,7 +509,7 @@ const translations = {
 
     // Hero
     heroTitle: "Toma el control de tu salud.",
-    heroSub: "Sube tu an\u00e1lisis de sangre o programa uno hoy. Descubre lo que tu m\u00e9dico pas\u00f3 por alto — causas ra\u00edz, protocolos espec\u00edficos de suplementaci\u00f3n y un plan personal respaldado por 250.000+ estudios cient\u00edficos.",
+    heroSub: "Sube tu an\u00e1lisis de sangre o reserva uno hoy. En minutos, sabr\u00e1s exactamente qu\u00e9 est\u00e1 pasando y qu\u00e9 hacer \u2014 causas, protocolos espec\u00edficos y patrones entre tus marcadores. Respaldado por 250.000+ estudios cient\u00edficos.",
     ctaButton: "Sube tu análisis de sangre",
     heroSecondary: "Descubre qué analizar",
     heroHowLink: "Mira cómo funciona ↓",
@@ -673,7 +673,7 @@ const translations = {
 
     // Hero
     heroTitle: "\u00dcbernimm die Kontrolle \u00fcber deine Gesundheit.",
-    heroSub: "Lade deinen Bluttest hoch oder vereinbare heute einen. Sieh, was dein Arzt \u00fcbersehen hat — Ursachen, spezifische Supplement-Protokolle und einen pers\u00f6nlichen Plan, gest\u00fctzt auf 250.000+ wissenschaftliche Studien.",
+    heroSub: "Lade deinen Bluttest hoch oder buche heute einen. In Minuten wei\u00dft du genau, was los ist und was zu tun ist \u2014 Ursachen, spezifische Protokolle und Zusammenh\u00e4nge zwischen deinen Markern. Gest\u00fctzt auf 250.000+ wissenschaftliche Studien.",
     ctaButton: "Bluttest hochladen",
     heroSecondary: "Finde heraus, was du testen solltest",
     heroHowLink: "So funktioniert's ↓",
@@ -837,7 +837,7 @@ const translations = {
 
     // Hero
     heroTitle: "Prenez le contr\u00f4le de votre sant\u00e9.",
-    heroSub: "Importez votre bilan sanguin ou programmez-en un aujourd\u2019hui. D\u00e9couvrez ce que votre m\u00e9decin a manqu\u00e9 — causes profondes, protocoles de suppl\u00e9mentation sp\u00e9cifiques et un plan personnel fond\u00e9 sur 250 000+ \u00e9tudes scientifiques.",
+    heroSub: "Importez votre bilan sanguin ou r\u00e9servez-en un aujourd\u2019hui. En quelques minutes, sachez exactement ce qui se passe et quoi faire \u2014 causes, protocoles sp\u00e9cifiques et connexions entre vos marqueurs. Fond\u00e9 sur 250 000+ \u00e9tudes scientifiques.",
     ctaButton: "Importer votre bilan sanguin",
     heroSecondary: "Découvrez quoi analyser",
     heroHowLink: "Voir comment ça fonctionne ↓",
@@ -1001,7 +1001,7 @@ const translations = {
 
     // Hero
     heroTitle: "Assuma o controle da sua sa\u00fade.",
-    heroSub: "Envie seu exame de sangue ou agende um hoje. Veja o que seu m\u00e9dico deixou passar — causas, protocolos espec\u00edficos de suplementa\u00e7\u00e3o e um plano pessoal baseado em 250.000+ estudos cient\u00edficos revisados.",
+    heroSub: "Envie seu exame de sangue ou agende um hoje. Em minutos, saiba exatamente o que est\u00e1 acontecendo e o que fazer \u2014 causas, protocolos espec\u00edficos e padr\u00f5es entre seus marcadores. Baseado em 250.000+ estudos cient\u00edficos revisados.",
     ctaButton: "Enviar exame de sangue",
     heroSecondary: "Descubra o que testar",
     heroHowLink: "Veja como funciona ↓",
