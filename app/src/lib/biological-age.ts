@@ -43,66 +43,36 @@ export interface BioAgeResult {
 }
 
 // ---------------------------------------------------------------------------
-// Biomarker alias map — match by name with case-insensitive aliases
+// Use global alias resolver (single source of truth)
 // ---------------------------------------------------------------------------
 
-const BIOMARKER_ALIASES: Record<string, string[]> = {
-  "Albumin": ["Albumin", "Serum Albumin", "ALB"],
-  "Alkaline Phosphatase": ["Alkaline Phosphatase", "ALP", "Alk Phos", "Alkaline Phosphatase (ALP)"],
-  "BUN": ["BUN", "Blood Urea Nitrogen", "Urea Nitrogen", "Urea", "Urea (BUN)"],
-  "Creatinine": ["Creatinine", "Serum Creatinine", "CREA"],
-  "Glucose": ["Glucose", "Fasting Glucose", "Fasting Blood Glucose", "FBG", "Blood Glucose", "Glucose (Fasting)", "Glucose Fasting"],
-  "Total Cholesterol": ["Total Cholesterol", "Cholesterol", "TC"],
-  "Systolic BP": ["Systolic BP", "Systolic Blood Pressure", "SBP", "Systolic"],
-  "CRP": ["CRP", "hs-CRP", "C-Reactive Protein", "High-sensitivity C-reactive protein", "hsCRP", "High Sensitivity CRP", "C-Reactive Protein, High Sensitivity", "C-Reactive Protein (High Sensitivity)", "C-Reactive Protein (hsCRP)", "High Sensitivity C-Reactive Protein", "HS CRP", "CRP, High Sensitivity", "Ultra-Sensitive CRP", "Cardio CRP", "C-Reactive Protein, Cardiac"],
-  "Lymphocyte %": ["Lymphocyte %", "Lymphocyte Percentage", "Lymph %", "Lymphocytes %", "Lymphocytes", "Lymphocytes (%)", "Lymphs"],
-  "MCV": ["MCV", "Mean Corpuscular Volume"],
-  "RDW": ["RDW", "Red Cell Distribution Width", "RDW-CV", "Red Cell Distribution Width"],
-  "WBC": ["WBC", "White Blood Cell Count", "White Blood Cells", "Leukocyte Count", "Leukocytes", "White Blood Cells (WBC)"],
+import { findBiomarkerValue, convertToStandardUnit, getAliases } from "./biomarker-aliases";
+
+// Bio-age specific canonical names (map to global canonical names)
+const BIO_AGE_CANONICAL_MAP: Record<string, string> = {
+  "Albumin": "Albumin",
+  "Alkaline Phosphatase": "Alkaline Phosphatase",
+  "BUN": "BUN",
+  "Creatinine": "Creatinine",
+  "Glucose": "Fasting Glucose",
+  "Total Cholesterol": "Total Cholesterol",
+  "Systolic BP": "Systolic BP", // not in global map — from profile
+  "CRP": "hs-CRP",
+  "Lymphocyte %": "Lymphocytes",
+  "MCV": "MCV",
+  "RDW": "RDW",
+  "WBC": "White Blood Cells",
 };
-
-// Unit conversion to standardize international lab results
-function convertToStandardUnit(name: string, value: number, unit?: string | null): number {
-  const u = (unit || "").toLowerCase().replace(/\s+/g, "");
-  const n = name.toLowerCase();
-
-  // Glucose: mmol/L → mg/dL (multiply by 18.018)
-  if (n.includes("glucose") && (u.includes("mmol") || u === "mmol/l")) {
-    return value * 18.018;
-  }
-  // Cholesterol: mmol/L → mg/dL (multiply by 38.67)
-  if ((n.includes("cholesterol") || n === "tc") && (u.includes("mmol") || u === "mmol/l")) {
-    return value * 38.67;
-  }
-  // Albumin: g/L → g/dL (divide by 10)
-  if (n.includes("albumin") && u === "g/l") {
-    return value / 10;
-  }
-  // Creatinine: µmol/L → mg/dL (divide by 88.42)
-  if (n.includes("creatinine") && (u.includes("µmol") || u.includes("umol") || u.includes("μmol"))) {
-    return value / 88.42;
-  }
-  // CRP: mg/L stays as mg/L (same unit used in algorithms)
-  // BUN: mmol/L → mg/dL (multiply by 2.801)
-  if ((n.includes("bun") || n.includes("urea")) && (u.includes("mmol") || u === "mmol/l")) {
-    return value * 2.801;
-  }
-  // Alkaline Phosphatase: U/L stays as U/L (standard)
-  return value;
-}
 
 function findBiomarker(
   biomarkers: { name: string; value: number; unit?: string | null }[],
   name: string
 ): number | null {
-  const aliases = BIOMARKER_ALIASES[name] || [name];
-  for (const alias of aliases) {
-    const match = biomarkers.find(
-      (b) => b.name.toLowerCase() === alias.toLowerCase()
-    );
-    if (match && !isNaN(match.value)) {
-      return convertToStandardUnit(name, match.value, match.unit);
-    }
+  // Map bio-age canonical name to global canonical name
+  const globalCanonical = BIO_AGE_CANONICAL_MAP[name] || name;
+  const match = findBiomarkerValue(biomarkers, globalCanonical);
+  if (match) {
+    return convertToStandardUnit(globalCanonical, match.value, match.unit);
   }
   return null;
 }
@@ -165,7 +135,14 @@ function calculateKDM(
     used.push(cfg.name);
 
     // Predicted age from this biomarker
-    const predictedAge = (value - cfg.intercept) / cfg.slope;
+    let predictedAge = (value - cfg.intercept) / cfg.slope;
+
+    // Clamp outliers: cap individual biomarker age predictions to ±30 years
+    // from chronological age. Extreme lab values (e.g., CRP of 9+) can
+    // produce predicted ages of 100+ which distort the entire ensemble.
+    const clampMin = Math.max(10, _chronologicalAge - 30);
+    const clampMax = _chronologicalAge + 30;
+    predictedAge = Math.max(clampMin, Math.min(clampMax, predictedAge));
 
     // Weight = inverse of residual variance (smaller variance = more weight)
     // We use (slope / residual_sd)^2 as the weight, which accounts for

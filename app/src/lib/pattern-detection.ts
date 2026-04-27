@@ -44,14 +44,23 @@ interface PatternRule {
   }>;
 }
 
+import { getAliases } from "./biomarker-aliases";
+
 // Helper to find a marker value by name or alias
+// Uses inline aliases + global alias resolver as fallback
 function findMarker(
   results: Array<{ name: string; value: number; status: string }>,
   marker: string,
-  aliases?: string[]
+  inlineAliases?: string[]
 ): { value: number; status: string } | null {
-  const names = [marker, ...(aliases || [])].map((n) => n.toLowerCase());
-  const match = results.find((r) => names.includes(r.name.toLowerCase()));
+  // Merge inline aliases with global aliases (deduped, case-insensitive)
+  const globalAliases = getAliases(marker);
+  const allNames = new Set<string>();
+  allNames.add(marker.toLowerCase());
+  for (const a of (inlineAliases || [])) allNames.add(a.toLowerCase());
+  for (const a of globalAliases) allNames.add(a.toLowerCase());
+
+  const match = results.find((r) => allNames.has(r.name.toLowerCase()));
   return match || null;
 }
 
