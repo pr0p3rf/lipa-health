@@ -43,11 +43,9 @@ export default function UploadPage() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    // Upload all files to Supabase Storage
+    // Track upload (no PDF stored — we only extract biomarker values, never store the original document)
     for (const file of files) {
-      const filePath = `${user.id}/${Date.now()}-${file.name}`;
-      try { await supabase.storage.from("lab-results").upload(filePath, file); } catch {}
-      try { await supabase.from("uploads").insert({ user_id: user.id, file_path: filePath, file_name: file.name, status: "analyzing" }); } catch {}
+      try { await supabase.from("uploads").insert({ user_id: user.id, file_name: file.name, status: "analyzing" }); } catch {}
     }
 
     setState("extracting");

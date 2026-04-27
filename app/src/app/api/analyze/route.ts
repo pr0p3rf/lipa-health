@@ -27,6 +27,7 @@ Return a JSON object with two fields:
    - "category": one of: "metabolic", "hormonal", "inflammatory", "cardiac", "liver", "kidney", "thyroid", "hematology", "nutrient", "lipid", "other"
 
 Important:
+- Extract ONLY biomarker data. Do NOT extract or return patient names, addresses, dates of birth, doctor names, or any personal identifying information.
 - Extract EVERY biomarker visible in the document
 - Use standardized English names even if the document is in Polish, German, Dutch, or Spanish
 - If a reference range shows "> X" or "< X", set the appropriate bound and leave the other as null
