@@ -838,50 +838,31 @@ Return ONLY valid JSON with a "markers" array containing exactly ${batchBiomarke
               .join("\n")
           : "(No rule-based patterns detected)";
 
-      const summaryPrompt = `Here are ALL the marker analyses from a patient's blood panel (${allAnalyses.length} markers):
+      // Focus summary on out-of-range and borderline markers only
+      const criticalAnalysesText = sortedAnalyses
+        .filter((a: any) => a.status === "out_of_range" || a.status === "borderline")
+        .map((a: any) => `${a.biomarker_name} [${a.status}/${a.flag}]: ${a.summary} | What to do: ${a.what_to_do || "N/A"}`)
+        .join("\n");
+
+      const normalCount = allAnalyses.filter((a: any) => a.status === "normal" || a.status === "optimal").length;
+
+      const summaryPrompt = `Patient blood panel: ${allAnalyses.length} markers analyzed. ${normalCount} normal/optimal.
 ${fullDemographicText}
 
-MARKER ANALYSES (sorted by clinical priority):
-${allMarkerAnalysesText}
+MARKERS NEEDING ATTENTION:
+${criticalAnalysesText}
 
-CROSS-MARKER PATTERN DETECTION RESULTS:
-The following patterns were detected by our rule engine (these are CONFIRMED patterns backed by peer-reviewed literature):
+DETECTED PATTERNS:
 ${detectedPatternsText}
 
-${patternResearchText ? `RETRIEVED RESEARCH FOR PATTERNS AND MARKER COMBINATIONS:
-${patternResearchText.slice(0, 4000)}` : ""}
-
 Produce a JSON object with:
-1. "executive_summary": 10-15 sentences (3-4 paragraphs). This is the centerpiece of the analysis — make it worth reading. Start with what's going well (be specific: "Your kidney function, liver enzymes, and thyroid markers are all optimal"). Then explain the 3-4 most important findings with actual values and what they mean together as a pattern. Then give the top 3 priority actions with specific interventions. End with a retest timeline. Write like a doctor who has 30 minutes instead of 5 — warm, thorough, specific to THEIR values. This summary alone should make the user feel they got their money's worth.
-2. "cross_marker_patterns": Array of connections across markers. Each pattern has: "name", "markers_involved" (array), "summary", "severity" ("attention"|"watch"|"informational"), "research_backing" (array of objects with "study_title", "authors", "year", "journal" — from the retrieved research above), "clinical_significance" (1-2 sentences from the research), "what_to_do" (specific actionable recommendation).
-   CRITICAL RULES FOR PATTERNS:
-   - You MUST include ALL rule-detected patterns listed above. These are confirmed — enhance them with the retrieved research context.
-   - You may ONLY add additional patterns if they are directly supported by the retrieved research studies above. Cite the specific study title and year.
-   - Do NOT hallucinate connections. If no research supports a combination, do not include it as a pattern.
-   - For each pattern, include at least one entry in "research_backing" with real study details from the retrieved research.
-   - Include positive patterns too (e.g., "strong thyroid function") but these do not require research_backing.
-   - Aim for at least 3 patterns total.
-3. "action_plan": Object with:
-   - "overall_summary": 8-12 sentence detailed summary. Cover what's excellent, what needs attention (with values), the top 3 priorities with specific actions, and when to retest. This should feel like a thorough medical briefing, not a quick note.
-   - "domains": Array of exactly 6 domains (nutrition, supplementation, sleep, movement, environment, lifestyle). Each domain has "domain" (string) and "recommendations" (array). Each recommendation has:
-     - "text": Concise plain-English recommendation headline
-     - "markers_addressed": Array of marker names this addresses
-     - "research_basis": 2-3 sentences grounding this in specific research
-     - "cited_studies": number of studies supporting this
-     - "details": Object with "dosage_range", "best_form", "timing", "food_sources", "interactions", "important_notes" (all string or null)
-   - "disclaimer": "This is educational content, not medical advice. Discuss any changes with your healthcare provider before starting."
+1. "executive_summary": 8-12 sentences. Start with what's going well (mention specific optimal markers). Then explain the 3-4 most important findings with actual values. Give top 3 priority actions. End with retest timeline.
+2. "action_plan": Object with:
+   - "overall_summary": 6-10 sentence summary covering what's excellent, what needs attention with values, top 3 priorities, and when to retest.
+   - "domains": Array of 6 domains (nutrition, supplementation, sleep, movement, environment, lifestyle). Each has "domain" and "recommendations" array. Each recommendation: "text" (headline), "markers_addressed" (array), "research_basis" (1-2 sentences), "cited_studies" (number), "details" (object with "dosage_range", "best_form", "timing", "food_sources" — string or null).
+   - "disclaimer": "This is educational content, not medical advice."
 
-ACTION PLAN RULES:
-- Be SPECIFIC. "Take 2,000mg EPA+DHA omega-3 daily in triglyceride form, with a fat-containing meal" not "increase omega-3 intake."
-- NEVER recommend prescription medications. DO recommend supplements, vitamins, minerals, adaptogens, herbs where research supports them.
-- Include NATURAL and HOLISTIC interventions: ashwagandha for cortisol, berberine for glucose/lipids, curcumin for inflammation, functional foods, mind-body practices, environmental changes.
-- Focus on what's borderline or out of range. Don't give generic wellness advice for markers that are fine.
-- Include 2-4 recommendations per domain. Every recommendation MUST reference specific markers by name.
-- If a marker is low or out of range, ALWAYS include a supplement recommendation.
-- Supplements go in the "supplementation" domain, NOT lifestyle or environment.
-- Environment recommendations must be specific to their markers (e.g., "BPA exposure affects thyroid — switch to glass containers" not generic "filter water").
-- Include a "retest_timeline" field in each recommendation: when to retest to see improvement (e.g., "Retest in 3 months" or "Retest in 6 weeks").
-- For optimal markers: briefly note what's keeping them healthy and what to maintain.
+RULES: Be specific with doses/forms. Never recommend prescription drugs. Focus on borderline/out-of-range markers. 2-3 recommendations per domain. Reference specific marker names.
 
 Return ONLY valid JSON.`;
 
