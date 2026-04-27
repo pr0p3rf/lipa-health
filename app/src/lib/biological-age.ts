@@ -61,6 +61,36 @@ const BIOMARKER_ALIASES: Record<string, string[]> = {
   "WBC": ["WBC", "White Blood Cell Count", "White Blood Cells", "Leukocyte Count", "Leukocytes"],
 };
 
+// Unit conversion to standardize international lab results
+function convertToStandardUnit(name: string, value: number, unit?: string | null): number {
+  const u = (unit || "").toLowerCase().replace(/\s+/g, "");
+  const n = name.toLowerCase();
+
+  // Glucose: mmol/L → mg/dL (multiply by 18.018)
+  if (n.includes("glucose") && (u.includes("mmol") || u === "mmol/l")) {
+    return value * 18.018;
+  }
+  // Cholesterol: mmol/L → mg/dL (multiply by 38.67)
+  if ((n.includes("cholesterol") || n === "tc") && (u.includes("mmol") || u === "mmol/l")) {
+    return value * 38.67;
+  }
+  // Albumin: g/L → g/dL (divide by 10)
+  if (n.includes("albumin") && u === "g/l") {
+    return value / 10;
+  }
+  // Creatinine: µmol/L → mg/dL (divide by 88.42)
+  if (n.includes("creatinine") && (u.includes("µmol") || u.includes("umol") || u.includes("μmol"))) {
+    return value / 88.42;
+  }
+  // CRP: mg/L stays as mg/L (same unit used in algorithms)
+  // BUN: mmol/L → mg/dL (multiply by 2.801)
+  if ((n.includes("bun") || n.includes("urea")) && (u.includes("mmol") || u === "mmol/l")) {
+    return value * 2.801;
+  }
+  // Alkaline Phosphatase: U/L stays as U/L (standard)
+  return value;
+}
+
 function findBiomarker(
   biomarkers: { name: string; value: number; unit?: string | null }[],
   name: string
@@ -70,7 +100,9 @@ function findBiomarker(
     const match = biomarkers.find(
       (b) => b.name.toLowerCase() === alias.toLowerCase()
     );
-    if (match && !isNaN(match.value)) return match.value;
+    if (match && !isNaN(match.value)) {
+      return convertToStandardUnit(name, match.value, match.unit);
+    }
   }
   return null;
 }

@@ -562,7 +562,26 @@ export default function DashboardPage() {
     })
     .filter(Boolean);
 
-  const keyFindings = [...outOfRangeFindings, ...borderlineFindings].slice(0, 5);
+  // Rank findings by clinical importance: important categories first, then by how far out of range
+  const CATEGORY_PRIORITY: Record<string, number> = {
+    cardiovascular: 1, lipid: 1, cardiac: 1,
+    metabolic: 2,
+    inflammatory: 3,
+    hormonal: 4, thyroid: 4,
+    nutritional: 5, nutrient: 5,
+    hematology: 6, liver: 6, kidney: 6,
+    other: 7,
+  };
+  const rankedFindings = [...outOfRangeFindings, ...borderlineFindings]
+    .sort((a: any, b: any) => {
+      // Out of range before borderline
+      if (a.status !== b.status) return a.status === "out_of_range" ? -1 : 1;
+      // Then by category importance
+      const aPri = CATEGORY_PRIORITY[a.category?.toLowerCase()] || 7;
+      const bPri = CATEGORY_PRIORITY[b.category?.toLowerCase()] || 7;
+      return aPri - bPri;
+    });
+  const keyFindings = rankedFindings.slice(0, 8);
   const allGood = keyFindings.length === 0 && statusCounts.optimal > 0;
 
   // Body systems
