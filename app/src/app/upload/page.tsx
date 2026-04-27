@@ -54,7 +54,7 @@ export default function UploadPage() {
 
     // Track upload (no PDF stored — we only extract biomarker values, never store the original document)
     for (const file of files) {
-      try { await supabase.from("uploads").insert({ user_id: user.id, file_name: file.name, status: "analyzing" }); } catch {}
+      try { await supabase.from("uploads").insert({ user_id: user.id, file_path: "not-stored", file_name: file.name, status: "analyzing" }); } catch {}
     }
 
     setState("extracting");
