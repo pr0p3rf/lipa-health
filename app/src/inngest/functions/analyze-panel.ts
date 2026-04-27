@@ -804,28 +804,8 @@ Return ONLY valid JSON with a "markers" array containing exactly ${batchBiomarke
         `[analyze-panel] Pattern detection: ${detectedPatterns.length} patterns found`
       );
 
-      // 2. RAG retrieval for pattern combinations
-      let patternResearchText = "";
-      try {
-        const patternRAGResult = await retrievePatternResearch(
-          supabase,
-          allBiomarkers,
-          statusMap,
-          referenceMap,
-          detectedPatterns
-        );
-
-        patternResearchText = formatPatternResearchForPrompt(
-          patternRAGResult,
-          detectedPatterns
-        );
-
-        console.log(
-          `[analyze-panel] Pattern RAG: ${patternRAGResult.total_studies} studies retrieved in ${patternRAGResult.retrieval_time_ms}ms`
-        );
-      } catch (err) {
-        console.error("[analyze-panel] Pattern RAG failed, continuing without:", err);
-      }
+      // Skip pattern RAG in summary step to avoid timeout — patterns are already
+      // detected by rules and computed client-side. RAG is done per-batch instead.
 
       // Build the detected patterns text for the prompt
       const detectedPatternsText =
