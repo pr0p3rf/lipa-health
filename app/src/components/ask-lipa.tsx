@@ -246,7 +246,7 @@ export function AskLipa({ userId }: { userId: string }) {
               /* Empty state with suggestions */
               <div>
                 <p className="text-[13px] text-[#5A635D] mb-4 leading-relaxed">
-                  Ask Lipa knows your actual blood test results and searches 100,000+ peer-reviewed studies to answer your questions. Ask about any marker, supplement, or health concern — every answer is specific to your values and backed by real research.
+                  Ask Lipa knows your actual blood test results and searches 250,000+ peer-reviewed studies to answer your questions. Ask about any marker, supplement, or health concern — every answer is specific to your values and backed by real research.
                 </p>
                 <div className="space-y-2">
                   {SUGGESTED_QUESTIONS.map((q) => (

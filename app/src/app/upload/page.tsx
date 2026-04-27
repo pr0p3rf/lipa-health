@@ -142,7 +142,7 @@ export default function UploadPage() {
           Upload your lab results and get a research-grade analysis in minutes. Any lab, any country, any format.
         </p>
         <div className="flex flex-wrap gap-4 mb-8 text-[12px] text-[#5A635D]">
-          <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-[#1B6B4A]" />100,000+ studies analyzed</span>
+          <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-[#1B6B4A]" />250,000+ studies analyzed</span>
           <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-[#1B6B4A]" />300K+ health profiles</span>
           <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-[#1B6B4A]" />Biological age estimate</span>
           <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-[#1B6B4A]" />Private &amp; encrypted</span>
