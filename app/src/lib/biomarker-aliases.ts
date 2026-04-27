@@ -84,9 +84,9 @@ const GLOBAL_ALIASES: Record<string, string[]> = {
   "Anti-Thyroglobulin Antibodies": ["Anti-Thyroglobulin Antibodies", "Thyroglobulin Antibodies", "TgAb"],
 
   // --- Hormonal ---
-  "Total Testosterone": ["Total Testosterone", "Testosterone", "Testosterone (Total)", "Testosterone, Total"],
+  "Total Testosterone": ["Total Testosterone", "Testosterone", "Testosterone (Total)", "Testosterone, Total", "Serum Testosterone"],
   "Free Testosterone": ["Free Testosterone", "Free Testosterone (Direct)", "Testosterone, Free", "Free Testosterone Index"],
-  "SHBG": ["SHBG", "Sex Hormone Binding Globulin", "Sex Hormone-Binding Globulin", "SHBG (Sex Hormone Binding Globulin)", "Sex Horm Binding Glob, Serum"],
+  "SHBG": ["SHBG", "Sex Hormone Binding Globulin", "Sex Hormone-Binding Globulin", "SHBG (Sex Hormone Binding Globulin)", "Sex Horm Binding Glob, Serum", "Sex Horm Binding Glob"],
   "Estradiol": ["Estradiol", "E2", "Estradiol (E2)", "Estradiol-17beta", "Oestradiol", "Estradiol, Serum"],
   "Progesterone": ["Progesterone", "Serum Progesterone", "P4"],
   "DHEA-S": ["DHEA-S", "DHEA Sulfate", "DHEA-Sulfate", "DHEAS", "Dehydroepiandrosterone Sulfate"],
