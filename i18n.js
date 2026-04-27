@@ -16,6 +16,7 @@ const translations = {
     ctaButton: "Upload your blood test",
     heroSecondary: "Find out what to test",
     heroHowLink: "See how it works ↓",
+    heroDemo: "See a sample analysis →",
     ctaFine: "Start free · See all your markers · No credit card required",
 
     // Stats
@@ -185,6 +186,7 @@ const translations = {
     ctaButton: "Upload je bloedtest",
     heroSecondary: "Ontdek wat je moet testen",
     heroHowLink: "Bekijk hoe het werkt ↓",
+    heroDemo: "Bekijk een voorbeeldanalyse →",
     ctaFine: "Begin gratis · Zie al je markers · Geen creditcard nodig",
 
     // Stats
@@ -349,6 +351,7 @@ const translations = {
     ctaButton: "Prześlij badanie krwi",
     heroSecondary: "Dowiedz się, co zbadać",
     heroHowLink: "Zobacz jak to działa ↓",
+    heroDemo: "Zobacz przykładową analizę →",
     ctaFine: "Zacznij za darmo · Zobacz wszystkie markery · Bez karty kredytowej",
 
     // Stats
@@ -513,6 +516,7 @@ const translations = {
     ctaButton: "Sube tu análisis de sangre",
     heroSecondary: "Descubre qué analizar",
     heroHowLink: "Mira cómo funciona ↓",
+    heroDemo: "Ver un análisis de ejemplo →",
     ctaFine: "Empieza gratis · Ve todos tus marcadores · Sin tarjeta de crédito",
 
     // Stats
@@ -677,6 +681,7 @@ const translations = {
     ctaButton: "Bluttest hochladen",
     heroSecondary: "Finde heraus, was du testen solltest",
     heroHowLink: "So funktioniert's ↓",
+    heroDemo: "Beispielanalyse ansehen →",
     ctaFine: "Kostenlos starten · Alle Marker einsehen · Keine Kreditkarte nötig",
 
     // Stats
@@ -841,6 +846,7 @@ const translations = {
     ctaButton: "Importer votre bilan sanguin",
     heroSecondary: "Découvrez quoi analyser",
     heroHowLink: "Voir comment ça fonctionne ↓",
+    heroDemo: "Voir un exemple d'analyse →",
     ctaFine: "Commencez gratuitement · Voyez tous vos marqueurs · Sans carte bancaire",
 
     // Stats
@@ -1005,6 +1011,7 @@ const translations = {
     ctaButton: "Enviar exame de sangue",
     heroSecondary: "Descubra o que testar",
     heroHowLink: "Veja como funciona ↓",
+    heroDemo: "Ver uma análise de exemplo →",
     ctaFine: "Comece grátis · Veja todos os marcadores · Sem cartão de crédito",
 
     // Stats

@@ -310,14 +310,22 @@ export default function DemoPage() {
               <path d="M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z" fill="#1B6B4A" opacity="0.15" stroke="#1B6B4A" strokeWidth="1.2" />
               <line x1="14" y1="11" x2="14" y2="21" stroke="#1B6B4A" strokeWidth="0.8" />
             </svg>
-            <span className="text-[16px] font-semibold text-[#0F1A15]" style={{ fontFamily: FRAUNCES }}>Lipa</span>
+            <span className="text-[16px] font-semibold text-[#0F1A15] tracking-[1.5px] uppercase">Lipa</span>
           </a>
-          <a
-            href="https://my.lipa.health/upload"
-            className="text-[12px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-5 py-2 rounded-full transition-all duration-300"
-          >
-            Upload your blood test
-          </a>
+          <div className="flex items-center gap-2">
+            <a
+              href="https://my.lipa.health/test-finder"
+              className="text-[12px] font-semibold text-[#1B6B4A] hover:text-[#155A3D] px-4 py-2 rounded-full transition-all duration-300 border border-[#1B6B4A]/20 hover:border-[#1B6B4A]/40"
+            >
+              Get tested
+            </a>
+            <a
+              href="https://my.lipa.health/upload"
+              className="text-[12px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-4 py-2 rounded-full transition-all duration-300"
+            >
+              Upload test
+            </a>
+          </div>
         </div>
       </nav>
 
@@ -340,16 +348,24 @@ export default function DemoPage() {
                 <p className="text-[13px] text-[#5A635D] mt-0.5">Explore a real 98-marker blood test analysis. Upload your own to see your personalized results.</p>
               </div>
             </div>
-            <a
-              href="https://my.lipa.health/upload"
-              className="inline-flex items-center gap-2 text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-6 py-2.5 rounded-full transition-all duration-300 hover:-translate-y-0.5 flex-shrink-0"
-              style={{ boxShadow: "0 4px 16px rgba(27,107,74,0.25)" }}
-            >
-              Upload your blood test
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                <path d="M5 12h14" /><path d="M12 5l7 7-7 7" />
-              </svg>
-            </a>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <a
+                href="https://my.lipa.health/upload"
+                className="inline-flex items-center gap-2 text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-5 py-2.5 rounded-full transition-all duration-300 hover:-translate-y-0.5"
+                style={{ boxShadow: "0 4px 16px rgba(27,107,74,0.25)" }}
+              >
+                Upload your test
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M5 12h14" /><path d="M12 5l7 7-7 7" />
+                </svg>
+              </a>
+              <a
+                href="https://my.lipa.health/test-finder"
+                className="inline-flex items-center gap-2 text-[13px] font-semibold text-[#1B6B4A] px-5 py-2.5 rounded-full transition-all duration-300 hover:-translate-y-0.5 border border-[#1B6B4A]/20 hover:border-[#1B6B4A]/40"
+              >
+                Get tested
+              </a>
+            </div>
           </div>
 
           {/* ============================================================ */}
@@ -392,7 +408,7 @@ export default function DemoPage() {
                 className="inline-flex self-center text-[13px] font-semibold px-3 py-1 rounded-full mt-2"
                 style={{ backgroundColor: "#E8F5EE", color: "#1B6B4A" }}
               >
-                {demoBioAgeGap} yrs
+                {Number(demoBioAgeGap.toFixed(1))} yrs
               </div>
               <div className="text-[11px] text-[#8A928C] mt-2">
                 vs age 40 &middot; {bioAge?.contributing_biomarkers.length || 10} markers
@@ -402,7 +418,19 @@ export default function DemoPage() {
             {/* Summary */}
             <div className="p-5 flex flex-col" style={CARD}>
               <div className="text-[10px] uppercase tracking-[0.1em] text-[#1B6B4A] font-semibold mb-2">Summary</div>
-              <p className="text-[14px] text-[#0F1A15] leading-relaxed flex-1">{actionPlan.overall_summary}</p>
+              <div className="text-[14px] text-[#0F1A15] leading-relaxed flex-1 space-y-3">
+                {actionPlan.overall_summary.split(/(?<=[.!?])\s+(?=[A-Z])/).reduce((paragraphs: string[][], sentence: string) => {
+                  const lastPara = paragraphs[paragraphs.length - 1];
+                  if (lastPara && lastPara.length < 3) {
+                    lastPara.push(sentence);
+                  } else {
+                    paragraphs.push([sentence]);
+                  }
+                  return paragraphs;
+                }, [] as string[][]).map((sentences: string[], i: number) => (
+                  <p key={i}>{sentences.join(" ")}</p>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -891,20 +919,28 @@ export default function DemoPage() {
               See your own results
             </h3>
             <p className="text-[14px] text-[#5A635D] max-w-lg mx-auto mb-6">
-              Upload your blood test and get a research-grade analysis of every marker -- just like this one, but personalized to your biology.
+              Get a research-grade analysis of every marker — just like this one, but personalized to your biology.
             </p>
-            <a
-              href="https://my.lipa.health/upload"
-              className="inline-flex items-center gap-2 text-[14px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-8 py-3.5 rounded-full transition-all duration-300 hover:-translate-y-0.5"
-              style={{ boxShadow: "0 4px 16px rgba(27,107,74,0.25)" }}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="17 8 12 3 7 8" />
-                <line x1="12" y1="3" x2="12" y2="15" />
-              </svg>
-              Upload your blood test
-            </a>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <a
+                href="https://my.lipa.health/upload"
+                className="inline-flex items-center gap-2 text-[14px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-8 py-3.5 rounded-full transition-all duration-300 hover:-translate-y-0.5"
+                style={{ boxShadow: "0 4px 16px rgba(27,107,74,0.25)" }}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="17 8 12 3 7 8" />
+                  <line x1="12" y1="3" x2="12" y2="15" />
+                </svg>
+                Upload your test
+              </a>
+              <a
+                href="https://my.lipa.health/test-finder"
+                className="inline-flex items-center gap-2 text-[14px] font-semibold text-[#1B6B4A] px-8 py-3.5 rounded-full transition-all duration-300 hover:-translate-y-0.5 border border-[#1B6B4A]/20 hover:border-[#1B6B4A]/40"
+              >
+                Get tested
+              </a>
+            </div>
             <p className="text-[12px] text-[#8A928C] mt-3">Start free. No credit card required.</p>
           </div>
 

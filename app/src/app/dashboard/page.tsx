@@ -877,7 +877,7 @@ export default function DashboardPage() {
                     color: bioAge.gap !== null && bioAge.gap < 0 ? "#1B6B4A" : bioAge.gap !== null && bioAge.gap > 2 ? "#B91C1C" : "#0F1A15",
                   }}
                 >
-                  {Math.round(bioAge.ensemble_age * 10) / 10}
+                  {Number(bioAge.ensemble_age.toFixed(1))}
                 </div>
                 {bioAge.gap !== null && (
                   <div
@@ -887,7 +887,7 @@ export default function DashboardPage() {
                       color: bioAge.gap < 0 ? "#1B6B4A" : bioAge.gap > 2 ? "#B91C1C" : "#5A635D",
                     }}
                   >
-                    {bioAge.gap < 0 ? "" : "+"}{Math.round(bioAge.gap * 10) / 10} yrs
+                    {bioAge.gap < 0 ? "" : "+"}{Number(bioAge.gap.toFixed(1))} yrs
                   </div>
                 )}
                 <div className="text-[11px] text-[#8A928C] mt-2">
@@ -938,7 +938,19 @@ export default function DashboardPage() {
                     <p className="text-[12px] text-[#8A928C] mt-2">Full summary with personalized recommendations available with Lipa One (&euro;39) or Lipa Life (&euro;89/year).</p>
                   </>
                 ) : (
-                  <p className="text-[14px] text-[#0F1A15] leading-relaxed flex-1">{actionPlan.overall_summary}</p>
+                  <div className="text-[14px] text-[#0F1A15] leading-relaxed flex-1 space-y-3">
+                    {actionPlan.overall_summary.split(/(?<=[.!?])\s+(?=[A-Z])/).reduce((paragraphs: string[][], sentence: string, i: number) => {
+                      const lastPara = paragraphs[paragraphs.length - 1];
+                      if (lastPara && lastPara.length < 3) {
+                        lastPara.push(sentence);
+                      } else {
+                        paragraphs.push([sentence]);
+                      }
+                      return paragraphs;
+                    }, [] as string[][]).map((sentences: string[], i: number) => (
+                      <p key={i}>{sentences.join(" ")}</p>
+                    ))}
+                  </div>
                 )
               ) : (
                 <p className="text-[14px] text-[#8A928C] leading-relaxed flex-1">
