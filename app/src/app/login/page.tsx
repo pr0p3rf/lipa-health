@@ -19,11 +19,17 @@ function LoginContent() {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirect") || "/dashboard";
   const defaultSignUp = searchParams.get("mode") === "signup";
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isSignUp, setIsSignUp] = useState(defaultSignUp);
+
+  // Magic-link is primary. Password mode is opt-in for users who set one.
+  const [usePassword, setUsePassword] = useState(false);
+  const [magicLinkSent, setMagicLinkSent] = useState(false);
+
   const [isResettingPassword, setIsResettingPassword] = useState(false);
   const [resetSuccess, setResetSuccess] = useState(false);
 
@@ -33,62 +39,66 @@ function LoginContent() {
       const hash = window.location.hash;
       if (hash.includes("type=recovery")) {
         setIsResettingPassword(true);
+        setUsePassword(true);
       }
     }
-    // Also listen for auth state change (recovery event)
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === "PASSWORD_RECOVERY") {
         setIsResettingPassword(true);
+        setUsePassword(true);
       }
     });
     return () => subscription.unsubscribe();
   }, []);
 
-  async function handleSubmit(e: React.FormEvent) {
+  // Send a magic-link sign-in email. Works for both new and returning users
+  // because shouldCreateUser=true: Supabase signs them in if the account
+  // exists, creates one if not.
+  async function handleMagicLink(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    try {
+      const { error: authError } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          shouldCreateUser: true,
+          emailRedirectTo: `${window.location.origin}${redirectTo}`,
+        },
+      });
+      if (authError) {
+        setError(authError.message);
+      } else {
+        setMagicLinkSent(true);
+      }
+    } catch (err: any) {
+      setError(err.message || "Something went wrong.");
+    }
+    setLoading(false);
+  }
+
+  async function handlePasswordSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
     setLoading(true);
 
-    // Password validation for signup
     if (isSignUp) {
-      if (password.length < 8) {
-        setError("Password must be at least 8 characters.");
-        setLoading(false);
-        return;
-      }
-      if (!/[A-Z]/.test(password)) {
-        setError("Password must include at least one uppercase letter.");
-        setLoading(false);
-        return;
-      }
-      if (!/[0-9]/.test(password)) {
-        setError("Password must include at least one number.");
-        setLoading(false);
-        return;
-      }
+      if (password.length < 8) { setError("Password must be at least 8 characters."); setLoading(false); return; }
+      if (!/[A-Z]/.test(password)) { setError("Password must include at least one uppercase letter."); setLoading(false); return; }
+      if (!/[0-9]/.test(password)) { setError("Password must include at least one number."); setLoading(false); return; }
     }
 
     try {
       if (isSignUp) {
-        const { data, error: authError } = await supabase.auth.signUp({
-          email,
-          password,
-        });
+        const { data, error: authError } = await supabase.auth.signUp({ email, password });
         if (authError) {
           setError(authError.message);
         } else if (data.user) {
-          // Create profile
-          await supabase.from("profiles").insert({
-            id: data.user.id,
-            email: data.user.email,
-          });
+          await supabase.from("profiles").insert({ id: data.user.id, email: data.user.email });
           router.push(redirectTo);
         }
       } else {
-        const { error: authError } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
+        const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
         if (authError) {
           setError(authError.message);
         } else {
@@ -98,12 +108,11 @@ function LoginContent() {
     } catch (err: any) {
       setError(err.message || "Something went wrong.");
     }
-
     setLoading(false);
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
+    <div className="min-h-screen flex items-center justify-center px-4" style={{ background: "#F8F5EF" }}>
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="flex items-center gap-3 mb-10 justify-center">
@@ -152,84 +161,129 @@ function LoginContent() {
               </>
             )}
           </>
+        ) : magicLinkSent ? (
+          /* ---- Magic-link sent confirmation ---- */
+          <>
+            <h1 className="text-[22px] font-semibold mb-2 text-center" style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}>Check your inbox</h1>
+            <p className="text-[#5A635D] text-[14px] text-center mb-8 leading-relaxed">
+              We sent a sign-in link to <span className="font-medium text-[#0F1A15]">{email}</span>.
+              <br />Click the link to continue.
+            </p>
+            <button
+              onClick={() => { setMagicLinkSent(false); setEmail(""); }}
+              className="text-[13px] text-[#1B6B4A] font-medium hover:underline mx-auto block"
+            >
+              Use a different email
+            </button>
+          </>
         ) : (
-        /* ---- Normal Login/Signup ---- */
+        /* ---- Magic-link primary login ---- */
         <>
-        <h1 className="text-[22px] font-semibold mb-2 text-center">
-          {isSignUp ? "Create your free account" : "Sign in to Lipa"}
-        </h1>
-        <p className="text-[#6B6B6B] text-[14px] text-center mb-8">
-          {isSignUp ? "Upload your blood test and see what it really means." : "Welcome back."}
-        </p>
+          <h1 className="text-[24px] mb-2 text-center" style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}>
+            {isSignUp ? "Create your account" : "Sign in to Lipa"}
+          </h1>
+          <p className="text-[#5A635D] text-[14px] text-center mb-8 leading-relaxed">
+            {isSignUp ? "We'll email you a sign-in link." : "Enter your email — we'll send you a sign-in link."}
+          </p>
 
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 text-[13px] p-3 rounded-lg mb-4">
-            {error}
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 text-[13px] p-3 rounded-lg mb-4">
+              {error}
+            </div>
+          )}
+
+          {!usePassword ? (
+            <form onSubmit={handleMagicLink} className="flex flex-col gap-3">
+              <Input
+                type="email"
+                placeholder="your@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="h-12 bg-white border-[#e5e5e5] text-[15px]"
+              />
+              <Button
+                type="submit"
+                disabled={loading || !email.trim()}
+                className="h-12 bg-[#1B6B4A] hover:bg-[#155A3D] text-white font-semibold text-[14px] tracking-wide"
+              >
+                {loading ? "Sending…" : "Email me a sign-in link"}
+              </Button>
+            </form>
+          ) : (
+            /* ---- Password fallback (opt-in) ---- */
+            <form onSubmit={handlePasswordSubmit} className="flex flex-col gap-3">
+              <Input
+                type="email"
+                placeholder="your@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="h-12 bg-white border-[#e5e5e5] text-[15px]"
+              />
+              <Input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={8}
+                className="h-12 bg-white border-[#e5e5e5] text-[15px]"
+              />
+              <Button
+                type="submit"
+                disabled={loading}
+                className="h-12 bg-[#1B6B4A] hover:bg-[#155A3D] text-white font-semibold text-[14px] tracking-wide"
+              >
+                {loading ? "Loading..." : isSignUp ? "Create Account" : "Sign In"}
+              </Button>
+            </form>
+          )}
+
+          <div className="mt-6 flex flex-col items-center gap-2">
+            <button
+              type="button"
+              onClick={() => { setUsePassword(!usePassword); setError(""); }}
+              className="text-[12px] text-[#8A928C] hover:text-[#1B6B4A] transition-colors"
+            >
+              {usePassword ? "← Email me a sign-in link instead" : "Use a password instead"}
+            </button>
+
+            {usePassword && !isSignUp && (
+              <button
+                onClick={async () => {
+                  if (!email) {
+                    setError("Enter your email address first.");
+                    return;
+                  }
+                  setError("");
+                  setLoading(true);
+                  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                    redirectTo: `${window.location.origin}/login`,
+                  });
+                  setLoading(false);
+                  if (error) {
+                    setError(error.message);
+                  } else {
+                    setError("");
+                    alert("Password reset email sent. Check your inbox.");
+                  }
+                }}
+                className="text-[12px] text-[#8A928C] hover:text-[#1B6B4A] transition-colors"
+              >
+                Forgot your password?
+              </button>
+            )}
+
+            {usePassword && (
+              <button
+                onClick={() => { setIsSignUp(!isSignUp); setError(""); }}
+                className="text-[12px] text-[#8A928C] hover:text-[#1B6B4A] transition-colors"
+              >
+                {isSignUp ? "Already have an account? Sign in" : "Don't have an account? Sign up"}
+              </button>
+            )}
           </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-          <Input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className="h-12 bg-white border-[#e5e5e5] text-[15px]"
-          />
-          <Input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            minLength={8}
-            className="h-12 bg-white border-[#e5e5e5] text-[15px]"
-          />
-          <Button
-            type="submit"
-            disabled={loading}
-            className="h-12 bg-[#1B6B4A] hover:bg-[#155A3D] text-white font-semibold text-[14px] tracking-wide"
-          >
-            {loading ? "Loading..." : isSignUp ? "Create Account" : "Sign In"}
-          </Button>
-        </form>
-
-        <p className="text-[13px] text-[#6B6B6B] text-center mt-6">
-          {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
-          <button
-            onClick={() => { setIsSignUp(!isSignUp); setError(""); }}
-            className="text-[#1B6B4A] font-medium hover:underline"
-          >
-            {isSignUp ? "Sign in" : "Sign up"}
-          </button>
-        </p>
-
-        {!isSignUp && (
-          <button
-            onClick={async () => {
-              if (!email) {
-                alert("Enter your email address first, then click forgot password.");
-                return;
-              }
-              setError("");
-              setLoading(true);
-              const { error } = await supabase.auth.resetPasswordForEmail(email, {
-                redirectTo: `${window.location.origin}/login`,
-              });
-              setLoading(false);
-              if (error) {
-                setError(error.message);
-              } else {
-                setError("");
-                alert("Password reset email sent. Check your inbox.");
-              }
-            }}
-            className="text-[12px] text-[#8A928C] hover:text-[#1B6B4A] mt-2 block mx-auto"
-          >
-            Forgot your password?
-          </button>
-        )}
         </>
         )}
       </div>
