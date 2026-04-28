@@ -30,6 +30,14 @@ export default function AccountPage() {
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [portalLoading, setPortalLoading] = useState(false);
 
+  // Password setup / change form state. updateUser({ password }) works both
+  // for users who don't have a password yet (post-checkout magic-link flow)
+  // and for users who do — so a single form covers both cases.
+  const [newPassword, setNewPassword] = useState("");
+  const [passwordSaving, setPasswordSaving] = useState(false);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [passwordSaved, setPasswordSaved] = useState(false);
+
   useEffect(() => {
     async function load() {
       const { data: { user } } = await supabase.auth.getUser();
@@ -50,6 +58,24 @@ export default function AccountPage() {
     }
     load();
   }, [router]);
+
+  async function savePassword(e: React.FormEvent) {
+    e.preventDefault();
+    setPasswordError(null);
+    setPasswordSaved(false);
+    if (newPassword.length < 8) { setPasswordError("Password must be at least 8 characters."); return; }
+    if (!/[A-Z]/.test(newPassword)) { setPasswordError("Must include at least one uppercase letter."); return; }
+    if (!/[0-9]/.test(newPassword)) { setPasswordError("Must include at least one number."); return; }
+    setPasswordSaving(true);
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    setPasswordSaving(false);
+    if (error) {
+      setPasswordError(error.message);
+    } else {
+      setPasswordSaved(true);
+      setNewPassword("");
+    }
+  }
 
   async function openPortal() {
     if (!user) return;
@@ -125,6 +151,40 @@ export default function AccountPage() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Security / Password card.
+            Anonymous users converted via magic-link (or post-checkout webhook)
+            don't have a password by default. This is the place to set one for
+            users who want belt-and-suspenders access. updateUser({ password })
+            covers both first-time setup and password change. */}
+        <div className="bg-white border border-[#E5E5E5] rounded-2xl p-6 mb-6">
+          <div className="text-[11px] uppercase tracking-wider text-[#999] font-medium mb-3">
+            Security
+          </div>
+          <div className="text-[13px] font-medium text-[#2A2A2A] mb-1">Set a password (optional)</div>
+          <div className="text-[12px] text-[#6B6B6B] mb-3 max-w-md">
+            We&apos;ll keep emailing you sign-in links by default. Set a password if you&apos;d prefer faster sign-in across devices.
+          </div>
+          <form onSubmit={savePassword} className="flex flex-col sm:flex-row gap-2 max-w-md">
+            <input
+              type="password"
+              minLength={8}
+              placeholder="New password (8+ chars, 1 uppercase, 1 number)"
+              value={newPassword}
+              onChange={(e) => { setNewPassword(e.target.value); setPasswordSaved(false); setPasswordError(null); }}
+              className="flex-1 px-4 py-2.5 rounded-full border border-[#E5E5E5] text-[13px] bg-white focus:outline-none focus:border-[#1B6B4A]"
+            />
+            <button
+              type="submit"
+              disabled={passwordSaving || !newPassword}
+              className="px-5 py-2.5 rounded-full text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
+            >
+              {passwordSaving ? "Saving…" : "Save password"}
+            </button>
+          </form>
+          {passwordError && <p className="text-[12px] text-[#B91C1C] mt-2">{passwordError}</p>}
+          {passwordSaved && <p className="text-[12px] text-[#1B6B4A] mt-2">Password saved. You can now sign in with email + password.</p>}
         </div>
 
         {/* Subscription card */}

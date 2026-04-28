@@ -805,6 +805,11 @@ export default function DashboardPage() {
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M5 12h14" /><path d="M12 5l7 7-7 7" /></svg>
                   </a>
                 )}
+                <p className="text-[12px] text-[#8A928C] mt-3">
+                  We&apos;ll email you sign-in links by default.{" "}
+                  <a href="/account" className="text-[#1B6B4A] hover:underline">Set a password</a>
+                  {" "}for faster sign-in across devices.
+                </p>
               </div>
               <button onClick={() => setShowSuccess(false)} className="text-[#8A928C] hover:text-[#0F1A15] p-1 flex-shrink-0">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
@@ -1551,6 +1556,9 @@ export default function DashboardPage() {
                   >
                     {checkoutLoading === "insight" ? "Loading..." : "Get Lipa Life — €89/year"}
                   </button>
+                  <p className="text-[10px] text-[#8A928C] text-center mt-2 leading-relaxed">
+                    Cross-referenced against 250,000+ peer-reviewed studies · Cancel anytime · No long-term commitment
+                  </p>
                 </div>
                 {/* Lipa One */}
                 <div className="p-6" style={CARD}>
@@ -1579,7 +1587,9 @@ export default function DashboardPage() {
                   >
                     {checkoutLoading === "one" ? "Loading..." : "Get Single Analysis — €39"}
                   </button>
-                  <p className="text-[10px] text-[#8A928C] text-center mt-2">&euro;39 credited if you upgrade to Life within 30 days</p>
+                  <p className="text-[10px] text-[#8A928C] text-center mt-2 leading-relaxed">
+                    Cross-referenced against 250,000+ peer-reviewed studies · &euro;39 credited toward Life if you upgrade within 30 days
+                  </p>
                 </div>
               </div>
               {checkoutError && (
@@ -1680,8 +1690,23 @@ export default function DashboardPage() {
                 Cancel
               </button>
             </form>
-            <p className="text-[10px] text-[#8A928C] mt-4 leading-relaxed">
-              Secure payment via Stripe. GDPR-compliant. Your data is encrypted and never sold.
+            <ul className="text-[11px] text-[#5A635D] mt-5 space-y-1.5">
+              {[
+                "180+ biomarkers cross-referenced against 250,000+ peer-reviewed studies",
+                "Cited research for every recommendation",
+                pendingCheckoutTier === "insight" ? "Cancel anytime, no long-term commitment" : "€39 credited toward Life if you upgrade within 30 days",
+                "GDPR-compliant. Encrypted. Never sold.",
+              ].map((line) => (
+                <li key={line} className="flex items-start gap-2">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" strokeLinecap="round" className="flex-shrink-0 mt-0.5">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  <span>{line}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="text-[10px] text-[#8A928C] mt-3 leading-relaxed">
+              Secure payment via Stripe.
             </p>
           </div>
         </div>
