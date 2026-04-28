@@ -85,6 +85,13 @@ function PricingContent() {
   const [user, setUser] = useState<any>(null);
   const [message, setMessage] = useState<string | null>(null);
 
+  // Pre-checkout email modal — shown when an anonymous user clicks Buy
+  // without an email on file. Same InsideTracker two-stage pattern as
+  // the dashboard buy flow: capture email → Stripe → webhook attaches
+  // it to the user_id at payment, no password required.
+  const [pendingTier, setPendingTier] = useState<"one" | "insight" | null>(null);
+  const [checkoutEmail, setCheckoutEmail] = useState("");
+
   // Load user
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -94,6 +101,19 @@ function PricingContent() {
       setMessage("Subscription canceled. No charges were made.");
     }
   }, [searchParams]);
+
+  // Reset stuck loading state on bfcache restore (browser back from Stripe)
+  useEffect(() => {
+    const onPageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) {
+        setLoading(null);
+        setPendingTier(null);
+        setMessage(null);
+      }
+    };
+    window.addEventListener("pageshow", onPageShow);
+    return () => window.removeEventListener("pageshow", onPageShow);
+  }, []);
 
   // Auto-trigger checkout when user is loaded and tier param is present
   const [autoTriggered, setAutoTriggered] = useState(false);
@@ -116,14 +136,29 @@ function PricingContent() {
       return;
     }
 
+    // No session at all (cold visit straight to /pricing) — send to login
+    // for now. Could create an anon session here, but /upload is where the
+    // real onboarding happens.
     if (!user) {
       router.push(`/login?redirect=/pricing?tier=${tierId}`);
       return;
     }
 
+    // Have a session. If email is on file, go straight to Stripe.
+    // If anonymous (no email), open the capture modal.
+    if (user.email) {
+      await startCheckout(tierId, user.email);
+    } else {
+      setMessage(null);
+      setCheckoutEmail("");
+      setPendingTier(tierId === "one" || tierId === "insight" ? tierId : null);
+    }
+  }
+
+  async function startCheckout(tierId: Tier["id"], email: string) {
+    if (!user) return;
     setLoading(tierId);
     setMessage(null);
-
     try {
       const res = await fetch("/api/stripe/checkout", {
         method: "POST",
@@ -131,7 +166,7 @@ function PricingContent() {
         body: JSON.stringify({
           tier: tierId,
           userId: user.id,
-          email: user.email,
+          email,
         }),
       });
 
@@ -141,10 +176,10 @@ function PricingContent() {
         window.location.href = data.url;
       } else {
         setMessage(data.error || "Failed to start checkout");
+        setLoading(null);
       }
     } catch (err: any) {
       setMessage(err.message || "Failed to start checkout");
-    } finally {
       setLoading(null);
     }
   }
@@ -288,6 +323,85 @@ function PricingContent() {
           Lipa is not a medical device. Content is for educational and research purposes only and not a substitute for medical advice, diagnosis, or treatment. Always consult your healthcare provider.
         </div>
       </main>
+
+      {/* Pre-checkout email gate — same UX as dashboard. Captures email
+          before Stripe so the webhook can turn the anonymous session into
+          a real, recoverable account at the moment of payment. */}
+      {pendingTier && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center" onClick={() => !loading && setPendingTier(null)}>
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+          <div
+            className="relative bg-white rounded-3xl p-7 w-full max-w-md mx-4"
+            style={{ boxShadow: "0 24px 80px rgba(15,26,21,0.18)" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="text-[10px] uppercase tracking-[0.12em] text-[#1B6B4A] font-semibold mb-2">
+              {pendingTier === "insight" ? "Lipa Life — €89/year" : "Lipa One — €39"}
+            </div>
+            <h3 className="text-[22px] tracking-tight mb-2" style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}>
+              One last step
+            </h3>
+            <p className="text-[13px] text-[#5A635D] leading-relaxed mb-5">
+              Enter your email — we&apos;ll send your receipt and unlock your full results. Your analysis stays linked to this email so you can come back anytime.
+            </p>
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const email = checkoutEmail.trim();
+                if (!email || !pendingTier) return;
+                await startCheckout(pendingTier, email);
+              }}
+            >
+              <input
+                type="email"
+                required
+                autoFocus
+                placeholder="your@email.com"
+                value={checkoutEmail}
+                onChange={(e) => setCheckoutEmail(e.target.value)}
+                disabled={!!loading}
+                className="w-full px-4 py-3 rounded-full border border-[#E5E5E5] text-[14px] bg-white focus:outline-none focus:border-[#1B6B4A] mb-3"
+              />
+              {message && (
+                <p className="text-[12px] text-[#B91C1C] mb-3">{message}</p>
+              )}
+              <button
+                type="submit"
+                disabled={!checkoutEmail.trim() || !!loading}
+                className="w-full px-6 py-3 rounded-full text-[14px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {loading ? "Loading..." : "Continue to checkout →"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setPendingTier(null)}
+                disabled={!!loading}
+                className="w-full mt-2 px-6 py-2 text-[12px] text-[#8A928C] hover:text-[#0F1A15] disabled:opacity-50"
+              >
+                Cancel
+              </button>
+            </form>
+            <ul className="text-[11px] text-[#5A635D] mt-5 space-y-1.5">
+              {[
+                "180+ biomarkers cross-referenced against 250,000+ peer-reviewed studies",
+                "Cited research for every recommendation",
+                pendingTier === "insight" ? "Cancel anytime, no long-term commitment" : "€39 credited toward Life if you upgrade within 30 days",
+                "GDPR-compliant. Encrypted. Never sold.",
+              ].map((line) => (
+                <li key={line} className="flex items-start gap-2">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2.5" strokeLinecap="round" className="flex-shrink-0 mt-0.5">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  <span>{line}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="text-[10px] text-[#8A928C] mt-3 leading-relaxed">
+              Secure payment via Stripe.
+            </p>
+          </div>
+        </div>
+      )}
     </>
   );
 }
