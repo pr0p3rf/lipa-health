@@ -462,6 +462,21 @@ export default function DashboardPage() {
     return () => clearInterval(interval);
   }, [analysisInProgress, userId, fetchData]);
 
+  // Reset checkout state when the page is restored from bfcache after the
+  // user navigated to Stripe and hit browser-back. Without this, the loading
+  // state from the previous click stays "stuck" and blocks further clicks.
+  useEffect(() => {
+    const onPageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) {
+        setCheckoutLoading(null);
+        setCheckoutError(null);
+        setPendingCheckoutTier(null);
+      }
+    };
+    window.addEventListener("pageshow", onPageShow);
+    return () => window.removeEventListener("pageshow", onPageShow);
+  }, []);
+
   // Direct checkout from dashboard — skips pricing page.
   // If userEmail is missing (anonymous user), prompt for email first via modal,
   // then proceed via startCheckout(). This is the InsideTracker two-stage pattern:
