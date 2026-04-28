@@ -1565,7 +1565,7 @@ export default function DashboardPage() {
 
       {/* Floating Ask Lipa for when scrolled past inline section */}
       {userId && <AskLipa userId={userId} />}
-      {userId && <SupportButton userId={userId} email={undefined} />}
+      {userId && <SupportButton userId={userId} email={userEmail || undefined} />}
     </>
   );
 }

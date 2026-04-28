@@ -14,53 +14,88 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Message required" }, { status: 400 });
     }
 
-    // Store in support_messages table
-    try {
-      await supabase.from("chat_messages").insert({
-        name: email || "App user",
-        email: email || "unknown",
+    const submittedEmail = email && typeof email === "string" && email.includes("@")
+      ? email.trim().toLowerCase()
+      : null;
+
+    // Store in chat_messages — note the table has no user_id column, so we
+    // encode it into source for traceability instead.
+    let logged = false;
+    let logError: string | null = null;
+    {
+      const source = `support:${type || "general"}${userId ? `:user=${userId}` : ":anon"}`;
+      const { error } = await supabase.from("chat_messages").insert({
+        name: submittedEmail ? submittedEmail.split("@")[0] : "App user",
+        email: submittedEmail || "unknown",
         message: `[${type || "support"}] ${biomarkerName ? `(${biomarkerName}) ` : ""}${message}`,
         page: page || "/dashboard",
-        user_id: userId || null,
+        source,
       });
-    } catch {}
+      if (error) {
+        logError = error.message;
+        console.error("[support] insert failed:", error.message);
+      } else {
+        logged = true;
+      }
+    }
 
-    // Send email notification to admin
-    const ADMIN_EMAIL = "plipnicki@gmail.com";
-    try {
-      // Use Supabase Edge Function or direct email — for now, store and we'll poll
-      // Also try sending via Supabase's built-in auth email (hacky but works)
-      console.log(`[support] New message from ${email || "anonymous"}: ${message.slice(0, 100)}`);
+    // Notification fan-out — independent paths, both best-effort.
+    let telegramSent = false;
+    let emailSent = false;
+    let emailError: string | null = null;
 
-      // Send to Telegram if bot token is available
-      const botToken = process.env.TELEGRAM_BOT_TOKEN;
-      const chatId = process.env.TELEGRAM_CHAT_ID;
-      if (botToken && chatId) {
-        const text = `🆘 Support Message\n\nFrom: ${email || "anonymous"}\nType: ${type || "support"}\nPage: ${page || "unknown"}\n\n${message}`;
-        await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+    const botToken = process.env.TELEGRAM_BOT_TOKEN;
+    const chatId = process.env.TELEGRAM_CHAT_ID;
+    if (botToken && chatId) {
+      try {
+        const text = `🆘 Support Message\n\nFrom: ${submittedEmail || "anonymous"}\nType: ${type || "support"}\nPage: ${page || "unknown"}\nUser: ${userId || "anon"}\n\n${message}`;
+        const tgRes = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ chat_id: chatId, text, parse_mode: "HTML" }),
-        }).catch(() => {});
-      }
+          body: JSON.stringify({ chat_id: chatId, text }),
+        });
+        telegramSent = tgRes.ok;
+      } catch {}
+    }
 
-      // Send email via Resend if API key is available
-      const resendKey = process.env.RESEND_API_KEY;
-      if (resendKey) {
-        await fetch("https://api.resend.com/emails", {
+    const resendKey = process.env.RESEND_API_KEY;
+    if (resendKey) {
+      try {
+        const res = await fetch("https://api.resend.com/emails", {
           method: "POST",
-          headers: { "Authorization": `Bearer ${resendKey}`, "Content-Type": "application/json" },
+          headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
           body: JSON.stringify({
             from: "Lipa Support <support@lipa.health>",
             to: "plipnicki@gmail.com",
-            subject: `[Lipa Support] ${type || "message"} from ${email || "anonymous"}`,
-            text: `From: ${email || "anonymous"}\nType: ${type || "support"}\nPage: ${page || "unknown"}\n\n${message}`,
+            reply_to: submittedEmail || undefined,
+            subject: `[Lipa Support] ${type || "message"} from ${submittedEmail || "anonymous"}`,
+            text: `From: ${submittedEmail || "anonymous"}\nUser ID: ${userId || "anon"}\nType: ${type || "support"}\nPage: ${page || "unknown"}\n\n${message}`,
           }),
-        }).catch(() => {});
+        });
+        if (res.ok) {
+          emailSent = true;
+        } else {
+          emailError = `Resend ${res.status}`;
+        }
+      } catch (e: any) {
+        emailError = e?.message || "fetch failed";
       }
-    } catch {}
+    } else {
+      emailError = "RESEND_API_KEY not set";
+    }
 
-    return NextResponse.json({ success: true });
+    console.log(
+      `[support] from=${submittedEmail || "anon"} logged=${logged} telegram=${telegramSent} email=${emailSent} emailErr=${emailError || "-"} logErr=${logError || "-"}`
+    );
+
+    return NextResponse.json({
+      success: logged,
+      logged,
+      telegramSent,
+      emailSent,
+      logError,
+      emailError,
+    });
   } catch (error: any) {
     console.error("Support error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });

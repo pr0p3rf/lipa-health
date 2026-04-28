@@ -11,32 +11,44 @@ interface SupportButtonProps {
 export function SupportButton({ userId, email, context }: SupportButtonProps) {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
   const [type, setType] = useState("issue");
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
+  // Use the prop when present (logged-in user), otherwise the field they fill in.
+  const effectiveEmail = email || contactEmail.trim() || undefined;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!message.trim() || sending) return;
     setSending(true);
+    setErrorMsg("");
 
     try {
-      await fetch("/api/support", {
+      const res = await fetch("/api/support", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           userId,
-          email,
+          email: effectiveEmail,
           type,
           message: message.trim(),
           page: typeof window !== "undefined" ? window.location.pathname : "",
           biomarkerName: context,
         }),
       });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.success) {
+        setErrorMsg(data?.error || data?.logError || "Could not save your message. Please email support@lipa.health directly.");
+        setSending(false);
+        return;
+      }
       setSent(true);
-      setTimeout(() => { setOpen(false); setSent(false); setMessage(""); }, 2000);
+      setTimeout(() => { setOpen(false); setSent(false); setMessage(""); setContactEmail(""); }, 2000);
     } catch {
-      alert("Failed to send. Please email support@lipa.health directly.");
+      setErrorMsg("Network error. Please email support@lipa.health directly.");
     }
     setSending(false);
   }
@@ -113,6 +125,21 @@ export function SupportButton({ userId, email, context }: SupportButtonProps) {
                     className="w-full text-[13px] border border-[#E5E5E5] rounded-xl px-4 py-3 h-28 resize-none focus:outline-none focus:border-[#1B6B4A] placeholder:text-[#B5B5B5]"
                     autoFocus
                   />
+
+                  {/* Email input shown when we don't already have one for this user */}
+                  {!email && (
+                    <input
+                      type="email"
+                      value={contactEmail}
+                      onChange={(e) => setContactEmail(e.target.value)}
+                      placeholder="Your email (so we can reply)"
+                      className="w-full text-[13px] border border-[#E5E5E5] rounded-xl px-4 py-2.5 mt-2 focus:outline-none focus:border-[#1B6B4A] placeholder:text-[#B5B5B5]"
+                    />
+                  )}
+
+                  {errorMsg && (
+                    <p className="text-[12px] text-[#B91C1C] mt-2">{errorMsg}</p>
+                  )}
 
                   <div className="flex items-center justify-between mt-3">
                     <p className="text-[10px] text-[#B5B5B5]">
