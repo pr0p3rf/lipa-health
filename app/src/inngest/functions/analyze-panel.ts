@@ -788,14 +788,16 @@ RULES: Be specific with doses/forms. Never recommend prescription drugs. Focus o
 
 Return ONLY valid JSON.`;
 
-      const model = "claude-sonnet-4-20250514";
+      // Use Haiku for summary — faster to avoid Vercel/Cloudflare 524 timeout.
+      // Individual marker analyses already used Sonnet for depth.
+      const summaryModel = "claude-haiku-4-5-20251001";
       let actionPlanStored = false;
 
       try {
-        console.log(`[analyze-panel] Summary: calling Claude with ${summaryPrompt.length} char prompt`);
+        console.log(`[analyze-panel] Summary: calling ${summaryModel} with ${summaryPrompt.length} char prompt`);
         const message = await anthropic.messages.create({
-          model,
-          max_tokens: 6000,
+          model: summaryModel,
+          max_tokens: 4000,
           system: SUMMARY_SYSTEM_PROMPT,
           messages: [{ role: "user", content: summaryPrompt }],
         });
@@ -868,7 +870,7 @@ Return ONLY valid JSON.`;
         analysesCount: allAnalyses.length,
         riskCalcs: riskCalcs.length,
         actionPlanStored,
-        model,
+        model: summaryModel,
       };
     });
 
