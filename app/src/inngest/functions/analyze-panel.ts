@@ -788,16 +788,15 @@ RULES: Be specific with doses/forms. Never recommend prescription drugs. Focus o
 
 Return ONLY valid JSON.`;
 
-      // Use Haiku for summary — faster to avoid Vercel/Cloudflare 524 timeout.
-      // Individual marker analyses already used Sonnet for depth.
-      const summaryModel = "claude-haiku-4-5-20251001";
+      // Sonnet for summary quality. maxDuration=300 on Inngest route prevents 524 timeout.
+      const summaryModel = "claude-sonnet-4-20250514";
       let actionPlanStored = false;
 
       try {
         console.log(`[analyze-panel] Summary: calling ${summaryModel} with ${summaryPrompt.length} char prompt`);
         const message = await anthropic.messages.create({
           model: summaryModel,
-          max_tokens: 4000,
+          max_tokens: 8192,
           system: SUMMARY_SYSTEM_PROMPT,
           messages: [{ role: "user", content: summaryPrompt }],
         });
