@@ -277,6 +277,11 @@ export default function DashboardPage() {
   const [profileOpen, setProfileOpen] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
+  // Pre-checkout email gate — when an anonymous user clicks Buy with no
+  // email on file, we capture it in a modal then proceed to Stripe with
+  // the email prefilled. Validated competitor pattern (InsideTracker).
+  const [pendingCheckoutTier, setPendingCheckoutTier] = useState<"one" | "insight" | null>(null);
+  const [checkoutEmail, setCheckoutEmail] = useState("");
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [convertEmail, setConvertEmail] = useState("");
@@ -457,27 +462,43 @@ export default function DashboardPage() {
     return () => clearInterval(interval);
   }, [analysisInProgress, userId, fetchData]);
 
-  // Direct checkout from dashboard — skips pricing page
+  // Direct checkout from dashboard — skips pricing page.
+  // If userEmail is missing (anonymous user), prompt for email first via modal,
+  // then proceed via startCheckout(). This is the InsideTracker two-stage pattern:
+  // capture email pre-payment (recoverable account asset) but no password yet
+  // (magic-link auth handles return visits — better for 3-12 month return cycle).
   async function handleCheckout(tier: "one" | "insight") {
-    if (!userId || !userEmail || checkoutLoading) return;
+    if (!userId || checkoutLoading) return;
+    if (userEmail) {
+      await startCheckout(tier, userEmail);
+    } else {
+      setCheckoutEmail("");
+      setCheckoutError(null);
+      setPendingCheckoutTier(tier);
+    }
+  }
+
+  async function startCheckout(tier: "one" | "insight", email: string) {
+    if (!userId) return;
     setCheckoutLoading(tier);
     setCheckoutError(null);
     try {
       const res = await fetch("/api/stripe/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tier, userId, email: userEmail }),
+        body: JSON.stringify({ tier, userId, email }),
       });
       const data = await res.json();
       if (data.url) {
         window.location.href = data.url;
       } else {
         setCheckoutError(data.details || data.error || "Checkout failed");
+        setCheckoutLoading(null);
       }
     } catch {
       setCheckoutError("Something went wrong. Please try again.");
+      setCheckoutLoading(null);
     }
-    setCheckoutLoading(null);
   }
 
   // ---------------------------------------------------------------------------
@@ -1560,6 +1581,72 @@ export default function DashboardPage() {
               onSave={async (next) => { await saveProfile(next); setProfileOpen(false); }}
               onCancel={() => setProfileOpen(false)}
             />
+          </div>
+        </div>
+      )}
+
+      {/* Pre-checkout email gate. Single field. We capture email here so
+          (a) Stripe gets it prefilled, (b) the webhook can attach it to the
+          anonymous user_id post-payment turning the anon session into a
+          real, recoverable account. No password — magic-link auth handles
+          returns. */}
+      {pendingCheckoutTier && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center" onClick={() => !checkoutLoading && setPendingCheckoutTier(null)}>
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+          <div
+            className="relative bg-white rounded-3xl p-7 w-full max-w-md mx-4"
+            style={{ boxShadow: "0 24px 80px rgba(15,26,21,0.18)" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="text-[10px] uppercase tracking-[0.12em] text-[#1B6B4A] font-semibold mb-2">
+              {pendingCheckoutTier === "insight" ? "Lipa Life — €89/year" : "Lipa One — €39"}
+            </div>
+            <h3 className="text-[22px] tracking-tight mb-2" style={{ fontFamily: FRAUNCES, fontWeight: 500 }}>
+              One last step
+            </h3>
+            <p className="text-[13px] text-[#5A635D] leading-relaxed mb-5">
+              Enter your email — we&apos;ll send your receipt and unlock your full results. Your analysis stays linked to this email so you can come back anytime.
+            </p>
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const email = checkoutEmail.trim();
+                if (!email || !pendingCheckoutTier) return;
+                await startCheckout(pendingCheckoutTier, email);
+              }}
+            >
+              <input
+                type="email"
+                required
+                autoFocus
+                placeholder="your@email.com"
+                value={checkoutEmail}
+                onChange={(e) => setCheckoutEmail(e.target.value)}
+                disabled={!!checkoutLoading}
+                className="w-full px-4 py-3 rounded-full border border-[#E5E5E5] text-[14px] bg-white focus:outline-none focus:border-[#1B6B4A] mb-3"
+              />
+              {checkoutError && (
+                <p className="text-[12px] text-[#B91C1C] mb-3">{checkoutError}</p>
+              )}
+              <button
+                type="submit"
+                disabled={!checkoutEmail.trim() || !!checkoutLoading}
+                className="w-full px-6 py-3 rounded-full text-[14px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {checkoutLoading ? "Loading..." : "Continue to checkout →"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setPendingCheckoutTier(null)}
+                disabled={!!checkoutLoading}
+                className="w-full mt-2 px-6 py-2 text-[12px] text-[#8A928C] hover:text-[#0F1A15] disabled:opacity-50"
+              >
+                Cancel
+              </button>
+            </form>
+            <p className="text-[10px] text-[#8A928C] mt-4 leading-relaxed">
+              Secure payment via Stripe. GDPR-compliant. Your data is encrypted and never sold.
+            </p>
           </div>
         </div>
       )}

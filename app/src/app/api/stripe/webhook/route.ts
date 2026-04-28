@@ -69,7 +69,38 @@ export async function POST(request: NextRequest) {
 // ---------------------------------------------------------------------
 
 async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
-  // Handle subscription payments (Lipa Life)
+  const userId = session.metadata?.userId;
+
+  // First, link the email Stripe captured to the Supabase user. Anonymous
+  // users hit checkout without an email on auth.users; this is the moment
+  // they become a real, recoverable account. Idempotent: setting an email
+  // that already matches is a no-op.
+  if (userId) {
+    const capturedEmail = session.customer_details?.email || (session as any).customer_email;
+    if (capturedEmail) {
+      try {
+        const email = capturedEmail.toLowerCase();
+        const { data: authData } = await supabase.auth.admin.getUserById(userId);
+        const currentEmail = authData?.user?.email?.toLowerCase();
+        if (!currentEmail || currentEmail !== email) {
+          // email_confirm: true skips Supabase's confirmation email — payment
+          // already proves email ownership (Stripe sent the receipt there).
+          await supabase.auth.admin.updateUserById(userId, {
+            email,
+            email_confirm: true,
+          });
+          console.log(`[webhook] Attached email ${email} to user ${userId}`);
+        }
+        // Also keep the public profiles.email row in sync.
+        await supabase.from("profiles").upsert({ id: userId, email }, { onConflict: "id" });
+      } catch (err: any) {
+        console.error("[webhook] Failed to attach email to user:", err?.message || err);
+        // Don't fail the webhook — payment succeeded, downstream logic still works.
+      }
+    }
+  }
+
+  // Subscription payments (Lipa Life)
   if (session.subscription && session.customer) {
     const subscription = await stripe.subscriptions.retrieve(
       session.subscription as string
@@ -78,10 +109,9 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
     return;
   }
 
-  // Handle one-time payments (Lipa One) — no subscription object
-  if (session.mode === "payment" && session.metadata?.tier && session.metadata?.userId) {
+  // One-time payments (Lipa One) — no subscription object
+  if (session.mode === "payment" && session.metadata?.tier && userId) {
     const tier = session.metadata.tier;
-    const userId = session.metadata.userId;
     console.log(`[webhook] One-time payment: tier=${tier} userId=${userId}`);
 
     await supabase
