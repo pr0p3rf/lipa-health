@@ -7,114 +7,101 @@
 
 | Phase | Name | Status |
 |-------|------|--------|
-| 0 | Landing Page + Validation | In Progress |
-| 1 | Auth + Core App Shell | Not started |
-| 2 | Lab PDF Parsing + Biomarker Extraction | Not started |
-| 3 | Interpretation Engine | Not started |
-| 4 | Dashboard + Data Visualization | Not started |
-| 5 | Protocol Generation + Affiliate Links | Not started |
+| 0 | Landing Page + Validation | Built, validation gate skipped |
+| 1 | Auth + Core App Shell | ✓ Complete |
+| 2 | Lab PDF Parsing + Biomarker Extraction | ✓ Complete |
+| 3 | Interpretation Engine | ✓ Complete — Stabilization plan 03-01 in PLAN |
+| 4 | Dashboard + Data Visualization | ✓ Complete |
+| 5 | Protocol Generation + Affiliate Links | Partial (protocols ✓, affiliate marketplace ○) |
 | 6 | Retest + Longitudinal Tracking | Not started |
 | 7 | Wearable Integration | Not started |
 | 8 | Living Protocol + Marketplace Alerts | Not started |
+| 8.5 | Peptide Intelligence Directory | Not started — added per PROJECT.md |
 | 9 | Health Intelligence Engine | Not started |
 | 10 | Lab Partnership + Second Market | Not started |
 
 ## Phase Details
 
-### Phase 0: Landing Page + Validation
-**Goal:** Validate demand before building anything. 200+ waitlist signups = green light.
-- Landing page (done — lipa.health)
-- Email capture to Supabase
-- EUR 100 in Meta ads
-- Reddit/community posts
-- Call Diagnostyka partnership team
-- Kill criteria: <50 signups after EUR 100 spend
+### Phase 0: Landing Page + Validation — BUILT, GATE SKIPPED
+**Original goal:** Validate demand before building. 200+ signups = green light.
+**What happened:** Landing built, ads/Reddit/Diagnostyka outreach not run, signup count never measured. Team went straight to product build.
+**Status:** Landing live (lipa.health, 7 languages, GA + Meta Pixel). Newsletter capture ("The Draw") shipped. Kill criteria (<50 signups) never tested.
+**Open question:** Was the gate intentionally skipped, or does it still apply retroactively before launch push?
 
-### Phase 1: Auth + Core App Shell
-**Goal:** Users can sign up, log in, and see an empty dashboard.
-- Supabase auth (email + Google)
-- Basic app layout with navigation (Overview, Biomarkers, Protocol, Trends)
-- User profile + settings
-- Stripe subscription setup
+### Phase 1: Auth + Core App Shell — ✓ COMPLETE
+- Supabase auth (email + Google + password reset)
+- Anonymous-auth upload flow (convert after seeing value)
+- Stripe subscription (Free / One / Life tiers)
+- Post-payment receipt emails
+- Vault with tier-aware upgrade prompts
 
-### Phase 2: Lab PDF Parsing + Biomarker Extraction
-**Goal:** User uploads a lab PDF, system extracts all biomarker values accurately.
-- Claude vision API reads lab PDFs
-- Structured extraction: biomarker name, value, unit, reference range
-- Support Diagnostyka, ALAB, Synevo formats minimum
-- Phone camera photo upload
-- Validation UI: user confirms extracted values
+### Phase 2: Lab PDF Parsing + Biomarker Extraction — ✓ COMPLETE
+- Claude vision PDF extraction
+- 286 biomarker aliases matched (multi-lab: Diagnostyka, ALAB, Synevo, Stephanie's lab format)
+- Outlier clamping + unit conversion
+- No-PII extraction prompt + PDF retention disabled by default
+- Re-analysis API for re-extracting against improved prompts
 
-### Phase 3: Interpretation Engine
-**Goal:** AI analyzes biomarkers and generates meaningful health insights.
-- Optimal range database (not just lab reference ranges)
-- Cross-marker pattern recognition
-- Risk scoring (cardiovascular, metabolic, inflammation, hormonal)
-- Biological age estimation from blood markers
-- Research-backed citations with confidence scores
-- Prompt architecture: system prompt + RAG over medical literature
+### Phase 3: Interpretation Engine — ✓ COMPLETE (reliability issues)
+- Two-pass Claude Opus analysis (batched: 4 batch calls + 1 summary)
+- Inngest background pipeline (no client-side timeouts)
+- 28 cross-marker clinical patterns + RAG-based pattern discovery
+- Reynolds Risk Score, contradiction warnings, bio-age calculation
+- 250K+ studies indexed, 180+ markers, ~95% citation coverage target
+- Ask Lipa chat: persistent history, patterns, protocols, trends (3 free Q's, paywalled)
+- **Concern:** Summary-step Inngest route hits 524 timeouts under load — last 8 commits are reactive patches without root cause
 
-### Phase 4: Dashboard + Data Visualization
-**Goal:** Beautiful, premium dashboard that makes people screenshot and share.
-- Lipa Score (composite health score)
-- Three-zone biomarker bars (InsideTracker-style)
-- System scores (Heart, Metabolic, Hormones, Inflammation, Nutrients, Thyroid)
-- Biological age display
-- Sparkline trends
-- Priority ordering (concerning markers first)
+### Phase 4: Dashboard + Data Visualization — ✓ COMPLETE
+- Apple Health-style hybrid dashboard
+- Demo/sample page (public, no auth) — sells the product
+- Marker cards with root causes + "What to do" + research citations
+- Executive summary (teaser free, full paid)
+- Pattern paywall, severity-ranked findings
+- Shareable Lipa Health Report Card
 
-### Phase 5: Protocol Generation + Affiliate Links
-**Goal:** Every result comes with actionable, research-backed recommendations.
-- Supplement recommendations with dosing
-- Peptide protocol suggestions (with appropriate framing)
-- Lifestyle/nutrition recommendations
-- Affiliate links to vetted vendors
-- Research citations inline with confidence scores
-- One-click to buy
+### Phase 5: Protocol Generation + Affiliate Links — PARTIAL
+**Done:**
+- Protocol surfacing in Ask Lipa and marker cards
+- Research-backed recommendations with confidence
+
+**Not done:**
+- Supplement affiliate marketplace
+- Price comparison across vendors
+- One-click buy
+- Vetted vendor list
 
 ### Phase 6: Retest + Longitudinal Tracking
-**Goal:** Users retest quarterly and see their health trajectory.
-- Before/after comparison
-- Trend charts per biomarker
-- Protocol effectiveness tracking ("hs-CRP dropped 40% since starting Omega-3")
-- Lipa Score change over time
-- Biological age trajectory
+- Re-analysis API exists (Phase 2) but no trends UI
+- Per-marker history, before/after comparison, protocol effectiveness chart, bio-age trajectory
 
 ### Phase 7: Wearable Integration
-**Goal:** Correlate continuous wearable data with periodic blood markers.
-- Terra API integration (Oura, Garmin, Whoop, Withings, Fitbit)
-- HRV + sleep + activity data correlated with blood panels
-- Resting HR trends mapped to thyroid/cardiac markers
-- Unified health timeline
+- Terra API (Oura, Garmin, Whoop, Withings, Fitbit)
+- HRV/sleep/activity correlated with blood panels
 
 ### Phase 8: Living Protocol + Marketplace Alerts
-**Goal:** The protocol evolves automatically — new research, better vendors, new products.
-- Push notifications / email alerts when research changes a recommendation
-- Price monitoring across supplement/peptide vendors — alert on drops
-- New product alerts when items matching user's profile hit the market (e.g., NMN EU approval)
-- Vendor aggregator: compare prices across multiple sources for each protocol item
-- Auto-update protocols when new meta-analyses or guidelines shift evidence
+- Push/email alerts on research changes, price drops, new products
+- Vendor aggregator with price comparison
 - AI summarizes new research with confidence scoring
-- User preferences: notification frequency, channels (email, push, in-app)
+
+### Phase 8.5: Peptide Intelligence Directory — NEW (added from PROJECT.md)
+**Why this is a separate phase:** PROJECT.md (2026-04-08) defines this as a distinct revenue layer with explicit "no peptide affiliate" rule — different commercial model from supplement affiliate (Phase 5).
+- Peptide research directory
+- Purity data: Janoshik COAs, vendor-submitted COAs, community-submitted, mystery shopper
+- Vendor ratings tied to verified test results
+- Subscription-only — no checkout links, no affiliate commissions
+- Legal positioning as journalism/research publisher
 
 ### Phase 9: Health Intelligence Engine
-**Goal:** Build the knowledge graph that connects biomarkers ↔ research ↔ products ↔ pricing ↔ outcomes. The Google of personalized health.
-- Research aggregation: continuously ingest PubMed, Examine.com, clinical trials, meta-analyses
-- AI extracts: substance X helps condition Y at dose Z with confidence level W
-- YouTube/podcast content extraction (Huberman, Attia, Rhonda Patrick) — extract claims, match to papers, score credibility
-- Product aggregation: scrape/partner with supplement and peptide vendors across Europe
-- Track per product: ingredients, dosage, price, price-per-dose, purity, vendor reputation, shipping regions
-- Auto-match products to research: "This product matches the dose used in the study showing X benefit"
-- Price comparison engine across vendors for equivalent products
-- Product discovery: surface new products matching user's biomarker profile
-- Knowledge graph at the center: biomarker → condition → substance → research → product → vendor → price
-- The interpretation engine (Phase 3) and protocol engine (Phase 5) query this graph
-- This is the long-term moat — the intelligence layer nobody else builds
+- Knowledge graph: biomarker → condition → substance → research → product → vendor → price
+- Continuous PubMed/Examine.com/clinical trial ingestion
+- YouTube/podcast claim extraction (Huberman, Attia, Rhonda Patrick) matched to papers
+- Phase 3 and Phase 5 query this graph
 
 ### Phase 10: Lab Partnership + Second Market
-**Goal:** Direct lab ordering and expansion beyond Poland.
-- Diagnostyka B2B partnership (order tests directly through Lipa)
-- Electronic results integration (no more PDF upload)
+- Diagnostyka B2B (direct test ordering through Lipa)
+- Electronic results integration (kill PDF upload as primary path)
 - Medical advisor onboarded
-- Launch in Germany or Spain
-- Localization
+- Second market launch (Netherlands, Spain, or Poland-deepening)
+
+---
+*Reconciled 2026-04-28 from git evidence. Phase numbering preserved; 8.5 added to address PROJECT.md gap.*
