@@ -14,6 +14,12 @@ export default function UploadPage() {
   const [dragOver, setDragOver] = useState(false);
   const [fileNames, setFileNames] = useState<string[]>([]);
   const [errorMsg, setErrorMsg] = useState("");
+  const [userId, setUserId] = useState<string | null>(null);
+  const [sex, setSex] = useState<"male" | "female" | "other" | "">("");
+  const [age, setAge] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [detailsSaved, setDetailsSaved] = useState(false);
+  const [detailsSaving, setDetailsSaving] = useState(false);
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
@@ -25,10 +31,35 @@ export default function UploadPage() {
           router.push("/login?mode=signup&redirect=/upload");
           return;
         }
+        setUserId(anonData.user.id);
+      } else {
+        setUserId(data.user.id);
       }
       setLoading(false);
     });
   }, [router]);
+
+  async function saveDetails() {
+    if (!userId) return;
+    setDetailsSaving(true);
+    try {
+      await fetch("/api/save-details", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId,
+          sex: sex || undefined,
+          age: age ? parseInt(age, 10) : undefined,
+          email: email.trim() || undefined,
+        }),
+      });
+      setDetailsSaved(true);
+    } catch {
+      // non-blocking — analysis continues regardless
+    } finally {
+      setDetailsSaving(false);
+    }
+  }
 
   const handleFiles = useCallback(async (fileList: FileList | File[]) => {
     const files = Array.from(fileList).filter(
@@ -204,6 +235,58 @@ export default function UploadPage() {
                   Your data is encrypted and never shared with third parties.
                 </p>
               </div>
+            </div>
+            {/* Inline details form — captured while extraction runs.
+                Sex + age unlock personalised reference ranges and risk calcs.
+                Email unlocks the results-ready notification (analysis takes ~10–14 min).
+                All fields optional; analysis runs regardless. */}
+            <div className="border-t border-[#E5E5E5] p-6 sm:p-8 bg-[#FAF8F3]">
+              {detailsSaved ? (
+                <div className="flex items-center gap-2 text-[13px] text-[#1B6B4A]">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  Saved. We&apos;ll personalise your analysis with these details.
+                </div>
+              ) : (
+                <>
+                  <p className="text-[14px] font-semibold text-[#0F1A15] mb-1">Personalise your analysis</p>
+                  <p className="text-[12px] text-[#5A635D] mb-4">SHBG, hemoglobin, and risk calculations use sex-specific ranges. All optional.</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-3">
+                    <select
+                      value={sex}
+                      onChange={(e) => setSex(e.target.value as "male" | "female" | "other" | "")}
+                      className="px-4 py-2.5 rounded-full border border-[#E5E5E5] bg-white text-[13px] focus:outline-none focus:border-[#1B6B4A]"
+                    >
+                      <option value="">Biological sex</option>
+                      <option value="female">Female</option>
+                      <option value="male">Male</option>
+                      <option value="other">Other / prefer not to say</option>
+                    </select>
+                    <input
+                      type="number"
+                      min={13}
+                      max={120}
+                      placeholder="Age"
+                      value={age}
+                      onChange={(e) => setAge(e.target.value)}
+                      className="px-4 py-2.5 rounded-full border border-[#E5E5E5] bg-white text-[13px] focus:outline-none focus:border-[#1B6B4A]"
+                    />
+                    <input
+                      type="email"
+                      placeholder="Email (we&apos;ll notify you when ready)"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="px-4 py-2.5 rounded-full border border-[#E5E5E5] bg-white text-[13px] focus:outline-none focus:border-[#1B6B4A]"
+                    />
+                  </div>
+                  <button
+                    onClick={saveDetails}
+                    disabled={detailsSaving || (!sex && !age && !email.trim())}
+                    className="text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-5 py-2 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {detailsSaving ? "Saving…" : "Save"}
+                  </button>
+                </>
+              )}
             </div>
           </div>
         ) : (

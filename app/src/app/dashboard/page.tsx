@@ -280,7 +280,6 @@ export default function DashboardPage() {
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [convertEmail, setConvertEmail] = useState("");
-  const [convertPassword, setConvertPassword] = useState("");
   const [convertLoading, setConvertLoading] = useState(false);
   const [convertError, setConvertError] = useState("");
   const [convertSuccess, setConvertSuccess] = useState(false);
@@ -682,35 +681,30 @@ export default function DashboardPage() {
                 </div>
                 <div>
                   <p className="text-[14px] font-semibold text-[#92400E]">Your results are temporary</p>
-                  <p className="text-[13px] text-[#B45309] mt-0.5">Create a free account to save your results and access your history.</p>
+                  <p className="text-[13px] text-[#B45309] mt-0.5">Save your account with email — we&apos;ll send a confirmation link. Set a password later if you want.</p>
                 </div>
               </div>
               <div className="flex flex-col sm:flex-row gap-2 mt-3">
                 <input
                   type="email"
-                  placeholder="Email"
+                  placeholder="Your email"
                   value={convertEmail}
                   onChange={(e) => setConvertEmail(e.target.value)}
                   className="flex-1 px-4 py-2.5 rounded-full border border-[#E5E5E5] text-[13px] bg-white focus:outline-none focus:border-[#1B6B4A]"
                 />
-                <input
-                  type="password"
-                  placeholder="Password (min 6 chars)"
-                  value={convertPassword}
-                  onChange={(e) => setConvertPassword(e.target.value)}
-                  className="flex-1 px-4 py-2.5 rounded-full border border-[#E5E5E5] text-[13px] bg-white focus:outline-none focus:border-[#1B6B4A]"
-                />
                 <button
-                  disabled={convertLoading || !convertEmail || convertPassword.length < 6}
+                  disabled={convertLoading || !convertEmail}
                   onClick={async () => {
                     setConvertLoading(true);
                     setConvertError("");
-                    const { error } = await supabase.auth.updateUser({ email: convertEmail, password: convertPassword });
+                    // updateUser on the existing anonymous session attaches the email
+                    // to this user_id and triggers Supabase's confirmation email.
+                    // Their data stays linked because user_id never changes.
+                    const { error } = await supabase.auth.updateUser({ email: convertEmail });
                     if (error) {
                       setConvertError(error.message);
                       setConvertLoading(false);
                     } else {
-                      setIsAnonymous(false);
                       setUserEmail(convertEmail);
                       setConvertSuccess(true);
                       setConvertLoading(false);
@@ -718,7 +712,7 @@ export default function DashboardPage() {
                   }}
                   className="px-6 py-2.5 rounded-full text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
                 >
-                  {convertLoading ? "Saving..." : "Create Account"}
+                  {convertLoading ? "Sending..." : "Save my account"}
                 </button>
               </div>
               {convertError && <p className="text-[12px] text-[#B91C1C] mt-2">{convertError}</p>}
@@ -729,7 +723,7 @@ export default function DashboardPage() {
               <div className="w-8 h-8 rounded-full bg-[#E8F5EE] flex items-center justify-center flex-shrink-0">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
               </div>
-              <p className="text-[14px] text-[#1B6B4A] font-medium">Account created! Your results are saved.</p>
+              <p className="text-[14px] text-[#1B6B4A] font-medium">Check your inbox — click the link to confirm. Your results are already saved.</p>
             </div>
           )}
 
@@ -795,7 +789,14 @@ export default function DashboardPage() {
               Your Lipa Analysis
             </h1>
             <p className="text-[13px] text-[#5A635D] leading-relaxed max-w-2xl">
-              Every marker cross-referenced against {analyses.reduce((sum, a) => sum + (a.citation_count || 0), 0).toLocaleString()}+ peer-reviewed studies from a corpus of 250,000+ research papers. Your values benchmarked against 300,000+ health profiles by age and sex. This is the most comprehensive analysis of your blood work available.
+              {(() => {
+                const summed = analyses.reduce((sum, a) => sum + (a.citation_count || 0), 0);
+                const cited = summed > 0 ? summed : citations.length;
+                const prefix = cited > 0
+                  ? `Every marker cross-referenced against ${cited.toLocaleString()}+ peer-reviewed studies from a corpus of 250,000+ research papers.`
+                  : `Every marker cross-referenced against a corpus of 250,000+ peer-reviewed research papers.`;
+                return `${prefix} Your values benchmarked against 300,000+ health profiles by age and sex. This is the most comprehensive analysis of your blood work available.`;
+              })()}
             </p>
           </div>
 

@@ -19,6 +19,7 @@ import {
   retrievePatternResearch,
   formatPatternResearchForPrompt,
 } from "@/lib/pattern-rag";
+import { sendResultsReady } from "@/lib/email";
 
 // ---------------------------------------------------------------------------
 // Clients (lazy-init to avoid cold-start overhead when not needed)
@@ -768,7 +769,19 @@ Return ONLY valid JSON with a "markers" array containing exactly ${batchBiomarke
 
       const normalCount = allAnalyses.filter((a: any) => a.status === "normal" || a.status === "optimal").length;
 
-      const summaryPrompt = `Patient blood panel: ${allAnalyses.length} markers analyzed. ${normalCount} normal/optimal.
+      // Compute days between blood draw and today so retest guidance reflects
+      // actual elapsed time, not a relative-from-test-date assumption.
+      const today = new Date();
+      const testDateObj = new Date(effectiveDate);
+      const daysSinceTest = Math.max(
+        0,
+        Math.floor((today.getTime() - testDateObj.getTime()) / 86_400_000)
+      );
+      const todayISO = today.toISOString().slice(0, 10);
+      const dateContext = `TODAY: ${todayISO}. TEST DATE: ${effectiveDate}. DAYS SINCE TEST: ${daysSinceTest}.`;
+
+      const summaryPrompt = `${dateContext}
+Patient blood panel: ${allAnalyses.length} markers analyzed. ${normalCount} normal/optimal.
 ${fullDemographicText}
 
 MARKERS NEEDING ATTENTION:
@@ -785,6 +798,8 @@ Produce a JSON object with:
    - "disclaimer": "This is educational content, not medical advice."
 
 RULES: Be specific with doses/forms. Never recommend prescription drugs. Focus on borderline/out-of-range markers. 2-3 recommendations per domain. Reference specific marker names.
+
+DATE-AWARE RETEST GUIDANCE: Frame retest timing relative to TODAY, not the test date. If DAYS SINCE TEST is already large (e.g. >30 days), say "retest now" or "retest within 2 weeks" — never "retest in 8 weeks" if 8 weeks have already passed since the draw. The user is reading this on ${todayISO}.
 
 Return ONLY valid JSON.`;
 
@@ -871,6 +886,66 @@ Return ONLY valid JSON.`;
         actionPlanStored,
         model: summaryModel,
       };
+    });
+
+    // Mark the upload row as complete so any "your uploads" UI / admin view
+    // reflects reality. Single-step, isolated, retried automatically by Inngest
+    // if it fails — does not affect downstream return value.
+    await step.run("mark-upload-complete", async () => {
+      const supabase = getSupabase();
+      const status = summaryResult?.actionPlanStored ? "complete" : "completed_with_fallback";
+      await supabase
+        .from("uploads")
+        .update({ status })
+        .eq("user_id", userId)
+        .eq("status", "analyzing");
+      return { status };
+    });
+
+    // Send results-ready email if we have an address for this user.
+    // Looks in auth.users (post-conversion) first, then newsletter_subscribers
+    // (anonymous upload-time capture). No-op if RESEND_API_KEY isn't set.
+    await step.run("notify-results-ready", async () => {
+      const supabase = getSupabase();
+
+      let toEmail: string | null = null;
+      try {
+        const { data: authData } = await supabase.auth.admin.getUserById(userId);
+        const e = authData?.user?.email;
+        if (e && e.includes("@")) toEmail = e.toLowerCase();
+      } catch {}
+
+      if (!toEmail) {
+        const { data: sub } = await supabase
+          .from("newsletter_subscribers")
+          .select("email")
+          .ilike("source", `upload:${userId}%`)
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        if (sub?.email && sub.email.includes("@")) toEmail = sub.email.toLowerCase();
+      }
+
+      if (!toEmail) return { sent: false, reason: "no email on file" };
+
+      const { data: counts } = await supabase
+        .from("user_analyses")
+        .select("status")
+        .eq("user_id", userId);
+      const out = (counts || []).filter((a: any) => a.status === "out_of_range").length;
+      const bord = (counts || []).filter((a: any) => a.status === "borderline").length;
+      const opt = (counts || []).filter((a: any) => a.status === "optimal").length;
+
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://my.lipa.health";
+      const result = await sendResultsReady({
+        to: toEmail,
+        dashboardUrl: `${baseUrl}/dashboard`,
+        outOfRangeCount: out,
+        borderlineCount: bord,
+        optimalCount: opt,
+        totalMarkers: counts?.length || 0,
+      });
+      return { sent: result.ok, reason: result.reason, to: toEmail };
     });
 
     return {
