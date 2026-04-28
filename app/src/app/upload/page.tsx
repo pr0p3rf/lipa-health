@@ -17,7 +17,6 @@ export default function UploadPage() {
   const [userId, setUserId] = useState<string | null>(null);
   const [sex, setSex] = useState<"male" | "female" | "other" | "">("");
   const [age, setAge] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
   const [detailsSaved, setDetailsSaved] = useState(false);
   const [detailsSaving, setDetailsSaving] = useState(false);
 
@@ -50,7 +49,6 @@ export default function UploadPage() {
           userId,
           sex: sex || undefined,
           age: age ? parseInt(age, 10) : undefined,
-          email: email.trim() || undefined,
         }),
       });
       setDetailsSaved(true);
@@ -237,9 +235,10 @@ export default function UploadPage() {
               </div>
             </div>
             {/* Inline details form — captured while extraction runs.
-                Sex + age unlock personalised reference ranges and risk calcs.
-                Email unlocks the results-ready notification (analysis takes ~10–14 min).
-                All fields optional; analysis runs regardless. */}
+                Sex + age unlock personalised reference ranges and risk calcs
+                (SHBG, hemoglobin, Reynolds risk, etc.).
+                Email is asked separately on the dashboard "Save your account"
+                banner so the user isn't asked for it twice. */}
             <div className="border-t border-[#E5E5E5] p-6 sm:p-8 bg-[#FAF8F3]">
               {detailsSaved ? (
                 <div className="flex items-center gap-2 text-[13px] text-[#1B6B4A]">
@@ -249,8 +248,8 @@ export default function UploadPage() {
               ) : (
                 <>
                   <p className="text-[14px] font-semibold text-[#0F1A15] mb-1">Personalise your analysis</p>
-                  <p className="text-[12px] text-[#5A635D] mb-4">SHBG, hemoglobin, and risk calculations use sex-specific ranges. All optional.</p>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-3">
+                  <p className="text-[12px] text-[#5A635D] mb-4">SHBG, hemoglobin, and risk calculations use sex-specific ranges. Optional but recommended.</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
                     <select
                       value={sex}
                       onChange={(e) => setSex(e.target.value as "male" | "female" | "other" | "")}
@@ -270,17 +269,10 @@ export default function UploadPage() {
                       onChange={(e) => setAge(e.target.value)}
                       className="px-4 py-2.5 rounded-full border border-[#E5E5E5] bg-white text-[13px] focus:outline-none focus:border-[#1B6B4A]"
                     />
-                    <input
-                      type="email"
-                      placeholder="Email (we&apos;ll notify you when ready)"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="px-4 py-2.5 rounded-full border border-[#E5E5E5] bg-white text-[13px] focus:outline-none focus:border-[#1B6B4A]"
-                    />
                   </div>
                   <button
                     onClick={saveDetails}
-                    disabled={detailsSaving || (!sex && !age && !email.trim())}
+                    disabled={detailsSaving || (!sex && !age)}
                     className="text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-5 py-2 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {detailsSaving ? "Saving…" : "Save"}
