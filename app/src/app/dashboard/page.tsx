@@ -692,26 +692,38 @@ export default function DashboardPage() {
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 py-6 sm:py-10" suppressHydrationWarning>
 
           {/* ============================================================ */}
-          {/* ANONYMOUS USER BANNER — save your results                    */}
+          {/* ANONYMOUS USER BANNER — save your analysis                   */}
           {/* ============================================================ */}
           {isAnonymous && !convertSuccess && (
-            <div className="mb-6 p-5 rounded-[20px]" style={{ background: "rgba(254,243,199,0.6)", border: "1px solid rgba(245,158,11,0.2)" }}>
-              <div className="flex items-start gap-3 mb-3">
-                <div className="w-8 h-8 rounded-full bg-[#FEF3C7] flex items-center justify-center flex-shrink-0">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B45309" strokeWidth="2" strokeLinecap="round"><path d="M12 9v4m0 4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+            <div
+              className="mb-6 p-6 sm:p-7 rounded-[24px] border border-[rgba(15,26,21,0.06)]"
+              style={{ background: "linear-gradient(135deg, #FCFAF5 0%, #F2EDE2 100%)" }}
+            >
+              <div className="flex items-start gap-4 mb-4">
+                <div
+                  className="w-10 h-10 rounded-full bg-white flex items-center justify-center flex-shrink-0"
+                  style={{ boxShadow: "0 2px 8px rgba(15,26,21,0.06)" }}
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
+                  </svg>
                 </div>
                 <div>
-                  <p className="text-[14px] font-semibold text-[#92400E]">Your results are temporary</p>
-                  <p className="text-[13px] text-[#B45309] mt-0.5">Save your account with email — we&apos;ll send a confirmation link. Set a password later if you want.</p>
+                  <h3 className="text-[20px] sm:text-[22px] tracking-tight text-[#0F1A15]" style={{ fontFamily: FRAUNCES, fontWeight: 500 }}>
+                    Save your analysis
+                  </h3>
+                  <p className="text-[13px] text-[#5A635D] mt-1.5 max-w-lg leading-relaxed">
+                    We&apos;ll email a sign-in link so you can return anytime — across devices, retest visits, and to track trends over time.
+                  </p>
                 </div>
               </div>
               <div className="flex flex-col sm:flex-row gap-2 mt-3">
                 <input
                   type="email"
-                  placeholder="Your email"
+                  placeholder="your@email.com"
                   value={convertEmail}
                   onChange={(e) => setConvertEmail(e.target.value)}
-                  className="flex-1 px-4 py-2.5 rounded-full border border-[#E5E5E5] text-[13px] bg-white focus:outline-none focus:border-[#1B6B4A]"
+                  className="flex-1 px-4 py-2.5 rounded-full border border-[rgba(15,26,21,0.10)] text-[14px] bg-white focus:outline-none focus:border-[#1B6B4A]"
                 />
                 <button
                   disabled={convertLoading || !convertEmail}
@@ -731,20 +743,29 @@ export default function DashboardPage() {
                       setConvertLoading(false);
                     }
                   }}
-                  className="px-6 py-2.5 rounded-full text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
+                  className="px-6 py-2.5 rounded-full text-[14px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
                 >
-                  {convertLoading ? "Sending..." : "Save my account"}
+                  {convertLoading ? "Sending…" : "Email me a sign-in link"}
                 </button>
               </div>
-              {convertError && <p className="text-[12px] text-[#B91C1C] mt-2">{convertError}</p>}
+              {convertError && <p className="text-[12px] text-[#B91C1C] mt-3">{convertError}</p>}
             </div>
           )}
           {convertSuccess && (
-            <div className="mb-6 p-5 rounded-[20px] flex items-center gap-3" style={{ background: "rgba(232,245,238,0.6)", border: "1px solid rgba(27,107,74,0.15)" }}>
-              <div className="w-8 h-8 rounded-full bg-[#E8F5EE] flex items-center justify-center flex-shrink-0">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <div
+              className="mb-6 p-5 rounded-[24px] flex items-center gap-3 border border-[rgba(15,26,21,0.06)]"
+              style={{ background: "linear-gradient(135deg, #FCFAF5 0%, #EEF5EF 100%)" }}
+            >
+              <div
+                className="w-9 h-9 rounded-full bg-white flex items-center justify-center flex-shrink-0"
+                style={{ boxShadow: "0 2px 8px rgba(15,26,21,0.06)" }}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1B6B4A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
               </div>
-              <p className="text-[14px] text-[#1B6B4A] font-medium">Check your inbox — click the link to confirm. Your results are already saved.</p>
+              <p className="text-[14px] text-[#0F1A15]">
+                <span className="font-medium">Sign-in link sent.</span>{" "}
+                <span className="text-[#5A635D]">Your analysis is saved to {userEmail}.</span>
+              </p>
             </div>
           )}
 
