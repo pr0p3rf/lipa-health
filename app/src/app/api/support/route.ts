@@ -6,12 +6,42 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
+// CORS — the support route is called from the landing page (lipa.health,
+// chat-widget.js) AND from the Next.js app (my.lipa.health). Cross-origin
+// without these headers means the browser blocks the POST.
+const ALLOWED_ORIGINS = new Set([
+  "https://lipa.health",
+  "https://www.lipa.health",
+  "https://my.lipa.health",
+  "http://localhost:3000",
+]);
+
+function corsHeaders(origin: string | null) {
+  const allowed = origin && ALLOWED_ORIGINS.has(origin) ? origin : "https://lipa.health";
+  return {
+    "Access-Control-Allow-Origin": allowed,
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Max-Age": "86400",
+    Vary: "Origin",
+  };
+}
+
+export async function OPTIONS(request: NextRequest) {
+  return new NextResponse(null, {
+    status: 204,
+    headers: corsHeaders(request.headers.get("origin")),
+  });
+}
+
 export async function POST(request: NextRequest) {
+  const cors = corsHeaders(request.headers.get("origin"));
+
   try {
     const { userId, email, type, message, page, biomarkerName } = await request.json();
 
     if (!message) {
-      return NextResponse.json({ error: "Message required" }, { status: 400 });
+      return NextResponse.json({ error: "Message required" }, { status: 400, headers: cors });
     }
 
     const submittedEmail = email && typeof email === "string" && email.includes("@")
@@ -88,16 +118,12 @@ export async function POST(request: NextRequest) {
       `[support] from=${submittedEmail || "anon"} logged=${logged} telegram=${telegramSent} email=${emailSent} emailErr=${emailError || "-"} logErr=${logError || "-"}`
     );
 
-    return NextResponse.json({
-      success: logged,
-      logged,
-      telegramSent,
-      emailSent,
-      logError,
-      emailError,
-    });
+    return NextResponse.json(
+      { success: logged, logged, telegramSent, emailSent, logError, emailError },
+      { headers: cors }
+    );
   } catch (error: any) {
     console.error("Support error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: error.message }, { status: 500, headers: cors });
   }
 }
