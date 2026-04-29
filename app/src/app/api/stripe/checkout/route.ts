@@ -60,6 +60,10 @@ export async function POST(request: NextRequest) {
       success_url: `${origin}/dashboard?subscription=success`,
       cancel_url: `${origin}/pricing?subscription=cancel`,
       allow_promotion_codes: true,
+      // Stripe Adaptive Pricing — auto-converts our EUR price to the
+      // customer's local currency at checkout based on their geo.
+      // Works for both one-time (Lipa One) and subscription (Lipa Life).
+      adaptive_pricing: { enabled: true },
       metadata: { tier, userId },
     };
 
