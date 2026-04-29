@@ -946,6 +946,9 @@ Return ONLY valid JSON.`;
               actionPlanData.disclaimer ||
               "This is educational content, not medical advice. Consult your healthcare provider.",
             domains: actionPlanData.domains || [],
+            cross_marker_patterns: Array.isArray(parsed.cross_marker_patterns)
+              ? parsed.cross_marker_patterns
+              : [],
             generation_time_ms: 0,
           });
           const t8 = Date.now();
