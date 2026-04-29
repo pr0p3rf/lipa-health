@@ -12,7 +12,7 @@ import { SEQUENCE_TEMPLATES } from "@/lib/email-sequences";
 // scheduled-emails row. The actual production cron will use the same
 // templates with real user payloads.
 
-const FROM = "Lipa Health <hello@lipa.health>";
+const FROM = "Lipa <hello@lipa.health>";
 
 function authorize(adminKey: string | null): boolean {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;

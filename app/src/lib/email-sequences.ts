@@ -17,7 +17,7 @@ interface SequencePayload {
   goals?: string[];             // raw keys, used to build the "update plan" link
 }
 
-const FROM = "Lipa Health <hello@lipa.health>";
+const FROM = "Lipa <hello@lipa.health>";
 export { FROM };
 
 function escapeHtml(s: string) {

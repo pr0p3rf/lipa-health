@@ -7,7 +7,7 @@ type ResendEmail = {
   bcc?: string[];
 };
 
-const FROM = "Lipa Health <hello@lipa.health>";
+const FROM = "Lipa <hello@lipa.health>";
 
 async function send(payload: ResendEmail): Promise<{ ok: boolean; reason?: string }> {
   const key = process.env.RESEND_API_KEY;
@@ -160,14 +160,14 @@ export async function sendResultsReady(opts: {
   totalMarkers: number;
 }) {
   const { to, dashboardUrl, outOfRangeCount, borderlineCount, optimalCount, totalMarkers } = opts;
-  const subject = `Your Lipa Health analysis is ready (${totalMarkers} markers)`;
+  const subject = `Your Lipa analysis is ready (${totalMarkers} markers)`;
   const headlineBits: string[] = [];
   if (outOfRangeCount > 0) headlineBits.push(`${outOfRangeCount} need attention`);
   if (borderlineCount > 0) headlineBits.push(`${borderlineCount} borderline`);
   if (optimalCount > 0) headlineBits.push(`${optimalCount} optimal`);
   const headline = headlineBits.join(" · ") || `${totalMarkers} markers analyzed`;
 
-  const text = `Your Lipa Health analysis is ready.
+  const text = `Your Lipa analysis is ready.
 
 ${headline}
 
