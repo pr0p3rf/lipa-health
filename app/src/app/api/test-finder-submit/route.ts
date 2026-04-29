@@ -105,6 +105,7 @@ export async function POST(request: NextRequest) {
   try {
     const result = await sendTestPlan({
       to: cleanEmail,
+      goals,
       goalTitles: Array.isArray(goalTitles) && goalTitles.length > 0 ? goalTitles : goals,
       country,
       markers,

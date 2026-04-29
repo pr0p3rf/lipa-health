@@ -484,11 +484,28 @@ export default function TestFinderPage() {
   const [emailSubmitted, setEmailSubmitted] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  // Restore goals from localStorage on mount
+  // Restore goals from localStorage on mount.
+  // URL params (?goals=longevity,trt&country=Poland) override — these come from
+  // "Update your plan" links in the test-plan emails, so the user lands here
+  // pre-filled and can change selections without redoing the whole flow.
   useEffect(() => {
     try {
-      const saved = localStorage.getItem("lipa_test_finder_goals");
-      if (saved) setSelectedGoals(JSON.parse(saved));
+      const params = new URLSearchParams(window.location.search);
+      const goalsParam = params.get("goals");
+      const countryParam = params.get("country");
+
+      if (goalsParam) {
+        const validKeys: GoalKey[] = ["general", "longevity", "trt", "glp1", "perimenopause", "thyroid", "metabolic", "comprehensive"];
+        const filtered = goalsParam.split(",").filter((k): k is GoalKey => validKeys.includes(k as GoalKey));
+        if (filtered.length > 0) setSelectedGoals(filtered);
+      } else {
+        const saved = localStorage.getItem("lipa_test_finder_goals");
+        if (saved) setSelectedGoals(JSON.parse(saved));
+      }
+
+      if (countryParam && COUNTRY_LIST.includes(countryParam)) {
+        setSelectedCountry(countryParam);
+      }
     } catch {}
   }, []);
 

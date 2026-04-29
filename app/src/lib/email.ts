@@ -32,6 +32,7 @@ async function send(payload: ResendEmail): Promise<{ ok: boolean; reason?: strin
 
 export async function sendTestPlan(opts: {
   to: string;
+  goals: string[]; // raw goal keys for the "update your plan" link
   goalTitles: string[];
   country: string;
   markers: string[];
@@ -116,6 +117,10 @@ Save this email — you'll need this list when you book.
 
     <p style="font-size:12px;color:#8A928C;margin-top:24px;line-height:1.55;">
       Save this email &mdash; you&rsquo;ll need this marker list when you book.
+    </p>
+
+    <p style="font-size:12px;color:#5A635D;margin-top:8px;line-height:1.55;">
+      Picked the wrong country or goals? <a href="${`https://my.lipa.health/test-finder?goals=${encodeURIComponent(opts.goals.join(","))}&country=${encodeURIComponent(country)}`}" style="color:#1B6B4A;text-decoration:underline;">Update your plan &rarr;</a>
     </p>
 
     <p style="font-size:11px;color:#8A928C;margin-top:32px;line-height:1.55;border-top:1px solid rgba(15,26,21,0.06);padding-top:16px;">
