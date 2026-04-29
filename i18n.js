@@ -17,6 +17,7 @@ const translations = {
     heroSecondary: "Find out what to test",
     heroHowLink: "See how it works ↓",
     heroDemo: "See a sample analysis →",
+    howDemoCta: "See a sample analysis →",
     ctaFine: "Start free · See all your markers · No credit card required",
 
     // Stats
@@ -99,7 +100,7 @@ const translations = {
     // Research Library
     researchEyebrow: "From the research library",
     researchTitle: "Read what we read.",
-    researchSeeAll: "See all 20+ articles",
+    researchSeeAll: "Browse the research library",
 
     // What you get / Pricing
     pricingEyebrow: "What you get",
@@ -187,6 +188,7 @@ const translations = {
     heroSecondary: "Ontdek wat je moet testen",
     heroHowLink: "Bekijk hoe het werkt ↓",
     heroDemo: "Bekijk een voorbeeldanalyse →",
+    howDemoCta: "Bekijk een voorbeeldanalyse →",
     ctaFine: "Begin gratis · Zie al je markers · Geen creditcard nodig",
 
     // Stats
@@ -269,7 +271,7 @@ const translations = {
     // Research Library
     researchEyebrow: "Uit de onderzoeksbibliotheek",
     researchTitle: "Lees wat wij lezen.",
-    researchSeeAll: "Bekijk alle 20+ artikelen",
+    researchSeeAll: "Bekijk de onderzoeksbibliotheek",
 
     // What you get / Pricing
     pricingEyebrow: "Wat je krijgt",
@@ -352,6 +354,7 @@ const translations = {
     heroSecondary: "Dowiedz się, co zbadać",
     heroHowLink: "Zobacz jak to działa ↓",
     heroDemo: "Zobacz przykładową analizę →",
+    howDemoCta: "Zobacz przykładową analizę →",
     ctaFine: "Zacznij za darmo · Zobacz wszystkie markery · Bez karty kredytowej",
 
     // Stats
@@ -434,7 +437,7 @@ const translations = {
     // Research Library
     researchEyebrow: "Z biblioteki badań",
     researchTitle: "Przeczytaj to, co my czytamy.",
-    researchSeeAll: "Zobacz wszystkie 20+ artykułów",
+    researchSeeAll: "Przeglądaj bibliotekę badań",
 
     // What you get / Pricing
     pricingEyebrow: "Co otrzymujesz",
@@ -517,6 +520,7 @@ const translations = {
     heroSecondary: "Descubre qué analizar",
     heroHowLink: "Mira cómo funciona ↓",
     heroDemo: "Ver un análisis de ejemplo →",
+    howDemoCta: "Ver un análisis de ejemplo →",
     ctaFine: "Empieza gratis · Ve todos tus marcadores · Sin tarjeta de crédito",
 
     // Stats
@@ -599,7 +603,7 @@ const translations = {
     // Research Library
     researchEyebrow: "De la biblioteca de investigación",
     researchTitle: "Lee lo que nosotros leemos.",
-    researchSeeAll: "Ver los 20+ artículos",
+    researchSeeAll: "Explorar la biblioteca de investigación",
 
     // What you get / Pricing
     pricingEyebrow: "Qué recibes",
@@ -682,6 +686,7 @@ const translations = {
     heroSecondary: "Finde heraus, was du testen solltest",
     heroHowLink: "So funktioniert's ↓",
     heroDemo: "Beispielanalyse ansehen →",
+    howDemoCta: "Beispielanalyse ansehen →",
     ctaFine: "Kostenlos starten · Alle Marker einsehen · Keine Kreditkarte nötig",
 
     // Stats
@@ -764,7 +769,7 @@ const translations = {
     // Research Library
     researchEyebrow: "Aus der Forschungsbibliothek",
     researchTitle: "Lies, was wir lesen.",
-    researchSeeAll: "Alle 20+ Artikel ansehen",
+    researchSeeAll: "Forschungsbibliothek durchsuchen",
 
     // What you get / Pricing
     pricingEyebrow: "Was du bekommst",
@@ -847,6 +852,7 @@ const translations = {
     heroSecondary: "Découvrez quoi analyser",
     heroHowLink: "Voir comment ça fonctionne ↓",
     heroDemo: "Voir un exemple d'analyse →",
+    howDemoCta: "Voir un exemple d'analyse →",
     ctaFine: "Commencez gratuitement · Voyez tous vos marqueurs · Sans carte bancaire",
 
     // Stats
@@ -929,7 +935,7 @@ const translations = {
     // Research Library
     researchEyebrow: "De la bibliothèque scientifique",
     researchTitle: "Lisez ce que nous lisons.",
-    researchSeeAll: "Voir les 20+ articles",
+    researchSeeAll: "Explorer la bibliothèque de recherche",
 
     // What you get / Pricing
     pricingEyebrow: "Ce que vous obtenez",
@@ -1012,6 +1018,7 @@ const translations = {
     heroSecondary: "Descubra o que testar",
     heroHowLink: "Veja como funciona ↓",
     heroDemo: "Ver uma análise de exemplo →",
+    howDemoCta: "Ver uma análise de exemplo →",
     ctaFine: "Comece grátis · Veja todos os marcadores · Sem cartão de crédito",
 
     // Stats
@@ -1094,7 +1101,7 @@ const translations = {
     // Research Library
     researchEyebrow: "Da biblioteca de pesquisas",
     researchTitle: "Leia o que nós lemos.",
-    researchSeeAll: "Ver todos os 20+ artigos",
+    researchSeeAll: "Explorar a biblioteca de pesquisa",
 
     // What you get / Pricing
     pricingEyebrow: "O que você recebe",
