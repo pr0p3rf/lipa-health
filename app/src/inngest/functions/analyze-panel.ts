@@ -20,6 +20,7 @@ import {
   formatPatternResearchForPrompt,
 } from "@/lib/pattern-rag";
 import { sendResultsReady } from "@/lib/email";
+import { jsonrepair } from "jsonrepair";
 
 // ---------------------------------------------------------------------------
 // Clients (lazy-init to avoid cold-start overhead when not needed)
@@ -864,6 +865,13 @@ ACTION PLAN RULES:
 
 DATE-AWARE RETEST GUIDANCE: Frame retest timing relative to TODAY, not the test date. If DAYS SINCE TEST is already large (e.g. >30 days), say "retest now" or "retest within 2 weeks" — never "retest in 8 weeks" if 8 weeks have already passed since the draw. The user is reading this on ${todayISO}.
 
+JSON OUTPUT RULES (CRITICAL):
+- Return ONLY a single JSON object. No prose before or after.
+- Inside string values: escape every double-quote as \\" and every backslash as \\\\.
+- Use straight ASCII quotes only — no smart quotes (" "), no curly apostrophes ('), no en/em dashes inside JSON keys.
+- No trailing commas. No comments. No markdown code fences.
+- Every opening brace/bracket must have a matching closing one.
+
 Return ONLY valid JSON.`;
       const t4 = Date.now();
       console.log(`[analyze-panel] [summary:t4] prompt built userId=${userId} panelSize=${allAnalyses.length} promptChars=${summaryPrompt.length} analysisCount=${allAnalyses.length} dt=${t4 - t3}ms`);
@@ -908,9 +916,22 @@ Return ONLY valid JSON.`;
           try {
             parsed = JSON.parse(jsonMatch[0]);
           } catch (parseErr: any) {
-            summaryFailureReason = "parse_threw";
-            summaryFailureMessage = parseErr?.message || String(parseErr);
-            throw parseErr;
+            // Sonnet occasionally emits JSON with unescaped quotes inside
+            // string values, smart quotes, or trailing commas. jsonrepair
+            // handles 90%+ of these silently. Failure mode caught at
+            // analyze-panel run #1 with the restored richer prompt:
+            // "Expected ',' or '}' after property value in JSON at position 1528"
+            console.warn(
+              `[analyze-panel] Summary: JSON.parse failed (${parseErr?.message}); attempting jsonrepair`
+            );
+            try {
+              parsed = JSON.parse(jsonrepair(jsonMatch[0]));
+              console.log("[analyze-panel] Summary: jsonrepair recovered the response");
+            } catch (repairErr: any) {
+              summaryFailureReason = "parse_threw";
+              summaryFailureMessage = `parse: ${parseErr?.message}; repair: ${repairErr?.message || String(repairErr)}`;
+              throw parseErr;
+            }
           }
           const t7 = Date.now();
           console.log(`[analyze-panel] [summary:t7] JSON.parse done userId=${userId} panelSize=${allAnalyses.length} dt=${t7 - t6}ms`);
