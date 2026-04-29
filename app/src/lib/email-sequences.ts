@@ -229,7 +229,7 @@ export function day14DoctorWedge(payload: SequencePayload): TemplateOutput {
   const subject = `What your 7-minute doctor appointment can't tell you`;
 
   const body = `
-<p>The average primary care visit in Europe is 7 to 12 minutes. Most of that is logistics — checking the chart, asking standard intake questions, ordering. Time spent actually <em>thinking about your biology</em>: 2 minutes. Maybe 3.</p>
+<p>The average primary care visit is 7 to 12 minutes. Most of that is logistics — checking the chart, asking standard intake questions, ordering. Time spent actually <em>thinking about your biology</em>: 2 minutes. Maybe 3.</p>
 
 <p>That's not a critique of doctors. It's the system. They have 30 patients a day and a 5-marker panel to interpret. They flag what's broken and move on.</p>
 
@@ -264,7 +264,7 @@ export function day14DoctorWedge(payload: SequencePayload): TemplateOutput {
 
   const text = `${subject}
 
-The average primary care visit in Europe is 7-12 minutes. Time spent thinking about your biology: 2-3 minutes. They flag what's broken and move on.
+The average primary care visit is 7-12 minutes. Time spent thinking about your biology: 2-3 minutes. They flag what's broken and move on.
 
 That's the system, not the doctors. The other 80% — patterns across markers, optimal-vs-normal gap, protocol recommendations — isn't their job.
 
@@ -349,7 +349,7 @@ export function day35WhileWaiting(payload: SequencePayload): TemplateOutput {
 <p>Most people wait passively for blood test results. You can do better — five evidence-backed interventions that measurably improve common markers within 4&ndash;8 weeks. Free advice, no upsell.</p>
 
 <ol style="font-size:14px;color:#0F1A15;line-height:1.75;padding-left:20px;">
-  <li><strong>Vitamin D, 4,000 IU/day with K2 (MK-7, 100&ndash;200 mcg).</strong> Vitamin D drops in winter for 80% of Europeans. Fixes within 6&ndash;8 weeks. K2 prevents arterial calcification from elevated D.</li>
+  <li><strong>Vitamin D, 4,000 IU/day with K2 (MK-7, 100&ndash;200 mcg).</strong> Most adults are deficient by spring — winter sun isn&rsquo;t strong enough above the 35th parallel. Fixes within 6&ndash;8 weeks. K2 prevents arterial calcification from elevated D.</li>
   <li><strong>Omega-3 EPA+DHA, 2&ndash;3 g/day in triglyceride form.</strong> Drops triglycerides 15&ndash;30% and small-dense LDL particles. Lowers hs-CRP. Single biggest lipid lever after diet.</li>
   <li><strong>Magnesium glycinate, 300&ndash;400 mg before bed.</strong> 80% of people are deficient (RBC magnesium, not serum). Improves sleep quality, lowers fasting glucose, supports cardiovascular function.</li>
   <li><strong>10-minute morning walk in sunlight.</strong> Cheapest intervention with the largest cross-marker effect: cortisol regulation, vitamin D synthesis, circadian alignment, mood, glucose tolerance. Zero cost.</li>
@@ -373,7 +373,7 @@ export function day35WhileWaiting(payload: SequencePayload): TemplateOutput {
 
 Five evidence-backed interventions that improve common markers within 4-8 weeks. No upsell.
 
-1. Vitamin D 4,000 IU/day + K2 (MK-7, 100-200 mcg). Drops 80% of Europeans in winter.
+1. Vitamin D 4,000 IU/day + K2 (MK-7, 100-200 mcg). Most adults deficient by spring above the 35th parallel.
 2. Omega-3 EPA+DHA 2-3 g/day, triglyceride form. Drops triglycerides 15-30%, lowers hs-CRP.
 3. Magnesium glycinate 300-400 mg before bed. 80% deficient. Improves sleep, glucose, cardiovascular.
 4. 10-min morning walk in sunlight. Cortisol, vitamin D, circadian, mood, glucose. Zero cost.
