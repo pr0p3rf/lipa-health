@@ -226,7 +226,7 @@ See a sample: https://my.lipa.health/demo
 // -- Day 14 — What your doctor doesn't have time for --
 // The wedge email. Frontloaded per Patrick's call.
 export function day14DoctorWedge(payload: SequencePayload): TemplateOutput {
-  const subject = `What your 7-minute appointment can't tell you`;
+  const subject = `What your 7-minute doctor appointment can't tell you`;
 
   const body = `
 <p>The average primary care visit in Europe is 7 to 12 minutes. Most of that is logistics — checking the chart, asking standard intake questions, ordering. Time spent actually <em>thinking about your biology</em>: 2 minutes. Maybe 3.</p>
