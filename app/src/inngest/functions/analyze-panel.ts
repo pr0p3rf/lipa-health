@@ -566,9 +566,15 @@ export const analyzePanel = inngest.createFunction(
     const panelText = buildPanelText(allBiomarkers, referenceMap, statusMap);
 
     // -----------------------------------------------------------------
-    // Step 2-N: Batch analysis (10 markers per batch)
+    // Step 2-N: Batch analysis (5 markers per batch)
     // -----------------------------------------------------------------
-    const BATCH_SIZE = 10;
+    // Per .paul/phases/03-interpretation-engine/DIAGNOSIS.md: at BATCH_SIZE=10
+    // a single batch could hit ~170s of Anthropic generation time, leaving
+    // only 1.7× headroom against Vercel's 300s maxDuration. Halving the
+    // batch shrinks worst-case per-call latency to ~85s and the headroom
+    // to 3.5×. Cost stays roughly flat; ~30s extra wall-clock from 2× RAG
+    // overhead, mostly absorbed by Inngest step parallelism.
+    const BATCH_SIZE = 5;
     const numBatches = Math.ceil(totalMarkers / BATCH_SIZE);
 
     for (let i = 0; i < numBatches; i++) {
