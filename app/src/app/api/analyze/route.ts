@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { createClient } from "@supabase/supabase-js";
 import { inngest } from "@/inngest/client";
+import { isKnownBiomarker } from "@/lib/biomarker-aliases";
 
 export const maxDuration = 300; // Vercel Pro max
 
@@ -239,6 +240,33 @@ export async function POST(request: NextRequest) {
         );
       }
       insertedResults = inserted || [];
+
+      // Telemetry: log biomarker names that didn't resolve to a canonical
+      // alias. Drives the self-aware coverage loop in biomarker-aliases.ts.
+      // Fire-and-forget so it never blocks the user flow.
+      const unmatched = validBiomarkers
+        .filter((b: any) => typeof b.name === "string" && b.name.length > 0 && !isKnownBiomarker(b.name))
+        .map((b: any) => ({
+          biomarker_name: b.name,
+          user_id: userId,
+          test_date: date,
+          unit: b.unit || null,
+          category: b.category || null,
+        }));
+      if (unmatched.length > 0) {
+        // Fire-and-forget. async IIFE so a thrown error becomes a console
+        // line instead of an unhandled rejection that could affect the user
+        // request — this telemetry must never break the upload flow.
+        void (async () => {
+          try {
+            const { error } = await supabase.from("unmatched_biomarkers").insert(unmatched);
+            if (error) console.error("[analyze] unmatched telemetry insert failed:", error.message);
+            else console.log(`[analyze] logged ${unmatched.length} unmatched biomarker names for coverage expansion`);
+          } catch (err: any) {
+            console.error("[analyze] unmatched telemetry threw:", err?.message || err);
+          }
+        })();
+      }
 
       // Successfully inserted — now clean up old analyses (not old results, to avoid losing data)
       await supabase.from("analysis_citations").delete().eq("user_id", userId);

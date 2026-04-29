@@ -165,6 +165,15 @@ export function resolveCanonicalName(name: string): string {
 }
 
 /**
+ * True if the given name is a canonical biomarker or any known alias.
+ * Use to distinguish "name was found" from "resolveCanonicalName returned
+ * the input unchanged because it was already canonical".
+ */
+export function isKnownBiomarker(name: string): boolean {
+  return REVERSE_LOOKUP.has(name.toLowerCase());
+}
+
+/**
  * Get all known aliases for a canonical biomarker name.
  */
 export function getAliases(canonicalName: string): string[] {
