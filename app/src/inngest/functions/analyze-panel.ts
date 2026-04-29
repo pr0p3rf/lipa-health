@@ -679,6 +679,9 @@ Return ONLY valid JSON with a "markers" array containing exactly ${batchBiomarke
     // Final step: Summary + action plan
     // -----------------------------------------------------------------
     const summaryResult = await step.run("generate-summary", async () => {
+      const t0 = Date.now();
+      const inputPanelSize = allBiomarkers.length;
+      console.log(`[analyze-panel] [summary:t0] entered userId=${userId} inputPanelSize=${inputPanelSize}`);
       const supabase = getSupabase();
       const anthropic = getAnthropic();
 
@@ -688,6 +691,8 @@ Return ONLY valid JSON with a "markers" array containing exactly ${batchBiomarke
         .select("*")
         .eq("user_id", userId)
         .order("id");
+      const t1 = Date.now();
+      console.log(`[analyze-panel] [summary:t1] allAnalyses fetched userId=${userId} panelSize=${allAnalyses?.length ?? 0} dt=${t1 - t0}ms`);
 
       if (!allAnalyses || allAnalyses.length === 0) {
         throw new Error("No analyses found after batch steps");
@@ -699,6 +704,8 @@ Return ONLY valid JSON with a "markers" array containing exactly ${batchBiomarke
         .select("age, sex, is_smoker, systolic_bp")
         .eq("user_id", userId)
         .maybeSingle();
+      const t2 = Date.now();
+      console.log(`[analyze-panel] [summary:t2] userProfile fetched userId=${userId} panelSize=${allAnalyses.length} dt=${t2 - t1}ms`);
 
       const userProfile: UserProfile = fullProfileData
         ? {
@@ -742,6 +749,8 @@ Return ONLY valid JSON with a "markers" array containing exactly ${batchBiomarke
         status: statusMap.get(bm.name)?.status || "normal",
       }));
       const detectedPatterns: DetectedPattern[] = detectPatterns(patternInput);
+      const t3 = Date.now();
+      console.log(`[analyze-panel] [summary:t3] detectPatterns done userId=${userId} panelSize=${allAnalyses.length} patterns=${detectedPatterns.length} dt=${t3 - t2}ms`);
 
       console.log(
         `[analyze-panel] Pattern detection: ${detectedPatterns.length} patterns found`
@@ -802,6 +811,8 @@ RULES: Be specific with doses/forms. Never recommend prescription drugs. Focus o
 DATE-AWARE RETEST GUIDANCE: Frame retest timing relative to TODAY, not the test date. If DAYS SINCE TEST is already large (e.g. >30 days), say "retest now" or "retest within 2 weeks" — never "retest in 8 weeks" if 8 weeks have already passed since the draw. The user is reading this on ${todayISO}.
 
 Return ONLY valid JSON.`;
+      const t4 = Date.now();
+      console.log(`[analyze-panel] [summary:t4] prompt built userId=${userId} panelSize=${allAnalyses.length} promptChars=${summaryPrompt.length} analysisCount=${allAnalyses.length} dt=${t4 - t3}ms`);
 
       // Sonnet for summary quality. maxDuration=300 on Inngest route prevents 524 timeout.
       const summaryModel = "claude-sonnet-4-20250514";
@@ -809,15 +820,19 @@ Return ONLY valid JSON.`;
 
       try {
         console.log(`[analyze-panel] Summary: calling ${summaryModel} with ${summaryPrompt.length} char prompt`);
+        const t5 = Date.now();
+        console.log(`[analyze-panel] [summary:t5] anthropic.messages.create about to send userId=${userId} panelSize=${allAnalyses.length} model=${summaryModel}`);
         const message = await anthropic.messages.create({
           model: summaryModel,
           max_tokens: 8192,
           system: SUMMARY_SYSTEM_PROMPT,
           messages: [{ role: "user", content: summaryPrompt }],
         });
+        const t6 = Date.now();
 
         const responseText =
           message.content[0].type === "text" ? message.content[0].text : "";
+        console.log(`[analyze-panel] [summary:t6] anthropic responded userId=${userId} panelSize=${allAnalyses.length} responseChars=${responseText.length} dt=${t6 - t5}ms`);
         console.log(`[analyze-panel] Summary: Claude responded with ${responseText.length} chars`);
 
         const jsonMatch = responseText.match(/\{[\s\S]*\}/);
@@ -826,6 +841,8 @@ Return ONLY valid JSON.`;
           console.error("[analyze-panel] Response preview:", responseText.slice(0, 500));
         } else {
           const parsed = JSON.parse(jsonMatch[0]);
+          const t7 = Date.now();
+          console.log(`[analyze-panel] [summary:t7] JSON.parse done userId=${userId} panelSize=${allAnalyses.length} dt=${t7 - t6}ms`);
           const actionPlanData = parsed.action_plan || {};
 
           await supabase.from("action_plans").insert({
@@ -839,6 +856,8 @@ Return ONLY valid JSON.`;
             domains: actionPlanData.domains || [],
             generation_time_ms: 0,
           });
+          const t8 = Date.now();
+          console.log(`[analyze-panel] [summary:t8] action_plans insert done userId=${userId} panelSize=${allAnalyses.length} dt=${t8 - t7}ms`);
           actionPlanStored = true;
           console.log("[analyze-panel] Summary: action plan stored successfully");
         }
@@ -878,6 +897,9 @@ Return ONLY valid JSON.`;
         })
       );
       const riskCalcs = runAllCalculations(biomarkerValues, userProfile);
+
+      const t9 = Date.now();
+      console.log(`[analyze-panel] [summary:t9] step returning userId=${userId} panelSize=${allAnalyses.length} totalMs=${t9 - t0} actionPlanStored=${actionPlanStored} model=${summaryModel}`);
 
       return {
         complete: true,
