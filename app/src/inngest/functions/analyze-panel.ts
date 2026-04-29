@@ -823,6 +823,12 @@ Return ONLY valid JSON.`;
       // Sonnet for summary quality. maxDuration=300 on Inngest route prevents 524 timeout.
       const summaryModel = "claude-sonnet-4-20250514";
       let actionPlanStored = false;
+      // Telemetry: capture failure cause + context so the fallback path is
+      // visible instead of silent. Logged to summary_failures only when the
+      // fallback fires (i.e. actionPlanStored stays false).
+      let summaryFailureReason: string | null = null;
+      let summaryFailureMessage: string | null = null;
+      let summaryResponseChars: number | null = null;
 
       try {
         console.log(`[analyze-panel] Summary: calling ${summaryModel} with ${summaryPrompt.length} char prompt`);
@@ -838,15 +844,25 @@ Return ONLY valid JSON.`;
 
         const responseText =
           message.content[0].type === "text" ? message.content[0].text : "";
+        summaryResponseChars = responseText.length;
         console.log(`[analyze-panel] [summary:t6] anthropic responded userId=${userId} panelSize=${allAnalyses.length} responseChars=${responseText.length} dt=${t6 - t5}ms`);
         console.log(`[analyze-panel] Summary: Claude responded with ${responseText.length} chars`);
 
         const jsonMatch = responseText.match(/\{[\s\S]*\}/);
         if (!jsonMatch) {
+          summaryFailureReason = "no_json_in_response";
+          summaryFailureMessage = `no JSON found in ${responseText.length}-char response`;
           console.error("[analyze-panel] Summary: no JSON found in response");
           console.error("[analyze-panel] Response preview:", responseText.slice(0, 500));
         } else {
-          const parsed = JSON.parse(jsonMatch[0]);
+          let parsed: any;
+          try {
+            parsed = JSON.parse(jsonMatch[0]);
+          } catch (parseErr: any) {
+            summaryFailureReason = "parse_threw";
+            summaryFailureMessage = parseErr?.message || String(parseErr);
+            throw parseErr;
+          }
           const t7 = Date.now();
           console.log(`[analyze-panel] [summary:t7] JSON.parse done userId=${userId} panelSize=${allAnalyses.length} dt=${t7 - t6}ms`);
           const actionPlanData = parsed.action_plan || {};
@@ -868,12 +884,37 @@ Return ONLY valid JSON.`;
           console.log("[analyze-panel] Summary: action plan stored successfully");
         }
       } catch (summaryErr: any) {
+        if (!summaryFailureReason) {
+          summaryFailureReason = "anthropic_threw";
+          summaryFailureMessage = summaryErr?.message || String(summaryErr);
+        }
         console.error("[analyze-panel] Summary step failed:", summaryErr?.message || summaryErr);
         console.error("[analyze-panel] Stack:", summaryErr?.stack);
       }
 
       // If Claude summary failed, store a basic fallback action plan
       if (!actionPlanStored) {
+        // Telemetry: log this fallback-fire so the "silent failure" pattern
+        // becomes visible. Fire-and-forget; does not block the fallback path.
+        const failureRow = {
+          user_id: userId,
+          test_date: effectiveDate,
+          failure_reason: summaryFailureReason || "unknown",
+          error_message: summaryFailureMessage,
+          model: summaryModel,
+          prompt_chars: summaryPrompt.length,
+          panel_size: allAnalyses.length,
+          response_chars: summaryResponseChars,
+        };
+        void (async () => {
+          try {
+            const { error } = await supabase.from("summary_failures").insert(failureRow);
+            if (error) console.error("[analyze-panel] summary_failures insert returned error:", error.message);
+            else console.log(`[analyze-panel] summary_failures logged: reason=${failureRow.failure_reason} panelSize=${failureRow.panel_size}`);
+          } catch (telErr: any) {
+            console.error("[analyze-panel] summary_failures threw:", telErr?.message || telErr);
+          }
+        })();
         console.log("[analyze-panel] Storing fallback action plan");
         const outOfRange = allAnalyses.filter((a: any) => a.status === "out_of_range");
         const borderline = allAnalyses.filter((a: any) => a.status === "borderline");
