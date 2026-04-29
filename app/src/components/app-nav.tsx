@@ -32,8 +32,12 @@ export function AppNav() {
       {/* Desktop nav */}
       <nav className="sticky top-0 z-50 bg-[#FAFAF8]/85 backdrop-blur-xl border-b border-black/[0.04]">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/dashboard" className="flex items-center gap-2 flex-shrink-0">
+          {/* Logo — links to the marketing home (lipa.health). In-app
+              navigation is handled by the desktop tabs / mobile bottom nav.
+              Anonymous users' Supabase session persists across this navigation
+              (different domain, same browser cookie scope), so their results
+              don't get lost just because they hit the logo. */}
+          <a href="https://lipa.health" className="flex items-center gap-2 flex-shrink-0">
             <svg width="22" height="22" viewBox="0 0 28 28" fill="none">
               <circle cx="14" cy="14" r="13" stroke="#1B6B4A" strokeWidth="1.5" />
               <path d="M14 7C14 7 10 10 10 15C10 18 11.5 20 14 21C16.5 20 18 18 18 15C18 10 14 7 14 7Z" fill="#1B6B4A" opacity="0.15" />
@@ -41,7 +45,7 @@ export function AppNav() {
               <line x1="14" y1="11" x2="14" y2="21" stroke="#1B6B4A" strokeWidth="0.8" />
             </svg>
             <span className="text-[15px] font-semibold tracking-[1.5px] uppercase hidden sm:inline">Lipa</span>
-          </Link>
+          </a>
 
           {/* Desktop tabs — hidden on mobile */}
           <div className="hidden sm:flex gap-1">

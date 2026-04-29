@@ -11,7 +11,7 @@ const translations = {
     mobilePricing: "Pricing",
 
     // Hero
-    heroTitle: "Take control of your health.",
+    heroTitle: "Take your health into your own hands.",
     heroSub: "Upload your blood test or book one today. In minutes, know exactly what's going on and what to do about it — root causes, specific protocols, and patterns across your markers. Backed by 250,000+ peer-reviewed studies.",
     ctaButton: "Upload your blood test",
     heroSecondary: "Find out what to test",
@@ -181,7 +181,7 @@ const translations = {
     mobilePricing: "Prijzen",
 
     // Hero
-    heroTitle: "Neem de controle over je gezondheid.",
+    heroTitle: "Neem je gezondheid in eigen hand.",
     heroSub: "Upload je bloedtest of boek er vandaag een. Weet binnen minuten wat er aan de hand is en wat je eraan kunt doen \u2014 oorzaken, specifieke protocollen en patronen tussen je markers. Onderbouwd door 250.000+ wetenschappelijke studies.",
     ctaButton: "Upload je bloedtest",
     heroSecondary: "Ontdek wat je moet testen",
@@ -346,7 +346,7 @@ const translations = {
     mobilePricing: "Cennik",
 
     // Hero
-    heroTitle: "Przejmij kontrol\u0119 nad swoim zdrowiem.",
+    heroTitle: "We\u017a zdrowie w swoje r\u0119ce.",
     heroSub: "Prze\u015blij wynik badania krwi lub zam\u00f3w je dzi\u015b. W kilka minut dowiedz si\u0119, co si\u0119 dzieje i co z tym zrobi\u0107 \u2014 przyczyny, konkretne protoko\u0142y i powi\u0105zania mi\u0119dzy markerami. Poparte 250 000+ recenzowanych bada\u0144 naukowych.",
     ctaButton: "Prześlij badanie krwi",
     heroSecondary: "Dowiedz się, co zbadać",
@@ -511,7 +511,7 @@ const translations = {
     mobilePricing: "Precios",
 
     // Hero
-    heroTitle: "Toma el control de tu salud.",
+    heroTitle: "Toma tu salud en tus propias manos.",
     heroSub: "Sube tu an\u00e1lisis de sangre o reserva uno hoy. En minutos, sabr\u00e1s exactamente qu\u00e9 est\u00e1 pasando y qu\u00e9 hacer \u2014 causas, protocolos espec\u00edficos y patrones entre tus marcadores. Respaldado por 250.000+ estudios cient\u00edficos.",
     ctaButton: "Sube tu análisis de sangre",
     heroSecondary: "Descubre qué analizar",
@@ -676,7 +676,7 @@ const translations = {
     mobilePricing: "Preise",
 
     // Hero
-    heroTitle: "\u00dcbernimm die Kontrolle \u00fcber deine Gesundheit.",
+    heroTitle: "Nimm deine Gesundheit selbst in die Hand.",
     heroSub: "Lade deinen Bluttest hoch oder buche heute einen. In Minuten wei\u00dft du genau, was los ist und was zu tun ist \u2014 Ursachen, spezifische Protokolle und Zusammenh\u00e4nge zwischen deinen Markern. Gest\u00fctzt auf 250.000+ wissenschaftliche Studien.",
     ctaButton: "Bluttest hochladen",
     heroSecondary: "Finde heraus, was du testen solltest",
@@ -841,7 +841,7 @@ const translations = {
     mobilePricing: "Tarifs",
 
     // Hero
-    heroTitle: "Prenez le contr\u00f4le de votre sant\u00e9.",
+    heroTitle: "Prenez votre sant\u00e9 en main.",
     heroSub: "Importez votre bilan sanguin ou r\u00e9servez-en un aujourd\u2019hui. En quelques minutes, sachez exactement ce qui se passe et quoi faire \u2014 causes, protocoles sp\u00e9cifiques et connexions entre vos marqueurs. Fond\u00e9 sur 250 000+ \u00e9tudes scientifiques.",
     ctaButton: "Importer votre bilan sanguin",
     heroSecondary: "Découvrez quoi analyser",
@@ -1006,7 +1006,7 @@ const translations = {
     mobilePricing: "Preços",
 
     // Hero
-    heroTitle: "Assuma o controle da sua sa\u00fade.",
+    heroTitle: "Tome sua sa\u00fade em suas pr\u00f3prias m\u00e3os.",
     heroSub: "Envie seu exame de sangue ou agende um hoje. Em minutos, saiba exatamente o que est\u00e1 acontecendo e o que fazer \u2014 causas, protocolos espec\u00edficos e padr\u00f5es entre seus marcadores. Baseado em 250.000+ estudos cient\u00edficos revisados.",
     ctaButton: "Enviar exame de sangue",
     heroSecondary: "Descubra o que testar",
