@@ -9,6 +9,10 @@ import { SEQUENCE_TEMPLATES, FROM } from "@/lib/email-sequences";
 // Auth: Vercel cron requests carry an Authorization header set to
 // `Bearer ${process.env.CRON_SECRET}`. Reject anything else so this
 // endpoint can't be hit externally to spam users.
+//
+// Required env: CRON_SECRET (any random string). Vercel automatically
+// sends Bearer ${CRON_SECRET} on cron invocations once the env var exists
+// in the project's production environment.
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
