@@ -4,6 +4,7 @@ type ResendEmail = {
   subject: string;
   html?: string;
   text?: string;
+  bcc?: string[];
 };
 
 const FROM = "Lipa Health <hello@lipa.health>";
@@ -11,6 +12,14 @@ const FROM = "Lipa Health <hello@lipa.health>";
 async function send(payload: ResendEmail): Promise<{ ok: boolean; reason?: string }> {
   const key = process.env.RESEND_API_KEY;
   if (!key) return { ok: false, reason: "RESEND_API_KEY not set" };
+
+  // BCC admin if configured. Patrick uses this to see every email Lipa
+  // sends so he can review copy and confirm sequences are firing.
+  const adminBcc = process.env.EMAIL_BCC_ADMIN;
+  const finalPayload: ResendEmail & { bcc?: string[] } = adminBcc
+    ? { ...payload, bcc: [adminBcc] }
+    : payload;
+
   try {
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -18,7 +27,7 @@ async function send(payload: ResendEmail): Promise<{ ok: boolean; reason?: strin
         Authorization: `Bearer ${key}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(finalPayload),
     });
     if (!res.ok) {
       const body = await res.text().catch(() => "");

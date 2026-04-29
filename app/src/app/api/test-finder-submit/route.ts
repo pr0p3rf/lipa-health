@@ -1,6 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { sendTestPlan } from "@/lib/email";
+import { pickTopMarkers } from "@/lib/email-sequences";
+
+// Sequence schedule. Days after Day 0 (which sends immediately).
+// Updated 2026-04-29 per Patrick: doctor-wedge moved to Day 14, rest bumped.
+const SEQUENCE = [
+  { template: "day3_markers", day: 3 },
+  { template: "day7_normal", day: 7 },
+  { template: "day14_doctor_wedge", day: 14 },
+  { template: "day21_book", day: 21 },
+  { template: "day35_while_waiting", day: 35 },
+  { template: "day50_time_check", day: 50 },
+  { template: "day75_long_tail", day: 75 },
+];
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -117,12 +130,55 @@ export async function POST(request: NextRequest) {
     emailError = e?.message || "email send failed";
   }
 
+  // Schedule the nurture sequence. First cancel any previous pending sends
+  // for this email so we never double-send if they resubmit. Then enqueue
+  // the 7-touch drip from now + Day N.
+  let scheduled = 0;
+  let scheduleError: string | null = null;
+  try {
+    const sequenceKey = `test-finder:${cleanEmail}`;
+
+    await supabase
+      .from("scheduled_emails")
+      .update({ status: "canceled", updated_at: new Date().toISOString() })
+      .eq("sequence_key", sequenceKey)
+      .eq("status", "pending");
+
+    const topMarkers = pickTopMarkers(goals);
+    const goalTitlesArr = Array.isArray(goalTitles) && goalTitles.length > 0 ? goalTitles : goals;
+    const sharedPayload = {
+      goalTitles: goalTitlesArr,
+      goals,
+      country,
+      topMarkers,
+    };
+    const now = Date.now();
+    const rows = SEQUENCE.map(({ template, day }) => ({
+      to_email: cleanEmail,
+      send_at: new Date(now + day * 86_400_000).toISOString(),
+      template,
+      payload: sharedPayload,
+      status: "pending" as const,
+      sequence_key: sequenceKey,
+    }));
+
+    const { error } = await supabase.from("scheduled_emails").insert(rows);
+    if (error) {
+      scheduleError = error.message;
+      console.error("[test-finder-submit] schedule insert failed:", error.message);
+    } else {
+      scheduled = rows.length;
+    }
+  } catch (e: any) {
+    scheduleError = e?.message || "schedule failed";
+  }
+
   console.log(
-    `[test-finder-submit] email=${cleanEmail} country=${country} goals=${goals.join(",")} logged=${logged} emailSent=${emailSent} emailErr=${emailError || "-"} logErr=${logError || "-"}`
+    `[test-finder-submit] email=${cleanEmail} country=${country} goals=${goals.join(",")} logged=${logged} emailSent=${emailSent} scheduled=${scheduled} emailErr=${emailError || "-"} logErr=${logError || "-"} schedErr=${scheduleError || "-"}`
   );
 
   return NextResponse.json(
-    { success: logged, logged, emailSent, logError, emailError },
+    { success: logged, logged, emailSent, scheduled, logError, emailError, scheduleError },
     { headers: cors }
   );
 }
