@@ -1645,6 +1645,19 @@
   <a href="https://my.lipa.health/pricing" onclick="document.getElementById('mobileMenu').style.display='none'" data-i18n="mobilePricing">Pricing</a>
   <a href="https://my.lipa.health/login" style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;" onclick="document.getElementById('mobileMenu').style.display='none'" data-i18n="navLogin">Log in</a>
   <a href="https://my.lipa.health/upload" class="mobile-menu-cta" onclick="document.getElementById('mobileMenu').style.display='none'" data-i18n="navCta">Get started free</a>
+
+  <!-- Language switcher (mobile). The desktop nav has a dropdown; mobile users
+       had no way to override the geo-detected language until this. -->
+  <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:24px;padding-top:24px;border-top:1px solid var(--border);">
+    <span style="width:100%;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-tertiary);margin-bottom:8px;">Language</span>
+    <button onclick="setLang('en'); document.getElementById('mobileMenu').style.display='none';" style="flex:1;min-width:60px;padding:10px;border:1px solid var(--border);border-radius:8px;background:white;font-size:13px;font-weight:500;cursor:pointer;">EN</button>
+    <button onclick="setLang('nl'); document.getElementById('mobileMenu').style.display='none';" style="flex:1;min-width:60px;padding:10px;border:1px solid var(--border);border-radius:8px;background:white;font-size:13px;font-weight:500;cursor:pointer;">NL</button>
+    <button onclick="setLang('pl'); document.getElementById('mobileMenu').style.display='none';" style="flex:1;min-width:60px;padding:10px;border:1px solid var(--border);border-radius:8px;background:white;font-size:13px;font-weight:500;cursor:pointer;">PL</button>
+    <button onclick="setLang('es'); document.getElementById('mobileMenu').style.display='none';" style="flex:1;min-width:60px;padding:10px;border:1px solid var(--border);border-radius:8px;background:white;font-size:13px;font-weight:500;cursor:pointer;">ES</button>
+    <button onclick="setLang('de'); document.getElementById('mobileMenu').style.display='none';" style="flex:1;min-width:60px;padding:10px;border:1px solid var(--border);border-radius:8px;background:white;font-size:13px;font-weight:500;cursor:pointer;">DE</button>
+    <button onclick="setLang('fr'); document.getElementById('mobileMenu').style.display='none';" style="flex:1;min-width:60px;padding:10px;border:1px solid var(--border);border-radius:8px;background:white;font-size:13px;font-weight:500;cursor:pointer;">FR</button>
+    <button onclick="setLang('pt'); document.getElementById('mobileMenu').style.display='none';" style="flex:1;min-width:60px;padding:10px;border:1px solid var(--border);border-radius:8px;background:white;font-size:13px;font-weight:500;cursor:pointer;">PT</button>
+  </div>
 </div>
 
 <!-- ================== HERO ================== -->
