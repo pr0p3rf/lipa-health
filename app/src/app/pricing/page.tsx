@@ -4,6 +4,8 @@ import { AppNav } from "@/components/app-nav";
 import { Suspense, useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter, useSearchParams } from "next/navigation";
+import { formatPrice } from "@/lib/geo-pricing";
+import { useCountry } from "@/lib/use-country";
 
 interface Tier {
   id: "free" | "one" | "insight";
@@ -16,59 +18,68 @@ interface Tier {
   featured?: boolean;
 }
 
-const TIERS: Tier[] = [
-  {
-    id: "insight",
-    name: "Lipa Life",
-    tagline: "Your health companion. Full analysis, ongoing tracking, unlimited chat.",
-    price: "€89",
-    priceDetail: "per year · first analysis included",
-    featured: true,
-    features: [
-      "Every marker analyzed in plain English",
-      "Full action plan (nutrition, supplements, sleep, movement)",
-      "16+ risk calculations + biological age",
-      "Cross-marker pattern detection",
-      "Up to 12 test uploads per year",
-      "Vault — your complete biological history",
-      "Trend tracking with bio-age trajectory",
-      "Ask Lipa — your personal health assistant, unlimited",
-      "Personalized research alerts for your markers",
-      "PDF export + doctor sharing",
-    ],
-    cta: "Get Lipa Life — €89/year",
-  },
-  {
-    id: "one",
-    name: "Lipa One",
-    tagline: "Full analysis of one blood test. No subscription.",
-    price: "€39",
-    priceDetail: "one-time · credited toward Life if you upgrade",
-    features: [
-      "Every marker analyzed in plain English",
-      "Full action plan across 6 life domains",
-      "Risk calculations + biological age",
-      "Cross-marker pattern detection",
-      "PDF report for your doctor",
-      "Ask Lipa chat for 7 days",
-    ],
-    cta: "Get Single Analysis — €39",
-  },
-  {
-    id: "free",
-    name: "Free Preview",
-    tagline: "Upload a test and see what Lipa can do.",
-    price: "Free",
-    priceDetail: null,
-    features: [
-      "Upload 1 blood test",
-      "All markers with status",
-      "Bio-age, key findings, body systems",
-      "Pattern detection",
-    ],
-    cta: "Try Free",
-  },
-];
+// EUR base prices. Display strings are localized via formatPrice() per
+// visitor country. Stripe Adaptive Pricing handles checkout conversion.
+const PRICE_LIFE_EUR = 89;
+const PRICE_ONE_EUR = 39;
+
+function buildTiers(country: string | null): Tier[] {
+  const lifePrice = formatPrice(country, PRICE_LIFE_EUR);
+  const onePrice = formatPrice(country, PRICE_ONE_EUR);
+  return [
+    {
+      id: "insight",
+      name: "Lipa Life",
+      tagline: "Your health companion. Full analysis, ongoing tracking, unlimited chat.",
+      price: lifePrice,
+      priceDetail: "per year · first analysis included",
+      featured: true,
+      features: [
+        "Every marker analyzed in plain English",
+        "Full action plan (nutrition, supplements, sleep, movement)",
+        "16+ risk calculations + biological age",
+        "Cross-marker pattern detection",
+        "Up to 12 test uploads per year",
+        "Vault — your complete biological history",
+        "Trend tracking with bio-age trajectory",
+        "Ask Lipa — your personal health assistant, unlimited",
+        "Personalized research alerts for your markers",
+        "PDF export + doctor sharing",
+      ],
+      cta: `Get Lipa Life — ${lifePrice}/year`,
+    },
+    {
+      id: "one",
+      name: "Lipa One",
+      tagline: "Full analysis of one blood test. No subscription.",
+      price: onePrice,
+      priceDetail: "one-time · credited toward Life if you upgrade",
+      features: [
+        "Every marker analyzed in plain English",
+        "Full action plan across 6 life domains",
+        "Risk calculations + biological age",
+        "Cross-marker pattern detection",
+        "PDF report for your doctor",
+        "Ask Lipa chat for 7 days",
+      ],
+      cta: `Get Single Analysis — ${onePrice}`,
+    },
+    {
+      id: "free",
+      name: "Free Preview",
+      tagline: "Upload a test and see what Lipa can do.",
+      price: "Free",
+      priceDetail: null,
+      features: [
+        "Upload 1 blood test",
+        "All markers with status",
+        "Bio-age, key findings, body systems",
+        "Pattern detection",
+      ],
+      cta: "Try Free",
+    },
+  ];
+}
 
 export default function PricingPage() {
   return (
@@ -84,6 +95,10 @@ function PricingContent() {
   const [loading, setLoading] = useState<string | null>(null);
   const [user, setUser] = useState<any>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const country = useCountry();
+  const TIERS = buildTiers(country);
+  const oneDisplay = formatPrice(country, PRICE_ONE_EUR);
+  const lifeDisplay = formatPrice(country, PRICE_LIFE_EUR);
 
   // Pre-checkout email modal — shown when an anonymous user clicks Buy
   // without an email on file. Same InsideTracker two-stage pattern as
@@ -314,7 +329,7 @@ function PricingContent() {
         {/* Coming soon note */}
         <div className="mt-12 text-center">
           <p className="text-[11px] text-[#999] max-w-2xl mx-auto leading-relaxed">
-            Lipa One is a one-time purchase — no subscription required. If you upgrade to Lipa Life within 30 days, your €39 is credited toward the annual price. We don't sell blood tests — bring your own from any lab, any country. See our guide on where to test.
+            Lipa One is a one-time purchase — no subscription required. If you upgrade to Lipa Life within 30 days, your {oneDisplay} is credited toward the annual price. We don't sell blood tests — bring your own from any lab, any country. See our guide on where to test.
           </p>
         </div>
 
@@ -336,7 +351,7 @@ function PricingContent() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="text-[10px] uppercase tracking-[0.12em] text-[#1B6B4A] font-semibold mb-2">
-              {pendingTier === "insight" ? "Lipa Life — €89/year" : "Lipa One — €39"}
+              {pendingTier === "insight" ? `Lipa Life — ${lifeDisplay}/year` : `Lipa One — ${oneDisplay}`}
             </div>
             <h3 className="text-[22px] tracking-tight mb-2" style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}>
               One last step
@@ -385,7 +400,7 @@ function PricingContent() {
               {[
                 "180+ biomarkers cross-referenced against 250,000+ peer-reviewed studies",
                 "Cited research for every recommendation",
-                pendingTier === "insight" ? "Cancel anytime, no long-term commitment" : "€39 credited toward Life if you upgrade within 30 days",
+                pendingTier === "insight" ? "Cancel anytime, no long-term commitment" : `${oneDisplay} credited toward Life if you upgrade within 30 days`,
                 "GDPR-compliant. Encrypted. Never sold.",
               ].map((line) => (
                 <li key={line} className="flex items-start gap-2">

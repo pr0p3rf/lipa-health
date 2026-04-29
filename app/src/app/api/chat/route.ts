@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { createClient } from "@supabase/supabase-js";
+import { formatPrice } from "@/lib/geo-pricing";
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
@@ -84,9 +85,12 @@ export async function POST(request: NextRequest) {
           .eq("user_id", userId)
           .eq("role", "user");
         if ((count || 0) >= 3) {
+          const country = request.headers.get("x-vercel-ip-country");
+          const oneDisplay = formatPrice(country, 39);
+          const lifeDisplay = formatPrice(country, 89);
           return new Response(JSON.stringify({
             error: "limit_reached",
-            message: "You've used your 3 free Ask Lipa questions. Upgrade to Lipa One (€39) for 7 days of Ask Lipa, or Lipa Life (€89/year) for unlimited access."
+            message: `You've used your 3 free Ask Lipa questions. Upgrade to Lipa One (${oneDisplay}) for 7 days of Ask Lipa, or Lipa Life (${lifeDisplay}/year) for unlimited access.`
           }), {
             status: 403,
             headers: { "Content-Type": "application/json" },

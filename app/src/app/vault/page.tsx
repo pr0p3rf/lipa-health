@@ -5,6 +5,8 @@ import { AskLipa } from "@/components/ask-lipa";
 import { useEffect, useState, useMemo, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import { formatPrice } from "@/lib/geo-pricing";
+import { useCountry } from "@/lib/use-country";
 
 // ---------------------------------------------------------------------
 // Types
@@ -387,6 +389,8 @@ function StatusBadge({ status, label }: { status: string; label: string }) {
 
 export default function VaultPage() {
   const router = useRouter();
+  const country = useCountry();
+  const lifeDisplay = formatPrice(country, 89);
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<string>("");
   const [results, setResults] = useState<BiomarkerResult[]>([]);
@@ -658,7 +662,7 @@ export default function VaultPage() {
                 }
               </p>
               <p style={{ fontSize: 13, color: "#5A635D", margin: "4px 0 0" }}>
-                Lipa Life includes full vault access, trend charts, bio-age trajectory, and unlimited uploads for €89/year.
+                Lipa Life includes full vault access, trend charts, bio-age trajectory, and unlimited uploads for {lifeDisplay}/year.
               </p>
             </div>
             <a
@@ -723,7 +727,7 @@ export default function VaultPage() {
                 key={tab}
                 onClick={() => {
                   if ((tab === "trends" || tab === "compare") && userTier !== "insight") {
-                    alert("Trend tracking and comparison are available with Lipa Life (€89/year).");
+                    alert(`Trend tracking and comparison are available with Lipa Life (${lifeDisplay}/year).`);
                     return;
                   }
                   setActiveTab(tab);

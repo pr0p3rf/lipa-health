@@ -19,6 +19,8 @@ import { detectPatterns, type DetectedPattern } from "@/lib/pattern-detection";
 import { getDemographicOptimalRange } from "@/lib/demographic-ranges";
 import { getPopulationPercentile, type PercentileResult } from "@/lib/population-percentiles";
 import { calculateBiologicalAge, type BioAgeResult } from "@/lib/biological-age";
+import { formatPrice } from "@/lib/geo-pricing";
+import { useCountry } from "@/lib/use-country";
 
 // ---------------------------------------------------------------------
 // Types
@@ -239,6 +241,9 @@ export default function DashboardPage() {
   const [userId, setUserId] = useState<string | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
   const [analysisInProgress, setAnalysisInProgress] = useState(false);
+  const country = useCountry();
+  const oneDisplay = formatPrice(country, 39);
+  const lifeDisplay = formatPrice(country, 89);
 
   // Check for post-payment success and analyzing state
   useEffect(() => {
@@ -998,7 +1003,7 @@ export default function DashboardPage() {
                 isFree ? (
                   <>
                     <p className="text-[14px] text-[#0F1A15] leading-relaxed line-clamp-3 flex-1">{actionPlan.overall_summary}</p>
-                    <p className="text-[12px] text-[#8A928C] mt-2">Full summary with personalized recommendations available with Lipa One (&euro;39) or Lipa Life (&euro;89/year).</p>
+                    <p className="text-[12px] text-[#8A928C] mt-2">Full summary with personalized recommendations available with Lipa One ({oneDisplay}) or Lipa Life ({lifeDisplay}/year).</p>
                   </>
                 ) : (
                   <div className="text-[14px] text-[#0F1A15] leading-relaxed flex-1 space-y-3">
@@ -1259,7 +1264,7 @@ export default function DashboardPage() {
                                     className="inline-flex text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] px-6 py-2.5 rounded-full transition-all duration-300 disabled:opacity-50"
                                     style={{ boxShadow: "0 4px 16px rgba(27,107,74,0.2)" }}
                                   >
-                                    {checkoutLoading ? "Loading..." : "See full analysis — €39"}
+                                    {checkoutLoading ? "Loading..." : `See full analysis — ${oneDisplay}`}
                                   </button>
                                 </div>
                               ) : (
@@ -1531,7 +1536,7 @@ export default function DashboardPage() {
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#1B6B4A] text-white text-[9px] uppercase tracking-wider font-semibold px-3 py-1 rounded-full">Best value</div>
                   <div className="text-[20px] font-semibold text-[#0F1A15] mb-1" style={{ fontFamily: FRAUNCES }}>Lipa Life</div>
                   <p className="text-[12px] text-[#5A635D] mb-3">For people who test regularly and want to track their health over time.</p>
-                  <div className="text-[28px] text-[#1B6B4A] mb-1" style={{ fontFamily: FRAUNCES, fontWeight: 600 }}>&euro;89<span className="text-[14px] text-[#8A928C] font-normal">/year</span></div>
+                  <div className="text-[28px] text-[#1B6B4A] mb-1" style={{ fontFamily: FRAUNCES, fontWeight: 600 }}>{lifeDisplay}<span className="text-[14px] text-[#8A928C] font-normal">/year</span></div>
                   <p className="text-[11px] text-[#1B6B4A] font-medium mb-4">Everything in Lipa One, plus:</p>
                   <ul className="text-[12px] text-[#5A635D] space-y-2 mb-5">
                     {[
@@ -1554,7 +1559,7 @@ export default function DashboardPage() {
                     className="block w-full text-center text-[13px] font-semibold text-white bg-[#1B6B4A] hover:bg-[#155A3D] py-3 rounded-full transition-all duration-300 disabled:opacity-50"
                     style={{ boxShadow: "0 4px 16px rgba(27,107,74,0.2)" }}
                   >
-                    {checkoutLoading === "insight" ? "Loading..." : "Get Lipa Life — €89/year"}
+                    {checkoutLoading === "insight" ? "Loading..." : `Get Lipa Life — ${lifeDisplay}/year`}
                   </button>
                   <p className="text-[10px] text-[#8A928C] text-center mt-2 leading-relaxed">
                     Cross-referenced against 250,000+ peer-reviewed studies · Cancel anytime · No long-term commitment
@@ -1564,7 +1569,7 @@ export default function DashboardPage() {
                 <div className="p-6" style={CARD}>
                   <div className="text-[20px] font-semibold text-[#0F1A15] mb-1" style={{ fontFamily: FRAUNCES }}>Lipa One</div>
                   <p className="text-[12px] text-[#5A635D] mb-3">A single deep-dive into this blood test.</p>
-                  <div className="text-[28px] text-[#0F1A15] mb-4" style={{ fontFamily: FRAUNCES, fontWeight: 600 }}>&euro;39<span className="text-[14px] text-[#8A928C] font-normal"> one-time</span></div>
+                  <div className="text-[28px] text-[#0F1A15] mb-4" style={{ fontFamily: FRAUNCES, fontWeight: 600 }}>{oneDisplay}<span className="text-[14px] text-[#8A928C] font-normal"> one-time</span></div>
                   <ul className="text-[12px] text-[#5A635D] space-y-2 mb-5">
                     {[
                       `Full analysis of all ${latestResults.length} markers — what each means, what to do, cited research`,
@@ -1585,10 +1590,10 @@ export default function DashboardPage() {
                     disabled={!!checkoutLoading}
                     className="block w-full text-center text-[13px] font-semibold text-[#0F1A15] bg-[#F4F4F5] hover:bg-[#E5E5E5] py-3 rounded-full transition-all duration-300 disabled:opacity-50"
                   >
-                    {checkoutLoading === "one" ? "Loading..." : "Get Single Analysis — €39"}
+                    {checkoutLoading === "one" ? "Loading..." : `Get Single Analysis — ${oneDisplay}`}
                   </button>
                   <p className="text-[10px] text-[#8A928C] text-center mt-2 leading-relaxed">
-                    Cross-referenced against 250,000+ peer-reviewed studies · &euro;39 credited toward Life if you upgrade within 30 days
+                    Cross-referenced against 250,000+ peer-reviewed studies · {oneDisplay} credited toward Life if you upgrade within 30 days
                   </p>
                 </div>
               </div>
