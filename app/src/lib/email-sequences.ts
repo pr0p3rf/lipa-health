@@ -189,7 +189,7 @@ export function day7Normal(payload: SequencePayload): TemplateOutput {
 
   const html = shell({
     eyebrow: "Reference vs optimal",
-    headline: "&ldquo;Normal&rdquo; isn&rsquo;t optimal.",
+    headline: "“Normal” isn’t optimal.",
     bodyHtml: body,
     ctaText: "See a sample analysis",
     ctaUrl: "https://my.lipa.health/demo",
@@ -255,7 +255,7 @@ export function day14DoctorWedge(payload: SequencePayload): TemplateOutput {
 
   const html = shell({
     eyebrow: "What your doctor can't",
-    headline: "Seven minutes isn&rsquo;t enough biology.",
+    headline: "Seven minutes isn’t enough biology.",
     bodyHtml: body,
     ctaText: "See what 180+ markers analyzed looks like",
     ctaUrl: "https://my.lipa.health/demo",
@@ -313,7 +313,7 @@ export function day21Book(payload: SequencePayload): TemplateOutput {
 
   const html = shell({
     eyebrow: "Time to book",
-    headline: "Your test won&rsquo;t schedule itself.",
+    headline: "Your test won’t schedule itself.",
     bodyHtml: body,
     ctaText: "Upload your blood test",
     ctaUrl: "https://my.lipa.health/upload",
@@ -440,7 +440,7 @@ No pressure. We'll be here.
 // -- Day 75 — Long tail --
 // Last touch. Warm, no pressure. If they bounce here they bounce.
 export function day75LongTail(payload: SequencePayload): TemplateOutput {
-  const subject = `One last thing — and then we&rsquo;ll stop`;
+  const subject = `One last thing — and then we’ll stop`;
 
   const body = `
 <p>This is the last email in your test-plan sequence. We&rsquo;re not going to keep nagging.</p>
@@ -455,7 +455,7 @@ export function day75LongTail(payload: SequencePayload): TemplateOutput {
 
   const html = shell({
     eyebrow: "Sequence complete",
-    headline: "We&rsquo;ll be here when you&rsquo;re ready.",
+    headline: "We’ll be here when you’re ready.",
     bodyHtml: body,
     ctaText: "Upload when ready",
     ctaUrl: "https://my.lipa.health/upload",
