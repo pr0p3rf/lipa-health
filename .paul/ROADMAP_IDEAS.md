@@ -148,6 +148,41 @@ These protocols are differentiated content, defensible because they require dept
 
 ---
 
+## Pricing surface
+
+### €29 vs €39 inconsistency (small fix, do soon)
+The "Lipa One" tier has stale €29 references that don't match the €39 displayed everywhere else:
+- `app/src/lib/stripe.ts:35` — comment "€29 one-time"
+- `app/src/app/account/page.tsx:19` — `price: "€29"`
+- vs. €39 in: `pricing/page.tsx`, `dashboard/page.tsx`, `api/chat/route.ts:89`
+
+Verify what STRIPE_PRICE_ONE is actually configured at in Stripe Dashboard. If Stripe is at €29, checkout may charge less than displayed price (refunds + brand risk). If Stripe is at €39, just fix the two stale strings.
+
+### Orphaned pricing tiers in account/page.tsx
+Lines 22-23 reference tiers that aren't surfaced in checkout:
+- `essential` / "Lipa Annual" / €149/year
+- `complete` / "Lipa Bi-Annual" / €289/year
+
+Either revive (premium tiers above Life?) or delete. Having them visible in account-status copy could confuse users.
+
+### Geo-adaptive currency display
+Two-layer approach:
+- **Stripe Adaptive Pricing** for checkout — flip a flag in Stripe Dashboard → Products → settings. Auto-converts to user's local currency at checkout using Stripe FX. Zero code changes, set-and-forget.
+- **UI display** uses Vercel geo headers (`x-vercel-ip-country`) + a `formatPrice(country, basePriceEur)` helper to render localized strings on `pricing/page.tsx`, `dashboard/page.tsx`, chat error messages, vault paywalls, email copy.
+
+Currency mapping: PL → "169 zł", GB → "£34", US → "$42", EU → "€39", fallback → "€39".
+
+Effort: ~3-4 hours total. Side benefit: makes any future country-specific marketing trivial.
+
+### Cheaper entry tier — "Lipa Insight" (€9-12)
+Top 3 priority findings + 1 Ask Lipa question. No full summary, no 6-domain action plan. Hard ceiling on depth.
+
+Why: turns the cold paywall from a 1-step (€39 cold) into a 3-step ladder (€9 → €39 → €89/year). Each step has lower friction than the last. €39 becomes the obvious upgrade ("you saw the priorities — pay €30 more for the full plan"). Don't ship until distribution is real; this only matters if you have traffic to convert.
+
+Don't kill recurring revenue (Vault thesis dies). Don't drop One below €19 (kills margin).
+
+---
+
 ## Strategic notes (not actionable, just frame)
 
 ### "Is Lipa a company?" — answer: depends on scale targeted
