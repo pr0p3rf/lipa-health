@@ -528,21 +528,37 @@ export default function TestFinderPage() {
   async function handleEmailSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!email.trim()) return;
-    // Save to Supabase newsletter_subscribers with source + goals
+    // Submit to our server-side endpoint instead of writing directly to
+    // Supabase. The server saves the lead AND fires off an immediate
+    // "your test plan" email via Resend so the user has the marker list +
+    // lab guidance in their inbox to reference when they book (typically
+    // 4-6 weeks later).
     try {
-      await fetch("https://ovprbhjtwtthuldcdlgq.supabase.co/rest/v1/newsletter_subscribers", {
+      const goalTitles = selectedGoals
+        .map((g) => GOALS.find((goal) => goal.key === g)?.title || g);
+      const labs = countryInfo
+        ? countryInfo.labs.map((l) => ({
+            name: l.name,
+            ease: l.ease,
+            cost: l.cost,
+            tip: l.tip,
+          }))
+        : [];
+      await fetch("/api/test-finder-submit", {
         method: "POST",
-        headers: {
-          apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im92cHJiaGp0d3R0aHVsZGNkbGdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0OTEzMTgsImV4cCI6MjA5MTA2NzMxOH0.n3clDryaCjEfGebFzk2ZiEacKd5xpVAXNUUGWPjklOA",
-          "Content-Type": "application/json",
-          Prefer: "return=minimal",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: email.trim(),
-          source: `test-finder:${selectedGoals.join(",")}:${selectedCountry}`,
+          goals: selectedGoals,
+          goalTitles,
+          country: selectedCountry,
+          markers,
+          labs,
         }),
       });
-    } catch {}
+    } catch {
+      // Non-blocking — they still see the in-page results.
+    }
     setEmailSubmitted(true);
   }
 
