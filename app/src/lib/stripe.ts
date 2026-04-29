@@ -32,7 +32,7 @@ export const stripe = new Proxy({} as Stripe, {
 // Set these in .env.local after creating products in Stripe Dashboard
 
 export const TIER_PRICES = {
-  one: process.env.STRIPE_PRICE_ONE!,             // €29 one-time
+  one: process.env.STRIPE_PRICE_ONE!,             // €39 one-time
   insight: process.env.STRIPE_PRICE_INSIGHT!,      // €89/year
 } as const;
 
